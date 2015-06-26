@@ -72,6 +72,8 @@ var filesizes = {
 	"vie": 2195922
 }
 
+var pako = require('pako')
+
 var recognize = (function createTesseractInstance(){
 
 	var Module = Tesseract304({
@@ -83,33 +85,30 @@ var recognize = (function createTesseractInstance(){
 
 	var base = new Module.TessBaseAPI()
 	var loaded_langs = []
-	var loadLanguage = (function(){
-
-		return (function loadLanguage(lang, cb){ // NodeJS style callback
-			if(loaded_langs.indexOf(lang) != -1){
-				cb(null, lang)		
+	var loadLanguage = function(lang, cb){ // NodeJS style callback
+		if(loaded_langs.indexOf(lang) != -1){
+			cb(null, lang)		
+		}
+		else{
+			Module.FS_createPath("/","tessdata",true,true)
+			var xhr = new XMLHttpRequest();
+			xhr.open('GET', 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/'+lang+'.traineddata.gz', true);
+			xhr.responseType = 'arraybuffer';
+			xhr.onerror = function(){ cb(xhr, null) }
+			xhr.onprogress = function(e){console.log('loading',lang,'language model:',Math.round(e.loaded/filesizes[lang]*100)+'%')}
+			xhr.onload = function(){
+				if (xhr.status == 200 || (xhr.status == 0 && xhr.response)) {
+					console.log('unzipping language model...')
+					var data = new Uint8Array(pako.deflate(new Uint8Array(xhr.response)))
+					console.log(lang +".traineddata", 'sucessfully unzipped')
+					Module.FS_createDataFile('tessdata', lang +".traineddata", data, true, false);
+					loaded_langs.push(lang)
+					cb(null, lang)
+				} else cb(xhr, null);
 			}
-			else{
-				Module.FS_createPath("/","tessdata",true,true)
-				var xhr = new XMLHttpRequest();
-				xhr.open('GET', 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/'+lang+'.traineddata.gz', true);
-				xhr.responseType = 'arraybuffer';
-				xhr.onerror = function(){ cb(xhr, null) }
-				xhr.onprogress = function(e){console.log('loading',lang,'language model:',Math.round(e.loaded/filesizes[lang]*100)+'%')}
-				xhr.onload = function(){
-					if (xhr.status == 200 || (xhr.status == 0 && xhr.response)) {
-						console.log('unzipping language model...')
-						var data = new Uint8Array(unzip(new Uint8Array(xhr.response)))
-						console.log(lang +".traineddata", 'sucessfully unzipped')
-						Module.FS_createDataFile('tessdata', lang +".traineddata", data, true, false);
-						loaded_langs.push(lang)
-						cb(null, lang)
-					} else cb(xhr, null);
-				}
-				xhr.send(null)
-			}
-		})
-	})()
+			xhr.send(null)
+		}
+	}
 
 	function DumpLiterallyEverything(){
 			var ri = base.GetIterator();
@@ -289,6 +288,7 @@ var recognize = (function createTesseractInstance(){
 		var ptr = Module.allocate(image, 'i8', Module.ALLOC_NORMAL);
 		
 		loadLanguage(lang, function(err, result){
+			
 			if(err){
 				console.error("error loading", lang);
 				cb(err, null)
