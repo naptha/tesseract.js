@@ -79,7 +79,11 @@ var recognize = (function createTesseractInstance(){
 	var Module = Tesseract304({
 		TOTAL_MEMORY: 90e6,
 		TesseractProgress: function(percent){
-			console.log('recognized',percent+'%')
+			postMessage({
+				'progress': {
+					'recognized': percent/100
+				}
+			})
 		}
 	})
 
@@ -95,12 +99,22 @@ var recognize = (function createTesseractInstance(){
 			xhr.open('GET', 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/'+lang+'.traineddata.gz', true);
 			xhr.responseType = 'arraybuffer';
 			xhr.onerror = function(){ cb(xhr, null) }
-			xhr.onprogress = function(e){console.log('loading',lang,'language model:',Math.round(e.loaded/filesizes[lang]*100)+'%')}
+			xhr.onprogress = function(e){
+				postMessage({
+					'progress': {
+						'loaded_lang_model': e.loaded/filesizes[lang]
+					}
+				})
+			}
 			xhr.onload = function(){
 				if (xhr.status == 200 || (xhr.status == 0 && xhr.response)) {
-					console.log('unzipping language model...')
-					var data = new Uint8Array(pako.deflate(new Uint8Array(xhr.response)))
-					console.log(lang +".traineddata", 'sucessfully unzipped')
+					postMessage({
+						'progress': 'unzipping_lang_model'
+					})
+					var data = pako.inflate(new Uint8Array(xhr.response))
+					postMessage({
+						'progress': 'unzipped_lang_model'
+					})
 					Module.FS_createDataFile('tessdata', lang +".traineddata", data, true, false);
 					loaded_langs.push(lang)
 					cb(null, lang)
@@ -288,7 +302,7 @@ var recognize = (function createTesseractInstance(){
 		var ptr = Module.allocate(image, 'i8', Module.ALLOC_NORMAL);
 		
 		loadLanguage(lang, function(err, result){
-			
+
 			if(err){
 				console.error("error loading", lang);
 				cb(err, null)
@@ -297,7 +311,14 @@ var recognize = (function createTesseractInstance(){
 			for (var option in options) {
 			    if (options.hasOwnProperty(option)) {
 			        base.SetVariable(option, options[option]);
-			        console.log('setting', option, '=', options[option]);
+			        postMessage({
+						progress: {
+							set_variable: {
+								variable: option,
+								value: options[option]
+							}
+						}
+					})
 			    }
 			}
 
@@ -312,7 +333,6 @@ var recognize = (function createTesseractInstance(){
 		})
 	}
 
-	// base._simple = _simple
 	return recognize
 })()
 
