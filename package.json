@@ -4,6 +4,7 @@
   "description": "",
   "main": "Tesseract.js",
   "dependencies": {
+    "level-js": "^2.1.6",
     "pako": "^0.2.7"
   },
   "devDependencies": {},

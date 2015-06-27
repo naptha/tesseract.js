@@ -1,76 +1,23 @@
 importScripts('madeline.js')
+var leveljs = require('level-js')
+// var levelup = require('levelup')
+var db = leveljs('./tessdata', function(){
 
-var filesizes = {
-	"afr": 1079573,
-	"ara": 1701536,
-	"aze": 1420865,
-	"bel": 1276820,
-	"ben": 6772012,
-	"bul": 1605615,
-	"cat": 1652368,
-	"ces": 1035441,
-	"chi_sim": 17710414,
-	"chi_tra": 24717749,
-	"chr": 320649,
-	"dan-frak": 677656,
-	"dan": 1972936,
-	"deu-frak": 822644,
-	"deu": 991656,
-	"ell": 859719,
-	"eng": 9453554,
-	"enm": 619254,
-	"epo": 1241212,
-	"equ": 821130,
-	"est": 1905040,
-	"eus": 1641190,
-	"fin": 979418,
-	"fra": 1376221,
-	"frk": 5912963,
-	"frm": 5147082,
-	"glg": 1674938,
-	"grc": 3012615,
-	"heb": 1051501,
-	"hin": 6590065,
-	"hrv": 1926995,
-	"hun": 3074473,
-	"ind": 1874776,
-	"isl": 1634041,
-	"ita": 948593,
-	"ita_old": 3436571,
-	"jpn": 13507168,
-	"kan": 4390317,
-	"kor": 5353098,
-	"lav": 1843944,
-	"lit": 1779240,
-	"mal": 5966263,
-	"meme": 88453,
-	"mkd": 1163087,
-	"mlt": 1463001,
-	"msa": 1665427,
-	"nld": 1134708,
-	"nor": 2191610,
-	"osd": 4274649,
-	"pol": 7024662,
-	"por": 909359,
-	"ron": 915680,
-	"rus": 5969957,
-	"slk-frak": 289885,
-	"slk": 2217342,
-	"slv": 1611338,
-	"spa": 883170,
-	"spa_old": 5647453,
-	"sqi": 1667041,
-	"srp": 1770244,
-	"swa": 757916,
-	"swe": 2451917,
-	"tam": 3498763,
-	"tel": 5795246,
-	"tgl": 1496256,
-	"tha": 3811136,
-	"tur": 3563264,
-	"ukr": 937566,
-	"vie": 2195922
-}
+})
+// // 2) put a key & value
+// db.put('name2', 'LevelUP', function (err) {
+//   if (err) return console.log('Ooops!', err) // some kind of I/O error
+
+//   // 3) fetch by key
+//   db.get('name', function (err, value) {
+//     if (err) return console.log('Ooops!', err) // likely the key was not found
+//     console.log('my name is' + value)
+//   })
+// })
+
+
+
+var filesizes = {"afr": 1079573, "ara": 1701536, "aze": 1420865, "bel": 1276820, "ben": 6772012, "bul": 1605615, "cat": 1652368, "ces": 1035441, "chi_sim": 17710414, "chi_tra": 24717749, "chr": 320649, "dan-frak": 677656, "dan": 1972936, "deu-frak": 822644, "deu": 991656, "ell": 859719, "eng": 9453554, "enm": 619254, "epo": 1241212, "equ": 821130, "est": 1905040, "eus": 1641190, "fin": 979418, "fra": 1376221, "frk": 5912963, "frm": 5147082, "glg": 1674938, "grc": 3012615, "heb": 1051501, "hin": 6590065, "hrv": 1926995, "hun": 3074473, "ind": 1874776, "isl": 1634041, "ita": 948593, "ita_old": 3436571, "jpn": 13507168, "kan": 4390317, "kor": 5353098, "lav": 1843944, "lit": 1779240, "mal": 5966263, "meme": 88453, "mkd": 1163087, "mlt": 1463001, "msa": 1665427, "nld": 1134708, "nor": 2191610, "osd": 4274649, "pol": 7024662, "por": 909359, "ron": 915680, "rus": 5969957, "slk-frak": 289885, "slk": 2217342, "slv": 1611338, "spa": 883170, "spa_old": 5647453, "sqi": 1667041, "srp": 1770244, "swa": 757916, "swe": 2451917, "tam": 3498763, "tel": 5795246, "tgl": 1496256, "tha": 3811136, "tur": 3563264, "ukr": 937566, "vie": 2195922}
 
 var pako = require('pako')
 
@@ -95,32 +42,77 @@ var recognize = (function createTesseractInstance(){
 		}
 		else{
 			Module.FS_createPath("/","tessdata",true,true)
-			var xhr = new XMLHttpRequest();
-			xhr.open('GET', 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/'+lang+'.traineddata.gz', true);
-			xhr.responseType = 'arraybuffer';
-			xhr.onerror = function(){ cb(xhr, null) }
-			xhr.onprogress = function(e){
+
+			var downloadlang = function(shouldcache){
 				postMessage({
-					'progress': {
-						'loaded_lang_model': e.loaded/filesizes[lang]
-					}
+					'progress': lang+' not found in cache, downloading'
 				})
-			}
-			xhr.onload = function(){
-				if (xhr.status == 200 || (xhr.status == 0 && xhr.response)) {
+				var xhr = new XMLHttpRequest();
+				xhr.open('GET', 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/'+lang+'.traineddata.gz', true);
+				xhr.responseType = 'arraybuffer';
+				xhr.onerror = function(){ cb(xhr, null) }
+				xhr.onprogress = function(e){
 					postMessage({
-						'progress': 'unzipping_lang_model'
+						'progress': {
+							'loaded_lang_model': e.loaded/filesizes[lang]
+						}
 					})
-					var data = pako.inflate(new Uint8Array(xhr.response))
-					postMessage({
-						'progress': 'unzipped_lang_model'
-					})
-					Module.FS_createDataFile('tessdata', lang +".traineddata", data, true, false);
-					loaded_langs.push(lang)
-					cb(null, lang)
-				} else cb(xhr, null);
+				}
+				xhr.onload = function(){
+					if (xhr.status == 200 || (xhr.status == 0 && xhr.response)) {
+						postMessage({
+							'progress': 'unzipping_lang_model'
+						})
+
+						var response = new Uint8Array(xhr.response)
+
+						var data = pako.inflate(response)
+						postMessage({
+							'progress': 'unzipped_lang_model'
+						})
+
+						Module.FS_createDataFile('tessdata', lang +".traineddata", data, true, false);
+
+						if(shouldcache){
+							db.put(lang, response, function(err){
+								console.log('cached lang')
+							})
+						}
+
+						loaded_langs.push(lang)
+
+						cb(null, lang)
+					} else cb(xhr, null);
+				}
+				xhr.send(null)
 			}
-			xhr.send(null)
+
+			db.open({compression: false},function(err){
+				if (err) {
+					downloadlang(false)
+				}
+				else {
+					db.get(lang, function (err, value) {
+
+						// err = true
+
+						if (err) {
+							downloadlang(true)
+						}
+						else {
+							value = pako.inflate(value)
+
+							postMessage({
+								'progress': lang+' found in cache, length '+ value.length
+							})
+
+							Module.FS_createDataFile('tessdata', lang +".traineddata", value, true, false);
+							loaded_langs.push(lang)
+							cb(null, lang)
+						}
+					})
+				}
+			})
 		}
 	}
 
@@ -305,31 +297,35 @@ var recognize = (function createTesseractInstance(){
 
 			if(err){
 				console.error("error loading", lang);
+				Module._free(ptr); 
 				cb(err, null)
 			}
-			base.Init(null, lang)
-			for (var option in options) {
-			    if (options.hasOwnProperty(option)) {
-			        base.SetVariable(option, options[option]);
-			        postMessage({
-						progress: {
-							set_variable: {
-								variable: option,
-								value: options[option]
+			else {
+				base.Init(null, lang)
+				for (var option in options) {
+				    if (options.hasOwnProperty(option)) {
+				        base.SetVariable(option, options[option]);
+				        postMessage({
+							progress: {
+								set_variable: {
+									variable: option,
+									value: options[option]
+								}
 							}
-						}
-					})
-			    }
+						})
+				    }
+				}
+
+
+				base.SetImage(Module.wrapPointer(ptr), width, height, 1, width)
+				base.SetRectangle(0, 0, width, height)
+				base.GetUTF8Text()
+				var everything = DumpLiterallyEverything()
+				base.End();
+				Module._free(ptr); 
+				cb(null, everything)
+
 			}
-
-
-			base.SetImage(Module.wrapPointer(ptr), width, height, 1, width)
-			base.SetRectangle(0, 0, width, height)
-			base.GetUTF8Text()
-			var everything = DumpLiterallyEverything()
-			base.End();
-			Module._free(ptr); 
-			cb(null, everything)
 		})
 	}
 
@@ -337,7 +333,6 @@ var recognize = (function createTesseractInstance(){
 })()
 
 onmessage = function(e) {
-
 	recognize(e.data.image, e.data.lang, e.data.options, function(err, result){
 		postMessage({err:err, result: result})	
 	})
