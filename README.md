@@ -1,1 +1,0 @@
-# tesseract.js

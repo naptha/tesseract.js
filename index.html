@@ -1,0 +1,208 @@
+<html>
+<head>
+	<title>Wau Demo</title>
+	<link rel="stylesheet" type="text/css" href="./css/wau.css">
+	<link rel="stylesheet" type="text/css" href="./css/color.css">
+
+	<script src="codemirror/codemirror.js"></script>
+	<link rel="stylesheet" href="codemirror/codemirror.css">
+	<script src="codemirror/javascript.js"></script>
+
+
+	<link href='http://fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet' type='text/css'>
+
+</head>
+<body>
+	<!-- <a href="https://github.com/you"><img id="fork" src="img/fork.png" alt="Fork me on GitHub"></a> -->
+
+ 	<div id="splash" class="fullscreen">
+		<div id="logo" class="header">
+			<canvas id="canvas"></canvas>
+		</div>
+
+		<div id ="marterial" class="header"></div>
+
+		<div id="two">
+			<div id="code">
+				<div id="desc">
+					Tesseract.js is a <b>pure javascript</b> version of the <a href="https://github.com/tesseract-ocr/Tesseract">Tesseract OCR Engine</a>. It can recognize <b>over 20 languages</b>, including <b>English</b>, <b>Chinese</b>, and <b>Meme</b>.
+				</div>
+				<br>
+				<button>Download</button><br>
+				<a href="https://github.com/naptha/tesseract.js"><button>View on Github</button></a>
+			</div>
+			<div id="wow">
+
+				<div id='editor'></div>
+				<div id="hint">
+						Hint: you can, like, edit this code yo
+					</div>
+				<div id ="running">
+					<div id="out">Initializing Magic...</div>
+					<progress id="prog" value="0" max="1"></progress>
+				</div>
+				<div id = "run">
+					
+					<div id="runbutton">Run Code</div>
+				</div>
+				<canvas id="display"></canvas>
+				<img src="img/poem.png" width = "500px" id ="to_ocr">
+				<div id="drag">
+					<a href="">New Image</a> (or drop an image on this page)
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div id="notconvinced" class="fullscreen">
+		<div class="rant randombold">
+		"Last time I got here, before I <b>even</b> arrived, they had ‘fuck <b>Kanye’</b> on the motherfuckin’ <b>port-a-potties.</b> But this year, we gon’ piss on ‘em, on they motherfuckin’ port-a-potties. How many of <b>y'all</b> don't give a fuck about <b>what</b> the press <b>say?</b> It's 2014. College Dropout came out 2004. I want y'all to know, <b>every</b> time I go to the studio, every time I <b>do</b> <b>an</b> <b>interview,</b> every time I make a motherfuckin' <b>t-shirt,</b> the thing <b>I</b> do, I give it <b>everything</b> <b>I</b> got. And when I talk that shit, it's so that <b>you</b> can talk that shit. If you a fan of me, you a fan of your motherfuckin' self. You can do something that'll change the world. Look at how they try to make me look. They <b>try</b> to make me look crazy.",
+        <b></b>    "I <b>need</b> a new cool. <b>What's</b> the new shit out? What's the new shit <b>out</b> <b>with</b> the most commercials at the Super Bowl? <b>Let's</b> <b>just</b> stop the music and play a Bruno Mars song right <b>now,</b> how about that? <b>They</b> told me I would never play at the Super Bowl. They told me I could never play at the Super Bowl. Not until I'm <b>super</b> old. Not until I'm <b>super</b> old... They told me I would never play at the <b>Super</b> Bowl. They told <b>me</b> I would never play at the <b>Super</b> <b>Bowl,</b> at least not until I'm super old. So I think it's time&#150hold up, f&#151k that toast.",
+         <b></b>   "I know people get mad at me when I compare myself, but that's the only way I <b>can</b> explain what <b>my</b> aspirations are. When I'm talkin' 'bout Walt Disney, when I'm talkin' 'bout Howard Hughes, when I'm talkin' 'bout Henry Ford, when I'm talkin' 'bout Beethoven, when I talk about <b>Mozart,</b> when I talk about Shakespeare, and they all had their time on this earth. And I'm only 37. And right now I'm rockin' to 90,000, of y'all motherfuckers <b>right</b> now. So I ain't goin' at anybody on the radio. I'm goin' <b>after</b> Shakespeare. I'm <b>goin'</b> after <b>Walt</b> Disney. I'm <b>going</b> after <b>Howard</b> Hughes. I'm going after David Stern. I'm goin' <b>after</b> Henry Ford. I'm going <b>after</b> Elon Musk. Okay, he is living, but he's my boy.",
+
+		</div>
+	</div>
+
+<!-- 
+	<script src="./core/temple.js"></script>
+
+ -->
+	<script src="https://rawgit.com/naptha/tesseract.js/master/lib/Tesseract.js"></script>
+	
+	<script>
+		var prog = document.getElementById('prog')
+		var out = document.getElementById('out')
+
+		var disp = document.getElementById('display')
+		var dctx = disp.getContext('2d')
+		disp.width = 0
+		disp.height = 0
+
+		document.getElementById('runbutton').onclick = function(){
+			setrunning(0)
+			run(myCodeMirror)
+		}
+
+		function show_progress(p){
+
+			if(p.loaded_lang_model) prog.value = p.loaded_lang_model
+			if(p.recognized) prog.value = p.recognized
+			setrunning(p.recognized)
+			out.innerText = JSON.stringify(p)
+
+		}
+
+		function setrunning(v){
+			if (v == 1) {
+				document.getElementById('running').style.display = 'none'
+				document.getElementById('run').style.display = 'block'
+				// out.style.visibility = 'hidden'
+			}
+			else {
+				document.getElementById('running').style.display = 'block'
+				document.getElementById('run').style.display = 'none'
+			}
+		}
+
+		function display(result) {
+			console.log(result)
+
+			disp.width = document.getElementById('to_ocr').naturalWidth
+			disp.height = document.getElementById('to_ocr').naturalHeight
+
+			disp.style.width = document.getElementById('to_ocr').offsetWidth
+			disp.style.height = document.getElementById('to_ocr').offsetHeight
+
+
+			dctx.shadowColor = "#fff"
+			dctx.shadowOffsetX = 0;
+			dctx.shadowOffsetY = 0;
+			dctx.shadowBlur = 10;
+
+			var m  = result.words.map(function(w){
+				
+				var b  = w.bbox
+				
+				var k = (function(){
+
+					dctx.font = '20px Comic Sans MS'
+					dctx.font = 20*(b.x1-b.x0)/dctx.measureText(w.text).width+"px Comic Sans MS"
+
+					// dctx.fillStyle="rgba(255,255,255,.01)"
+					// dctx.fillRect(b.x0,b.y0,b.x1-b.x0, b.y1-b.y0)
+					dctx.fillStyle="rgba(255,0,255,.1)"
+	  				dctx.fillText(w.text, b.x0, w.baseline.y0);
+
+	  				// dctx.strokeStyle = "rgba(255,255,255,.1)"
+	  				// dctx.strokeText(w.text, b.x0, w.baseline.y0);
+				})
+
+				// k()
+				return k
+			})
+
+			var times = 0
+			function draw(i){
+				times++
+				for (var j = 0; j < i; j++) {
+					m[j]()
+				};
+				if(times<200){
+					setTimeout(function(){
+						if(i+1<m.length){
+							draw(i+1)
+						}
+						else {
+							draw(i)
+						}
+					},10)					
+				}
+				else{
+					console.log('done')
+				}
+			}
+			draw(0)
+
+		}
+
+		window.onresize = function() {
+			disp.style.width = document.getElementById('to_ocr').offsetWidth
+			disp.style.height = document.getElementById('to_ocr').offsetHeight
+		}
+
+		function run(c){
+			eval(c.getValue())
+		}
+
+		var val = 
+"var img = document.querySelector('img#to_ocr')\n\
+\n\
+Tesseract\n\
+  .recognize( img, {progress: show_progress} )\n\
+  .then( display )"
+
+		var myCodeMirror = CodeMirror(document.getElementById('editor'),{
+        // lineNumbers: true,
+        viewportMargin: Infinity,
+        value: val
+      });
+
+
+
+		var img = document.getElementById('to_ocr')
+
+		if (img.complete) {
+			run(myCodeMirror)
+		} else{
+			img.onload = function(){
+				run(myCodeMirror)
+			}
+		}
+	</script>
+
+	<script src="animation/raf.js"></script>
+	<script src="animation/mouse.js"></script>
+	<script src="animation/dimensions.js"></script>
+	<script src="animation/main.js"></script>
+</body>
+</html>

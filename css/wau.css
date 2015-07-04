@@ -1,0 +1,210 @@
+.fullscreen {
+	width:100%;
+	min-height: 100%;
+}
+
+#runwrap {
+	position: relative;
+	right:0px;
+	width: 100%;
+	height: 0px;
+	text-align: right;
+	background: green;
+	z-index: 2;
+
+}
+
+#run, #running {
+	width: 100%;
+	height: 42px;
+	text-align: center;
+}
+
+#run {
+	display: none
+}
+
+#runbutton {
+	padding-top: 6px;
+	padding-bottom: 10px;
+	font-weight: 500;
+
+}
+
+a {
+	text-decoration: none;
+	/*font-weight: bold;*/
+}
+
+#display {
+	position: absolute;
+	/*background: rgba(0,0,255,.1);*/
+}
+
+#marterial {
+	position: absolute;
+	width: 100%;
+	height: 90px;
+	z-index: -1;
+}
+
+#out {
+	padding: 10px;
+	padding-bottom: 0px;
+	text-align: center;
+	font-family: monospace;
+}
+
+#hint {
+	text-align: left;
+	padding-left: 14px
+
+}
+
+#prog {
+	width: 400px;
+	max-width: 100%;
+	position: relative;
+}
+
+#drag {
+	padding: 10px;
+	/*padding-top: 0px;*/
+	text-align: center
+}
+
+#logo {
+	text-align: center;
+	padding-top: 5%;
+}
+
+#to_ocr {
+	width: 100%;
+}
+
+#wow {
+	border-radius: 5px;
+	overflow: hidden;
+	width:500px;
+	margin-top: 10px;
+	text-align: left
+}
+
+#canvas {
+	margin-left: auto;
+	margin-right: auto;
+	pointer-events:none;
+	z-index: 0;
+	background-image: url(../img/logowhite.png);
+	background-size: cover;
+}
+
+#splash {
+	text-align: center;
+}
+
+#desc {
+	text-align: left;
+	font-size: 18px;
+}
+
+#demo {
+}
+
+#notconvinced {
+	max-width: 960;
+
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 8%;
+
+
+}
+
+
+.randombold {
+	font-size: 18px;
+	/*font-family: Georgia;*/
+	letter-spacing: .8px;
+	line-height: 37px;
+}
+
+.rant {
+	padding-left: 8%;
+	padding-right: 8%;
+}
+/*#editor {
+	border-radius: 5px 5px 0px 0px;
+}
+*/
+#code {
+	text-align: center;
+	width: 335px;
+	border-radius: 5px;
+	margin-right: 40px;
+	margin-left: 40px;
+	margin-top: 140px;
+
+}
+
+#fork {
+	position: absolute;
+	top: 0;
+	right: 0;
+	border: 0;
+	width: 149px;
+}
+
+
+
+#two {
+	width: 100%;
+	paddin-left: 8%;
+	paddin-right: 8%;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	margin-bottom: 8%;
+
+}
+
+
+
+body {
+	padding: 0px;
+	margin: 0px;
+	font-family: Lato;/*, Helvetica, Arial, sans-serif;*/
+	font-weight: 300;
+
+}
+
+button {
+
+	height: 60px;
+	width: 240px;
+
+	margin-top: 10px;
+
+	font: inherit;
+	font-size: 30px;	
+
+	-webkit-transition: all 0.7s ease;
+	transition: all 0.7s ease;
+	
+	outline: 0;
+}
+
+button:hover {
+	cursor: pointer;
+}
+
+@media (max-width: 914px) {
+	#marterial {
+		height: 300px;
+	}
+
+	#code {
+		margin-top: 20px;
+		margin-bottom: 20px
+	}
+}

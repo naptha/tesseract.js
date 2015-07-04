@@ -1,0 +1,79 @@
+#wow {
+	box-shadow: 0px 0px 20px 0px rgba(0,0,0,.2);
+	background-color: #fff;
+}
+
+#splash {
+	border-bottom: solid 1px #ddd;
+	/*background-color: #222*/
+}
+
+#desc {
+	color: #444;
+}
+
+.header {
+	background-color: #27C6F9;
+}
+
+#marterial {
+	background: linear-gradient(#27C6F9 80%, #0CB5EB 100%);
+}
+
+#runbutton {
+	color:  #27C6F9;
+	cursor: pointer;
+	-webkit-transition: all 0.7s ease;
+	transition: all 0.7s ease;
+}
+
+#runbutton:hover {
+	text-shadow: 0px 0px 10px #27C6F9;
+}
+
+#wow {
+	box-shadow: 0px 0px 20px -2px rgba(0,0,0,.2);
+}
+
+#hint {
+	font-size: 10px;
+	color: #aaa;
+	
+}
+
+
+a {
+	color: #f90;
+}
+
+button {
+	color: #000;
+	background: #fff;
+	border-radius: 5px;
+	border: solid 1px #fff;
+}
+
+button:hover {
+	background: rgba(255,255,255,1);
+	border: solid 1px #ddd;
+}
+
+@media (max-width: 914px) {
+	button{
+		color: #fff;
+		background-color: rgba(0,0,0,0)	
+	}
+
+	button:hover {
+		background: rgba(255,255,255,.3);
+		border: solid 1px #fff;
+	}
+
+	#desc {
+		color: rgba(255,255,255,.9);
+	}
+
+	#splash {
+		background-color: #27C6F9;
+	}
+}
