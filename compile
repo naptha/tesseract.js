@@ -1,0 +1,3 @@
+browserify worker_src/worker.js -o worker/wumbo.js
+cat worker_src/madeline.js worker/wumbo.js > worker/worker.js
+rm worker/wumbo.js

@@ -1,21 +1,5 @@
-importScripts('madeline.js')
-var leveljs = require('level-js')
-// var levelup = require('levelup')
-var db = leveljs('./tessdata', function(){
-
-})
-// // 2) put a key & value
-// db.put('name2', 'LevelUP', function (err) {
-//   if (err) return console.log('Ooops!', err) // some kind of I/O error
-
-//   // 3) fetch by key
-//   db.get('name', function (err, value) {
-//     if (err) return console.log('Ooops!', err) // likely the key was not found
-//     console.log('my name is' + value)
-//   })
-// })
-
-
+var db = (require('level-js'))('./tessdata')
+// var db = leveljs('./tessdata')
 
 var filesizes = {"afr": 1079573, "ara": 1701536, "aze": 1420865, "bel": 1276820, "ben": 6772012, "bul": 1605615, "cat": 1652368, "ces": 1035441, "chi_sim": 17710414, "chi_tra": 24717749, "chr": 320649, "dan-frak": 677656, "dan": 1972936, "deu-frak": 822644, "deu": 991656, "ell": 859719, "eng": 9453554, "enm": 619254, "epo": 1241212, "equ": 821130, "est": 1905040, "eus": 1641190, "fin": 979418, "fra": 1376221, "frk": 5912963, "frm": 5147082, "glg": 1674938, "grc": 3012615, "heb": 1051501, "hin": 6590065, "hrv": 1926995, "hun": 3074473, "ind": 1874776, "isl": 1634041, "ita": 948593, "ita_old": 3436571, "jpn": 13507168, "kan": 4390317, "kor": 5353098, "lav": 1843944, "lit": 1779240, "mal": 5966263, "meme": 88453, "mkd": 1163087, "mlt": 1463001, "msa": 1665427, "nld": 1134708, "nor": 2191610, "osd": 4274649, "pol": 7024662, "por": 909359, "ron": 915680, "rus": 5969957, "slk-frak": 289885, "slk": 2217342, "slv": 1611338, "spa": 883170, "spa_old": 5647453, "sqi": 1667041, "srp": 1770244, "swa": 757916, "swe": 2451917, "tam": 3498763, "tel": 5795246, "tgl": 1496256, "tha": 3811136, "tur": 3563264, "ukr": 937566, "vie": 2195922}
 
@@ -24,14 +8,17 @@ var pako = require('pako')
 var recognize = (function createTesseractInstance(){
 
 	var Module = Tesseract304({
-		TOTAL_MEMORY: 90e6,
+		TOTAL_MEMORY: 6*16777216, //must be a multiple of 10 megabytes
 		TesseractProgress: function(percent){
 			postMessage({
 				'progress': {
-					'recognized': percent/100
+					'recognized': Math.max(0,(percent-30)/70)
 				}
 			})
-		}
+		}//,
+		// onRuntimeInitialized: function(){
+		// 	console.log('wau')
+		// }
 	})
 
 	var base = new Module.TessBaseAPI()
@@ -45,7 +32,11 @@ var recognize = (function createTesseractInstance(){
 
 			var downloadlang = function(shouldcache){
 				postMessage({
-					'progress': lang+' not found in cache, downloading'
+					'progress': {
+						'loaded_lang_model': 0,
+						cached: false,
+						requesting: true
+					}
 				})
 				var xhr = new XMLHttpRequest();
 				xhr.open('GET', 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/'+lang+'.traineddata.gz', true);
@@ -54,7 +45,8 @@ var recognize = (function createTesseractInstance(){
 				xhr.onprogress = function(e){
 					postMessage({
 						'progress': {
-							'loaded_lang_model': e.loaded/filesizes[lang]
+							'loaded_lang_model': e.loaded/filesizes[lang],
+							cached: false
 						}
 					})
 				}
@@ -103,7 +95,10 @@ var recognize = (function createTesseractInstance(){
 							value = pako.inflate(value)
 
 							postMessage({
-								'progress': lang+' found in cache, length '+ value.length
+								'progress': {
+									loaded_lang_model:1,
+									cached: true
+								}
 							})
 
 							Module.FS_createDataFile('tessdata', lang +".traineddata", value, true, false);
@@ -115,6 +110,66 @@ var recognize = (function createTesseractInstance(){
 			})
 		}
 	}
+
+
+	function circularize(page){
+	    page.paragraphs = []
+	    page.lines = []
+	    page.words = []
+	    page.symbols = []
+
+	    page.blocks.forEach(function(block){
+	        block.page = page;
+
+	        block.lines = []
+	        block.words = []
+	        block.symbols = []
+
+	        block.paragraphs.forEach(function(para){
+	            para.block = block;
+	            para.page = page;
+
+	            para.words = []
+	            para.symbols = []
+	            
+	            para.lines.forEach(function(line){
+	                line.paragraph = para;
+	                line.block = block;
+	                line.page = page;
+
+	                line.symbols = []
+
+	                line.words.forEach(function(word){
+	                    word.line = line;
+	                    word.paragraph = para;
+	                    word.block = block;
+	                    word.page = page;
+	                    word.symbols.forEach(function(sym){
+	                        sym.word = word;
+	                        sym.line = line;
+	                        sym.paragraph = para;
+	                        sym.block = block;
+	                        sym.page = page;
+	                        
+	                        sym.line.symbols.push(sym)
+	                        sym.paragraph.symbols.push(sym)
+	                        sym.block.symbols.push(sym)
+	                        sym.page.symbols.push(sym)
+	                    })
+	                    word.paragraph.words.push(word)
+	                    word.block.words.push(word)
+	                    word.page.words.push(word)
+	                })
+	                line.block.lines.push(line)
+	                line.page.lines.push(line)
+	            })
+	            para.page.paragraphs.push(para)
+	        })
+	    })
+	    return page
+	}
+
+
 
 	function DumpLiterallyEverything(){
 			var ri = base.GetIterator();
@@ -128,6 +183,7 @@ var recognize = (function createTesseractInstance(){
 					.map(function(e){ return e.slice(prefix.length + 1) })[0])
 			}
 
+			ri.Begin()
 			do {
 				if(ri.IsAtBeginningOf(Module.RIL_BLOCK)){
 					var poly = ri.BlockPolygon();
@@ -224,29 +280,30 @@ var recognize = (function createTesseractInstance(){
 				// var image = pix2array(pix);
 				// // for some reason it seems that things stop working if you destroy pics
 				// Module._pixDestroy(Module.getPointer(pix));
+				if(ri.IsAtBeginningOf(Module.RIL_SYMBOL)){
+					symbol = {
+						choices: [],
+						image: image,
 
-				symbol = {
-					choices: [],
-					image: image,
+						text: ri.GetUTF8Text(Module.RIL_SYMBOL),
+						confidence: ri.Confidence(Module.RIL_SYMBOL),
+						baseline: ri.getBaseline(Module.RIL_SYMBOL),
+						bbox: ri.getBoundingBox(Module.RIL_SYMBOL),
 
-					text: ri.GetUTF8Text(Module.RIL_SYMBOL),
-					confidence: ri.Confidence(Module.RIL_SYMBOL),
-					baseline: ri.getBaseline(Module.RIL_SYMBOL),
-					bbox: ri.getBoundingBox(Module.RIL_SYMBOL),
-
-					is_superscript: !!ri.SymbolIsSuperscript(),
-					is_subscript: !!ri.SymbolIsSubscript(),
-					is_dropcap: !!ri.SymbolIsDropcap(),
+						is_superscript: !!ri.SymbolIsSuperscript(),
+						is_subscript: !!ri.SymbolIsSubscript(),
+						is_dropcap: !!ri.SymbolIsDropcap(),
+					}
+					word.symbols.push(symbol)
+					var ci = new Module.ChoiceIterator(ri);
+					do {
+						symbol.choices.push({
+							text: ci.GetUTF8Text(),
+							confidence: ci.Confidence()
+						})
+					} while (ci.Next());
+					Module.destroy(ci)
 				}
-				word.symbols.push(symbol)
-				var ci = new Module.ChoiceIterator(ri);
-				do {
-					symbol.choices.push({
-						text: ci.GetUTF8Text(),
-						confidence: ci.Confidence()
-					})
-				} while (ci.Next());
-				Module.destroy(ci)
 			} while (ri.Next(Module.RIL_SYMBOL));
 			Module.destroy(ri)
 
@@ -271,22 +328,19 @@ var recognize = (function createTesseractInstance(){
 			width     	  = image.width, height = image.height;
 			var dst       = new Uint8Array(width * height);
 			var srcLength = src.length | 0, srcLength_16 = (srcLength - 16) | 0;
-
-			var coeff_r = 4899, coeff_g = 9617, coeff_b = 1868;
-
+			
 			for (var i = 0, j = 0; i <= srcLength_16; i += 16, j += 4) {
-				// convert to grayscale 4 pixels at a time;
-				// add 8192 = 1<<13 so for int n, float k >= .5,  ((n + k)*(1<<14) >> 14) = 1 + ((n)*(1<<14) >> 14)
-				dst[j]     = src[i+3] //(((src[i] * coeff_r + src[i+1] * coeff_g + src[i+2] * coeff_b + 8192) >> 14) * src[i+3]) >> 8 + 255 - src[i+3];
-				dst[j + 1] = src[i+4+3]//(((src[i+4] * coeff_r + src[i+5] * coeff_g + src[i+6] * coeff_b + 8192) >> 14) * src[i+3]) >> 8 + 255 - src[i+3];
-				dst[j + 2] = src[i+8+3]//(((src[i+8] * coeff_r + src[i+9] * coeff_g + src[i+10] * coeff_b + 8192) >> 14) * src[i+3]) >> 8 + 255 - src[i+3];
-				dst[j + 3] = src[i+12+3]//(((src[i+12] * coeff_r + src[i+13] * coeff_g + src[i+14] * coeff_b + 8192) >> 14) * src[i+3]) >> 8 + 255 - src[i+3];
+				// convert to grayscale 4 pixels at a time; eveything with alpha get put in front of 50% gray
+				dst[j]     = (((src[i] * 77 + src[i+1] * 151 + src[i+2] * 28) * src[i+3]) + ((255-src[i+3]) << 15) + 32768) >> 16
+				dst[j+1]   = (((src[i+4] * 77 + src[i+5] * 151 + src[i+6] * 28) * src[i+7]) + ((255-src[i+7]) << 15) + 32768) >> 16
+				dst[j+2]   = (((src[i+8] * 77 + src[i+9] * 151 + src[i+10] * 28) * src[i+11]) + ((255-src[i+11]) << 15) + 32768) >> 16
+				dst[j+3]   = (((src[i+12] * 77 + src[i+13] * 151 + src[i+14] * 28) * src[i+15]) + ((255-src[i+15]) << 15) + 32768) >> 16
+				
 			}
 			for (; i < srcLength; i += 4, ++j) //finish up
-				dst[j] = (src[i] * coeff_r + src[i+1] * coeff_g + src[i+2] * coeff_b + 8192) >> 14;
+				dst[j]     = (((src[i] * 77 + src[i+1] * 151 + src[i+2] * 28) * src[i+3]) + ((255-src[i+3]) << 15) + 32768) >> 16
 			
 			image = dst;
-			// for(var i = 0; i < image.length; i++) image[i] = image[i] > 128;
 		}
 		else {
 			throw 'Expected ImageData'
@@ -319,8 +373,9 @@ var recognize = (function createTesseractInstance(){
 
 				base.SetImage(Module.wrapPointer(ptr), width, height, 1, width)
 				base.SetRectangle(0, 0, width, height)
-				base.GetUTF8Text()
-				var everything = DumpLiterallyEverything()
+				// base.GetUTF8Text()
+				base.Recognize(null)
+				var everything = circularize(DumpLiterallyEverything())
 				base.End();
 				Module._free(ptr); 
 				cb(null, everything)
