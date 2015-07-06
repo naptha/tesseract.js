@@ -123,7 +123,10 @@ var T = (function createTesseractInstance(){
 							downloadlang(true)
 						}
 						else {
-							value = pako.inflate(value)
+
+							while(value[0] == 0x1f && value[1] == 0x8b){
+								value = pako.ungzip(value)
+							}
 
 							postMessage({
 								index: index,
@@ -469,6 +472,7 @@ var T = (function createTesseractInstance(){
 					sid = best.get_script_id();
 				console.log('orientation id', oid, [0, 270, 180, 90][oid], best.get_oconfidence())
 				console.log('script id', sid, charset.get_script_from_script_id(sid), best.get_sconfidence())
+				// console.log(best)
 				cb(null, 'wolo')
 				base.End();
 				Module._free(ptr);
