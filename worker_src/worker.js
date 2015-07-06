@@ -7,16 +7,21 @@ else {
 	db = leveljs('./tessdata')
 }
 
+console.log('hallo')
+
 var filesizes = {"afr": 1079573, "ara": 1701536, "aze": 1420865, "bel": 1276820, "ben": 6772012, "bul": 1605615, "cat": 1652368, "ces": 1035441, "chi_sim": 17710414, "chi_tra": 24717749, "chr": 320649, "dan-frak": 677656, "dan": 1972936, "deu-frak": 822644, "deu": 991656, "ell": 859719, "eng": 9453554, "enm": 619254, "epo": 1241212, "equ": 821130, "est": 1905040, "eus": 1641190, "fin": 979418, "fra": 1376221, "frk": 5912963, "frm": 5147082, "glg": 1674938, "grc": 3012615, "heb": 1051501, "hin": 6590065, "hrv": 1926995, "hun": 3074473, "ind": 1874776, "isl": 1634041, "ita": 948593, "ita_old": 3436571, "jpn": 13507168, "kan": 4390317, "kor": 5353098, "lav": 1843944, "lit": 1779240, "mal": 5966263, "meme": 88453, "mkd": 1163087, "mlt": 1463001, "msa": 1665427, "nld": 1134708, "nor": 2191610, "osd": 4274649, "pol": 7024662, "por": 909359, "ron": 915680, "rus": 5969957, "slk-frak": 289885, "slk": 2217342, "slv": 1611338, "spa": 883170, "spa_old": 5647453, "sqi": 1667041, "srp": 1770244, "swa": 757916, "swe": 2451917, "tam": 3498763, "tel": 5795246, "tgl": 1496256, "tha": 3811136, "tur": 3563264, "ukr": 937566, "vie": 2195922}
 
 var pako = require('pako')
 
-var recognize = (function createTesseractInstance(){
+var T = (function createTesseractInstance(){
+
+	curindex = 0
 
 	var Module = Tesseract304({
 		TOTAL_MEMORY: 6*16777216, //must be a multiple of 10 megabytes
 		TesseractProgress: function(percent){
 			postMessage({
+				index: curindex,
 				'progress': {
 					'recognized': Math.max(0,(percent-30)/70)
 				}
@@ -29,7 +34,7 @@ var recognize = (function createTesseractInstance(){
 
 	var base = new Module.TessBaseAPI()
 	var loaded_langs = []
-	var loadLanguage = function(lang, cb){ // NodeJS style callback
+	var loadLanguage = function(lang, index, cb){ // NodeJS style callback
 		if(loaded_langs.indexOf(lang) != -1){
 			cb(null, lang)		
 		}
@@ -38,6 +43,7 @@ var recognize = (function createTesseractInstance(){
 
 			var downloadlang = function(shouldcache){
 				postMessage({
+					index: index,
 					'progress': {
 						'loaded_lang_model': 0,
 						cached: false,
@@ -50,8 +56,9 @@ var recognize = (function createTesseractInstance(){
 				xhr.onerror = function(){ cb(xhr, null) }
 				xhr.onprogress = function(e){
 					postMessage({
+						index: index,
 						'progress': {
-							'loaded_lang_model': e.loaded/filesizes[lang],
+							'loaded_lang_model': e.loaded/filesizes[lang], //this is kinda wrong on safari
 							cached: false
 						}
 					})
@@ -59,23 +66,40 @@ var recognize = (function createTesseractInstance(){
 				xhr.onload = function(){
 					if (xhr.status == 200 || (xhr.status == 0 && xhr.response)) {
 						postMessage({
+							index: index,
 							'progress': 'unzipping_lang_model'
 						})
 
 						var response = new Uint8Array(xhr.response)
 
-						var data = pako.inflate(response)
+						while(response[0] == 0x1f && response[1] == 0x8b){
+							response = pako.ungzip(response)
+						}
+						console.log('asdf')
+
 						postMessage({
-							'progress': 'unzipped_lang_model'
+							index: index,
+							'progress': {
+								'unzipped_lang_model': true,
+								'lang_model_size': response.length
+							}
 						})
 
-						Module.FS_createDataFile('tessdata', lang +".traineddata", data, true, false);
+						Module.FS_createDataFile('tessdata', lang +".traineddata", response, true, false);
 
 						if(shouldcache){
 							db.put(lang, response, function(err){
 								console.log('cached lang')
 							})
 						}
+
+						postMessage({
+							index: index,
+							'progress': {
+								'created_virtual_datafile': true,
+								'cached_file': shouldcache
+							}
+						})
 
 						loaded_langs.push(lang)
 
@@ -86,6 +110,7 @@ var recognize = (function createTesseractInstance(){
 			}
 
 			db.open({compression: false},function(err){
+				// err = true
 				if (err) {
 					downloadlang(false)
 				}
@@ -101,6 +126,7 @@ var recognize = (function createTesseractInstance(){
 							value = pako.inflate(value)
 
 							postMessage({
+								index: index,
 								'progress': {
 									loaded_lang_model:1,
 									cached: true
@@ -116,7 +142,6 @@ var recognize = (function createTesseractInstance(){
 			})
 		}
 	}
-
 
 	function circularize(page){
 	    page.paragraphs = []
@@ -175,18 +200,16 @@ var recognize = (function createTesseractInstance(){
 	    return page
 	}
 
-
-
 	function DumpLiterallyEverything(){
 			var ri = base.GetIterator();
 			var blocks = [];
 			var block, para, textline, word, symbol;
 
 			function enumToString(value, prefix){
-				return (Object.keys(Module)
-					.filter(function(e){ return e.startsWith(prefix + '_') })
-					.filter(function(e){ return Module[e] === value })
-					.map(function(e){ return e.slice(prefix.length + 1) })[0])
+			   return (Object.keys(Module)
+			       .filter(function(e){ return e.substr(0, prefix.length + 1) == prefix + '_' })
+			       .filter(function(e){ return Module[e] === value })
+			       .map(function(e){ return e.slice(prefix.length + 1) })[0])
 			}
 
 			ri.Begin()
@@ -327,7 +350,7 @@ var recognize = (function createTesseractInstance(){
 			}
 	}
 
-	function recognize(image, lang, options,cb){
+	function desaturate(image){
 		var width, height;
 		if(image.data){
 			var src       = image.data;
@@ -351,9 +374,19 @@ var recognize = (function createTesseractInstance(){
 		else {
 			throw 'Expected ImageData'
 		}
+		return image
+	}
+
+	function recognize(index, image, lang, options, cb){
+
+
+		var width = image.width, height = image.height;
+
+		image = desaturate(image)
+
 		var ptr = Module.allocate(image, 'i8', Module.ALLOC_NORMAL);
 		
-		loadLanguage(lang, function(err, result){
+		loadLanguage(lang, index, function(err, result){
 
 			if(err){
 				console.error("error loading", lang);
@@ -361,7 +394,18 @@ var recognize = (function createTesseractInstance(){
 				cb(err, null)
 			}
 			else {
+				curindex = index
+
 				base.Init(null, lang)
+
+				postMessage({
+					index: index,			
+					'progress': {
+						'initialized_with_lang': true,
+						'lang': lang
+					}
+				})
+
 				for (var option in options) {
 				    if (options.hasOwnProperty(option)) {
 				        base.SetVariable(option, options[option]);
@@ -390,11 +434,63 @@ var recognize = (function createTesseractInstance(){
 		})
 	}
 
-	return recognize
+	function detect(index, image, cb){
+		var width = image.width, height = image.height;
+		image = desaturate(image)
+
+		var ptr = Module.allocate(image, 'i8', Module.ALLOC_NORMAL);
+		console.log('allocated image')
+		// base = new Module.TessBaseAPI()
+
+		loadLanguage('osd', index, function(err, result){
+			if(err){
+				Module._free(ptr);
+				cb(err)
+			}
+			else {
+				curindex = index
+				base.Init(null, 'osd')
+				base.SetPageSegMode(Module.PSM_OSD_ONLY)
+				console.log('loaded language')
+				
+				base.SetImage(Module.wrapPointer(ptr), width, height, 1, width)
+				base.SetRectangle(0, 0, width, height)
+
+				// base.Recognize(0);
+
+				var results = new Module.OSResults();
+				var success = base.DetectOS(results);
+				console.log('detected os successfully', !!success);
+				var charset = results.get_unicharset()
+				results.print_scores()
+
+				var best = results.get_best_result()
+				var oid = best.get_orientation_id(),
+					sid = best.get_script_id();
+				console.log('orientation id', oid, [0, 270, 180, 90][oid], best.get_oconfidence())
+				console.log('script id', sid, charset.get_script_from_script_id(sid), best.get_sconfidence())
+				cb(null, 'wolo')
+				base.End();
+				Module._free(ptr);
+			}
+		})
+	}
+
+	return {
+		recognize: recognize,
+		detect: detect
+	}
 })()
 
 onmessage = function(e) {
-	recognize(e.data.image, e.data.lang, e.data.options, function(err, result){
-		postMessage({err:err, result: result})	
-	})
+	if(e.data.fun === 'recognize'){
+		T.recognize(e.data.index, e.data.image, e.data.lang, e.data.options, function(err, result){
+			postMessage({index: e.data.index, err:err, result: result})
+		})		
+	}
+	else if(e.data.fun === 'detect'){
+		T.detect(e.data.index, e.data.image, function(err, result){
+			postMessage({index: e.data.index, err:err, result: result})
+		})
+	}
 }
