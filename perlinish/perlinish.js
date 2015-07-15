@@ -1,21 +1,9 @@
-<html>
-<head>
-	<title></title>
-	<style type="text/css">
-		body {
-			margin: 0px
-		}
-	</style>
-</head>
-<body>
-<script type="text/javascript">
-
 var svg = (function(colors){
 	var canvas = document.createElement('canvas'),
 		ctx = canvas.getContext('2d');
 
 	canvas.width = 10
-	canvas.height = 5
+	canvas.height = 2
 	var upscale = 10
 
 	var im = ctx.getImageData(0,0,canvas.width,canvas.height)
@@ -54,37 +42,20 @@ var svg = (function(colors){
 		};
 
 		var n = i/4
-		ctx.fillStyle = 'rgba('+Math.min(mincolor[0]+n%2*20,255)+', '+mincolor[1]+', '+mincolor[2]+',1)'
 		var elem = document.createElementNS(xmlns, "rect");
-
 		elem.setAttributeNS(null,"x",n%im.width);
 		elem.setAttributeNS(null,"y",Math.floor(n/im.width));
 		elem.setAttributeNS(null,"width",1.5);
 		elem.setAttributeNS(null,"height",1.5);
-		elem.setAttributeNS(null,"fill", 'rgba('+Math.min(mincolor[0]+n%2*20,255)+', '+mincolor[1]+', '+mincolor[2]+',1)');
+		elem.setAttributeNS(null,"fill", 'rgba('+Math.min(mincolor[0]+0%2*20,255)+', '+mincolor[1]+', '+mincolor[2]+',1)');
 		 
 		svg.appendChild(elem);
 	};
 	return svg
-})([[39, 198, 249], [6, 188, 249], [116, 218, 251], [91, 211, 251]])
-
-document.body.appendChild(svg)
-// wrap.appendChild(svg)
-
-// document.body.style.backgroundImage = "url(data:image/svg+xml;utf8,"+wrap.innerHTML+")"
-// document.styleSheets[0].insertRule("body {background: url('data:image/svg+xml;utf8,"+wrap.innerHTML+"')}",0)
-
-// ctx.putImageData(im,0,0)
-// canvas.style.width = 2000
-// canvas.style.height = 2000
-
-// document.body.appendChild(canvas)
-
-
-
-
-
-</script>
-<!-- <script type="text/javascript" src="wolo.js"></script> -->
-</body>
-</html>
+})([
+[39, 198, 249],
+[6, 188, 249],
+// [154, 218, 198],
+[116, 218, 251],
+[91, 211, 251]])
+document.getElementById('marterial').appendChild(svg)

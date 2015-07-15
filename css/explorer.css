@@ -1,0 +1,92 @@
+#explorer {
+	max-width: 500px;
+	max-height: 500px;
+	white-space: nowrap;
+	overflow: scroll;
+	padding: 10px;
+
+	border: 1px solid #eee;
+	border-radius: 5px;
+	font-family: monospace;
+	
+}
+
+@media (max-width: 914px) {
+	#explorer {
+	margin: 8%;
+
+	}
+}
+
+.textNode {
+	display: inline-block;
+	max-width: 400px;
+	vertical-align: middle;
+	white-space: pre;
+	overflow: scroll;
+	margin-bottom: 1px;
+	margin-top: 1px;
+}
+
+.textNode {
+	background-color: rgb(255, 238, 174);
+	color: rgb(48, 48, 97);
+	padding: 2px;
+	border-radius: 3px;
+}
+
+.html {
+	background-color: #F5F5F5;
+}
+
+.comma, .ellipsis {
+	color: grey;
+}
+
+.nullNode {
+	color: grey;
+}
+
+.numberNode {
+	color: rgb(203, 48, 48);
+}
+
+.booleanNode {
+	color: rgb(174, 44, 164);
+}
+
+.label {
+	color: rgb(76, 162, 242);
+}
+
+.clickable {
+	cursor: pointer;
+}
+
+.indent {
+	padding-left: 30px;
+	display: inline-block;
+}
+
+
+/*.collapsed, .expanded {
+	position: relative;
+}
+*/
+/*.collapsed::before {
+  content: "▶";
+  position: absolute;
+  left: -16px;
+}
+
+.expanded::before {
+  content: "▼";
+  position: absolute;
+  left: -16px;
+}
+
+.swiper{
+	padding-left: 40px;
+	margin-top: 8px;
+}
+*/
