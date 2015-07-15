@@ -1,0 +1,1 @@
+browserify src/worker.js -o inter/worker.js
