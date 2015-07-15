@@ -1,4 +1,4 @@
-var Tesseract304 = require('tesseract')
+var Tesseract304 = require('tesseract.js-core')
 var leveljs = require('level-js')
 var db;
 if (typeof indexedDB === 'undefined'){
