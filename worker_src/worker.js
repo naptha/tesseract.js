@@ -1,3 +1,4 @@
+var Tesseract304 = require('tesseract')
 var leveljs = require('level-js')
 var db;
 if (typeof indexedDB === 'undefined'){
@@ -13,12 +14,14 @@ var filesizes = {"afr": 1079573, "ara": 1701536, "aze": 1420865, "bel": 1276820,
 
 var pako = require('pako')
 
-var T = (function createTesseractInstance(){
+var T;
+
+var tesseractinit = (function createTesseractInstance(memory){
 
 	curindex = 0
 
 	var Module = Tesseract304({
-		TOTAL_MEMORY: 6*16777216, //must be a multiple of 10 megabytes
+		TOTAL_MEMORY: memory, //must be a multiple of 10 megabytes
 		TesseractProgress: function(percent){
 			postMessage({
 				index: curindex,
@@ -341,7 +344,7 @@ var T = (function createTesseractInstance(){
 
 			return {
 				text: base.GetUTF8Text(),
-				html: base.GetHOCRText(),
+				html: deindent(base.GetHOCRText()),
 
 				confidence: base.MeanTextConf(),
 
@@ -351,6 +354,18 @@ var T = (function createTesseractInstance(){
 				oem: enumToString(base.oem(), 'OEM'),
 				version: base.Version(),
 			}
+	}
+
+	function deindent(html){
+		var lines = html.split('\n')
+		if(lines[0].substring(0,2) === "  "){
+			for (var i = 0; i < lines.length; i++) {
+				if (lines[i].substring(0,2) === "  ") {
+					lines[i] = lines[i].slice(2)
+				}
+			};
+		}
+		return lines.join('\n')
 	}
 
 	function desaturate(image){
@@ -413,8 +428,9 @@ var T = (function createTesseractInstance(){
 				    if (options.hasOwnProperty(option)) {
 				        base.SetVariable(option, options[option]);
 				        postMessage({
-							progress: {
-								set_variable: {
+							index: index,			
+							'progress': {
+								'set_variable': {
 									variable: option,
 									value: options[option]
 								}
@@ -485,7 +501,7 @@ var T = (function createTesseractInstance(){
 						orientation_degrees: [0, 270, 180, 90][oid],
 						orientation_confidence: best.get_oconfidence()
 					})
-					
+
 					base.End();
 					Module._free(ptr);
 				}
@@ -497,10 +513,14 @@ var T = (function createTesseractInstance(){
 		recognize: recognize,
 		detect: detect
 	}
-})()
+})
 
 onmessage = function(e) {
-	if(e.data.fun === 'recognize'){
+
+	if(e.data.init){
+		T = tesseractinit(e.data.init.mem)
+	}
+	else if(e.data.fun === 'recognize'){
 		T.recognize(e.data.index, e.data.image, e.data.lang, e.data.options, function(err, result){
 			postMessage({index: e.data.index, err:err, result: result})
 		})		
