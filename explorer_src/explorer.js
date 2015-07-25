@@ -66,7 +66,7 @@ class TextNode extends React.Component {
 		else{
 			return <span>
 				<span className={(html? "html " : "")+"textNode clickable"} onClick={toggleExpand} >{node.substring(0,30)}</span>
-				{node.length > 30 ? <span className="ellipsis">...</span> : ''}
+				{node.length > 30 ? <Ellipsis /> : ''}
 			</span>
 		}
 	}
@@ -95,7 +95,7 @@ class ListNode extends React.Component {
 				<br />
 				<span className="indent">
 				{array_join(node.map((e, i) => 
-					<Node node={e} />
+					<Node node={e} key={i}/>
 				),<Comma br/>)}
 				
 				</span>
@@ -122,7 +122,7 @@ class ObjectNode extends React.Component {
 				<br />
 				<span className="indent">
 				{array_join(Object.keys(node).map(
-					key => <Node node={node[key]} label={key} />
+					key => <Node node={node[key]} label={key} key={key}/>
 				),<Comma br/>)}
 				</span>
 				<br />

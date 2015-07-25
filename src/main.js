@@ -140,7 +140,7 @@ function builddemo(id, val){
 	sc.appendChild(scdiv)
 	scdiv.className = 'CodeMirror cm-s-default'
 	// scdiv.className = 'cm-s-default'
-	CodeMirror.runMode('<script src="https://cdn.rawgit.com/naptha/tesseract.js/master/lib/Tesseract.2015.07.25.v0.js"></script>', {name: 'xml', htmlMode: true}, scdiv)
+	CodeMirror.runMode('<script src="__tesseractjs__"></script>', {name: 'xml', htmlMode: true}, scdiv)
 
 	// var scripttag = CodeMirror(,{
 	// 	mode: {name: 'xml', htmlMode: true},

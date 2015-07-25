@@ -1,6 +1,4 @@
 #wow {
-	box-shadow: 0px 0px 20px 0px rgba(0,0,0,.2);
-	background-color: #fff;
 }
 
 #splash {
@@ -9,12 +7,13 @@
 }
 
 .desc {
-	color: #343E70;
 	/* text-shadow: 0px 0px 2px rgba(0, 131, 255, 0.53); */
 }
 
+.headernav {
+}
+
 .vr {
-	border-left: 1px solid #ddd;
 }
 
 /*.ellipsis {
@@ -27,101 +26,55 @@
 
 
 .getStarted {
-	display: inline-block;
-	background-color: #2CC7F9;
-	color: white;
-	font-size: 40px;
-	padding: 20px;
-	padding-left: 50px;
-	border-radius: 5px;
-	margin-top: 40;
-	padding-right: 50px;
-	cursor: pointer;
 }
 
 
 .npm {
-  background-color: rgb(255, 238, 174);
-  margin-bottom: 0px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border-left: 10px solid #303061;
-  color: rgb(48, 48, 97);
-  font-size: 19px;
-  font-family: monospace;
 }
 
 
 
 #marterial {
 	/*background: linear-gradient(#27C6F9 80%, #0CB5EB 100%);*/
-	background-color: #1E1D31;
-	background-image: url(../img/stars.jpeg);
-	background-size: cover;
-	background-position: bottom;
 	/*background-attachment: fixed;*/
 }
 .demoheader .CodeMirror {
-	background-color: rgb(243, 243, 243);
 }
 .runbutton {
-	color:  #27C6F9;
-	cursor: pointer;
-	-webkit-transition: all 0.7s ease;
-	transition: all 0.7s ease;
 }
 
-.runbutton:hover {
-	text-shadow: 0px 0px 10px #27C6F9;
-}
+
 
 .demo {
-	box-shadow: 0px 0px 20px -2px rgba(0,0,0,.2);
-	position: relative;
-	background-color: white;
+
 }
 
 .hint {
-	font-size: 10px;
-	color: #56607D;
+
 }
 
 body {
-	background-color: rgb(251, 251, 251);
 }
 
 hr {
-	border: none;
-	border-top: 1px solid #ddd;
-	margin:	0px;
+
 }
 
 a {
-	color: #6079D6;
 }
 
 .manyLanguages {
 	/*color: #C8D1F3;*/
-	opacity: .3;
 }
 
 button {
-	color: #FFF;
-	background: #5A4E60;
-	border-radius: 5px;
-	border: solid 1px #fff;
+
 }
 
 button:hover {
-	background: rgba(255,255,255,1);
-	border: solid 1px #ddd;
 }
 
 @media (max-width: 914px) {
-	button{
-		color: #fff;
-		background-color: rgba(0,0,0,0)	
-	}
 
 	button:hover {
 		background: rgba(255,255,255,.3);
@@ -133,13 +86,6 @@ button:hover {
 	  text-shadow: 0px 0px 3px rgba(58, 58, 58, 1);
 	}
 
-	.desc a {
-		color: #B8EEFF;
-	}
-	
-	.npm {
-		box-shadow: 0px 0px 20px 4px rgb(180, 146, 150);
-	}
 
 	/*#splash {
 		background-color: #27C6F9;

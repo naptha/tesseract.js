@@ -122,11 +122,7 @@ var TextNode = (function (_React$Component2) {
 						{ className: (html ? "html " : "") + "textNode clickable", onClick: toggleExpand },
 						node.substring(0, 30)
 					),
-					node.length > 30 ? React.createElement(
-						"span",
-						{ className: "ellipsis" },
-						"..."
-					) : ""
+					node.length > 30 ? React.createElement(Ellipsis, null) : ""
 				);
 			}
 		}
@@ -216,7 +212,7 @@ var ListNode = (function (_React$Component5) {
 						"span",
 						{ className: "indent" },
 						array_join(node.map(function (e, i) {
-							return React.createElement(Node, { node: e });
+							return React.createElement(Node, { node: e, key: i });
 						}), React.createElement(Comma, { br: true }))
 					),
 					React.createElement("br", null),
@@ -278,7 +274,7 @@ var ObjectNode = (function (_React$Component6) {
 						"span",
 						{ className: "indent" },
 						array_join(Object.keys(node).map(function (key) {
-							return React.createElement(Node, { node: node[key], label: key });
+							return React.createElement(Node, { node: node[key], label: key, key: key });
 						}), React.createElement(Comma, { br: true }))
 					),
 					React.createElement("br", null),
