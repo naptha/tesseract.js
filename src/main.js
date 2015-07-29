@@ -189,7 +189,7 @@ wow.run()
 
 var tabs = Array.prototype.slice.call(document.querySelectorAll('.langlabel'))
 var ltabs = Array.prototype.slice.call(document.querySelectorAll('.ltab'))
-var langs = ['eng', 'chi_sim', 'rus', 'tha']
+var langs = ['eng', 'chi_sim', 'rus', 'meme']
 
 function setlang(i){
     tabs.forEach(function(t){
