@@ -115,7 +115,7 @@ div.CodeMirror-overwrite div.CodeMirror-cursor {}
 .cm-s-default .cm-operator {}
 .cm-s-default .cm-variable-2 {color: #05a;}
 .cm-s-default .cm-variable-3 {color: #085;}
-.cm-s-default .cm-comment {color: #a50;}
+.cm-s-default .cm-comment {color: #DB0000;}
 .cm-s-default .cm-string {color: #5426C9;}
 .cm-s-default .cm-string-2 {color: #f50;}
 .cm-s-default .cm-meta {color: #555;}

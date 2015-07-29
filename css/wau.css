@@ -3,24 +3,93 @@
     width: 100%;
     min-height: 100%;
 }
+
+
+
+.stretch {
+    max-width: 100%
+}
+
+.langpair {
+    display: inline-block;
+    padding: -1px;
+    font-family: monospace;
+    text-align: center;
+    /*border: 1px solid #F3F3F3;*/
+    margin-bottom: 10px;
+    margin-right: 5px;
+    font-size: initial;
+    line-height: 1.5em;
+    flex-grow:1;
+}
+.footer {
+    width: 100%;
+    color: #fff;
+    margin-top: 8%;
+    background-color: #6A6A6A;
+    text-align: right;
+}
+.lengle {
+    margin-top: 8%;
+    margin-bottom: 8%;
+
+    line-height: normal;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.shortlang {
+    /*background-color: #FFEEAE;*/
+}
+
+.longlang {
+    background-color: #59C6FF;
+    color:#fff;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 3px;
+}
+.explorersection{
+    background-color: rgb(255, 238, 174);
+    width: 100%;
+    padding-top: 8%;
+    padding-bottom: 8%;
+}
+.noheight{
+    height: 0;
+}
+.columnwrap {
+    max-width: 1100;
+    margin-left: auto;
+    margin-right: auto;
+}
+.column {
+    padding-left: 8%;
+    padding-right: 8%;
+}
+.smalllogo {
+    height: 50px;
+    vertical-align: middle;
+    position: absolute;
+    left: 3%;
+    opacity: 0;
+}
 .stickyheader {
     position: fixed;
     width: 100%;
     z-index: 3;
-    height: 50px;
-    vertical-align: middle;
     text-align: right;
     line-height: 50px;
+    background-color: #00DB9D;
 }
 .headernav {
-    padding-right: 35px;
-    vertical-align: middle;
+    padding-right: 3%;
     color: #fff;
 }
 .run,
 .running {
     width: 100%;
-    height: 42px;
+    height: 47px;
     text-align: center;
 }
 .running {
@@ -63,10 +132,9 @@ a {
 svg {
     height: 100%
 }
-#marterial {
-    position: absolute;
+.marterial {
+    /*position: absolute;*/
     width: 100%;
-    height: 330px;
     z-index: -1;
     overflow: hidden;
     background-color: #00DB9D;
@@ -91,13 +159,15 @@ svg {
     flex-grow: 1;
     height: 40px;
     line-height: 40px;
+
+    cursor: pointer;
     color: #fff;
     background-color: #6A6A6A;
 }
 
 .selected {
 	background-color: #00DB9D;
-	font-weight: bold;
+	/*font-weight: bold;*/
 }
 
 .bookend {
@@ -115,6 +185,7 @@ svg {
     text-align: center;
     /*display:  flex*/
 }
+
 #wow .demofooter {
     display: flex;
     padding: 0px;
@@ -123,26 +194,40 @@ svg {
 }
 #logo {
     text-align: center;
-    padding-top: 70px;
+    margin-top: 8%;
+    margin-bottom: 8%;
     height: 182px;
+    position: relative;
+    /*z-index: 4;*/
 }
 .to_ocr {
     width: 100%;
 }
-#wow {
-    margin-top: 25px;
-}
+
 .demo {
     border-radius: 5px;
     width: 500px;
     max-width: 100%;
     text-align: left;
+    top:-50px;
 
     overflow: hidden;
-    box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, .2);
+    box-shadow: 0px 40px 60px 10px rgba(0, 0, 0, .2);
     position: relative;
     background-color: #f3f3f3;
+    opacity: 1;
+    -webkit-transition: .7s ease-out;
+       -moz-transition: .7s ease-out;
+        -ms-transition: .7s ease-out;
+         -o-transition: .7s ease-out;
+            transition: .7s ease-out;
 }
+
+/*.opaque {
+    top:-30;
+    box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, .2);
+}*/
+
 .demoheader {
     overflow: hidden;
     border-radius: 5px 5px 0px 0px;
@@ -156,10 +241,7 @@ svg {
     background-image: url(../img/logowhite.png);
     background-size: cover;
 }
-#splash {
-    text-align: center;
-    position: relative;
-}
+
 .desc {
     text-align: left;
     font-size: 18px;
@@ -168,7 +250,7 @@ svg {
 .vr {
     display: inline-block;
     height: 40px;
-    border-left: 1px solid #ddd;
+    border-left: 1px solid #5C5C5C;
 }
 .getStarted {
     display: inline-block;
@@ -182,13 +264,9 @@ svg {
     padding-right: 50px;
     cursor: pointer;
 }
-#notconvinced {
-    max-width: 960;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 8%;
-}
-.randombold {
+
+.randombold
+ {
     font-size: 18px;
     /*font-family: Georgia;*/
     
@@ -202,11 +280,12 @@ svg {
 .npm {
     margin-top: 20px;
     padding-left: 15px;
-    background-color: rgb(255, 238, 174);
+    background-color: #F3F3F3;
+    border-radius: 5px;
     margin-bottom: 0px;
     padding-top: 10px;
     padding-bottom: 10px;
-    border-left: 10px solid #303061;
+    border-left: 6px solid #303061;
     color: rgb(48, 48, 97);
     font-size: 19px;
     font-family: monospace;
@@ -220,9 +299,9 @@ svg {
     text-align: center;
     width: 335px;
     border-radius: 5px;
-    margin-right: 40px;
-    margin-left: 40px;
-    margin-top: 120px;
+    margin-top: 80px;
+    margin-bottom: 80px;
+    max-width: 100%;
 }
 .woloasdf {
     padding-top: 8%;
@@ -241,13 +320,10 @@ svg {
     width: 100%;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: space-between;
     max-width: 1100px;
     margin-left: auto;
     margin-right: auto;
-}
-#two {
-    margin-bottom: 8%;
 }
 .demoheader .CodeMirror {
     padding-bottom: 9px;
@@ -260,13 +336,13 @@ hr {
     border-top: 1px solid #ddd;
     margin: 0px;
 }
-#ocroutput {
+.ocroutput {
     position: relative;
+    z-index: 2;
 }
-.manyLanguages {
-    font-size: 7px;
-    padding-top: 10px;
-    opacity: .3;
+.manylangs{
+    display: flex;
+    flex-wrap: wrap;
 }
 body {
     padding: 0px;
@@ -296,31 +372,35 @@ button:hover {
     background: rgba(255, 255, 255, 1);
     border: solid 1px #ddd;
 }
-@media (max-width: 914px) {
+@media (max-width: 1015px) {
     button {
         color: #fff;
         background-color: rgba(0, 0, 0, 0)
     }
-    .desc {
+/*    .desc {
         color: #FFFFFF;
         text-shadow: 0px 0px 3px rgba(58, 58, 58, 1);
     }
     .desc a {
-        color: #B8EEFF;
+        color: #FFEEAE;
     }
-    .npm {
-        box-shadow: 0px 0px 20px 4px rgb(180, 146, 150);
+*/
+    .getStarted {
+        font-size: 33px;
     }
-    #logo {
-        padding-top: 8%;
+    .noheight {
         height: auto;
     }
-    #marterial {
-        height: 100%;
-    }
     .demo {
-        margin-right: 8%;
-        margin-left: 8%;
+        top:0;
+        margin-bottom: 20px;
+        box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, .2);
+    }
+    #logo {
+        height: auto;
+    }
+    .two {
+        justify-content: space-around;
     }
     #code {
         margin-top: 20px;

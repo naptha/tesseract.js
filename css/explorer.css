@@ -1,22 +1,14 @@
 #explorer {
-	max-width: 500px;
 	max-height: 500px;
 	white-space: nowrap;
 	overflow: scroll;
 	padding: 10px;
-
-	border: 1px solid #eee;
+	/*border: 1px solid #eee;*/
 	border-radius: 5px;
 	font-family: monospace;
-	
+	background-color: #fff;
 }
 
-@media (max-width: 914px) {
-	#explorer {
-	margin: 8%;
-
-	}
-}
 
 .textNode {
 	display: inline-block;

@@ -12,170 +12,125 @@
 
 	<script src="explorer/react.js"></script>
 
-	<link href='http://fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet' type='text/css'>
+	<!-- <link href='http://fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet' type='text/css'> -->
 
 </head>
 <body>
 	<!-- <a href="https://github.com/naptha/tesseract.js" class="fork"><img id="fork" src="img/fork.png" alt="Fork me on GitHub"></a> -->
 	
+
+
+ 	
+	<div class ="marterial">
 	<div class="stickyheader">
-		<a class="headernav" href="#docs">Documentation</a>
+		<a href="#"><img src="img/logowhite.png" class="smalllogo"></a>
+		<a class="headernav" href="#docs">Docs</a>
 		<a class="headernav" href="https://github.com/naptha/tesseract.js">GitHub</a>
 	</div>
-
- 	<div id="splash" class="fullscreen">
-		<div id ="marterial" class="header"></div>
- 		
-		<div id="logo" class="header">
-			<canvas id="canvas"></canvas>
-		</div>
-
-		<div id="two" class="two">
-
-			<div id="code">
-				<div id="d1desc" class="desc">
-					Tesseract.js is a <b>pure javascript</b> version of the <b><a href="https://github.com/tesseract-ocr/Tesseract">Tesseract OCR Engine</a>
-				</b> that can recognize 
-					 <a href="#eng">English</a>,
-					 <a href="#chi_sim">Chinese</a>,
-					 <a href="#rus">Russian</a>,
-					 <a href="#tha">Meme</a>, and <a>60 other languages</a>.
-					 <!-- <div class="manyLanguages">
-					 (and
-					 <a href="#deu">German</a>,
-					 <a href="#jpn">Japanese</a>,
-					 <a href="#spa">Spanish</a>,
-					 <a href="#fra">French</a>,
-					 <a href="#chi_tra">Traditional Chinese</a>,
-					 <a href="#por">Portuguese</a>,
-					 <a href="#ita">Italian</a>,
-					 <a href="#pol">Polish</a>,
-					 <a href="#tur">Turkish</a>,
-					 <a href="#nld">Dutch</a>,
-					 <a href="#ara">Arabic</a>,
-					 <a href="#ces">Czech</a>,
-					 <a href="#kor">Korean</a>,
-					 <a href="#swe">Swedish</a>,
-					 <a href="#vie">Vietnamese</a>,
-					 <a href="#ron">Romanian</a>,
-					 <a href="#ell">Greek</a>,
-					 <a href="#ind">Indonesian</a>,
-					 <a href="#hun">Hungarian</a>,
-					 <a href="#dan">Danish</a>,
-					 <a href="#bul">Bulgarian</a>,
-					 <a href="#fin">Finnish</a>,
-					 <a href="#nor">Norwegian</a>,
-					 <a href="#ukr">Ukrainian</a>,
-					 <a href="#cat">Catalan</a>,
-					 <a href="#hrv">Croatian</a>,
-					 <a href="#heb">Hebrew</a>,
-					 <a href="#lit">Lithuanian</a>,
-					 <a href="#slv">Slovenian</a>,
-					 <a href="#hin">Hindi</a>,
-					 <a href="#ben">Bengali</a>,
-					 <a href="#tel">Telugu</a>,
-					 <a href="#tam">Tamil</a>,
-					 <a href="#kan">Kannada</a>,
-					 <a href="#mal">Malayalam</a>,
-					 <a href="#tgl">Tagalog</a>,
-					 <a href="#swa">Swahili</a>,
-					 <a href="#aze">Azerbaijani</a>,
-					 <a href="#bel">Belarusian</a>,
-					 <a href="#afr">Afrikaans</a>,
-					 <a href="#sqi">Albanian</a>,
-					 <a href="#eus">Basque</a>,
-					 <a href="#epo">Esperanto</a>,
-					 <a href="#est">Estonian</a>,
-					 <a href="#glg">Galician</a>,
-					 <a href="#isl">Icelandic</a>,
-					 <a href="#lav">Latvian</a>,
-					 <a href="#mkd">Macedonian</a>,
-					 <a href="#msa">Malay</a>,
-					 <a href="#mlt">Maltese</a>,
-					 <a href="#grc">Ancient Greek</a>,
-					 <a href="#chr">Cherokee</a>,
-					 <a href="#enm">English (Old)</a>,
-					 <a href="#epo_alt">Esperanto alternative</a>,
-					 <a href="#frk">Frankish</a>,
-					 <a href="#frm">French (Old)</a>,
-					 <a href="#ita_old">Italian (Old)</a>,
-					 <a href="#equ">Math</a>,
-					 <a href="#srp">Serbian (Latin)</a>,
-					 <a href="#slk">Slovakian</a>,
-					 and
-					 <a href="#spa_old">Old Spanish!</a>)</div> -->
-
-				</div>
-				<a href="#get_started">
-					<div class="getStarted">
-						Get Started
-					</div>
-				</a>
-
-			</div>
-
-			<div id="wow" class="demo">
-				<div class="demoheader">
-				</div>
-				<hr>
-				<div class="editor"></div>
-				<div class="hint">
-						Hint: you can, like, edit this code yo
-				</div>
-				<div class="running">
-					<div class="out">Initializing Magic...</div>
-					<progress class="prog" value="0" max="1"></progress>
-				</div>
-				<div class="notrunning">
-					<div class="runbutton">Run Code</div>
-				</div>
-
-				<canvas class="display"></canvas>
-
-				<img src="img/poem.png" class="to_ocr">
-				<div class="demofooter">
-					<div class="bookend"></div>
-					<div class="langlabel selected">English </div><div class="vr"></div>
-					<div class="langlabel">Chinese</div> <div class="vr"></div>
-					<div class="langlabel">Russian</div> <div class="vr"></div>
-					<div class="langlabel">Meme</div> <div class="bookend"></div>
-				</div>
-			</div>
-
-		</div>
+	<div id="logo" class="header">
+		<canvas id="canvas"></canvas>
+	</div>
 
 	</div>
+		
+
+
+	<div class='columnwrap'>
+		<div class='column'>
+			<div class="two">
+				<div class="stretch">
+					<div id="code">
+						<div id="d1desc" class="desc">
+							Tesseract.js is a <b>pure javascript</b> version of the <b><a href="https://github.com/tesseract-ocr/Tesseract">Tesseract OCR Engine</a>
+						</b> that can recognize 
+							 <a class="ltab" href="#eng">English</a>,
+							 <a class="ltab" href="#chi_sim">Chinese</a>,
+							 <a class="ltab" href="#rus">Russian</a>,
+							 <a class="ltab" href="#tha">Meme</a>, and <a href="#langs">60 other languages</a>.
+
+
+						</div>
+						<a href="#get_started">
+							<div class="getStarted">
+								Get Started
+							</div>
+						</a>
+					</div>
+				</div>
+				<div class="stretch noheight">
+					<div id="wow" class="demo">
+						<div class="demoheader">
+						</div>
+						<hr>
+						<div class="editor"></div>
+						<div class="hint">
+								Hint: you can, like, edit this code yo
+						</div>
+						<div class="running">
+							<div class="out">Initializing Magic...</div>
+							<progress class="prog" value="0" max="1"></progress>
+						</div>
+						<div class="notrunning">
+							<div class="runbutton">Run Code</div>
+						</div>
+
+						<div class='ocroutput'></div>
+						<canvas class="display"></canvas>
+
+						<img src="img/eng.png" class="to_ocr">
+						<div class="demofooter">
+							<div class="bookend"></div>
+							<div class="langlabel selected">English </div><div class="vr"></div>
+							<div class="langlabel">Chinese</div> <div class="vr"></div>
+							<div class="langlabel">Russian</div> <div class="vr"></div>
+							<div class="langlabel">Meme</div> <div class="bookend"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
 <!-- 	<div class="fullscreen">
 	</div>
- --><div class="fullscreen">
-		<div class="two">
 
+ -->
+<div class="explorersection">
+ <div class="columnwrap">
+		<div class="column">
+
+
+<!-- 
+			<div>
+				click stuff to explore the rich creamy Tesseract.js output
+ 			</div> -->
 			<div id="explorer">The output of the demo will magically appear here :)</div>
 
-
-			<div class="desc">
-				click stuff to explore the rich creamy Tesseract.js output
- 			</div>
 		</div>
 
 	</div>
-	<div id="notconvinced" class="fullscreen">
-
-
-		<div id="get_started">
-			<div class="npm" >npm install tesseract.js</div>
-		<!-- <br> -->
-		<!-- &#151; or &#151; -->
-			<div class="npm longasstag">&lt;script src="https://cdn.rawgit.com/naptha/tesseract.js/master/lib/Tesseract.2015.07.25.v0.js"&gt;&lt;/script&gt;</div>
-		</div>
+</div>
+	<div  class="columnwrap">
 
 <!-- (and German, Japanese, Spanish, French, Traditional Chinese, Portuguese, Italian, Polish, Turkish, Dutch, Arabic, Czech, Korean, Swedish, Vietnamese, Romanian, Greek, Indonesian, Hungarian, Danish, Bulgarian, Finnish, Norwegian, Ukrainian, Catalan, Croatian, Hebrew, Lithuanian, Slovenian, Hindi, Bengali, Telugu, Tamil, Kannada, Malayalam, Tagalog, Swahili, Azerbaijani, Belarusian, Afrikaans, Albanian, Basque, Esperanto, Estonian, Galician, Icelandic, Latvian, Macedonian, Malay, Maltese, Ancient Greek, Cherokee, English (Old), Esperanto alternative, Frankish, French (Old), Italian (Old), Math, Serbian (Latin), Slovakian, and Old Spanish!) -->
 
 
-		<div class="rant randombold">
-		"Last time I got here, before I <b>even</b> arrived, they had ‘fuck <b>Kanye’</b> on the motherfuckin’ <b>port-a-potties.</b> But this year, we gon’ piss on ‘em, on they motherfuckin’ port-a-potties. How many of <b>y'all</b> don't give a fuck about <b>what</b> the press <b>say?</b> It's 2014. College Dropout came out 2004. I want y'all to know, <b>every</b> time I go to the studio, every time I <b>do</b> <b>an</b> <b>interview,</b> every time I make a motherfuckin' <b>t-shirt,</b> the thing <b>I</b> do, I give it <b>everything</b> <b>I</b> got. And when I talk that shit, it's so that <b>you</b> can talk that shit. If you a fan of me, you a fan of your motherfuckin' self. You can do something that'll change the world. Look at how they try to make me look. They <b>try</b> to make me look crazy.",
-        <b></b>    "I <b>need</b> a new cool. <b>What's</b> the new shit out? What's the new shit <b>out</b> <b>with</b> the most commercials at the Super Bowl? <b>Let's</b> <b>just</b> stop the music and play a Bruno Mars song right <b>now,</b> how about that? <b>They</b> told me I would never play at the Super Bowl. They told me I could never play at the Super Bowl. Not until I'm <b>super</b> old. Not until I'm <b>super</b> old... They told me I would never play at the <b>Super</b> Bowl. They told <b>me</b> I would never play at the <b>Super</b> <b>Bowl,</b> at least not until I'm super old. So I think it's time&#150hold up, f&#151k that toast.",
-         <b></b>   "I know people get mad at me when I compare myself, but that's the only way I <b>can</b> explain what <b>my</b> aspirations are. When I'm talkin' 'bout Walt Disney, when I'm talkin' 'bout Howard Hughes, when I'm talkin' 'bout Henry Ford, when I'm talkin' 'bout Beethoven, when I talk about <b>Mozart,</b> when I talk about Shakespeare, and they all had their time on this earth. And I'm only 37. And right now I'm rockin' to 90,000, of y'all motherfuckers <b>right</b> now. So I ain't goin' at anybody on the radio. I'm goin' <b>after</b> Shakespeare. I'm <b>goin'</b> after <b>Walt</b> Disney. I'm <b>going</b> after <b>Howard</b> Hughes. I'm going after David Stern. I'm goin' <b>after</b> Henry Ford. I'm going <b>after</b> Elon Musk. Okay, he is living, but he's my boy.",
+		<div class="column randombold">
+			<h1 id="docs">Such Docs</h1>
+			<h2 id="get_started">Installation</h2>
+			<div class="npm" >npm install tesseract.js</div>
+		
+			<div class="npm longasstag">&lt;script src="https://cdn.rawgit.com/naptha/tesseract.js/master/lib/Tesseract.2015.07.26.js"&gt;&lt;/script&gt;</div>
+			<h2>Methods</h2>
+			<h3>Tesseract.recognize( img [, callback(err,result)] )</h3>
+			Go Kevin! You can write this!
+			<h3>Tesseract.detect( img [, callback(err,result)] )</h3>
+			Go Kevin! You can write this!
+			<h2 id="langs">Supported Languages</h2>
+	<div class='manylangs'>
+<div class="langpair"><div class="shortlang">eng</div><div class="longlang">Enlish</div></div><div class="langpair"><div class="shortlang">chi_sim</div><div class="longlang">Chinese</div></div><div class="langpair"><div class="shortlang">rus</div><div class="longlang">Rusian</div></div><div class="langpair"><div class="shortlang">tha</div><div class="longlang">Meme</div></div><div class="langpair"><div class="shortlang">deu</div><div class="longlang">German</div></div><div class="langpair"><div class="shortlang">jpn</div><div class="longlang">Japanese</div></div><div class="langpair"><div class="shortlang">spa</div><div class="longlang">Spanish</div></div><div class="langpair"><div class="shortlang">fra</div><div class="longlang">French</div></div><div class="langpair"><div class="shortlang">chi_tra</div><div class="longlang">Traditional Chinese</div></div><div class="langpair"><div class="shortlang">por</div><div class="longlang">Portuguese</div></div><div class="langpair"><div class="shortlang">ita</div><div class="longlang">Italian</div></div><div class="langpair"><div class="shortlang">pol</div><div class="longlang">Polish</div></div><div class="langpair"><div class="shortlang">tur</div><div class="longlang">Turkish</div></div><div class="langpair"><div class="shortlang">nld</div><div class="longlang">Dutch</div></div><div class="langpair"><div class="shortlang">ara</div><div class="longlang">Arabic</div></div><div class="langpair"><div class="shortlang">ces</div><div class="longlang">Czech</div></div><div class="langpair"><div class="shortlang">kor</div><div class="longlang">Korean</div></div><div class="langpair"><div class="shortlang">swe</div><div class="longlang">Swedish</div></div><div class="langpair"><div class="shortlang">vie</div><div class="longlang">Vietnamese</div></div><div class="langpair"><div class="shortlang">ron</div><div class="longlang">Romanian</div></div><div class="langpair"><div class="shortlang">ell</div><div class="longlang">Greek</div></div><div class="langpair"><div class="shortlang">ind</div><div class="longlang">Indonesian</div></div><div class="langpair"><div class="shortlang">hun</div><div class="longlang">Hungarian</div></div><div class="langpair"><div class="shortlang">dan</div><div class="longlang">Danish</div></div><div class="langpair"><div class="shortlang">bul</div><div class="longlang">Bulgarian</div></div><div class="langpair"><div class="shortlang">fin</div><div class="longlang">Finnish</div></div><div class="langpair"><div class="shortlang">nor</div><div class="longlang">Norwegian</div></div><div class="langpair"><div class="shortlang">ukr</div><div class="longlang">Ukrainian</div></div><div class="langpair"><div class="shortlang">cat</div><div class="longlang">Catalan</div></div><div class="langpair"><div class="shortlang">hrv</div><div class="longlang">Croatian</div></div><div class="langpair"><div class="shortlang">heb</div><div class="longlang">Hebrew</div></div><div class="langpair"><div class="shortlang">lit</div><div class="longlang">Lithuanian</div></div><div class="langpair"><div class="shortlang">slv</div><div class="longlang">Slovenian</div></div><div class="langpair"><div class="shortlang">hin</div><div class="longlang">Hindi</div></div><div class="langpair"><div class="shortlang">ben</div><div class="longlang">Bengali</div></div><div class="langpair"><div class="shortlang">tel</div><div class="longlang">Telugu</div></div><div class="langpair"><div class="shortlang">tam</div><div class="longlang">Tamil</div></div><div class="langpair"><div class="shortlang">kan</div><div class="longlang">Kannada</div></div><div class="langpair"><div class="shortlang">mal</div><div class="longlang">Malayalam</div></div><div class="langpair"><div class="shortlang">tgl</div><div class="longlang">Tagalog</div></div><div class="langpair"><div class="shortlang">swa</div><div class="longlang">Swahili</div></div><div class="langpair"><div class="shortlang">aze</div><div class="longlang">Azerbaijani</div></div><div class="langpair"><div class="shortlang">bel</div><div class="longlang">Belarusian</div></div><div class="langpair"><div class="shortlang">afr</div><div class="longlang">Afrikaans</div></div><div class="langpair"><div class="shortlang">sqi</div><div class="longlang">Albanian</div></div><div class="langpair"><div class="shortlang">eus</div><div class="longlang">Basque</div></div><div class="langpair"><div class="shortlang">epo</div><div class="longlang">Esperanto</div></div><div class="langpair"><div class="shortlang">est</div><div class="longlang">Estonian</div></div><div class="langpair"><div class="shortlang">glg</div><div class="longlang">Galician</div></div><div class="langpair"><div class="shortlang">isl</div><div class="longlang">Icelandic</div></div><div class="langpair"><div class="shortlang">lav</div><div class="longlang">Latvian</div></div><div class="langpair"><div class="shortlang">mkd</div><div class="longlang">Macedonian</div></div><div class="langpair"><div class="shortlang">msa</div><div class="longlang">Malay</div></div><div class="langpair"><div class="shortlang">mlt</div><div class="longlang">Maltese</div></div><div class="langpair"><div class="shortlang">grc</div><div class="longlang">Ancient Greek</div></div><div class="langpair"><div class="shortlang">chr</div><div class="longlang">Cherokee</div></div><div class="langpair"><div class="shortlang">enm</div><div class="longlang">English (Old)</div></div><div class="langpair"><div class="shortlang">epo_alt</div><div class="longlang">Esperanto alternative</div></div><div class="langpair"><div class="shortlang">frk</div><div class="longlang">Frankish</div></div><div class="langpair"><div class="shortlang">frm</div><div class="longlang">French (Old)</div></div><div class="langpair"><div class="shortlang">ita_old</div><div class="longlang">Italian (Old)</div></div><div class="langpair"><div class="shortlang">equ</div><div class="longlang">Math</div></div><div class="langpair"><div class="shortlang">srp</div><div class="longlang">Serbian (Latin)</div></div><div class="langpair"><div class="shortlang">slk</div><div class="longlang">Slovakian</div></div><div class="langpair"><div class="shortlang">spa_old</div><div class="longlang">Old Spanish</div></div>
+</div>
 
 		</div>
 	</div>
@@ -183,15 +138,22 @@
 <!-- 
 	<script src="https://rawgit.com/naptha/tesseract.js/master/lib/Tesseract.js"></script>
  -->
+<div class='footer'>
+	<div class="columnwrap">
+		<div class="column">
+			<span class="lengle">“Speaking of ways, pet, by the way, <b>there is such a thing as a tesseract</b>.” </span>
+		</div>
+	</div>
+</div>
 
- 	<script src="https://cdn.rawgit.com/naptha/tesseract.js/master/lib/Tesseract.2015.07.25.v0.js"></script>
+ 	<script src="https://cdn.rawgit.com/naptha/tesseract.js/master/lib/Tesseract.2015.07.26.js"></script>
 
 	<script src="main.js"></script>
 
 	<script src="animation/raf.js"></script>
 	<script src="animation/mouse.js"></script>
 	<script src="animation/dimensions.js"></script>
-	<script src="animation/main.js"></script>
+	<script src="animation/animate.js"></script>
 
 	<script src="explorer/explorer.js"></script>
 </body>
