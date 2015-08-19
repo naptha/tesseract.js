@@ -6,7 +6,7 @@ var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_ag
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 function array_join(array, glue) {
 	var new_array = [];
@@ -18,6 +18,8 @@ function array_join(array, glue) {
 }
 
 var Node = (function (_React$Component) {
+	_inherits(Node, _React$Component);
+
 	function Node(props) {
 		var _this = this;
 
@@ -33,8 +35,6 @@ var Node = (function (_React$Component) {
 			expanded: props.expanded
 		};
 	}
-
-	_inherits(Node, _React$Component);
 
 	_createClass(Node, [{
 		key: "render",
@@ -79,13 +79,13 @@ var Node = (function (_React$Component) {
 })(React.Component);
 
 var TextNode = (function (_React$Component2) {
+	_inherits(TextNode, _React$Component2);
+
 	function TextNode() {
 		_classCallCheck(this, TextNode);
 
 		_get(Object.getPrototypeOf(TextNode.prototype), "constructor", this).apply(this, arguments);
 	}
-
-	_inherits(TextNode, _React$Component2);
 
 	_createClass(TextNode, [{
 		key: "render",
@@ -100,7 +100,7 @@ var TextNode = (function (_React$Component2) {
 				var content = node;
 				if (html) {
 					var content = [];
-					CodeMirror.runMode(node, { name: "xml", htmlMode: true }, function (text, className) {
+					CodeMirror.runMode(node, { name: 'xml', htmlMode: true }, function (text, className) {
 						content.push(React.createElement(
 							"span",
 							{ className: "cm-" + className },
@@ -122,7 +122,7 @@ var TextNode = (function (_React$Component2) {
 						{ className: (html ? "html " : "") + "textNode clickable", onClick: toggleExpand },
 						node.substring(0, 30)
 					),
-					node.length > 30 ? React.createElement(Ellipsis, null) : ""
+					node.length > 30 ? React.createElement(Ellipsis, null) : ''
 				);
 			}
 		}
@@ -132,13 +132,13 @@ var TextNode = (function (_React$Component2) {
 })(React.Component);
 
 var BooleanNode = (function (_React$Component3) {
+	_inherits(BooleanNode, _React$Component3);
+
 	function BooleanNode() {
 		_classCallCheck(this, BooleanNode);
 
 		_get(Object.getPrototypeOf(BooleanNode.prototype), "constructor", this).apply(this, arguments);
 	}
-
-	_inherits(BooleanNode, _React$Component3);
 
 	_createClass(BooleanNode, [{
 		key: "render",
@@ -157,13 +157,13 @@ var BooleanNode = (function (_React$Component3) {
 })(React.Component);
 
 var NumberNode = (function (_React$Component4) {
+	_inherits(NumberNode, _React$Component4);
+
 	function NumberNode() {
 		_classCallCheck(this, NumberNode);
 
 		_get(Object.getPrototypeOf(NumberNode.prototype), "constructor", this).apply(this, arguments);
 	}
-
-	_inherits(NumberNode, _React$Component4);
 
 	_createClass(NumberNode, [{
 		key: "render",
@@ -182,13 +182,13 @@ var NumberNode = (function (_React$Component4) {
 })(React.Component);
 
 var ListNode = (function (_React$Component5) {
+	_inherits(ListNode, _React$Component5);
+
 	function ListNode() {
 		_classCallCheck(this, ListNode);
 
 		_get(Object.getPrototypeOf(ListNode.prototype), "constructor", this).apply(this, arguments);
 	}
-
-	_inherits(ListNode, _React$Component5);
 
 	_createClass(ListNode, [{
 		key: "render",
@@ -238,13 +238,13 @@ var ListNode = (function (_React$Component5) {
 })(React.Component);
 
 var ObjectNode = (function (_React$Component6) {
+	_inherits(ObjectNode, _React$Component6);
+
 	function ObjectNode() {
 		_classCallCheck(this, ObjectNode);
 
 		_get(Object.getPrototypeOf(ObjectNode.prototype), "constructor", this).apply(this, arguments);
 	}
-
-	_inherits(ObjectNode, _React$Component6);
 
 	_createClass(ObjectNode, [{
 		key: "render",
@@ -303,7 +303,7 @@ var ObjectNode = (function (_React$Component6) {
 					{ className: "objectNode clickable", onClick: toggleExpand },
 					"{",
 					contents,
-					toolong ? React.createElement(Ellipsis, null) : "",
+					toolong ? React.createElement(Ellipsis, null) : '',
 					"}"
 				);
 			}
@@ -314,13 +314,13 @@ var ObjectNode = (function (_React$Component6) {
 })(React.Component);
 
 var Comma = (function (_React$Component7) {
+	_inherits(Comma, _React$Component7);
+
 	function Comma() {
 		_classCallCheck(this, Comma);
 
 		_get(Object.getPrototypeOf(Comma.prototype), "constructor", this).apply(this, arguments);
 	}
-
-	_inherits(Comma, _React$Component7);
 
 	_createClass(Comma, [{
 		key: "render",
@@ -331,7 +331,7 @@ var Comma = (function (_React$Component7) {
 				"span",
 				{ className: "comma" },
 				", ",
-				br ? React.createElement("br", null) : ""
+				br ? React.createElement("br", null) : ''
 			);
 		}
 	}]);
@@ -340,13 +340,13 @@ var Comma = (function (_React$Component7) {
 })(React.Component);
 
 var Ellipsis = (function (_React$Component8) {
+	_inherits(Ellipsis, _React$Component8);
+
 	function Ellipsis() {
 		_classCallCheck(this, Ellipsis);
 
 		_get(Object.getPrototypeOf(Ellipsis.prototype), "constructor", this).apply(this, arguments);
 	}
-
-	_inherits(Ellipsis, _React$Component8);
 
 	_createClass(Ellipsis, [{
 		key: "render",
@@ -387,7 +387,6 @@ var simplething = {
 			}
 		}
 	}
-}
+};
 
 // React.render(<Node node={simplething} />, document.getElementById('explorer'))
-;

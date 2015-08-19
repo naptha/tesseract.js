@@ -39,6 +39,10 @@
     vertical-align: middle;
 }
 
+.lengle img {
+    height: .7em;
+}
+
 .shortlang {
     /*background-color: #FFEEAE;*/
 }
@@ -76,12 +80,11 @@
     opacity: 0;
 }
 .stickyheader {
-    position: fixed;
+    position: absolute;
     width: 100%;
     z-index: 3;
     text-align: right;
     line-height: 50px;
-    background-color: #00DB9D;
 }
 .headernav {
     padding-right: 3%;
@@ -92,6 +95,7 @@
     width: 100%;
     height: 47px;
     text-align: center;
+    position: relative;
 }
 .running {
     display: none
@@ -176,10 +180,17 @@ svg {
     display: inline-block;
 }
 .prog {
-    width: 400px;
-    max-width: 100%;
-    position: relative;
+    height: 4px;
+    width: 100%;
+    position: absolute;
+    bottom:0;
+    background-color: #6a6a6a;
 }
+.prog div{
+    height: 100%;
+    background-color: #00DB9D;
+}
+
 .demofooter {
     padding: 10px;
     /*padding-top: 0px;*/
@@ -199,8 +210,8 @@ svg {
 }
 #logo {
     text-align: center;
-    margin-top: 8%;
-    margin-bottom: 8%;
+    margin-top: 6%;
+    margin-bottom: 6%;
     height: 182px;
     position: relative;
     /*z-index: 4;*/
@@ -243,9 +254,10 @@ svg {
     margin-right: auto;
     pointer-events: none;
     z-index: 0;
-    background-image: url(../img/logowhite.png);
+    position: absolute;
+/*    background-image: url(../img/logowhite.png);
     background-size: cover;
-}
+*/}
 
 .desc {
     text-align: left;

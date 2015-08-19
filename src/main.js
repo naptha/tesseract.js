@@ -11,15 +11,20 @@ function builddemo(id, val){
     demo.querySelector('.runbutton').onclick = function(){
         setrunning(0)
         run(editor)
+        editor.clear()
+        prog.setValue(0)
+    }
+
+    prog.setValue = function(v){
+        prog.querySelector('div').style.width = v*100+'%'
     }
 
     function show_progress(p){
 
         setrunning(0)
         console.log(p)
-        if(p.loaded_lang_model) prog.value = p.loaded_lang_model
-        if(p.recognized) prog.value = p.recognized
-        out.innerText = JSON.stringify(p)
+        if(p.loaded_lang_model) prog.setValue(p.loaded_lang_model)
+        if(p.recognized) prog.setValue(p.recognized)
         out.innerText = JSON.stringify(p)
 
     }
@@ -84,6 +89,7 @@ function builddemo(id, val){
             times++
             // dctx.fillStyle="rgba(30, 29, 49, .8)"
             dctx.fillStyle="rgba(0, 219, 157, "+Math.min(i/100,1)+")"
+            // dctx.fillStyle="rgba(0, 219, 199, "+Math.min(i/100,1)+")"
             // dctx.globalAlpha = .1;
             dctx.clearRect(0,0,disp.width, disp.height)
             dctx.fillRect(0,0,disp.width, disp.height)
@@ -97,7 +103,7 @@ function builddemo(id, val){
             if(i<maxtimes){
                 setTimeout(function(){
                     draw(i+1)
-                },10)                   
+                },10)
             }
             else{
                 console.log('done')
@@ -166,6 +172,7 @@ function builddemo(id, val){
         } else{
             editor.img.onload = function(){
                 run(editor)
+                editor.img.onload = function(){}
             }
         }
     }
@@ -178,11 +185,12 @@ setTimeout(function(){
 }, 100) 
 
 var wow = builddemo('wow', 
-"var img = demo.querySelector('img.to_ocr')\n\n\
-Tesseract\n\
-  .recognize( img, {\n\
-    progress: show_progress} )\n\
-  .then( display ) // scroll down for full output ")
+"var img = demo.querySelector('img.to_ocr')\n\n"
++"Tesseract\n"
++"  .recognize( img, {\n"
++"    progress: show_progress} )\n"
++"  .then( display ) // scroll down for full output\n"
++"                   // you can edit this code")
 
 wow.run()
 
@@ -190,6 +198,11 @@ wow.run()
 var tabs = Array.prototype.slice.call(document.querySelectorAll('.langlabel'))
 var ltabs = Array.prototype.slice.call(document.querySelectorAll('.ltab'))
 var langs = ['eng', 'chi_sim', 'rus', 'meme']
+var langims = langs.map(lang => {
+    var limg = new Image()
+    limg.src = 'img/'+lang+'.png'
+    return limg
+})
 
 function setlang(i){
     tabs.forEach(function(t){
@@ -202,7 +215,8 @@ function setlang(i){
         +"Tesseract\n" 
         +"  .recognize( img, {\n"
         +"    progress: show_progress, lang: '"+langs[i]+"'} )\n" 
-        +"  .then( display ) // scroll down for full output ")
+        +"  .then( display ) // scroll down for full output\n"
+        +"                   // you can edit this code")
     wow.img.src = 'img/'+langs[i]+'.png'
     wow.clear()
 

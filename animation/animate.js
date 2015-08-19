@@ -100,6 +100,7 @@ function init () {
 	requestAnimationFrame(main)
 }
 
+var freeze
 function fixdim() {
 	dimensions.update()
 
@@ -119,17 +120,22 @@ function fixdim() {
 	// }
 	var fadestart = Math.min(rect.height/2, 100)
 
-	header.style['background-color'] = 'rgba(0, 219, 157,'+Math.max(Math.min((-bottom+fadestart),1),0)+')'
+	// header.style['background-color'] = 'rgba(0, 219, 157,'+Math.max(Math.min((-bottom+fadestart),1),0)+')'
+	// header.style['display'] = -bottom+fadestart < 0 ? 'none' : 'initial'
 	header.querySelector('.smalllogo').style.opacity = Math.max(Math.min((-bottom+fadestart)*2/fadestart,1),0)
 	document.getElementById('logo').style.opacity = Math.max(Math.min((bottom-fadestart)/fadestart,1),0)
 
 
+	document.getElementById('logoimg').style.width = displaywidth
 
-	var displayheight = displaywidth * 4/15//dimensions.width > 900 ? 250 : 125
-	canvas.width = displaywidth*window.devicePixelRatio
-	canvas.style.width = displaywidth
+	if(!freeze){
+	var displayheight = displaywidth * 4/15 //dimensions.width > 900 ? 250 : 125
+	canvas.width = displayheight*window.devicePixelRatio
+	canvas.style.width = displayheight
 	canvas.height = displayheight*window.devicePixelRatio
 	canvas.style.height = displayheight
+
+	}
 }
 
 addEventListener('scroll', fixdim)
@@ -176,11 +182,10 @@ function main (time) {
 	var m = tesseractwithrotation(t, t*2, t*3, mouse.x/100    , mouse.y/100, 0)
 
 	drawtesseract(m, {
-		x: as*canvas.width + canvas.width/2, 
-		y: df*canvas.height + canvas.height/2, 
+		x: canvas.width/2, 
+		y: canvas.height/2, 
 		size: gh*canvas.height, 
-		corner_radius: 0,
-		line_width: 2
+		line_width: 2,
 	})
 
 	ctx.beginPath()
