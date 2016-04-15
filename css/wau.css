@@ -55,7 +55,7 @@
     border-radius: 3px;
 }
 .explorersection{
-    background-color: rgb(255, 238, 174);
+    background-color: rgba(102, 142, 195, 0.19);
     width: 100%;
     padding-top: 8%;
     padding-bottom: 8%;
@@ -142,7 +142,7 @@ svg {
     width: 100%;
     z-index: -1;
     overflow: hidden;
-    background-color: #00DB9D;
+    background-color: #668EC3;
     /*background-image: url(../img/stars.jpeg);*/
     background-size: cover;
     background-position: bottom;
@@ -172,7 +172,7 @@ svg {
 }
 
 .selected {
-	background-color: #00DB9D;
+	background-color: #668EC3;
 	/*font-weight: bold;*/
 }
 
@@ -230,7 +230,7 @@ svg {
     overflow: hidden;
     box-shadow: 0px 40px 60px 10px rgba(0, 0, 0, .2);
     position: relative;
-    background-color: #f3f3f3;
+    background-color: #fff;
     opacity: 1;
     -webkit-transition: .7s ease-out;
        -moz-transition: .7s ease-out;
@@ -261,7 +261,7 @@ svg {
 
 .desc {
     text-align: left;
-    font-size: 18px;
+    font-size: 21px;
     color: #343E70;
 }
 .vr {
@@ -271,7 +271,7 @@ svg {
 }
 .getStarted {
     display: inline-block;
-    background-color: #00DB9D;
+    background-color: #668EC3;
     color: white;
     font-size: 40px;
     padding: 20px;
@@ -349,7 +349,7 @@ svg {
     padding-bottom: 9px;
     padding-top: 9px;
     padding-left: 13px;
-    background-color: transparent;
+    background-color: rgb(255, 238, 174);
 }
 hr {
     border: none;
