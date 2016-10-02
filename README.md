@@ -61,7 +61,9 @@ Then, cd in to the folder, `npm install`, and `npm start`
 ```shell
 > cd tesseract.js
 > npm install && npm start
+
   ... a bunch of npm stuff ... 
+  
   tesseract.js@1.0.0 start /Users/guillermo/Desktop/code_static/tesseract.js
   node devServer.js
 
