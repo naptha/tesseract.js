@@ -7,13 +7,24 @@ Tesseract.js is a pure javascript version of the Tesseract OCR Engine that can r
 <!-- ![alt text]( "Logo Title Text 1") -->
 
 # Installation
-Tesseract.js works with a `<script>` tag, or with `npm` (if you're using webpack /browserify).
+Tesseract.js works with a `<script>` tag via local copy or cdn, or with `npm` (if you're using webpack / browserify).
 
 ## `<script/>`
-First grab copies of `tesseract.js` and `tesseract.worker.js` from the [dist folder](https://github.com/naptha/tesseract.js/tree/master/dist). Then include `tesseract.js on your page like this`:
+First grab copies of `tesseract.js` and `tesseract.worker.js` from the [dist folder](https://github.com/naptha/tesseract.js/tree/master/dist). Then include `tesseract.js` on your page like this:
+
 ```html
 <script src='/path/to/tesseract.js'></script>
+
+<script>
+var worker = createTesseractWorker('/path/to/tesseract.worker.js')
+
+worker.recognize('#my-image')
+    .progress(function (p) { console.log('progress', p) })
+    .then(function (result) { console.log('result', result) })
+</script>
 ```
+
+After that, you should 
 
 ## npm 
 ```shell
