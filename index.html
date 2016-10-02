@@ -1,5 +1,5 @@
 <canvas id="c"></canvas>
-<script type="text/javascript" src="./lib/Tesseract.js"></script>
+<script type="text/javascript" src="./build/tesseract.js"></script>
 <script type="text/javascript">
 	var canvas = document.getElementById('c')
 	canvas.width = 400
@@ -14,11 +14,16 @@
 	ctx.font = '30px sans-serif'
 	ctx.fillText('the Cosmic Void', 100, 120)
 
-	Tesseract.recognize(canvas,{
-		tessedit_char_blacklist:'e',
-		progress: function(e){
-			console.log(e)
-		}
-	}).then( function(d){ console.log(d) } )
+	var tesseract = Tesseract();
+
+	tesseract.recognize(canvas, {
+		tessedit_char_blacklist: 'e'
+	})
+	.progress(function(e){
+		console.log('progress', e)
+	})
+	.then(function(e){
+		console.log('result', e)
+	})
 
 </script>
