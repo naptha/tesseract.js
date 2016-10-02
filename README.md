@@ -63,7 +63,7 @@ Then, cd in to the folder, `npm install`, and `npm start`
 > npm install && npm start
 
   ... a bunch of npm stuff ... 
-  
+
   tesseract.js@1.0.0 start /Users/guillermo/Desktop/code_static/tesseract.js
   node devServer.js
 
@@ -77,3 +77,5 @@ After you've cloned the repo and run `npm install` as described in the [Developm
 ```shell
 > npm run build
 ```
+
+## Send us a Pull Request!
