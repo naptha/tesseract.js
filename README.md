@@ -1,5 +1,5 @@
-> UNDER CONTRUCTION
-> Due for Release on Monday, Oct 3, 2016
+> # UNDER CONTRUCTION
+> ## Due for Release on Monday, Oct 3, 2016
 
 # tesseract.js
 Tesseract.js is a pure javascript version of the Tesseract OCR Engine that can recognize English, Chinese, Russian, and 60 other languages.
