@@ -1,5 +1,5 @@
 //TODO: replace with cdn url
-module.exports = function Tesseract(url=location.href+'build/tesseract.worker.js'){
+module.exports = function createTesseractWorker(url=location.href+'build/tesseract.worker.js'){
 	var blob = new Blob(["importScripts('"+url+"');"])
 	var worker = new Worker(window.URL.createObjectURL(blob));
 

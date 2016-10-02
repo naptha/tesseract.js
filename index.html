@@ -14,7 +14,7 @@
 	ctx.font = '30px sans-serif'
 	ctx.fillText('the Cosmic Void', 100, 120)
 
-	var tesseract = Tesseract();
+	var tesseract = createTesseractWorker();
 
 	tesseract.recognize(canvas, {
 		tessedit_char_blacklist: 'e'
