@@ -4,6 +4,8 @@
 # tesseract.js
 Tesseract.js is a pure javascript version of the Tesseract OCR Engine that can recognize English, Chinese, Russian, and 60 other languages.
 
+Tesseract.js lets your code get the words out of scanned documents and other images.
+
 <!-- ![alt text]( "Logo Title Text 1") -->
 
 # Installation
@@ -12,14 +14,11 @@ Tesseract.js works with a `<script>` tag via local copy or cdn, or with `npm` (i
 ## Script Tag
 
 ### CDN
-
 ```html
-<script src='https://cdn.rawgit.com/naptha/tesseract.js/5ed4c0bc/dist/tesseract.js'></script>
+<script src='https://cdn.rawgit.com/naptha/tesseract.js/a01d2a2/dist/tesseract.js'></script>
 
 <script>
-var worker = createTesseractWorker('https://cdn.rawgit.com/naptha/tesseract.js/5ed4c0bc/dist/tesseract.worker.js')
-
-worker.recognize('#my-image')
+Tesseract.recognize('#my-image')
     .progress(function (p) { console.log('progress', p) })
     .then(function (result) { console.log('result', result) })
 </script>
@@ -27,16 +26,16 @@ worker.recognize('#my-image')
 
 
 ### Local
-First grab copies of `tesseract.js` and `tesseract.worker.js` from the [dist folder](https://github.com/naptha/tesseract.js/tree/master/dist). Then include `tesseract.js` on your page like this:
+First grab copies of `tesseract.js` and `tesseract.worker.js` from the [dist folder](https://github.com/naptha/tesseract.js/tree/master/dist). Then include `tesseract.js` on your page, and set `Tesseract.workerUrl` like this:
 
 
 ```html
 <script src='/path/to/tesseract.js'></script>
 
 <script>
-var worker = createTesseractWorker('/path/to/tesseract.worker.js')
+Tesseract.workerUrl = 'http://www.absolute-path-to/tesseract.worker.js'
 
-worker.recognize('#my-image')
+Tesseract.recognize('#my-image')
     .progress(function (p) { console.log('progress', p) })
     .then(function (result) { console.log('result', result) })
 </script>
@@ -51,30 +50,45 @@ worker.recognize('#my-image')
 ```-->
 
 # Docs
-## Tesseract.recognize(image) -> [TesseractJob](#tesseractjob)
-Returns a TesseractJob whose `then` method can be used to act on the result of the OCR.
 
-For example:
+## ImageLike
+The main Tesseract.js functions take an `image` parameter, which should be something that is 'image-like'. 
+That means `image` should be 
+- an `img` element or querySelector that matches an `img` element
+- a `video` element or querySelector that matches a `video` element
+- a `canvas` element or querySelector that matches a `canvas` element
+- a CanvasRenderingContext2D (returned by `canvas.getContext('2d')`)
+- the absolute `url` of an image from the same website that is running your script. Browser security policies don't allow access to the content of images from other websites :(
 
-`image` can be 
- - an `img` element or querySelector that matches an `img` element
- - a `video` element or querySelector that matches a `video` element
- - a `canvas` element or querySelector that matches a `canvas` element
- - a CanvasRenderingContext2D (returned by `canvas.getContext('2d')`)
- - the absolute `url` of an image from the same website that is running your script. Browser security policies don't allow access to the content of images from other websites :(
- - 
 
-## Tesseract.detect(image) -> [TesseractJob](#tesseractjob)
-Returns a TesseractJob whose `then` method can be used to act on the result of the OCR.
+## Tesseract.recognize(image: [ImageLike](#imagelike)[, options]) -> [TesseractJob](#tesseractjob)
+Figures out what words are in the image, where the words are, etc.
+- `image` should be an [ImageLike](#imagelike) object.
+- `options` is an optional parameter with tesseract specific keys
+    + hi
+Returns a [TesseractJob](#tesseractjob) whose `then` method can be used to act on the result.
 
-For example:
+Example:
+```javascript
+Tesseract.recognize('#my-image')
+.then(function(result){
+    console.log(result)
+})
+```
 
-`image` can be 
- - an `img` element or querySelector that matches an `img` element
- - a `video` element or querySelector that matches a `video` element
- - a `canvas` element or querySelector that matches a `canvas` element
- - a CanvasRenderingContext2D (returned by `canvas.getContext('2d')`)
- - the absolute `url` of an image from the same website that is running your script. Browser security policies don't allow access to the content of images from other websites :(
+## Tesseract.detect(image: [ImageLike](#imagelike)) -> [TesseractJob](#tesseractjob)
+Figures out what script (e.g. 'Latin', 'Chinese') the words in the image are written in.
+`image` should be an [ImageLike](#imagelike) object.
+Returns a [TesseractJob](#tesseractjob) whose `then` method can be used to act on the result of the script.
+
+
+```javascript
+Tesseract.detect('#my-image')
+.then(function(result){
+    console.log(result)
+})
+```
+
 
 ## TesseractJob
 A TesseractJob is an an object returned by a call to recognize or detect.
