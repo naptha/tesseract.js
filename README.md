@@ -8,6 +8,8 @@ Tesseract.js lets your code get the words out of scanned documents and other ima
 
 <!-- ![alt text]( "Logo Title Text 1") -->
 
+[Installation](#installation) | [Docs](#docs) | [Contributing](#contributing)
+
 # Installation
 Tesseract.js works with a `<script>` tag via local copy or cdn, or with `npm` (if you're using webpack / browserify).
 
