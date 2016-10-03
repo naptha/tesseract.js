@@ -48,10 +48,6 @@ walp
 
 # Docs 
 
-* [Tesseract Remote File Options](#tesseract-remote-file-options)
-  + [Tesseract.coreUrl](#tesseractcoreurl)
-  + [Tesseract.workerUrl](#tesseractworkerurl)
-  + [Tesseract.langUrl](#tesseractlangurl)
 * [Tesseract.recognize(image: ImageLike[, options]) -> [TesseractJob](#tesseractjob)](#tesseractrecognizeimage-imagelike-options---tesseractjob)
   + [Simple Example:](#simple-example)
   + [More Complicated Example:](#more-complicated-example)
@@ -61,37 +57,10 @@ walp
   + [TesseractJob.progress(callback: function) -> TesseractJob](#tesseractjobprogresscallback-function---tesseractjob)
   + [TesseractJob.then(callback: function) -> TesseractJob](#tesseractjobthencallback-function---tesseractjob)
   + [TesseractJob.error(callback: function) -> TesseractJob](#tesseractjoberrorcallback-function---tesseractjob)
-
-## Tesseract Remote File Options
-### Tesseract.coreUrl
-A string specifying the location of the [tesseract.js-core library](https://github.com/naptha/tesseract.js-core), with default value 'https://cdn.rawgit.com/naptha/tesseract.js-core/master/index.js'. Set this string before calling `Tesseract.recognize` and `Tesseract.detect` if you want Tesseract.js to use a different file.
-
-For example:
-```javascript
-Tesseract.coreUrl = 'https://absolute-path-to/tesseract.js-core/index.js'
-```
-
-### Tesseract.workerUrl
-A string specifying the location of the [tesseract.worker.js](./dist/tesseract.worker.js) file, with default value 'https://cdn.rawgit.com/naptha/tesseract.js/8b915dc/dist/tesseract.worker.js'. Set this string before calling `Tesseract.recognize` and `Tesseract.detect` if you want Tesseract.js to use a different file.
-
-For example:
-```javascript
-Tesseract.workerUrl = 'https://absolute-path-to/tesseract.worker.js'
-```
-
-
-### Tesseract.langUrl
-A string specifying the location of the tesseract language files, with default value 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/'. Language file urls are calculated according to the formula `Tesseract.langUrl + lang + '.traineddata.gz'`. Set this string before calling `Tesseract.recognize` and `Tesseract.detect` if you want Tesseract.js to use different language files.
-
-In the following exampple, Tesseract.js will download the language file from 'https://absolute-path-to/lang/folder/rus.traineddata.gz':
-```javascript
-Tesseract.langUrl = 'https://absolute-path-to/lang/folder/'
-
-Tesseract.recognize('#my-im', {
-    lang: 'rus'
-})
-```
-
+* [Tesseract Remote File Options](#tesseract-remote-file-options)
+  + [Tesseract.coreUrl](#tesseractcoreurl)
+  + [Tesseract.workerUrl](#tesseractworkerurl)
+  + [Tesseract.langUrl](#tesseractlangurl)
 
 
 
@@ -232,6 +201,38 @@ progress is: {
 ### TesseractJob.error(callback: function) -> TesseractJob
 Sets `callback` as the function that will be called if the job fails. 
 - `callback` is a function with the signature `callback(erros)` where `error` is a json object.
+
+## Tesseract Remote File Options
+### Tesseract.coreUrl
+A string specifying the location of the [tesseract.js-core library](https://github.com/naptha/tesseract.js-core), with default value 'https://cdn.rawgit.com/naptha/tesseract.js-core/master/index.js'. Set this string before calling `Tesseract.recognize` and `Tesseract.detect` if you want Tesseract.js to use a different file.
+
+For example:
+```javascript
+Tesseract.coreUrl = 'https://absolute-path-to/tesseract.js-core/index.js'
+```
+
+### Tesseract.workerUrl
+A string specifying the location of the [tesseract.worker.js](./dist/tesseract.worker.js) file, with default value 'https://cdn.rawgit.com/naptha/tesseract.js/8b915dc/dist/tesseract.worker.js'. Set this string before calling `Tesseract.recognize` and `Tesseract.detect` if you want Tesseract.js to use a different file.
+
+For example:
+```javascript
+Tesseract.workerUrl = 'https://absolute-path-to/tesseract.worker.js'
+```
+
+
+### Tesseract.langUrl
+A string specifying the location of the tesseract language files, with default value 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/'. Language file urls are calculated according to the formula `Tesseract.langUrl + lang + '.traineddata.gz'`. Set this string before calling `Tesseract.recognize` and `Tesseract.detect` if you want Tesseract.js to use different language files.
+
+In the following exampple, Tesseract.js will download the language file from 'https://absolute-path-to/lang/folder/rus.traineddata.gz':
+```javascript
+Tesseract.langUrl = 'https://absolute-path-to/lang/folder/'
+
+Tesseract.recognize('#my-im', {
+    lang: 'rus'
+})
+```
+
+
 
 
 # Contributing
