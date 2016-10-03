@@ -1,29 +1,29 @@
 import desaturate from './desaturate'
 import loadLanguage from './loadLanguage'
 
-export default function detect(jobId, module, base, image, cb){
+export default function detect(jobId, image, cb){
 	var width = image.width, height = image.height;
 	image = desaturate(image)
 
-	var ptr = module.allocate(image, 'i8', module.ALLOC_NORMAL);
+	var ptr = self.module.allocate(image, 'i8', self.module.ALLOC_NORMAL);
 	// console.log('allocated image')
 
-	loadLanguage(jobId, module, 'osd', err => {
-		module._free(ptr);
+	loadLanguage(jobId, 'osd', err => {
+		self.module._free(ptr);
 		cb(err)
 	}, success => {
-		base.Init(null, 'osd')
-		base.SetPageSegMode(module.PSM_OSD_ONLY)
+		self.base.Init(null, 'osd')
+		self.base.SetPageSegMode(self.module.PSM_OSD_ONLY)
 		// console.log('loaded language')
 		
-		base.SetImage(module.wrapPointer(ptr), width, height, 1, width)
-		base.SetRectangle(0, 0, width, height)
+		self.base.SetImage(self.module.wrapPointer(ptr), width, height, 1, width)
+		self.base.SetRectangle(0, 0, width, height)
 
-		var results = new module.OSResults();
-		var success = base.DetectOS(results);
+		var results = new self.module.OSResults();
+		var success = self.base.DetectOS(results);
 		if(!success){
-			base.End();
-			module._free(ptr);
+			self.base.End();
+			self.module._free(ptr);
 			cb("failed to detect os")
 		}
 		else {
@@ -46,8 +46,8 @@ export default function detect(jobId, module, base, image, cb){
 				orientation_confidence: best.get_oconfidence()
 			})
 
-			base.End();
-			module._free(ptr);
+			self.base.End();
+			self.module._free(ptr);
 		}
 	})
 }

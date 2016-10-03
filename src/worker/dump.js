@@ -10,7 +10,10 @@ function deindent(html){
 	return lines.join('\n')
 }
 
-export default function DumpLiterallyEverything(module, base){
+export default function DumpLiterallyEverything(){
+
+	var {module, base} = self
+
 	var ri = base.GetIterator();
 	var blocks = [];
 	var block, para, textline, word, symbol;

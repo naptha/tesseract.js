@@ -5,7 +5,7 @@ import dump from './dump'
 
 var loaded_langs = []
 
-export default function recognize(jobId, module, base, image, options, cb){
+export default function recognize(jobId, image, options, cb){
 
 	console.log('recognize id', jobId)
 	var {lang} = options
@@ -13,13 +13,13 @@ export default function recognize(jobId, module, base, image, options, cb){
 
 	image = desaturate(image)
 
-	var ptr = module.allocate(image, 'i8', module.ALLOC_NORMAL);
+	var ptr = self.module.allocate(image, 'i8', self.module.ALLOC_NORMAL);
 
-	loadLanguage(jobId, module, lang, err => {
-		module._free(ptr)
+	loadLanguage(jobId, lang, err => {
+		self.module._free(ptr)
 		cb(err)
 	}, success => {
-		base.Init(null, lang)
+		self.base.Init(null, lang)
 
 		postMessage({
 			jobId,			
@@ -30,7 +30,7 @@ export default function recognize(jobId, module, base, image, options, cb){
 
 		for (var option in options) {
 		    if (options.hasOwnProperty(option)) {
-		        base.SetVariable(option, options[option]);
+		        self.base.SetVariable(option, options[option]);
 		        postMessage({
 					jobId: jobId,			
 					'progress': {
@@ -44,13 +44,13 @@ export default function recognize(jobId, module, base, image, options, cb){
 		}
 
 
-		base.SetImage(module.wrapPointer(ptr), width, height, 1, width)
-		base.SetRectangle(0, 0, width, height)
-		// base.GetUTF8Text()
-		base.Recognize(null)
-		var everything = circularize(dump(module, base))
-		base.End();
-		module._free(ptr); 
+		self.base.SetImage(self.module.wrapPointer(ptr), width, height, 1, width)
+		self.base.SetRectangle(0, 0, width, height)
+		// self.base.GetUTF8Text()
+		self.base.Recognize(null)
+		var everything = circularize(dump())
+		self.base.End();
+		self.module._free(ptr); 
 		cb(null, everything)
 	})	
 }

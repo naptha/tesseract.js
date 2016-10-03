@@ -1,6 +1,3 @@
-import TesseractCore from 'tesseract.js-core'
-import pako from 'pako'
-
 import recognize from './recognize'
 import detect from './detect'
 
@@ -14,7 +11,8 @@ onmessage = function(e) {
 
 	if(action == 'init'){
 
-		module = TesseractCore({
+		self.langUrl = args.langUrl
+		self.module = TesseractCore({
 			TOTAL_MEMORY: args.mem, //must be a multiple of 10 megabytes
 			TesseractProgress(percent){
 				postMessage({ jobId,
@@ -25,15 +23,15 @@ onmessage = function(e) {
 			},
 			onRuntimeInitialized() {}
 		})
-		module.FS_createPath("/","tessdata",true,true)
-		base = new module.TessBaseAPI()
+		self.module.FS_createPath("/","tessdata",true,true)
+		self.base = new self.module.TessBaseAPI()
 
 	} else if(action === 'recognize'){
 		var {image, options} = args
-		recognize(jobId, module, base, image, options,
+		recognize(jobId, image, options,
 			(error, result) => postMessage({jobId, error, result}))
 	} else if(action === 'detect'){
-		detect(jobId, module, base, args.image, 
+		detect(jobId, args.image, 
 			(error, result) => postMessage({jobId, error, result}))
 	}
 }

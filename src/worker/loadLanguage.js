@@ -1,12 +1,12 @@
-import pako from 'pako'
+import {ungzip} from 'pako'
 import db from './db'
 import fileSizes from './fileSizes'
 
-function getLanguageData(lang, progress, cb, url='https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/'+lang+'.traineddata.gz'){
+function getLanguageData(lang, progress, cb){
 	var xhr = new XMLHttpRequest();
 	xhr.responseType = 'arraybuffer';
-	xhr.open('GET', url, true);
-	xhr.onerror    = e => {
+	xhr.open('GET', self.LANG_URL + lang + '.traineddata.gz', true);
+	xhr.onerror = e => {
 		xhr.onprogress = xhr.onload = null
 		cb(xhr, null)
 	}
@@ -20,7 +20,7 @@ function getLanguageData(lang, progress, cb, url='https://cdn.rawgit.com/naptha/
 		progress({'unzipping_lang_model': true})
 
 		var response = new Uint8Array(xhr.response)
-		while(response[0] == 0x1f && response[1] == 0x8b) response = pako.ungzip(response);
+		while(response[0] == 0x1f && response[1] == 0x8b) response = ungzip(response);
 
 		progress({
 			'unzipped_lang_model': true,
@@ -40,7 +40,7 @@ function getLanguageData(lang, progress, cb, url='https://cdn.rawgit.com/naptha/
 }
 
 
-function load(lang, jobId, cb, url){
+function load(lang, jobId, cb){
 
 	console.log('loadLanguage jobId', jobId)
 
@@ -69,13 +69,13 @@ function load(lang, jobId, cb, url){
 
 
 	db.open({compression: false}, err => {
-		if (err) return getLanguageData(lang, progressMessage, createDataFile, url);
+		if (err) return getLanguageData(lang, progressMessage, createDataFile);
 
 		db.get(lang, (err, data) => {
 
-			if (err) return getLanguageData(lang, progressMessage, createDataFileCached, url)
+			if (err) return getLanguageData(lang, progressMessage, createDataFileCached)
 
-			while(data[0] == 0x1f && data[1] == 0x8b) data = pako.ungzip(data);
+			while(data[0] == 0x1f && data[1] == 0x8b) data = ungzip(data);
 
 			progressMessage({ loaded_lang_model: lang, from_cache: true })
 
@@ -86,14 +86,14 @@ function load(lang, jobId, cb, url){
 
 var loaded_langs = []
 
-export default function loadLanguage(jobId, module, lang, error, success){
+export default function loadLanguage(jobId, lang, error, success){
 	if(loaded_langs.indexOf(lang) == -1) load(lang, jobId, function(err, result){
 		if(err) return error(err)
 
 		loaded_langs.push(lang)
-		module.FS_createDataFile('tessdata', lang +".traineddata", result, true, false);
+		self.module.FS_createDataFile('tessdata', lang +".traineddata", result, true, false);
 
 		success()
 	})
-	else run();
+	else success();
 }
