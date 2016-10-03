@@ -49,8 +49,8 @@ walp
 # Docs 
 
 * [Tesseract.recognize(image: ImageLike[, options]) -> [TesseractJob](#tesseractjob)](#tesseractrecognizeimage-imagelike-options---tesseractjob)
-  + [Simple Example:](#simple-example)
-  + [More Complicated Example:](#more-complicated-example)
+  + [Simple Example](#simple-example)
+  + [More Complicated Example](#more-complicated-example)
 * [Tesseract.detect(image: ImageLike) -> [TesseractJob](#tesseractjob)](#tesseractdetectimage-imagelike---tesseractjob)
 * [ImageLike](#imagelike)
 * [TesseractJob](#tesseractjob)
