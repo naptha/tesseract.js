@@ -7,7 +7,7 @@ function config({entry, output, include}) {
     entry,
     output: Object.assign({}, output, {
       path: path.join(__dirname, 'build'),
-      publicPath: '/build/',
+      publicPath: '/tesseract/',
     }),
     plugins: [
       new webpack.NoErrorsPlugin()
@@ -29,7 +29,7 @@ module.exports = [{
   entry: './src/browser/index.js',
   output: {
     filename: 'tesseract.js',
-    library: "createTesseractWorker",
+    library: "Tesseract",
     libraryTarget: "umd"
   },
   include: [path.join(__dirname, 'src/browser')]  

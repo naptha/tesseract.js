@@ -33,7 +33,7 @@ module.exports = [{
   entry: './src/browser/index.js',
   output: {
     filename: 'tesseract.js',
-    library: "createTesseractWorker",
+    library: "Tesseract",
     libraryTarget: "umd"
   },
   include: [path.join(__dirname, 'src/browser')]  
