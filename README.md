@@ -4,7 +4,9 @@
 # Tesseract.js
 [Installation](#installation) • [Docs](#docs) • [Contributing](#contributing)
 
-Tesseract.js is a pure javascript library that lets you get words written in [almost any language](./tesseract_lang_list.md)* out of scanned documents and other images. More specifically, Tesseract.js is a wrapper around an [emscripten](https://github.com/kripken/emscripten) port of the [Tesseract OCR Engine](https://github.com/tesseract-ocr/tesseract).
+Tesseract.js is a pure javascript library that lets you get words written in [almost any language](./tesseract_lang_list.md)* out of scanned documents and other images.
+
+Tesseract.js is a wrapper around an [emscripten](https://github.com/kripken/emscripten) port of the [Tesseract OCR Engine](https://github.com/tesseract-ocr/tesseract).
 
 * [English, Chinese, Russian, and 60 others](./tesseract_lang_list.md).
 <!-- ![alt text]( "Logo Title Text 1") -->
