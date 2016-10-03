@@ -1,8 +1,8 @@
 > # UNDER CONTRUCTION
 > ## Due for Release on Monday, Oct 3, 2016
 
-# Tesseract.js
-[Installation](#installation) • [Docs](#docs) • [Contributing](#contributing)
+# [Tesseract.js](http://tesseract.projectnaptha.com/)
+## [Installation](#installation) • [Docs](#docs) • [Contributing](#contributing)
 
 Tesseract.js is a pure javascript library that lets you get words in [almost any language](./tesseract_lang_list.md)* out of images.
 
