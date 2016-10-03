@@ -39,13 +39,10 @@ function getLanguageData(lang, progress, cb, url='https://cdn.rawgit.com/naptha/
 	xhr.send()
 }
 
-// var loaded_langs = []
 
-export default function loadLanguage(lang, jobId, cb, url){
+function load(lang, jobId, cb, url){
 
 	console.log('loadLanguage jobId', jobId)
-
-	// if(loaded_langs.indexOf(lang) != -1) return cb(null, lang);
 
 	function progressMessage(progress){
 		postMessage({ jobId, progress })
@@ -85,4 +82,18 @@ export default function loadLanguage(lang, jobId, cb, url){
 			cb(null, data)
 		})
 	})	
+}
+
+var loaded_langs = []
+
+export default function loadLanguage(jobId, module, lang, error, success){
+	if(loaded_langs.indexOf(lang) == -1) load(lang, jobId, function(err, result){
+		if(err) return error(err)
+
+		loaded_langs.push(lang)
+		module.FS_createDataFile('tessdata', lang +".traineddata", result, true, false);
+
+		success()
+	})
+	else run();
 }

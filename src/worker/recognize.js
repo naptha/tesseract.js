@@ -15,8 +15,10 @@ export default function recognize(jobId, module, base, image, options, cb){
 
 	var ptr = module.allocate(image, 'i8', module.ALLOC_NORMAL);
 
-
-	function run() {
+	loadLanguage(jobId, module, lang, err => {
+		module._free(ptr)
+		cb(err)
+	}, success => {
 		base.Init(null, lang)
 
 		postMessage({
@@ -50,22 +52,5 @@ export default function recognize(jobId, module, base, image, options, cb){
 		base.End();
 		module._free(ptr); 
 		cb(null, everything)
-	}
-
-
-
-	if(loaded_langs.indexOf(lang) == -1) loadLanguage(lang, jobId, function(err, result){
-
-		if(err){
-			console.error("error loading", lang);
-			module._free(ptr);
-			return cb(err, null);
-		}
-
-		loaded_langs.push(lang)
-		module.FS_createDataFile('tessdata', lang +".traineddata", result, true, false);
-		run()
-
-	})
-	else run();
+	})	
 }

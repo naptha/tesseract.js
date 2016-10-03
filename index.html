@@ -16,15 +16,15 @@
 
 	var tesseract = createTesseractWorker();
 
+	tesseract.detect(canvas)
 	// tesseract.recognize('http://localhost:7355/westmorland.jpg')
-	tesseract.recognize(canvas, {
-		tessedit_char_blacklist: 'e'
-	})
+	// tesseract.recognize(canvas, {
+	// 	tessedit_char_blacklist: 'e'
+	// })
 	.progress(function(e){
 		console.log('progress', e)
 	})
 	.then(function(e){
 		console.log('result', e)
 	})
-
 </script>
