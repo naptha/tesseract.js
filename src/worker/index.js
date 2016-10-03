@@ -29,9 +29,9 @@ onmessage = function(e) {
 	} else if(action === 'recognize'){
 		var {image, options} = args
 		recognize(jobId, image, options,
-			(error, result) => postMessage({jobId, error, result}))
+			(error, result) => postMessage({jobId, error: error.message, result}))
 	} else if(action === 'detect'){
 		detect(jobId, args.image, 
-			(error, result) => postMessage({jobId, error, result}))
+			(error, result) => postMessage({jobId, error: error.message, result}))
 	}
 }

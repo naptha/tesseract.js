@@ -1,11 +1,11 @@
 var path = require('path');
 var webpack = require('webpack');
 
-function config({entry, output, include}) {
+function config(opt) {
   return {
     devtool: 'cheap-module-eval-source-map',
-    entry,
-    output: Object.assign({}, output, {
+    entry: opt.entry,
+    output: Object.assign({}, opt.output, {
       path: path.join(__dirname, 'build'),
       publicPath: '/tesseract/',
     }),
@@ -16,7 +16,7 @@ function config({entry, output, include}) {
       loaders: [{
         test: /\.js$/,
         loaders: ['babel'],
-        include
+        include: opt.include
       }]
     },
     node: {
@@ -32,11 +32,11 @@ module.exports = [{
     library: "Tesseract",
     libraryTarget: "umd"
   },
-  include: [path.join(__dirname, 'src/browser')]  
+  include: [path.join(__dirname, 'src/browser'), path.join(__dirname, 'src/shared')]  
 }, {
   entry: './src/worker/index.js',
   output: {
     filename: 'tesseract.worker.js',
   },
-  include: [path.join(__dirname, 'src/worker')]
+  include: [path.join(__dirname, 'src/worker'), path.join(__dirname, 'src/shared')]
 }].map(config);

@@ -1,7 +1,7 @@
-import desaturate from './desaturate'
+import desaturate from '../shared/desaturate'
 import loadLanguage from './loadLanguage'
-import circularize from './circularize'
-import dump from './dump'
+import circularize from '../shared/circularize'
+import dump from '../shared/dump'
 
 var loaded_langs = []
 
@@ -22,7 +22,7 @@ export default function recognize(jobId, image, options, cb){
 		self.base.Init(null, lang)
 
 		postMessage({
-			jobId,			
+			jobId,
 			'progress': {
 				'initialized_with_lang': lang
 			}

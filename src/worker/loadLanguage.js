@@ -1,11 +1,11 @@
 import {ungzip} from 'pako'
 import db from './db'
-import fileSizes from './fileSizes'
+import fileSizes from '../shared/fileSizes'
 
 function getLanguageData(lang, progress, cb){
 	var xhr = new XMLHttpRequest();
 	xhr.responseType = 'arraybuffer';
-	xhr.open('GET', self.LANG_URL + lang + '.traineddata.gz', true);
+	xhr.open('GET', self.langUrl + lang + '.traineddata.gz', true);
 	xhr.onerror = e => {
 		xhr.onprogress = xhr.onload = null
 		cb(xhr, null)
