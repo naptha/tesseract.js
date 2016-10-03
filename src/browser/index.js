@@ -24,7 +24,6 @@ module.exports = function createTesseractWorker(url=location.href+'build/tessera
 		})
 
 		if(waitingCount == 0) worker.postMessage({jobId, action, args})
-
 		return {
 			then    (f){ handlers[jobId].result  = f; return this},
 			error   (f){ handlers[jobId].error    = f; return this},
@@ -41,7 +40,6 @@ module.exports = function createTesseractWorker(url=location.href+'build/tessera
 	}
 
 	function convertToImageData(image){
-
 		if(image.match && image.match(/^https?:\/\//)) {
 			return function thunk(cb){
 				var img = new Image()
