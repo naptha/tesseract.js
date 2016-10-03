@@ -66,7 +66,7 @@ Figures out what words are in `image`, where the words are in `image`, etc.
 - `image` is any [ImageLike](#imagelike) object.
 - `options` is an optional flat json object. `options` may:
     + override some subset of the [default tesseract parameters](./tesseract_parameters.md)
-    + specify a lang parameter that is one of 'afr', 'ara', 'aze', 'bel', 'ben', 'bul', 'cat', 'ces', 'chi_sim', 'chi_tra', 'chr', 'frak', 'dan', 'frak', 'deu', 'ell', 'eng', 'enm', 'epo', 'equ', 'est', 'eus', 'fin', 'fra', 'frk', 'frm', 'glg', 'grc', 'heb', 'hin', 'hrv', 'hun', 'ind', 'isl', 'ita', 'ita_old', 'jpn', 'kan', 'kor', 'lav', 'lit', 'mal', 'meme', 'mkd', 'mlt', 'msa', 'nld', 'nor', 'osd', 'pol', 'por', 'ron', 'rus', 'frak', 'slk', 'slv', 'spa', 'spa_old', 'sqi', 'srp', 'swa', 'swe', 'tam', 'tel', 'tgl', 'tha', 'tur', 'ukr', or 'vie'. The default is 'eng'.
+    + specify a lang parameter that is one of `'afr'`, `'ara'`, `'aze'`, `'bel'`, `'ben'`, `'bul'`, `'cat'`, `'ces'`, `'chi_sim'`, `'chi_tra'`, `'chr'`, `'frak'`, `'dan'`, `'frak'`, `'deu'`, `'ell'`, `'eng'`, `'enm'`, `'epo'`, `'equ'`, `'est'`, `'eus'`, `'fin'`, `'fra'`, `'frk'`, `'frm'`, `'glg'`, `'grc'`, `'heb'`, `'hin'`, `'hrv'`, `'hun'`, `'ind'`, `'isl'`, `'ita'`, `'ita_old'`, `'jpn'`, `'kan'`, `'kor'`, `'lav'`, `'lit'`, `'mal'`, `'meme'`, `'mkd'`, `'mlt'`, `'msa'`, `'nld'`, `'nor'`, `'osd'`, `'pol'`, `'por'`, `'ron'`, `'rus'`, `'frak'`, `'slk'`, `'slv'`, `'spa'`, `'spa_old'`, `'sqi'`, `'srp'`, `'swa'`, `'swe'`, `'tam'`, `'tel'`, `'tgl'`, `'tha'`, `'tur'`, `'ukr'`, or `'vie'`. The default is `'eng'`.
 
 
 Returns a [TesseractJob](#tesseractjob) whose `then`, `progress`, and `error` methods can be used to act on the result.
