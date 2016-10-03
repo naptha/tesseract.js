@@ -65,19 +65,33 @@ That means `image` should be
 Figures out what words are in `image`, where the words are in `image`, etc.
 - `image` is any [ImageLike](#imagelike) object.
 - `options` is an optional flat json object. `options` may:
-    + override some subset of the [default tesseract parameters](./tesseract_parameters.md)
-    + specify a lang parameter that is one of `'afr'`, `'ara'`, `'aze'`, `'bel'`, `'ben'`, `'bul'`, `'cat'`, `'ces'`, `'chi_sim'`, `'chi_tra'`, `'chr'`, `'frak'`, `'dan'`, `'frak'`, `'deu'`, `'ell'`, `'eng'`, `'enm'`, `'epo'`, `'equ'`, `'est'`, `'eus'`, `'fin'`, `'fra'`, `'frk'`, `'frm'`, `'glg'`, `'grc'`, `'heb'`, `'hin'`, `'hrv'`, `'hun'`, `'ind'`, `'isl'`, `'ita'`, `'ita_old'`, `'jpn'`, `'kan'`, `'kor'`, `'lav'`, `'lit'`, `'mal'`, `'meme'`, `'mkd'`, `'mlt'`, `'msa'`, `'nld'`, `'nor'`, `'osd'`, `'pol'`, `'por'`, `'ron'`, `'rus'`, `'frak'`, `'slk'`, `'slv'`, `'spa'`, `'spa_old'`, `'sqi'`, `'srp'`, `'swa'`, `'swe'`, `'tam'`, `'tel'`, `'tgl'`, `'tha'`, `'tur'`, `'ukr'`, or `'vie'`. The default is `'eng'`.
-
+    + include properties that override some subset of the [default tesseract parameters](./tesseract_parameters.md)
+    + include a `lang` property with a value from the [list of lang parameters](./tesseract_lang_list.md)
 
 Returns a [TesseractJob](#tesseractjob) whose `then`, `progress`, and `error` methods can be used to act on the result.
 
-Example:
+Simple Example:
 ```javascript
 Tesseract.recognize('#my-image')
 .then(function(result){
     console.log(result)
 })
 ```
+
+More Complicated Example:
+```javascript
+// if we know our image is of spanish words without the letter 'e':
+Tesseract.recognize('#my-image', {
+    lang: 'spa',
+    tessedit_char_blacklist: 'e'
+})
+.then(function(result){
+    console.log(result)
+})
+```
+
+
+
 
 ## Tesseract.detect(image: [ImageLike](#imagelike)) -> [TesseractJob](#tesseractjob)
 Figures out what script (e.g. 'Latin', 'Chinese') the words in  image are written in.
