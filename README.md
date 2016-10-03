@@ -65,9 +65,9 @@ That means `image` should be
 Figures out what words are in `image`, where the words are in `image`, etc.
 - `image` is any [ImageLike](#imagelike) object.
 - `options` is an optional parameter that overrides some subset of the following parameters:
-| Paramereter                                              | Default Value | Description                                                                                                                                                                                                                                          | 
-|----------------------------------------------------------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| 
-| ambigs_debug_level                                       | 0             | Debug level for unichar ambiguities                                                                                                                                                                                                                  | 
+| Paramereter                                              | Default Value | Description                           | 
+|----------------------------------------------------------|---------------|---------------------------------------| 
+| ambigs_debug_level                                       | 0             | Debug level for unichar ambiguities   | 
 
 
 
