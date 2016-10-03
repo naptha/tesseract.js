@@ -44,12 +44,23 @@ Tesseract.recognize('#my-image')
 
 ## npm
 ### TODO
+walp
 
-<!-- ```shell
-> npm install tesseract-js ?
-```-->
+# Docs 
 
-# Docs
+* [Tesseract Remote File Options](#tesseract-remote-file-options)
+  + [Tesseract.coreUrl](#tesseractcoreurl)
+  + [Tesseract.workerUrl](#tesseractworkerurl)
+  + [Tesseract.langUrl](#tesseractlangurl)
+* [Tesseract.recognize(image: ImageLike[, options]) -> [TesseractJob](#tesseractjob)](#tesseractrecognizeimage-imagelike-options---tesseractjob)
+  + [Simple Example:](#simple-example)
+  + [More Complicated Example:](#more-complicated-example)
+* [Tesseract.detect(image: ImageLike) -> [TesseractJob](#tesseractjob)](#tesseractdetectimage-imagelike---tesseractjob)
+* [ImageLike](#imagelike)
+* [TesseractJob](#tesseractjob)
+  + [TesseractJob.progress(callback: function) -> TesseractJob](#tesseractjobprogresscallback-function---tesseractjob)
+  + [TesseractJob.then(callback: function) -> TesseractJob](#tesseractjobthencallback-function---tesseractjob)
+  + [TesseractJob.error(callback: function) -> TesseractJob](#tesseractjoberrorcallback-function---tesseractjob)
 
 ## Tesseract Remote File Options
 ### Tesseract.coreUrl
@@ -81,14 +92,8 @@ Tesseract.recognize('#my-im', {
 })
 ```
 
-## ImageLike
-The main Tesseract.js functions take an `image` parameter, which should be something that is 'image-like'. 
-That means `image` should be 
-- an `img` element or querySelector that matches an `img` element
-- a `video` element or querySelector that matches a `video` element
-- a `canvas` element or querySelector that matches a `canvas` element
-- a CanvasRenderingContext2D (returned by `canvas.getContext('2d')`)
-- the absolute `url` of an image from the same website that is running your script. Browser security policies don't allow access to the content of images from other websites :(
+
+
 
 ## Tesseract.recognize(image: [ImageLike](#imagelike)[, options]) -> [TesseractJob](#tesseractjob)
 Figures out what words are in `image`, where the words are in `image`, etc.
@@ -136,6 +141,15 @@ Tesseract.detect('#my-image')
 })
 ```
 
+
+## ImageLike
+The main Tesseract.js functions take an `image` parameter, which should be something that is 'image-like'. 
+That means `image` should be 
+- an `img` element or querySelector that matches an `img` element
+- a `video` element or querySelector that matches a `video` element
+- a `canvas` element or querySelector that matches a `canvas` element
+- a CanvasRenderingContext2D (returned by `canvas.getContext('2d')`)
+- the absolute `url` of an image from the same website that is running your script. Browser security policies don't allow access to the content of images from other websites :(
 
 
 ## TesseractJob
@@ -249,3 +263,4 @@ After you've cloned the repo and run `npm install` as described in the [Developm
 ```
 
 ## Send us a Pull Request!
+Thanks :)
