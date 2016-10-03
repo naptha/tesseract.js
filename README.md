@@ -8,7 +8,8 @@ Tesseract.js is a pure javascript library that lets you get words in [almost any
 
 Tesseract.js is a wrapper around an [emscripten](https://github.com/kripken/emscripten) port of the [Tesseract OCR Engine](https://github.com/tesseract-ocr/tesseract).
 
-* [English, Chinese, Russian, and 60 others](./tesseract_lang_list.md).
+*[English, Chinese, Russian, and 60 others](./tesseract_lang_list.md).
+
 <!-- ![alt text]( "Logo Title Text 1") -->
 
 
