@@ -4,8 +4,6 @@
     min-height: 100%;
 }
 
-
-
 .stretch {
     max-width: 100%
 }
@@ -26,7 +24,6 @@
 .footer {
     width: 100%;
     color: #fff;
-    margin-top: 8%;
     background-color: #6A6A6A;
     text-align: right;
 }
@@ -131,7 +128,7 @@ a {
     /*font-weight: bold;*/
 }
 .display {
-    position: absolute;
+    // position: absolute;
     /*background: rgba(0,0,255,.1);*/
 }
 svg {
@@ -188,7 +185,7 @@ svg {
 }
 .prog div{
     height: 100%;
-    background-color: #00DB9D;
+    background-color: #5BA9F2;
 }
 
 .demofooter {

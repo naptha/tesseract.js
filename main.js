@@ -58,12 +58,12 @@ function builddemo(id, val) {
         disp.style.width = demo.querySelector('.to_ocr').offsetWidth;
         disp.style.height = demo.querySelector('.to_ocr').offsetHeight;
 
-        dctx.shadowColor = "rgba(255,255,255,.1)";
-        dctx.shadowOffsetX = 0;
-        dctx.shadowOffsetY = 0;
-        dctx.shadowBlur = 10;
+        // dctx.shadowColor = "rgba(255,255,255,.1)";
+        // dctx.shadowOffsetX = 0;
+        // dctx.shadowOffsetY = 0;
+        // dctx.shadowBlur = 10;
 
-        dctx.fillRect(0, 0, disp.width, disp.height);
+        // dctx.fillRect(0, 0, disp.width, disp.height);
 
         var m = result.words.map(function (w) {
 
@@ -71,13 +71,14 @@ function builddemo(id, val) {
             dctx.font = '20px Times';
             var font = 20 * (b.x1 - b.x0) / dctx.measureText(w.text).width + "px Times";
 
-            var k = function k() {
+            return function k() {
                 dctx.font = font;
+                // dctx.font = '40px Times';
                 dctx.fillText(w.text, b.x0, w.baseline.y0);
+                // dctx.fillStyle='rgba(255,255,255,.3)'
+                // dctx.fillRect(b.x0, b.y0, b.x1 - b.x0, b.y1 - b.y0);
                 return font;
             };
-
-            return k;
         });
 
         var times = 0;
@@ -89,12 +90,13 @@ function builddemo(id, val) {
             dctx.fillStyle = "rgba(0, 219, 157, " + Math.min(i / 100, 1) + ")";
             // dctx.fillStyle="rgba(0, 219, 199, "+Math.min(i/100,1)+")"
             // dctx.globalAlpha = .1;
+
             dctx.clearRect(0, 0, disp.width, disp.height);
-            dctx.fillRect(0, 0, disp.width, disp.height);
+            // dctx.fillRect(0, 0, disp.width, disp.height);
 
             for (var j = 0; j < Math.min(i, m.length); j++) {
                 var asdf = Math.min(Math.max(i - j, 0), 100);
-                dctx.fillStyle = "rgba(255,255,255," + asdf * .01 + ")";
+                dctx.fillStyle = "rgba(0,0,0," + asdf * .01 + ")";
                 m[j]();
             };
 
@@ -140,14 +142,14 @@ function builddemo(id, val) {
     });
 
     var sc = demo.querySelector('.demoheader');
-    var scdiv = document.createElement('div');
-    sc.appendChild(scdiv);
-    scdiv.className = 'CodeMirror cm-s-default';
-    // scdiv.className = 'cm-s-default'
-    CodeMirror.runMode('<script src="http://tenso.rs/tesseract.js"></script>', {
-        name: 'xml',
-        htmlMode: true
-    }, scdiv);
+    // var scdiv = document.createElement('div');
+    // sc.appendChild(scdiv);
+    // scdiv.className = 'CodeMirror cm-s-default';
+    // // scdiv.className = 'cm-s-default'
+    // CodeMirror.runMode('<script src="http://tenso.rs/tesseract.js"></script>', {
+    //     name: 'xml',
+    //     htmlMode: true
+    // }, scdiv);
 
     // var scripttag = CodeMirror(,{
     //  mode: {name: 'xml', htmlMode: true},
@@ -156,6 +158,7 @@ function builddemo(id, val) {
     // });
     editor.clear = function () {
         dctx.clearRect(0, 0, disp.width, disp.height);
+        disp.style.height = 0;
         document.querySelector('.ocroutput').innerHTML = '';
     };
 
@@ -180,7 +183,13 @@ setTimeout(function () {
     document.getElementById('wow').className += ' opaque';
 }, 100);
 
-var wow = builddemo('wow', "var img = demo.querySelector('img.to_ocr')\n\n" + "Tesseract\n" + "  .recognize( img, {\n" + "    progress: show_progress} )\n" + "  .then( display ) // scroll down for full output\n" + "                   // you can edit this code");
+var wow = builddemo('wow',
+   ["var img = demo.querySelector('img.to_ocr')", 
+    "Tesseract", 
+    "  .recognize( img )", 
+    "  .progress( show_progress )", 
+    "  .then( display ) // scroll down for full output", 
+    "                   // you can edit this code"].join('\n'));
 
 wow.run();
 
@@ -199,9 +208,15 @@ function setlang(i) {
     });
     tabs[i].className = 'langlabel selected';
     console.log(tabs[i]);
-    wow.setValue("var img = demo.querySelector('img.to_ocr')\n\n" + "Tesseract\n" + "  .recognize( img, {\n" + "    progress: show_progress, lang: '" + langs[i] + "'} )\n" + "  .then( display ) // scroll down for full output\n" + "                   // you can edit this code");
+    wow.setValue(["var img = demo.querySelector('img.to_ocr')", 
+                  "Tesseract", 
+                  "  .recognize( img, '"+langs[i]+"' )", 
+                  "  .progress( show_progress )", 
+                  "  .then( display ) // scroll down for full output", 
+                  "                   // you can edit this code"].join('\n'));
     wow.img.src = 'img/' + langs[i] + '.png';
     wow.clear();
+    wow.run()
 }
 
 ltabs.forEach(function (ltab, i) {
