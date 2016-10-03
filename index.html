@@ -1,5 +1,5 @@
 <canvas id="c"></canvas>
-<script type="text/javascript" src="./build/tesseract.js"></script>
+<script type="text/javascript" src="./tesseract/tesseract.js"></script>
 <script type="text/javascript">
 	var canvas = document.getElementById('c')
 	canvas.width = 400
@@ -14,13 +14,13 @@
 	ctx.font = '30px sans-serif'
 	ctx.fillText('the Cosmic Void', 100, 120)
 
-	var tesseract = createTesseractWorker();
 
-	tesseract.detect(canvas)
-	// tesseract.recognize('http://localhost:7355/westmorland.jpg')
-	// tesseract.recognize(canvas, {
-	// 	tessedit_char_blacklist: 'e'
-	// })
+	Tesseract.workerUrl = location.protocol+'//'+location.host+'/tesseract/tesseract.worker.js'
+
+	// Tesseract.detect(canvas)
+	// Tesseract.recognize('http://localhost:7355/westmorland.jpg')
+	// Tesseract.recognize(canvas, { tessedit_char_blacklist: 'e' })
+	Tesseract.recognize(canvas)
 	.progress(function(e){
 		console.log('progress', e)
 	})
