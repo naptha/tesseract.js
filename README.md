@@ -1,5 +1,5 @@
 > # UNDER CONTRUCTION
-> ## Due for Release on Monday, Oct 3, 2016
+> ## Due for Release on ~~Monday, Oct 3, 2016~~ Tuesdau, Oct 4, 2016
 
 # [Tesseract.js](http://tesseract.projectnaptha.com/)
 ## [Installation](#installation) • [Docs](#docs) • [Contributing](#contributing)
