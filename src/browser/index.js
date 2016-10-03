@@ -1,6 +1,23 @@
-//TODO: replace with cdn url
-module.exports = function createTesseractWorker(url=location.href+'build/tesseract.worker.js'){
-	var blob = new Blob(["importScripts('"+url+"');"])
+var coreUrl = 'https://cdn.rawgit.com/naptha/tesseract.js-core/master/index.js',
+	workerUrl = 'https://cdn.rawgit.com/naptha/tesseract.js/8b915dc/dist/tesseract.worker.js',
+	langUrl = 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/',
+	worker;
+
+function recognize(image, options){
+	if(!worker) worker = createWorker( Tesseract.coreUrl, Tesseract.workerUrl, Tesseract.langUrl )
+	return worker.recognize(image, options)
+}
+
+function detect(image){
+	if(!worker) worker = createWorker( Tesseract.coreUrl, Tesseract.workerUrl, Tesseract.langUrl )
+	return worker.detect(image)
+}
+
+function createWorker(coreUrl=Tesseract.coreUrl, workerUrl=Tesseract.workerUrl, langUrl=Tesseract.langUrl){
+
+	var blob = new Blob([`importScripts('${coreUrl}');
+		                  importScripts('${workerUrl}');`])
+
 	var worker = new Worker(window.URL.createObjectURL(blob));
 
 	var bigworker = false
@@ -13,14 +30,14 @@ module.exports = function createTesseractWorker(url=location.href+'build/tessera
 		handlers[jobId] = {}
 
 		var waitingCount = 0
-		Object.getOwnPropertyNames(args).forEach(name => {
-			if(typeof args[name] === 'function'){
-				waitingCount++
-				args[name](value => {
-					args[name] = value
-					if(--waitingCount == 0) worker.postMessage({jobId, action, args})
-				})
-			}
+		Object.getOwnPropertyNames(args)
+		.filter(name => typeof args[name] === 'function')
+		.forEach(name => {
+			waitingCount++
+			args[name](value => {
+				args[name] = value
+				if(--waitingCount == 0) worker.postMessage({jobId, action, args})
+			})
 		})
 
 		if(waitingCount == 0) worker.postMessage({jobId, action, args})
@@ -62,7 +79,7 @@ module.exports = function createTesseractWorker(url=location.href+'build/tessera
 		return image
 	}
 
-	runAsync('init', {mem: (1<<24) * 6})
+	runAsync('init', {mem: (1<<24) * 6, langUrl})
 
 	return {
 		detect(image){
@@ -75,7 +92,7 @@ module.exports = function createTesseractWorker(url=location.href+'build/tessera
 			else options.lang = options.lang || 'eng';
 
 			if (!bigworker && ['chi_sim', 'chi_tra', 'jpn'].indexOf(options.lang) != -1){
-				runAsync('init', {mem: (1<<24) * 10})
+				runAsync('init', {mem: (1<<24) * 10, langUrl})
 				bigworker = true
 			}
 
@@ -83,3 +100,7 @@ module.exports = function createTesseractWorker(url=location.href+'build/tessera
 		}	
 	}
 }
+
+var Tesseract = {coreUrl, workerUrl, langUrl, recognize, detect, createWorker}
+
+module.exports = Tesseract
