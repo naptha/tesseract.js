@@ -8,11 +8,23 @@ module.exports = function createTesseractWorker(url=location.href+'build/tessera
 	var handlers = {}
 
 	function runAsync(action, args){
+		
 		var jobId = jobCounter++
 		handlers[jobId] = {}
-		var message = {jobId, action, args}
-		console.log(message)
-		worker.postMessage(message)
+
+		var waitingCount = 0
+		Object.getOwnPropertyNames(args).forEach(name => {
+			if(typeof args[name] === 'function'){
+				waitingCount++
+				args[name](value => {
+					args[name] = value
+					if(--waitingCount == 0) worker.postMessage({jobId, action, args})
+				})
+			}
+		})
+
+		if(waitingCount == 0) worker.postMessage({jobId, action, args})
+
 		return {
 			then    (f){ handlers[jobId].result  = f; return this},
 			error   (f){ handlers[jobId].error    = f; return this},
@@ -29,6 +41,16 @@ module.exports = function createTesseractWorker(url=location.href+'build/tessera
 	}
 
 	function convertToImageData(image){
+
+		if(image.match && image.match(/^https?:\/\//)) {
+			return function thunk(cb){
+				var img = new Image()
+				img.src = image
+				img.onload = () => cb(convertToImageData(img))
+			}
+		}
+
+		if(typeof image === 'string') image = document.querySelector(image)
 		if(image.getContext) image = image.getContext('2d');
 		else if(image.tagName == "IMG" || image.tagName == "VIDEO"){
 			var c = document.createElement('canvas');

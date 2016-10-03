@@ -16,6 +16,7 @@
 
 	var tesseract = createTesseractWorker();
 
+	// tesseract.recognize('http://localhost:7355/westmorland.jpg')
 	tesseract.recognize(canvas, {
 		tessedit_char_blacklist: 'e'
 	})
