@@ -1,4 +1,4 @@
-import desaturate from './desaturate'
+import desaturate from '../shared/desaturate'
 import loadLanguage from './loadLanguage'
 
 export default function detect(jobId, image, cb){
