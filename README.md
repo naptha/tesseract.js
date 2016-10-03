@@ -1,14 +1,15 @@
 > # UNDER CONTRUCTION
 > ## Due for Release on Monday, Oct 3, 2016
 
-# tesseract.js
+# Tesseract.js
+[Installation](#installation) | [Docs](#docs) | [Contributing](#contributing)
+
 Tesseract.js is a pure javascript version of the Tesseract OCR Engine that can recognize English, Chinese, Russian, and 60 other languages.
 
 Tesseract.js lets your code get the words out of scanned documents and other images.
 
 <!-- ![alt text]( "Logo Title Text 1") -->
 
-[Installation](#installation) | [Docs](#docs) | [Contributing](#contributing)
 
 # Installation
 Tesseract.js works with a `<script>` tag via local copy or cdn, or with `npm` (if you're using webpack / browserify).
