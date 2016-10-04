@@ -3,13 +3,13 @@
 
 # [Tesseract.js](http://tesseract.projectnaptha.com/)
 
-Tesseract.js is a javascript library that gets words in [almost any language](./tesseract_lang_list.md)* out of images.
+Tesseract.js is a javascript library that gets words in [almost any language](./tesseract_lang_list.md) out of images.
 
 ![fancy demo gif](http://placehold.it/700x300 "jhgfjhgf")
 
-The tesseract API is dead simple, and looks like this: 
+Tesseract.js works with script tags, webpack/browserify, and node. Once you've [installed it](#installation), using it is as simple as 
 ```javascript
-Tesseract.recognize('#my-image')
+Tesseract.recognize(my_image)
     .progress(function (p) { console.log('progress', p) })
     .then(function (result) { console.log('result', result) })
 ```
