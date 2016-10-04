@@ -42,8 +42,22 @@ Tesseract.workerUrl = 'http://www.absolute-path-to/tesseract.worker.js'
 After including your scripts, the `Tesseract` variable should be defined! You can [head to the docs](#docs) for a full treatment of the API.
 
 ## npm
-### TODO
-walp
+First:
+```shell
+> npm install tesseract.js --save
+```
+
+Then
+```javascript
+var Tesseract = require('tesseract.js')
+```
+
+or
+```javascript
+import Tesseract from 'tesseract.js'
+```
+
+You can [head to the docs](#docs) for a full treatment of the API.
 
 # Docs 
 
