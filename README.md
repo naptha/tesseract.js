@@ -6,7 +6,7 @@
 
 Tesseract.js is a javascript library that gets words in [almost any language](./tesseract_lang_list.md)* out of images.
 
-![fancy demo gif](https://placeholdit.imgix.net/700x300)
+![fancy demo gif](http://placehold.it/700x300 "jhgfjhgf")
 
 The tesseract API is dead simple, and looks like this: 
 ```javascript
