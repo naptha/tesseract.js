@@ -1,7 +1,7 @@
 {
   "name": "tesseract.js",
   "version": "1.0.0",
-  "description": "",
+  "description": "Pure Javascript Multilingual OCR",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" & exit 1",
@@ -28,5 +28,15 @@
     "pako": "^1.0.3",
     "png.js": "^0.2.1",
     "tesseract.js-core": "^1.0.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/naptha/tesseract.js.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/naptha/tesseract.js/issues"
+  },
+  "homepage": "https://github.com/naptha/tesseract.js"
 }
