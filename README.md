@@ -4,42 +4,35 @@
 # [Tesseract.js](http://tesseract.projectnaptha.com/)
 ## [Installation](#installation) • [Docs](#docs) • [Contributing](#contributing)
 
-Tesseract.js is a pure javascript library that lets you get words in [almost any language](./tesseract_lang_list.md)* out of images.
+Tesseract.js is a javascript library that gets words in [almost any language](./tesseract_lang_list.md)* out of images.
 
-Tesseract.js is a wrapper around an [emscripten](https://github.com/kripken/emscripten) port of the [Tesseract OCR Engine](https://github.com/tesseract-ocr/tesseract).
-
-*[English, Chinese, Russian, and 60 others](./tesseract_lang_list.md).
+Under the hood, Tesseract.js wraps an [emscripten](https://github.com/kripken/emscripten) port of the [Tesseract OCR Engine](https://github.com/tesseract-ocr/tesseract).
 
 <!-- ![alt text]( "Logo Title Text 1") -->
 
 
 # Installation
-Tesseract.js works with a `<script>` tag via local copy or cdn, or with `npm` (if you're using webpack / browserify).
+Tesseract.js works with a `<script>` tag via local copy or cdn, with webpack and browserify via `npm`, and on node via `npm`. [Check out the docs](#docs) for a full treatment of the API.
 
 ## Script Tag
 
-### CDN
+You can either include Tesseract.js on you page with a cdn like this:
 ```html
 <script src='https://cdn.rawgit.com/naptha/tesseract.js/a01d2a2/dist/tesseract.js'></script>
-
-<script>
-Tesseract.recognize('#my-image')
-    .progress(function (p) { console.log('progress', p) })
-    .then(function (result) { console.log('result', result) })
-</script>
 ```
 
-
-### Local
-First grab copies of `tesseract.js` and `tesseract.worker.js` from the [dist folder](https://github.com/naptha/tesseract.js/tree/master/dist). Then include `tesseract.js` on your page, and set `Tesseract.workerUrl` like this:
-
-
+Or you can grab copies of `tesseract.js` and `tesseract.worker.js` from the [dist folder](https://github.com/naptha/tesseract.js/tree/master/dist) and include your local copies like this:
 ```html
 <script src='/path/to/tesseract.js'></script>
 
 <script>
 Tesseract.workerUrl = 'http://www.absolute-path-to/tesseract.worker.js'
+</script>
+```
 
+After including your scripts, the `Tesseract` variable should be defined! You can [head to the docs](#docs) for a full treatment of the API.
+```html
+<script>
 Tesseract.recognize('#my-image')
     .progress(function (p) { console.log('progress', p) })
     .then(function (result) { console.log('result', result) })
