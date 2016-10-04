@@ -1,6 +1,8 @@
+# Tesseract Parameters
+
 You can override the following parameters in the options object passed to `Tesseract.recognize`:
 
-| Paramereter                                              | Default Value | Description                                                                                                                                                                                                                                          | 
+| Parameter                                              | Default Value | Description                                                                                                                                                                                                                                          | 
 |----------------------------------------------------------|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| 
 | ambigs_debug_level                                       | 0             | Debug level for unichar ambiguities                                                                                                                                                                                                                  | 
 | applybox_debug                                           | 1             | Debug level                                                                                                                                                                                                                                          | 

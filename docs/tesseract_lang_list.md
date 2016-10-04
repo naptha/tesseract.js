@@ -1,3 +1,5 @@
+# Tesseract Languages
+
 The `lang` property of the options object passed to `Tesseract.recognize` can have one of the following values (the default is `'eng'`.):
 
 | `lang`    | Language              | 
