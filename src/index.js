@@ -1,6 +1,8 @@
 "use strict";
 
 var adapter = require('./node/index.js')
+var circularize = require('./common/circularize.js')
+
 
 function createWorker(workerOptions){
 	return new TesseractWorker(workerOptions)
@@ -54,6 +56,11 @@ class TesseractWorker {
 	}
 
 	_recv(packet){
+
+        if(packet.status === 'resolve' && packet.action === 'recognize'){
+            packet.data = circularize(packet.data);
+        }
+
 		if(this._currentJob.id === packet.jobId){
 			this._currentJob._handle(packet)
 		}else{

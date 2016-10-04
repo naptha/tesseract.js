@@ -10,7 +10,8 @@ exports.defaultOptions = {
 exports.spawnWorker = function spawnWorker(instance, workerOptions) {
     var worker = new Worker(workerOptions.workerPath);
     worker.onmessage = function (e) {
-        instance._recv(e.data);
+        var packet = e.data;
+        instance._recv(packet);
     };
     return worker;
 };
@@ -72,11 +73,72 @@ function loadImage(image, cb) {
 },{}],2:[function(require,module,exports){
 "use strict";
 
+module.exports = function circularize(page) {
+    page.paragraphs = [];
+    page.lines = [];
+    page.words = [];
+    page.symbols = [];
+
+    page.blocks.forEach(function (block) {
+        block.page = page;
+
+        block.lines = [];
+        block.words = [];
+        block.symbols = [];
+
+        block.paragraphs.forEach(function (para) {
+            para.block = block;
+            para.page = page;
+
+            para.words = [];
+            para.symbols = [];
+
+            para.lines.forEach(function (line) {
+                line.paragraph = para;
+                line.block = block;
+                line.page = page;
+
+                line.symbols = [];
+
+                line.words.forEach(function (word) {
+                    word.line = line;
+                    word.paragraph = para;
+                    word.block = block;
+                    word.page = page;
+                    word.symbols.forEach(function (sym) {
+                        sym.word = word;
+                        sym.line = line;
+                        sym.paragraph = para;
+                        sym.block = block;
+                        sym.page = page;
+
+                        sym.line.symbols.push(sym);
+                        sym.paragraph.symbols.push(sym);
+                        sym.block.symbols.push(sym);
+                        sym.page.symbols.push(sym);
+                    });
+                    word.paragraph.words.push(word);
+                    word.block.words.push(word);
+                    word.page.words.push(word);
+                });
+                line.block.lines.push(line);
+                line.page.lines.push(line);
+            });
+            para.page.paragraphs.push(para);
+        });
+    });
+    return page;
+};
+
+},{}],3:[function(require,module,exports){
+"use strict";
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var adapter = require('./node/index.js');
+var circularize = require('./common/circularize.js');
 
 function createWorker(workerOptions) {
 	return new TesseractWorker(workerOptions);
@@ -146,6 +208,11 @@ var TesseractWorker = function () {
 	}, {
 		key: '_recv',
 		value: function _recv(packet) {
+
+			if (packet.status === 'resolve' && packet.action === 'recognize') {
+				packet.data = circularize(packet.data);
+			}
+
 			if (this._currentJob.id === packet.jobId) {
 				this._currentJob._handle(packet);
 			} else {
@@ -247,5 +314,5 @@ DefaultTesseract.createWorker = createWorker;
 
 module.exports = DefaultTesseract;
 
-},{"./node/index.js":1}]},{},[2])(2)
+},{"./common/circularize.js":2,"./node/index.js":1}]},{},[3])(3)
 });

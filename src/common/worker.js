@@ -8,6 +8,7 @@ function dispatchHandlers(packet, send){
         send({
             jobId: packet.jobId,
             status: status,
+            action: packet.action,
             data: data
         })
     }
@@ -89,6 +90,12 @@ function handleRecognize(req, res){
 
         base.Init(null, lang)
         res.progress({ status: 'initialized with language' })
+
+        for (var option in options) {
+            if (options.hasOwnProperty(option)) {
+                base.SetVariable(option, options[option]);
+            }
+        }
 
         var ptr = setImage(Module, base, req.image);
         base.Recognize(null)

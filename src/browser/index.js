@@ -7,7 +7,8 @@ exports.defaultOptions = {
 exports.spawnWorker = function spawnWorker(instance, workerOptions){
     var worker = new Worker(workerOptions.workerPath)
     worker.onmessage = function(e){
-        instance._recv(e.data)
+        var packet = e.data;
+        instance._recv(packet)
     }
     return worker
 }

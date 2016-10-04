@@ -82,7 +82,7 @@ AbstractChainedBatch.prototype.write = function (options, callback) {
 
 module.exports = AbstractChainedBatch
 }).call(this,require('_process'))
-},{"_process":37}],2:[function(require,module,exports){
+},{"_process":35}],2:[function(require,module,exports){
 (function (process){
 /* Copyright (c) 2013 Rod Vagg, MIT License */
 
@@ -135,7 +135,7 @@ AbstractIterator.prototype.end = function (callback) {
 module.exports = AbstractIterator
 
 }).call(this,require('_process'))
-},{"_process":37}],3:[function(require,module,exports){
+},{"_process":35}],3:[function(require,module,exports){
 (function (Buffer,process){
 /* Copyright (c) 2013 Rod Vagg, MIT License */
 
@@ -395,7 +395,7 @@ module.exports.AbstractIterator     = AbstractIterator
 module.exports.AbstractChainedBatch = AbstractChainedBatch
 
 }).call(this,{"isBuffer":require("../is-buffer/index.js")},require('_process'))
-},{"../is-buffer/index.js":9,"./abstract-chained-batch":1,"./abstract-iterator":2,"_process":37,"xtend":4}],4:[function(require,module,exports){
+},{"../is-buffer/index.js":9,"./abstract-chained-batch":1,"./abstract-iterator":2,"_process":35,"xtend":4}],4:[function(require,module,exports){
 module.exports = extend
 
 function extend() {
@@ -4034,7 +4034,7 @@ var checkKeyValue = Level.prototype._checkKeyValue = function (obj, type) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"./iterator":13,"abstract-leveldown":3,"buffer":6,"idb-wrapper":7,"isbuffer":11,"typedarray-to-buffer":38,"util":41,"xtend":15}],13:[function(require,module,exports){
+},{"./iterator":13,"abstract-leveldown":3,"buffer":6,"idb-wrapper":7,"isbuffer":11,"typedarray-to-buffer":36,"util":39,"xtend":41}],13:[function(require,module,exports){
 var util = require('util')
 var AbstractIterator  = require('abstract-leveldown').AbstractIterator
 var ltgt = require('ltgt')
@@ -4108,43 +4108,7 @@ Iterator.prototype._next = function (callback) {
   this.callback = callback
 }
 
-},{"abstract-leveldown":3,"ltgt":16,"util":41}],14:[function(require,module,exports){
-module.exports = hasKeys
-
-function hasKeys(source) {
-    return source !== null &&
-        (typeof source === "object" ||
-        typeof source === "function")
-}
-
-},{}],15:[function(require,module,exports){
-var Keys = require("object-keys")
-var hasKeys = require("./has-keys")
-
-module.exports = extend
-
-function extend() {
-    var target = {}
-
-    for (var i = 0; i < arguments.length; i++) {
-        var source = arguments[i]
-
-        if (!hasKeys(source)) {
-            continue
-        }
-
-        var keys = Keys(source)
-
-        for (var j = 0; j < keys.length; j++) {
-            var name = keys[j]
-            target[name] = source[name]
-        }
-    }
-
-    return target
-}
-
-},{"./has-keys":14,"object-keys":18}],16:[function(require,module,exports){
+},{"abstract-leveldown":3,"ltgt":14,"util":39}],14:[function(require,module,exports){
 (function (Buffer){
 
 exports.compare = function (a, b) {
@@ -4294,7 +4258,7 @@ exports.filter = function (range, compare) {
 }
 
 }).call(this,{"isBuffer":require("../is-buffer/index.js")})
-},{"../is-buffer/index.js":9}],17:[function(require,module,exports){
+},{"../is-buffer/index.js":9}],15:[function(require,module,exports){
 var hasOwn = Object.prototype.hasOwnProperty;
 var toString = Object.prototype.toString;
 
@@ -4336,11 +4300,11 @@ module.exports = function forEach(obj, fn) {
 };
 
 
-},{}],18:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 module.exports = Object.keys || require('./shim');
 
 
-},{"./shim":20}],19:[function(require,module,exports){
+},{"./shim":18}],17:[function(require,module,exports){
 var toString = Object.prototype.toString;
 
 module.exports = function isArguments(value) {
@@ -4358,7 +4322,7 @@ module.exports = function isArguments(value) {
 };
 
 
-},{}],20:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 (function () {
 	"use strict";
 
@@ -4422,7 +4386,7 @@ module.exports = function isArguments(value) {
 }());
 
 
-},{"./foreach":17,"./isArguments":19}],21:[function(require,module,exports){
+},{"./foreach":15,"./isArguments":17}],19:[function(require,module,exports){
 // Top level file is just a mixin of submodules & constants
 'use strict';
 
@@ -4438,7 +4402,7 @@ assign(pako, deflate, inflate, constants);
 
 module.exports = pako;
 
-},{"./lib/deflate":22,"./lib/inflate":23,"./lib/utils/common":24,"./lib/zlib/constants":27}],22:[function(require,module,exports){
+},{"./lib/deflate":20,"./lib/inflate":21,"./lib/utils/common":22,"./lib/zlib/constants":25}],20:[function(require,module,exports){
 'use strict';
 
 
@@ -4840,7 +4804,7 @@ exports.deflate = deflate;
 exports.deflateRaw = deflateRaw;
 exports.gzip = gzip;
 
-},{"./utils/common":24,"./utils/strings":25,"./zlib/deflate":29,"./zlib/messages":34,"./zlib/zstream":36}],23:[function(require,module,exports){
+},{"./utils/common":22,"./utils/strings":23,"./zlib/deflate":27,"./zlib/messages":32,"./zlib/zstream":34}],21:[function(require,module,exports){
 'use strict';
 
 
@@ -5260,7 +5224,7 @@ exports.inflate = inflate;
 exports.inflateRaw = inflateRaw;
 exports.ungzip  = inflate;
 
-},{"./utils/common":24,"./utils/strings":25,"./zlib/constants":27,"./zlib/gzheader":30,"./zlib/inflate":32,"./zlib/messages":34,"./zlib/zstream":36}],24:[function(require,module,exports){
+},{"./utils/common":22,"./utils/strings":23,"./zlib/constants":25,"./zlib/gzheader":28,"./zlib/inflate":30,"./zlib/messages":32,"./zlib/zstream":34}],22:[function(require,module,exports){
 'use strict';
 
 
@@ -5364,7 +5328,7 @@ exports.setTyped = function (on) {
 
 exports.setTyped(TYPED_OK);
 
-},{}],25:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 // String encode/decode helpers
 'use strict';
 
@@ -5551,7 +5515,7 @@ exports.utf8border = function (buf, max) {
   return (pos + _utf8len[buf[pos]] > max) ? pos : max;
 };
 
-},{"./common":24}],26:[function(require,module,exports){
+},{"./common":22}],24:[function(require,module,exports){
 'use strict';
 
 // Note: adler32 takes 12% for level 0 and 2% for level 6.
@@ -5585,7 +5549,7 @@ function adler32(adler, buf, len, pos) {
 
 module.exports = adler32;
 
-},{}],27:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 'use strict';
 
 
@@ -5637,7 +5601,7 @@ module.exports = {
   //Z_NULL:                 null // Use -1 or null inline, depending on var type
 };
 
-},{}],28:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 'use strict';
 
 // Note: we can't get significant speed boost here.
@@ -5680,7 +5644,7 @@ function crc32(crc, buf, len, pos) {
 
 module.exports = crc32;
 
-},{}],29:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 'use strict';
 
 var utils   = require('../utils/common');
@@ -7537,7 +7501,7 @@ exports.deflatePrime = deflatePrime;
 exports.deflateTune = deflateTune;
 */
 
-},{"../utils/common":24,"./adler32":26,"./crc32":28,"./messages":34,"./trees":35}],30:[function(require,module,exports){
+},{"../utils/common":22,"./adler32":24,"./crc32":26,"./messages":32,"./trees":33}],28:[function(require,module,exports){
 'use strict';
 
 
@@ -7579,7 +7543,7 @@ function GZheader() {
 
 module.exports = GZheader;
 
-},{}],31:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 'use strict';
 
 // See state defs from inflate.js
@@ -7907,7 +7871,7 @@ module.exports = function inflate_fast(strm, start) {
   return;
 };
 
-},{}],32:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 'use strict';
 
 
@@ -9447,7 +9411,7 @@ exports.inflateSyncPoint = inflateSyncPoint;
 exports.inflateUndermine = inflateUndermine;
 */
 
-},{"../utils/common":24,"./adler32":26,"./crc32":28,"./inffast":31,"./inftrees":33}],33:[function(require,module,exports){
+},{"../utils/common":22,"./adler32":24,"./crc32":26,"./inffast":29,"./inftrees":31}],31:[function(require,module,exports){
 'use strict';
 
 
@@ -9776,7 +9740,7 @@ module.exports = function inflate_table(type, lens, lens_index, codes, table, ta
   return 0;
 };
 
-},{"../utils/common":24}],34:[function(require,module,exports){
+},{"../utils/common":22}],32:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -9791,7 +9755,7 @@ module.exports = {
   '-6':   'incompatible version' /* Z_VERSION_ERROR (-6) */
 };
 
-},{}],35:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 'use strict';
 
 
@@ -10995,7 +10959,7 @@ exports._tr_flush_block  = _tr_flush_block;
 exports._tr_tally = _tr_tally;
 exports._tr_align = _tr_align;
 
-},{"../utils/common":24}],36:[function(require,module,exports){
+},{"../utils/common":22}],34:[function(require,module,exports){
 'use strict';
 
 
@@ -11026,7 +10990,7 @@ function ZStream() {
 
 module.exports = ZStream;
 
-},{}],37:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -11208,7 +11172,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],38:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 (function (Buffer){
 /**
  * Convert a typed array to a Buffer without a copy
@@ -11231,7 +11195,7 @@ module.exports = function (arr) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":6}],39:[function(require,module,exports){
+},{"buffer":6}],37:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -11256,14 +11220,14 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],40:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],41:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -11853,7 +11817,43 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":40,"_process":37,"inherits":39}],42:[function(require,module,exports){
+},{"./support/isBuffer":38,"_process":35,"inherits":37}],40:[function(require,module,exports){
+module.exports = hasKeys
+
+function hasKeys(source) {
+    return source !== null &&
+        (typeof source === "object" ||
+        typeof source === "function")
+}
+
+},{}],41:[function(require,module,exports){
+var Keys = require("object-keys")
+var hasKeys = require("./has-keys")
+
+module.exports = extend
+
+function extend() {
+    var target = {}
+
+    for (var i = 0; i < arguments.length; i++) {
+        var source = arguments[i]
+
+        if (!hasKeys(source)) {
+            continue
+        }
+
+        var keys = Keys(source)
+
+        for (var j = 0; j < keys.length; j++) {
+            var name = keys[j]
+            target[name] = source[name]
+        }
+    }
+
+    return target
+}
+
+},{"./has-keys":40,"object-keys":16}],42:[function(require,module,exports){
 'use strict';
 
 var leveljs = require('level-js');
@@ -11924,7 +11924,7 @@ function fetchLanguageData(req, res, cb) {
     xhr.send();
 }
 
-},{"../common/langdata.json":46,"level-js":12,"pako":21}],43:[function(require,module,exports){
+},{"../common/langdata.json":46,"level-js":12,"pako":19}],43:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -12163,6 +12163,7 @@ function dispatchHandlers(packet, send) {
         send({
             jobId: packet.jobId,
             status: status,
+            action: packet.action,
             data: data
         });
     }
@@ -12238,6 +12239,12 @@ function handleRecognize(req, res) {
 
         base.Init(null, lang);
         res.progress({ status: 'initialized with language' });
+
+        for (var option in options) {
+            if (options.hasOwnProperty(option)) {
+                base.SetVariable(option, options[option]);
+            }
+        }
 
         var ptr = setImage(Module, base, req.image);
         base.Recognize(null);
