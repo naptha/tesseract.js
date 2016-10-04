@@ -16,6 +16,8 @@ Tesseract.recognize(my_image)
 
 [Check out the docs](#docs) for a full treatment of the API.
 
+
+# Tech
 Under the hood, Tesseract.js wraps an [emscripten](https://github.com/kripken/emscripten) port of the [Tesseract OCR Engine](https://github.com/tesseract-ocr/tesseract).
 
 
