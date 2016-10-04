@@ -74,7 +74,10 @@ You can [head to the docs](#docs) for a full treatment of the API.
   + [Tesseract.coreUrl](#tesseractcoreurl)
   + [Tesseract.workerUrl](#tesseractworkerurl)
   + [Tesseract.langUrl](#tesseractlangurl)
-
+* [Contributing](#contributing)
+  + [Development](#development) 
+  + [Building Static Files](#building-static-files)
+  + [Send us a Pull Request!](#send-us-a-pull-request)
 
 
 ## Tesseract.recognize(image: [ImageLike](#imagelike)[, options]) -> [TesseractJob](#tesseractjob)
@@ -248,8 +251,8 @@ Tesseract.recognize('#my-im', {
 
 
 
-# Contributing
-## Development
+## Contributing
+### Development
 To run a development copy of tesseract.js, first clone this repo.
 ```shell
 > git clone https://github.com/naptha/tesseract.js.git
@@ -270,11 +273,11 @@ Listening at http://localhost:7355
 
 Then open `http://localhost:7355` in your favorite browser. The devServer automatically rebuilds tesseract.js and tesseract.worker.js when you change files in the src folder.
 
-## Building Static Files
+### Building Static Files
 After you've cloned the repo and run `npm install` as described in the [Development Section](#development), you can build static library files in the dist folder with 
 ```shell
 > npm run build
 ```
 
-## Send us a Pull Request!
+### Send us a Pull Request!
 Thanks :)
