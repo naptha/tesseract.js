@@ -1,4 +1,4 @@
-export default function circularize(page){
+module.exports = function circularize(page){
     page.paragraphs = []
     page.lines = []
     page.words = []

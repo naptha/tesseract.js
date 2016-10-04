@@ -2,34 +2,31 @@
   "name": "tesseract.js",
   "version": "1.0.0",
   "description": "",
-  "main": "Tesseract.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node devServer.js",
-    "build": "webpack --config webpack.config.prod.js"
+    "test": "echo \"Error: no test specified\" & exit 1",
+    "start": "watchify src/index.js -o dist/tesseract.js --standalone Tesseract & watchify src/browser/worker.js -o dist/worker.js & http-server -p 7355",
+    "build": "browserify src/index.js -t [ babelify --presets [ es2015 ] ] -o dist/tesseract.js --standalone Tesseract && browserify src/browser/worker.js -t [ babelify --presets [ es2015 ] ] -o dist/worker.js"
   },
-  "dependencies": {
-    "level-js": "^2.1.6",
-    "pako": "^0.2.7",
-    "tesseract.js-core": "^1.0.0"
-  },
-  "devDependencies": {
-    "babel": "^6.5.2",
-    "babel-core": "^6.7.0",
-    "babel-loader": "^6.2.4",
-    "express": "^4.13.4",
-    "webpack": "^1.13.0",
-    "webpack-dev-middleware": "^1.5.1",
-    "babel-preset-stage-1": "^6.5.0",
-    "babel-preset-es2015": "^6.6.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/naptha/tesseract.js.git"
+  "browser": {
+    "./src/node/index.js": "./src/browser/index.js"
   },
   "author": "",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/naptha/tesseract.js/issues"
+  "license": "ISC",
+  "devDependencies": {
+    "babel-preset-es2015": "^6.16.0",
+    "babel-preset-react": "^6.16.0",
+    "babelify": "^7.3.0",
+    "browserify": "^13.1.0",
+    "http-server": "^0.9.0",
+    "watchify": "^3.7.0"
   },
-  "homepage": "https://github.com/naptha/tesseract.js"
+  "dependencies": {
+    "file-type": "^3.8.0",
+    "jpeg-js": "^0.2.0",
+    "level-js": "^2.2.4",
+    "pako": "^1.0.3",
+    "png.js": "^0.2.1",
+    "tesseract.js-core": "^1.0.2"
+  }
 }

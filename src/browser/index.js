@@ -1,106 +1,64 @@
-var coreUrl = 'https://cdn.rawgit.com/naptha/tesseract.js-core/master/index.js',
-	workerUrl = 'https://cdn.rawgit.com/naptha/tesseract.js/8b915dc/dist/tesseract.worker.js',
-	langUrl = 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/',
-	worker;
-
-function recognize(image, options){
-	if(!worker) worker = createWorker( Tesseract.coreUrl, Tesseract.workerUrl, Tesseract.langUrl )
-	return worker.recognize(image, options)
+exports.defaultOptions = {
+    langPath: 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/',
+    workerPath: 'dist/worker.js',
+    tesseractPath: 'https://cdn.rawgit.com/naptha/tesseract.js-core/0.1.0/index.js',    
 }
 
-function detect(image){
-	if(!worker) worker = createWorker( Tesseract.coreUrl, Tesseract.workerUrl, Tesseract.langUrl )
-	return worker.detect(image)
+exports.spawnWorker = function spawnWorker(instance, workerOptions){
+    var worker = new Worker(workerOptions.workerPath)
+    worker.onmessage = function(e){
+        instance._recv(e.data)
+    }
+    return worker
 }
 
-function createWorker(coreUrl=Tesseract.coreUrl, workerUrl=Tesseract.workerUrl, langUrl=Tesseract.langUrl){
-
-	var blob = new Blob([`importScripts('${coreUrl}');
-		                  importScripts('${workerUrl}');`])
-
-	var worker = new Worker(window.URL.createObjectURL(blob));
-
-	var bigworker = false
-	var jobCounter = 0
-	var handlers = {}
-
-	function runAsync(action, args){
-		
-		var jobId = jobCounter++
-		handlers[jobId] = {}
-
-		var waitingCount = 0
-		Object.getOwnPropertyNames(args)
-		.filter(name => typeof args[name] === 'function')
-		.forEach(name => {
-			waitingCount++
-			args[name](value => {
-				args[name] = value
-				if(--waitingCount == 0) worker.postMessage({jobId, action, args})
-			})
-		})
-
-		if(waitingCount == 0) worker.postMessage({jobId, action, args})
-		return {
-			then    (f){ handlers[jobId].result  = f; return this},
-			error   (f){ handlers[jobId].error    = f; return this},
-			progress(f){ handlers[jobId].progress = f; return this}
-		}
-	}
-
-	worker.onmessage = function(e){
-		var {jobId, progress, error, result} = e.data
-		var handler = handlers[jobId]
-		if(progress && handler.progress) handler.progress(progress);
-		if(error && handler.error) handler.error(error);
-		if(result && handler.result) handler.result(result);
-	}
-
-	function convertToImageData(image){
-		if(image.match && image.match(/^https?:\/\//)) {
-			return function thunk(cb){
-				var img = new Image()
-				img.src = image
-				img.onload = () => cb(convertToImageData(img))
-			}
-		}
-
-		if(typeof image === 'string') image = document.querySelector(image)
-		if(image.getContext) image = image.getContext('2d');
-		else if(image.tagName == "IMG" || image.tagName == "VIDEO"){
-			var c = document.createElement('canvas');
-			c.width  = image.naturalWidth  || image.videoWidth;
-			c.height = image.naturalHeight || image.videoHeight;
-			var ctx = c.getContext('2d');
-			ctx.drawImage(image, 0, 0);
-			image = ctx;
-		}
-		if(image.getImageData) image = image.getImageData(0, 0, image.canvas.width, image.canvas.height);
-		return image
-	}
-
-	runAsync('init', {mem: (1<<24) * 6, langUrl})
-
-	return {
-		detect(image){
-			return runAsync('detect', {image: convertToImageData(image)})
-		},
-
-		recognize(image, options='eng'){
-
-			if (typeof options === 'string') options = {lang: options};
-			else options.lang = options.lang || 'eng';
-
-			if (!bigworker && ['chi_sim', 'chi_tra', 'jpn'].indexOf(options.lang) != -1){
-				runAsync('init', {mem: (1<<24) * 10, langUrl})
-				bigworker = true
-			}
-
-			return runAsync('recognize', {options, image: convertToImageData(image)})
-		}	
-	}
+exports.terminateWorker = function(instance){
+    instance.worker.terminate()
 }
 
-var Tesseract = {coreUrl, workerUrl, langUrl, recognize, detect, createWorker}
+exports.sendPacket = function sendPacket(instance, packet){
+    loadImage(packet.payload.image, function(img){
+        packet.payload.image = img
+        instance.worker.postMessage(packet) 
+    })
+}
 
-module.exports = Tesseract
+
+function loadImage(image, cb){
+    if(typeof image === 'string'){
+        if(/^\#/.test(image)){
+            // element css selector
+            return loadImage(document.querySelector(image), cb)
+        }else{
+            // url or path
+            var im = new Image
+            im.src = image;
+            im.onload = e => loadImage(im, cb);
+            return
+        }
+    }else if(image instanceof File){
+        // files
+        var fr = new FileReader()
+        fr.onload = e => loadImage(fr.result, cb);
+        fr.readAsDataURL(image)
+        return
+    }else if(image instanceof Blob){
+        return loadImage(URL.createObjectURL(image), cb)
+    }else if(image.getContext){
+        // canvas element
+        return loadImage(image.getContext('2d'), cb)
+    }else if(image.tagName == "IMG" || image.tagName == "VIDEO"){
+        // image element or video element
+        var c = document.createElement('canvas');
+        c.width  = image.naturalWidth  || image.videoWidth;
+        c.height = image.naturalHeight || image.videoHeight;
+        var ctx = c.getContext('2d');
+        ctx.drawImage(image, 0, 0);
+        return loadImage(ctx, cb)
+    }else if(image.getImageData){
+        // canvas context
+        var data = image.getImageData(0, 0, image.canvas.width, image.canvas.height);
+        return loadImage(data, cb)
+    }
+    cb(image)
+}

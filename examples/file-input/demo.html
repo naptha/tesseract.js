@@ -1,0 +1,5 @@
+<script src="dist/tesseract.js"></script>
+<input type="file" onchange="Tesseract.recognize(this.files[0]).progress(console.log)">
+
+
+<input type="file" onchange="Tesseract.recognize(this.files[0], {lang: 'chi_sim'}).progress(console.log)">
