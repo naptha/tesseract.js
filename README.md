@@ -3,7 +3,7 @@
 
 # [Tesseract.js](http://tesseract.projectnaptha.com/)
 
-Tesseract.js is a javascript library that gets words in [almost any language](./tesseract_lang_list.md) out of images. Under the hood, Tesseract.js wraps [tesseract.js-core](https://github.com/naptha/tesseract.js-core) an [emscripten](https://github.com/kripken/emscripten) port of the [Tesseract OCR Engine](https://github.com/tesseract-ocr/tesseract).
+Tesseract.js is a javascript library that gets words in [almost any language](./tesseract_lang_list.md) out of images. Under the hood, Tesseract.js wraps [tesseract.js-core](https://github.com/naptha/tesseract.js-core), an [emscripten](https://github.com/kripken/emscripten) port of the [Tesseract OCR Engine](https://github.com/tesseract-ocr/tesseract).
 
 
 ![fancy demo gif](http://placehold.it/700x300 "jhgfjhgf")
@@ -21,7 +21,7 @@ Tesseract.recognize(my_image)
 # Installation
 Tesseract.js works with a `<script>` tag via local copy or cdn, with webpack and browserify via `npm`, and on node via `npm`. [Check out the docs](#docs) for a full treatment of the API.
 
-## <script/>
+## &lt;script/>
 
 You can either include Tesseract.js on you page with a cdn like this:
 ```html
