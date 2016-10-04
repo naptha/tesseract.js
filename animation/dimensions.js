@@ -38,8 +38,6 @@ var dimensions = {
 			this.height=curH
 			return true
 		}
-		else {
-			return false
-		}
+		return false
 	}	
 }

@@ -1,0 +1,182 @@
+body, html{
+	position: absolute;
+	top: 0;
+	margin: 0;
+	width: 100%;
+	font-family: Lato;
+}
+
+#slogan {
+    text-align: center;
+    margin-top: -26px;
+    color: #fff;
+}
+#splash {
+    overflow: hidden;
+    background-color: #668EC3;
+    // background: linear-gradient(90deg, #eb6b8f, #ffee75);
+}
+
+#logo-wrap {
+	margin-top: 50px;
+	text-align: center;
+	position: relative;
+}
+
+#logo-canvas {
+    margin-left: auto;
+    margin-right: auto;
+    pointer-events: none;
+    z-index: 0;
+    position: absolute;
+}
+
+#logo-img {
+	max-width: 100%;
+}
+
+#get-started-wrap {
+	text-align: center;
+	position: relative;
+}
+
+#get-started {
+    display: inline-block;
+    color: #668EC3;
+    background: #fff;
+    padding: 17px 25px;
+    font-size: 30px;
+    margin: 50px 0;
+    border-radius: 7px;
+}
+
+#demo-title {
+	padding: 40px 0;
+	color: #668EC3;
+	font-size: 30px;
+	text-align: center;
+}
+
+
+#options {
+    display: flex;
+    justify-content: space-around;
+    font-size: 20px;
+    color: #199ff4;
+    padding: 0 15px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.option {
+	padding: 10px;
+	border-radius: 5px;
+}
+
+.option.selected {
+	color: #fff;
+	background: #668EC3;
+}
+
+#input {
+	max-width: 100%;
+	box-sizing: border-box;
+	padding: 20px;
+	margin-top: 30px;
+}
+
+#input-overlay {
+	position: absolute;
+	max-width: 100%;
+	box-sizing: border-box;
+	margin-top: 30px;
+	padding: 20px;
+}
+
+#github {
+	height: 1em;
+	width: 1em;
+    margin-bottom: -3px;
+    margin-right: 10px;
+}
+
+#github path {
+	fill: #668EC3;
+}
+
+#arrow {
+	text-align: center;
+    color: #668ec3;
+}
+
+#arrow::before {
+	content: '\2193'
+}
+
+#output {
+	max-width: 100%;
+	box-sizing: border-box;
+	padding: 20px;
+}
+
+#footer {
+    color: #fff;
+    background-color: #7A8A9F;
+    // background: linear-gradient(90deg, #eb6b8f, #ffee75);
+    text-align: right;
+    padding: 0 20px;
+}
+
+#lengle {
+    margin-top: 8%;
+    margin-bottom: 8%;
+
+    line-height: normal;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#lengle img {
+    height: .7em;
+}
+
+@media (min-width: 900px) {
+	#demo-content {
+		display: flex;
+		align-items: center;
+	}
+
+	#demo-content > div {
+		position: relative;
+	}
+
+	#input, #input-overlay {
+		margin-top: 0;
+	}
+
+	#arrow::before {
+		content: '\2192'
+	}
+
+	#options {
+		margin: 40px auto;
+	}
+
+	#demo-title {
+		width: 250px;
+		background: #fff;
+		margin-top: -70px;
+		position: relative;
+		padding: 20px 0;
+	}
+
+	#demo-title::after {
+	    border-right: 40px solid transparent;
+	    border-bottom: 70px solid white;
+	    content: ' ';
+	    position: absolute;
+	    top: 0;
+	    left: 100%;
+	}
+}

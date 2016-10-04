@@ -21,12 +21,14 @@
     flex-grow:1;
     -webkit-flex-grow:1;
 }
+
 .footer {
     width: 100%;
     color: #fff;
     background-color: #6A6A6A;
     text-align: right;
 }
+
 .lengle {
     margin-top: 8%;
     margin-bottom: 8%;
@@ -170,7 +172,6 @@ svg {
 
 .selected {
 	background-color: #668EC3;
-	/*font-weight: bold;*/
 }
 
 .bookend {
