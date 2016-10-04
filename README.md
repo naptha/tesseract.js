@@ -6,9 +6,18 @@
 
 Tesseract.js is a javascript library that gets words in [almost any language](./tesseract_lang_list.md)* out of images.
 
-Under the hood, Tesseract.js wraps an [emscripten](https://github.com/kripken/emscripten) port of the [Tesseract OCR Engine](https://github.com/tesseract-ocr/tesseract).
+![fancy demo gif](https://placeholdit.imgix.net/~text?txtsize=33&txt=cool%20demo&w=700&h=300)
 
-<!-- ![alt text]( "Logo Title Text 1") -->
+The tesseract API is dead simple, and looks like this: 
+```javascript
+Tesseract.recognize('#my-image')
+    .progress(function (p) { console.log('progress', p) })
+    .then(function (result) { console.log('result', result) })
+```
+
+[Check out the docs](#docs) for a full treatment of the API.
+
+Under the hood, Tesseract.js wraps an [emscripten](https://github.com/kripken/emscripten) port of the [Tesseract OCR Engine](https://github.com/tesseract-ocr/tesseract).
 
 
 # Installation
@@ -31,14 +40,6 @@ Tesseract.workerUrl = 'http://www.absolute-path-to/tesseract.worker.js'
 ```
 
 After including your scripts, the `Tesseract` variable should be defined! You can [head to the docs](#docs) for a full treatment of the API.
-```html
-<script>
-Tesseract.recognize('#my-image')
-    .progress(function (p) { console.log('progress', p) })
-    .then(function (result) { console.log('result', result) })
-</script>
-```
-
 
 ## npm
 ### TODO
