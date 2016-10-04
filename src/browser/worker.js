@@ -7,8 +7,6 @@ global.addEventListener('message', function(e){
     workerUtils.dispatchHandlers(packet, obj => postMessage(obj))
 })
 
-exports.getLanguageData = require('./lang.js')
-
 exports.getCore = function(req, res){
     if(!global.TesseractCore){
         res.progress({ status: 'loading tesseract core' })
@@ -17,5 +15,7 @@ exports.getCore = function(req, res){
     }
     return TesseractCore
 }
+
+exports.getLanguageData = require('./lang.js')
 
 workerUtils.setAdapter(module.exports);

@@ -6,9 +6,6 @@ process.on('message', function(packet){
     workerUtils.dispatchHandlers(packet, obj => process.send(obj))
 })
 
-exports.getLanguageData = require('./lang.js')
-
-
 var TesseractCore;
 exports.getCore = function(req, res){
     if(!TesseractCore){
@@ -18,5 +15,7 @@ exports.getCore = function(req, res){
     }
     return TesseractCore
 }
+
+exports.getLanguageData = require('./lang.js')
 
 workerUtils.setAdapter(module.exports);

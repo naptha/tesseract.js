@@ -1,4 +1,5 @@
 var path = require('path')
+
 exports.defaultOptions = {
     workerPath: path.join(__dirname, 'worker.js'),
     langPath: 'http://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/',

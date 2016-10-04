@@ -1,15 +1,3 @@
-function deindent(html){
-    var lines = html.split('\n')
-    if(lines[0].substring(0,2) === "  "){
-        for (var i = 0; i < lines.length; i++) {
-            if (lines[i].substring(0,2) === "  ") {
-                lines[i] = lines[i].slice(2)
-            }
-        };
-    }
-    return lines.join('\n')
-}
-
 module.exports = function DumpLiterallyEverything(Module, base){
     var ri = base.GetIterator();
     var blocks = [];
@@ -158,4 +146,19 @@ module.exports = function DumpLiterallyEverything(Module, base){
         oem: enumToString(base.oem(), 'OEM'),
         version: base.Version(),
     }
+}
+
+// the generated HOCR is excessively indented, so
+// we get rid of that indentation
+
+function deindent(html){
+    var lines = html.split('\n')
+    if(lines[0].substring(0, 2) === "  "){
+        for (var i = 0; i < lines.length; i++) {
+            if (lines[i].substring(0,2) === "  ") {
+                lines[i] = lines[i].slice(2)
+            }
+        };
+    }
+    return lines.join('\n')
 }
