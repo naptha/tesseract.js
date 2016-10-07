@@ -4,6 +4,7 @@ body, html{
 	margin: 0;
 	width: 100%;
 	font-family: Lato;
+	font-weight: 300;
 }
 
 #slogan {
@@ -13,7 +14,7 @@ body, html{
 }
 #splash {
     overflow: hidden;
-    background-color: #668EC3;
+    background-color: #425565;
     // background: linear-gradient(90deg, #eb6b8f, #ffee75);
 }
 
@@ -42,7 +43,7 @@ body, html{
 
 #get-started {
     display: inline-block;
-    color: #668EC3;
+    color: #714d26;
     background: #fff;
     padding: 17px 25px;
     font-size: 30px;
@@ -52,7 +53,7 @@ body, html{
 
 #demo-title {
 	padding: 40px 0;
-	color: #668EC3;
+	color: #714d26;
 	font-size: 30px;
 	text-align: center;
 }
@@ -62,7 +63,7 @@ body, html{
     display: flex;
     justify-content: space-around;
     font-size: 20px;
-    color: #199ff4;
+    color: #714d26;
     padding: 0 15px;
     max-width: 700px;
     margin-left: auto;
@@ -72,11 +73,13 @@ body, html{
 .option {
 	padding: 10px;
 	border-radius: 5px;
+	cursor: pointer;
 }
 
 .option.selected {
 	color: #fff;
-	background: #668EC3;
+	background: #5781a5;
+	font-weight: 400;
 }
 
 #input {
@@ -102,12 +105,13 @@ body, html{
 }
 
 #github path {
-	fill: #668EC3;
+	fill: #826f5c;
 }
 
 #arrow {
 	text-align: center;
-    color: #668ec3;
+    font-size: 30px;
+    color: #826f5c;
 }
 
 #arrow::before {
@@ -121,9 +125,8 @@ body, html{
 }
 
 #footer {
-    color: #fff;
-    background-color: #7A8A9F;
-    // background: linear-gradient(90deg, #eb6b8f, #ffee75);
+    color: #826f5c;
+    background-color: #ffffff;
     text-align: right;
     padding: 0 20px;
 }
