@@ -73,6 +73,13 @@ function loadImage(image, cb) {
 },{}],2:[function(require,module,exports){
 "use strict";
 
+// The result of dump.js is a big JSON tree
+// which can be easily serialized (for instance
+// to be sent from a webworker to the main app
+// or through Node's IPC), but we want
+// a (circular) DOM-like interface for walking
+// through the data. 
+
 module.exports = function circularize(page) {
     page.paragraphs = [];
     page.lines = [];
