@@ -174,8 +174,13 @@ var TesseractWorker = function () {
 			var _this = this;
 
 			return this._delay(function (job) {
-				options = options || {};
-				options.lang = options.lang || 'eng';
+				if (typeof options === 'string') {
+					options = { lang: options };
+				} else {
+					options = options || {};
+					options.lang = options.lang || 'eng';
+				}
+
 				job._send('recognize', { image: image, options: options, workerOptions: _this.workerOptions });
 			});
 		}
