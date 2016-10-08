@@ -1,5 +1,4 @@
 > # UNDER CONTRUCTION
-> ## Due for Release on ~~Tuesday, Oct 4, 2016~~ Friday, Oct 7, 2016
 > Sorry for the delay!
 
 # [Tesseract.js](http://tesseract.projectnaptha.com/)
