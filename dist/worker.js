@@ -12245,6 +12245,7 @@ function handleRecognize(req, res) {
         base.Init(null, lang);
         res.progress({ status: 'initialized with language' });
 
+        var options = req.options;
         for (var option in options) {
             if (options.hasOwnProperty(option)) {
                 base.SetVariable(option, options[option]);
