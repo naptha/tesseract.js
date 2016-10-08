@@ -3,7 +3,8 @@
 
 exports.defaultOptions = {
     langPath: 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/',
-    workerPath: 'dist/worker.js',
+    // workerPath: 'dist/worker.js',
+    workerPath: 'https://cdn.rawgit.com/naptha/tesseract.js/0.1.0/dist/worker.js',
     tesseractPath: 'https://cdn.rawgit.com/naptha/tesseract.js-core/0.1.0/index.js'
 };
 
@@ -72,6 +73,13 @@ function loadImage(image, cb) {
 
 },{}],2:[function(require,module,exports){
 "use strict";
+
+// The result of dump.js is a big JSON tree
+// which can be easily serialized (for instance
+// to be sent from a webworker to the main app
+// or through Node's IPC), but we want
+// a (circular) DOM-like interface for walking
+// through the data. 
 
 module.exports = function circularize(page) {
     page.paragraphs = [];
