@@ -18,8 +18,13 @@ class TesseractWorker {
 
 	recognize(image, options){
 		return this._delay(job => {
-			options = options || {}
-			options.lang = options.lang || 'eng';
+			if(typeof options === 'string'){
+				options = { lang: options };
+			}else{
+				options = options || {}
+				options.lang = options.lang || 'eng';	
+			}
+			
 			job._send('recognize', { image: image, options: options, workerOptions: this.workerOptions })
 		})
 	}
