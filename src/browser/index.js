@@ -6,7 +6,13 @@ exports.defaultOptions = {
 }
 
 exports.spawnWorker = function spawnWorker(instance, workerOptions){
-    var worker = new Worker(workerOptions.workerPath)
+    if(window.Blob && window.URL){
+        var blob = new Blob(['importScripts("' + workerOptions.workerPath + '");'])
+        var worker = new Worker(window.URL.createObjectURL(blob));
+    }else{
+        var worker = new Worker(workerOptions.workerPath)
+    }
+
     worker.onmessage = function(e){
         var packet = e.data;
         instance._recv(packet)
