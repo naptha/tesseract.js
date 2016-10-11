@@ -11854,38 +11854,33 @@ function extend() {
 }
 
 },{"./has-keys":40,"object-keys":17}],42:[function(require,module,exports){
-'use strict';
+var leveljs = require('level-js')
+var db = typeof indexedDB === 'undefined' ? { open: (_, cb) =>  cb(true) } : leveljs('./tessdata2')
 
-var leveljs = require('level-js');
-var db = typeof indexedDB === 'undefined' ? { open: function open(_, cb) {
-        return cb(true);
-    } } : leveljs('./tessdata2');
+var langdata = require('../common/langdata.json')
 
-var langdata = require('../common/langdata.json');
-
-module.exports = function getLanguageData(req, res, cb) {
+module.exports = function getLanguageData(req, res, cb){
     var lang = req.options.lang;
-
-    function saveDataFile(data) {
-        db.put(lang, data, function (err) {
-            return console.log('cached', lang, err);
-        });
-        cb(data);
+    
+    function saveDataFile(data){
+        db.put(lang, data, err => console.log('cached', lang, err))
+        cb(data)
     }
 
-    db.open({ compression: false }, function (err) {
+    db.open({ compression: false }, err => {
         if (err) return fetchLanguageData(req, res, cb);
-        db.get(lang, function (err, data) {
+        db.get(lang, (err, data) => {
             if (err) return fetchLanguageData(req, res, saveDataFile);
-            res.progress({ status: 'found in cache ' + lang + '.traineddata' });
-            cb(data);
-        });
-    });
-};
+            res.progress({ status: 'found in cache ' + lang + '.traineddata' })
+            cb(data)
+        })
+    })
+}
+
 
 var ungzip = require('pako').ungzip;
 
-function fetchLanguageData(req, res, cb) {
+function fetchLanguageData(req, res, cb){
     var lang = req.options.lang;
     var langfile = lang + '.traineddata.gz';
     var url = req.workerOptions.langPath + langfile;
@@ -11893,130 +11888,114 @@ function fetchLanguageData(req, res, cb) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'arraybuffer';
     xhr.open('GET', url, true);
-    xhr.onerror = function (e) {
-        xhr.onprogress = xhr.onload = null;
-        cb(xhr, null);
-    };
-    xhr.onprogress = function (e) {
-        return res.progress({
+    xhr.onerror = e => {
+        xhr.onprogress = xhr.onload = null
+        cb(xhr, null)
+    }
+    xhr.onprogress = e => 
+        res.progress({
             status: 'downloading ' + langfile,
             loaded: e.loaded,
             progress: Math.min(1, e.loaded / langdata[lang])
         });
-    };
 
-    xhr.onload = function (e) {
-        if (!(xhr.status == 200 || xhr.status == 0 && xhr.response)) return res.reject('Error downloading language ' + url);
-        res.progress({ status: 'unzipping ' + langfile });
+    xhr.onload = e => {
+        if (!(xhr.status == 200 || (xhr.status == 0 && xhr.response))) return res.reject('Error downloading language ' + url);
+        res.progress({ status: 'unzipping ' + langfile })
 
         // in case the gzips are already ungzipped or extra gzipped
-        var response = new Uint8Array(xhr.response);
+        var response = new Uint8Array(xhr.response)
         try {
-            while (response[0] == 0x1f && response[1] == 0x8b) {
-                response = ungzip(response);
-            }
+            while(response[0] == 0x1f && response[1] == 0x8b) response = ungzip(response);
         } catch (err) {
-            return res.reject('Error unzipping language file ' + langfile + '\n' + err.message);
+            return res.reject('Error unzipping language file ' + langfile + '\n' + err.message)
         }
-
-        cb(response);
-    };
-    xhr.send();
+        
+        cb(response)
+    }
+    xhr.send()
 }
 
 },{"../common/langdata.json":46,"level-js":13,"pako":20}],43:[function(require,module,exports){
 (function (global){
 "use strict";
 
-var workerUtils = require('../common/worker.js');
+var workerUtils = require('../common/worker.js')
 
-global.addEventListener('message', function (e) {
+global.addEventListener('message', function(e){
     var packet = e.data;
-    workerUtils.dispatchHandlers(packet, function (obj) {
-        return postMessage(obj);
-    });
-});
+    workerUtils.dispatchHandlers(packet, obj => postMessage(obj))
+})
 
-exports.getCore = function (req, res) {
-    if (!global.TesseractCore) {
-        res.progress({ status: 'loading tesseract core' });
-        importScripts(req.workerOptions.tesseractPath);
-        res.progress({ status: 'loaded tesseract core' });
+exports.getCore = function(req, res){
+    if(!global.TesseractCore){
+        res.progress({ status: 'loading tesseract core' })
+        importScripts(req.workerOptions.tesseractPath)
+        res.progress({ status: 'loaded tesseract core' })
     }
-    return TesseractCore;
-};
+    return TesseractCore
+}
 
-exports.getLanguageData = require('./lang.js');
+exports.getLanguageData = require('./lang.js')
 
 workerUtils.setAdapter(module.exports);
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../common/worker.js":47,"./lang.js":42}],44:[function(require,module,exports){
-'use strict';
-
 // This converts an image to grayscale
 
-module.exports = function desaturate(image) {
+module.exports = function desaturate(image){
     var width, height;
-    if (image.data) {
-        var src = image.data;
-        width = image.width, height = image.height;
-        var dst = new Uint8Array(width * height);
-        var srcLength = src.length | 0,
-            srcLength_16 = srcLength - 16 | 0;
-
+    if(image.data){
+        var src       = image.data;
+            width     = image.width, 
+            height    = image.height;
+        var dst       = new Uint8Array(width * height);
+        var srcLength = src.length | 0, srcLength_16 = (srcLength - 16) | 0;
+        
         for (var i = 0, j = 0; i <= srcLength_16; i += 16, j += 4) {
             // convert to grayscale 4 pixels at a time; eveything with alpha gets put in front of 50% gray
-            dst[j] = (src[i] * 77 + src[i + 1] * 151 + src[i + 2] * 28) * src[i + 3] + (255 - src[i + 3] << 15) + 32768 >> 16;
-            dst[j + 1] = (src[i + 4] * 77 + src[i + 5] * 151 + src[i + 6] * 28) * src[i + 7] + (255 - src[i + 7] << 15) + 32768 >> 16;
-            dst[j + 2] = (src[i + 8] * 77 + src[i + 9] * 151 + src[i + 10] * 28) * src[i + 11] + (255 - src[i + 11] << 15) + 32768 >> 16;
-            dst[j + 3] = (src[i + 12] * 77 + src[i + 13] * 151 + src[i + 14] * 28) * src[i + 15] + (255 - src[i + 15] << 15) + 32768 >> 16;
+            dst[j]     = (((src[i] * 77 + src[i+1] * 151 + src[i+2] * 28) * src[i+3]) + ((255-src[i+3]) << 15) + 32768) >> 16
+            dst[j+1]   = (((src[i+4] * 77 + src[i+5] * 151 + src[i+6] * 28) * src[i+7]) + ((255-src[i+7]) << 15) + 32768) >> 16
+            dst[j+2]   = (((src[i+8] * 77 + src[i+9] * 151 + src[i+10] * 28) * src[i+11]) + ((255-src[i+11]) << 15) + 32768) >> 16
+            dst[j+3]   = (((src[i+12] * 77 + src[i+13] * 151 + src[i+14] * 28) * src[i+15]) + ((255-src[i+15]) << 15) + 32768) >> 16
         }
-        for (; i < srcLength; i += 4, ++j) {
-            //finish up
-            dst[j] = (src[i] * 77 + src[i + 1] * 151 + src[i + 2] * 28) * src[i + 3] + (255 - src[i + 3] << 15) + 32768 >> 16;
-        }image = dst;
-    } else {
-        throw 'Invalid ImageData';
-    }
-    return image;
-};
-
+        for (; i < srcLength; i += 4, ++j) //finish up
+            dst[j]     = (((src[i] * 77 + src[i+1] * 151 + src[i+2] * 28) * src[i+3]) + ((255-src[i+3]) << 15) + 32768) >> 16
+        image = dst;
+    } else { throw 'Invalid ImageData' }
+    return image
+}
 },{}],45:[function(require,module,exports){
-'use strict';
-
-module.exports = function DumpLiterallyEverything(Module, base) {
+module.exports = function DumpLiterallyEverything(Module, base){
     var ri = base.GetIterator();
     var blocks = [];
     var block, para, textline, word, symbol;
 
-    function enumToString(value, prefix) {
-        return Object.keys(Module).filter(function (e) {
-            return e.substr(0, prefix.length + 1) == prefix + '_';
-        }).filter(function (e) {
-            return Module[e] === value;
-        }).map(function (e) {
-            return e.slice(prefix.length + 1);
-        })[0];
+    function enumToString(value, prefix){
+       return (Object.keys(Module)
+           .filter(function(e){ return e.substr(0, prefix.length + 1) == prefix + '_' })
+           .filter(function(e){ return Module[e] === value })
+           .map(function(e){ return e.slice(prefix.length + 1) })[0])
     }
 
-    ri.Begin();
+    ri.Begin()
     do {
-        if (ri.IsAtBeginningOf(Module.RIL_BLOCK)) {
+        if(ri.IsAtBeginningOf(Module.RIL_BLOCK)){
             var poly = ri.BlockPolygon();
             var polygon = null;
             // BlockPolygon() returns null when automatic page segmentation is off
-            if (Module.getPointer(poly) > 0) {
+            if(Module.getPointer(poly) > 0){
                 var n = poly.get_n(),
                     px = poly.get_x(),
                     py = poly.get_y(),
                     polygon = [];
-                for (var i = 0; i < n; i++) {
+                for(var i = 0; i < n; i++){
                     polygon.push([px.getValue(i), py.getValue(i)]);
                 }
-                Module._ptaDestroy(Module.getPointer(poly));
+                Module._ptaDestroy(Module.getPointer(poly));    
             }
-
+            
             block = {
                 paragraphs: [],
 
@@ -12027,10 +12006,10 @@ module.exports = function DumpLiterallyEverything(Module, base) {
 
                 blocktype: enumToString(ri.BlockType(), 'PT'),
                 polygon: polygon
-            };
-            blocks.push(block);
+            }
+            blocks.push(block)
         }
-        if (ri.IsAtBeginningOf(Module.RIL_PARA)) {
+        if(ri.IsAtBeginningOf(Module.RIL_PARA)){
             para = {
                 lines: [],
 
@@ -12040,10 +12019,10 @@ module.exports = function DumpLiterallyEverything(Module, base) {
                 bbox: ri.getBoundingBox(Module.RIL_PARA),
 
                 is_ltr: !!ri.ParagraphIsLtr()
-            };
-            block.paragraphs.push(para);
+            }
+            block.paragraphs.push(para)
         }
-        if (ri.IsAtBeginningOf(Module.RIL_TEXTLINE)) {
+        if(ri.IsAtBeginningOf(Module.RIL_TEXTLINE)){
             textline = {
                 words: [],
 
@@ -12051,10 +12030,10 @@ module.exports = function DumpLiterallyEverything(Module, base) {
                 confidence: ri.Confidence(Module.RIL_TEXTLINE),
                 baseline: ri.getBaseline(Module.RIL_TEXTLINE),
                 bbox: ri.getBoundingBox(Module.RIL_TEXTLINE)
-            };
-            para.lines.push(textline);
+            }
+            para.lines.push(textline)
         }
-        if (ri.IsAtBeginningOf(Module.RIL_WORD)) {
+        if(ri.IsAtBeginningOf(Module.RIL_WORD)){
             var fontInfo = ri.getWordFontAttributes(),
                 wordDir = ri.WordDirection();
             word = {
@@ -12079,25 +12058,25 @@ module.exports = function DumpLiterallyEverything(Module, base) {
                 is_smallcaps: fontInfo.is_smallcaps,
                 font_size: fontInfo.pointsize,
                 font_id: fontInfo.font_id,
-                font_name: fontInfo.font_name
-            };
+                font_name: fontInfo.font_name,
+            }
             var wc = new Module.WordChoiceIterator(ri);
             do {
                 word.choices.push({
                     text: wc.GetUTF8Text(),
                     confidence: wc.Confidence()
-                });
+                })
             } while (wc.Next());
-            Module.destroy(wc);
-            textline.words.push(word);
+            Module.destroy(wc)
+            textline.words.push(word)
         }
-
+        
         var image = null;
         // var pix = ri.GetBinaryImage(Module.RIL_SYMBOL)
         // var image = pix2array(pix);
         // // for some reason it seems that things stop working if you destroy pics
         // Module._pixDestroy(Module.getPointer(pix));
-        if (ri.IsAtBeginningOf(Module.RIL_SYMBOL)) {
+        if(ri.IsAtBeginningOf(Module.RIL_SYMBOL)){
             symbol = {
                 choices: [],
                 image: image,
@@ -12109,20 +12088,20 @@ module.exports = function DumpLiterallyEverything(Module, base) {
 
                 is_superscript: !!ri.SymbolIsSuperscript(),
                 is_subscript: !!ri.SymbolIsSubscript(),
-                is_dropcap: !!ri.SymbolIsDropcap()
-            };
-            word.symbols.push(symbol);
+                is_dropcap: !!ri.SymbolIsDropcap(),
+            }
+            word.symbols.push(symbol)
             var ci = new Module.ChoiceIterator(ri);
             do {
                 symbol.choices.push({
                     text: ci.GetUTF8Text(),
                     confidence: ci.Confidence()
-                });
+                })
             } while (ci.Next());
-            Module.destroy(ci);
+            Module.destroy(ci)
         }
     } while (ri.Next(Module.RIL_SYMBOL));
-    Module.destroy(ri);
+    Module.destroy(ri)
 
     return {
         text: base.GetUTF8Text(),
@@ -12134,116 +12113,120 @@ module.exports = function DumpLiterallyEverything(Module, base) {
 
         psm: enumToString(base.GetPageSegMode(), 'PSM'),
         oem: enumToString(base.oem(), 'OEM'),
-        version: base.Version()
-    };
-};
+        version: base.Version(),
+    }
+}
 
 // the generated HOCR is excessively indented, so
 // we get rid of that indentation
 
-function deindent(html) {
-    var lines = html.split('\n');
-    if (lines[0].substring(0, 2) === "  ") {
+function deindent(html){
+    var lines = html.split('\n')
+    if(lines[0].substring(0, 2) === "  "){
         for (var i = 0; i < lines.length; i++) {
-            if (lines[i].substring(0, 2) === "  ") {
-                lines[i] = lines[i].slice(2);
+            if (lines[i].substring(0,2) === "  ") {
+                lines[i] = lines[i].slice(2)
             }
         };
     }
-    return lines.join('\n');
+    return lines.join('\n')
 }
 
 },{}],46:[function(require,module,exports){
 module.exports={"afr": 1079573, "ara": 1701536, "aze": 1420865, "bel": 1276820, "ben": 6772012, "bul": 1605615, "cat": 1652368, "ces": 1035441, "chi_sim": 17710414, "chi_tra": 24717749, "chr": 320649, "dan-frak": 677656, "dan": 1972936, "deu-frak": 822644, "deu": 991656, "ell": 859719, "eng": 9453554, "enm": 619254, "epo": 1241212, "equ": 821130, "est": 1905040, "eus": 1641190, "fin": 979418, "fra": 1376221, "frk": 5912963, "frm": 5147082, "glg": 1674938, "grc": 3012615, "heb": 1051501, "hin": 6590065, "hrv": 1926995, "hun": 3074473, "ind": 1874776, "isl": 1634041, "ita": 948593, "ita_old": 3436571, "jpn": 13507168, "kan": 4390317, "kor": 5353098, "lav": 1843944, "lit": 1779240, "mal": 5966263, "meme": 88453, "mkd": 1163087, "mlt": 1463001, "msa": 1665427, "nld": 1134708, "nor": 2191610, "osd": 4274649, "pol": 7024662, "por": 909359, "ron": 915680, "rus": 5969957, "slk-frak": 289885, "slk": 2217342, "slv": 1611338, "spa": 883170, "spa_old": 5647453, "sqi": 1667041, "srp": 1770244, "swa": 757916, "swe": 2451917, "tam": 3498763, "tel": 5795246, "tgl": 1496256, "tha": 3811136, "tur": 3563264, "ukr": 937566, "vie": 2195922}
 },{}],47:[function(require,module,exports){
-'use strict';
-
 var latestJob;
 var Module;
 var base;
 var adapter = {};
 
-function dispatchHandlers(packet, send) {
-    function respond(status, data) {
+function dispatchHandlers(packet, send){
+    function respond(status, data){
         send({
             jobId: packet.jobId,
             status: status,
             action: packet.action,
             data: data
-        });
+        })
     }
-    respond.resolve = respond.bind(this, 'resolve');
-    respond.reject = respond.bind(this, 'reject');
-    respond.progress = respond.bind(this, 'progress');
-
+    respond.resolve = respond.bind(this, 'resolve')
+    respond.reject = respond.bind(this, 'reject')
+    respond.progress = respond.bind(this, 'progress')
+    
     latestJob = respond;
 
-    if (packet.action === 'recognize') {
-        handleRecognize(packet.payload, respond);
-    } else if (packet.action === 'detect') {
-        handleDetect(packet.payload, respond);
+    if(packet.action === 'recognize'){
+        handleRecognize(packet.payload, respond)
+    }else if(packet.action === 'detect'){
+        handleDetect(packet.payload, respond)
     }
 }
 exports.dispatchHandlers = dispatchHandlers;
 
-exports.setAdapter = function setAdapter(impl) {
+exports.setAdapter = function setAdapter(impl){
     adapter = impl;
-};
+}
 
-function handleInit(req, res) {
-    if (!Module) {
+
+function handleInit(req, res){
+    if(!Module){
         var Core = adapter.getCore(req, res);
 
-        res.progress({ status: 'initializing tesseract api' });
+        res.progress({ status: 'initializing tesseract api' })
         Module = Core({
             TOTAL_MEMORY: req.memory,
-            TesseractProgress: function TesseractProgress(percent) {
-                latestJob.progress({ status: 'recognizing text', progress: Math.max(0, (percent - 30) / 70) });
+            TesseractProgress(percent){
+                latestJob.progress({ status: 'recognizing text', progress: Math.max(0, (percent-30)/70) })
             },
-            onRuntimeInitialized: function onRuntimeInitialized() {}
-        });
-        Module.FS_createPath("/", "tessdata", true, true);
-        base = new Module.TessBaseAPI();
-        res.progress({ status: 'initialized tesseract api' });
+            onRuntimeInitialized() {}
+        })
+        Module.FS_createPath("/", "tessdata", true, true)
+        base = new Module.TessBaseAPI()
+        res.progress({ status: 'initialized tesseract api' })
     }
 }
 
-var dump = require('./dump.js');
-var desaturate = require('./desaturate.js');
 
-function setImage(Module, base, image) {
+
+var dump = require('./dump.js')
+var desaturate = require('./desaturate.js')
+
+
+function setImage(Module, base, image){
     var imgbin = desaturate(image),
         width = image.width,
         height = image.height;
 
     var ptr = Module.allocate(imgbin, 'i8', Module.ALLOC_NORMAL);
     base.SetImage(Module.wrapPointer(ptr), width, height, 1, width);
-    base.SetRectangle(0, 0, width, height);
+    base.SetRectangle(0, 0, width, height)
     return ptr;
 }
 
-function loadLanguage(req, res, cb) {
+function loadLanguage(req, res, cb){
     var lang = req.options.lang;
+    
+    if(!Module._loadedLanguages) Module._loadedLanguages = {};
+    if(lang in Module._loadedLanguages) return cb();
 
-    if (!Module._loadedLanguages) Module._loadedLanguages = {};
-    if (lang in Module._loadedLanguages) return cb();
-
-    adapter.getLanguageData(req, res, function (data) {
+    adapter.getLanguageData(req, res, function(data){
         Module.FS_createDataFile('tessdata', lang + ".traineddata", data, true, false);
-        res.progress({ status: 'loaded ' + lang + '.traineddata' });
+        res.progress({ status: 'loaded ' + lang + '.traineddata' })
         Module._loadedLanguages[lang] = true;
-        cb();
-    });
+        cb()
+    })
 }
 
-function handleRecognize(req, res) {
-    handleInit(req, res);
 
-    loadLanguage(req, res, function () {
+
+function handleRecognize(req, res){
+    handleInit(req, res)
+    
+    loadLanguage(req, res, function(){  
         var lang = req.options.lang;
 
-        base.Init(null, lang);
-        res.progress({ status: 'initialized with language' });
+        base.Init(null, lang)
+        res.progress({ status: 'initialized with language' })
 
         var options = req.options;
         for (var option in options) {
@@ -12253,37 +12236,38 @@ function handleRecognize(req, res) {
         }
 
         var ptr = setImage(Module, base, req.image);
-        base.Recognize(null);
-
-        var result = dump(Module, base);
+        base.Recognize(null)
+        
+        var result = dump(Module, base)
 
         base.End();
-        Module._free(ptr);
+        Module._free(ptr); 
 
         res.resolve(result);
-    });
+    })
 }
 
-function handleDetect(req, res) {
-    handleInit(req, res);
+
+function handleDetect(req, res){
+    handleInit(req, res)
     req.options.lang = 'osd';
-    loadLanguage(req, res, function () {
+    loadLanguage(req, res, function(){
 
-        base.Init(null, 'osd');
-        base.SetPageSegMode(Module.PSM_OSD_ONLY);
-
+        base.Init(null, 'osd')
+        base.SetPageSegMode(Module.PSM_OSD_ONLY)
+        
         var ptr = setImage(Module, base, req.image);
 
         var results = new Module.OSResults();
         var success = base.DetectOS(results);
-        if (!success) {
+        if(!success){
             base.End();
             Module._free(ptr);
-            res.reject("failed to detect os");
+            res.reject("failed to detect os")
         } else {
-            var charset = results.get_unicharset();
-
-            var best = results.get_best_result();
+            var charset = results.get_unicharset()
+            
+            var best = results.get_best_result()
             var oid = best.get_orientation_id(),
                 sid = best.get_script_id();
 
@@ -12293,14 +12277,14 @@ function handleDetect(req, res) {
                 script_confidence: best.get_sconfidence(),
                 orientation_degrees: [0, 270, 180, 90][oid],
                 orientation_confidence: best.get_oconfidence()
-            };
+            }
 
             base.End();
             Module._free(ptr);
 
-            res.resolve(result);
+            res.resolve(result)
         }
-    });
+    })
 }
 
 },{"./desaturate.js":44,"./dump.js":45}]},{},[43]);

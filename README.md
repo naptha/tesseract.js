@@ -265,8 +265,10 @@ Then, cd in to the folder, `npm install`, and `npm start`
 
   ... a bunch of npm stuff ... 
 
-  tesseract.js@1.0.0 start /Users/guillermo/Desktop/code_static/tesseract.js
-  node devServer.js
+  Starting up http-server, serving ./
+  Available on:
+    http://127.0.0.1:7355
+    http://18.111.40.187:7355
 
 Listening at http://localhost:7355
 ```
