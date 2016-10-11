@@ -268,7 +268,7 @@ Then, cd in to the folder, `npm install`, and `npm start`
   Starting up http-server, serving ./
   Available on:
     http://127.0.0.1:7355
-    http://18.111.40.187:7355
+    http://[your ip]:7355
 
 ```
 
