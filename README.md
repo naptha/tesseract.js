@@ -8,7 +8,7 @@ Tesseract.js is a javascript library that gets words in [almost any language](./
 <!-- Under the hood, Tesseract.js wraps [tesseract.js-core](https://github.com/naptha/tesseract.js-core), an [emscripten](https://github.com/kripken/emscripten) port of the [Tesseract OCR Engine](https://github.com/tesseract-ocr/tesseract).
  -->
 
-![fancy demo gif](./demo.gif "Demo")
+[![fancy demo gif](./demo.gif "Demo")](http://tesseract.projectnaptha.com)
 
 Tesseract.js works with script tags, webpack/browserify, and node. [After you install it](#installation), using it is as simple as 
 ```javascript
