@@ -1,3 +1,6 @@
+> # UNDER CONTRUCTION
+> Just working on Fire Fox support!
+
 # [Tesseract.js](http://tesseract.projectnaptha.com/)
 
 Tesseract.js is a javascript library that gets words in [almost any language](./tesseract_lang_list.md) out of images. ([Demo](http://tesseract.projectnaptha.com/))
