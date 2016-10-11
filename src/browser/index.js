@@ -1,11 +1,18 @@
 exports.defaultOptions = {
     langPath: 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/',
-    workerPath: 'dist/worker.js',
+    // workerPath: 'dist/worker.js',
+    workerPath: 'https://cdn.rawgit.com/naptha/tesseract.js/0.1.3/dist/worker.js',
     tesseractPath: 'https://cdn.rawgit.com/naptha/tesseract.js-core/0.1.0/index.js',    
 }
 
 exports.spawnWorker = function spawnWorker(instance, workerOptions){
-    var worker = new Worker(workerOptions.workerPath)
+    if(window.Blob && window.URL){
+        var blob = new Blob(['importScripts("' + workerOptions.workerPath + '");'])
+        var worker = new Worker(window.URL.createObjectURL(blob));
+    }else{
+        var worker = new Worker(workerOptions.workerPath)
+    }
+
     worker.onmessage = function(e){
         var packet = e.data;
         instance._recv(packet)
