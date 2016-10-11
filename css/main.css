@@ -12,10 +12,11 @@ body, html{
     margin-top: -26px;
     color: #fff;
 }
+
 #splash {
     overflow: hidden;
     background-color: #425565;
-    background: url(../img/bg.png);
+    background: url(../img/bg.jpg);
     background-size: cover;
     background-position: center;
 }
