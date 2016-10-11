@@ -30,8 +30,8 @@ function fetchLanguageData(req, res, cb){
     var url = req.workerOptions.langPath + langfile;
 
     var xhr = new XMLHttpRequest();
-    xhr.responseType = 'arraybuffer';
     xhr.open('GET', url, true);
+    xhr.responseType = 'arraybuffer';
     xhr.onerror = e => {
         xhr.onprogress = xhr.onload = null
         cb(xhr, null)
