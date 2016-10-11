@@ -1,5 +1,5 @@
 > # UNDER CONTRUCTION
-> Just working on Fire Fox support!
+> Just working on Firefox support!
 
 # [Tesseract.js](http://tesseract.projectnaptha.com/)
 
