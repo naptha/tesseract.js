@@ -16,7 +16,7 @@ function fixdim() {
 	var doc = document.documentElement;
 	var top = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
 	
-	logo_wrap.style.top = top / 2 + 'px'
+	// logo_wrap.style.top = top / 2 + 'px'
 	var rect = splash.getBoundingClientRect()
 	var bottom = rect.top + rect.height
 

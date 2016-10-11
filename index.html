@@ -6,7 +6,7 @@
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 	<link href='http://fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet' type='text/css'>
 </head>
-<body>
+<body ondragover="return false">
 
 	<div id="splash">
 		<div id="logo-wrap" class="header">
@@ -14,9 +14,9 @@
 			<img id="logo-img" src="img/logowhite.png">
 			<div id='slogan'>Pure Javascript OCR</div>
 		</div>
-		<div id='get-started-wrap'>
+		<div class='get-started-wrap'>
 			<a href="https://github.com/naptha/tesseract.js#tesseractjs">
-			<div id='get-started'>
+			<div class='get-started'>
 				<svg id="github" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>
 				Get Started
 			</div>							
@@ -25,21 +25,47 @@
 	</div>
 
 	<div id='demo'>
-		<div id='demo-title'>Demo</div>
-		<div id='options'>
-			<div class="option selected" lang='eng'>English</div>
-			<div class="option" lang='chi_sim'>Chinese</div>
-			<div class="option" lang='rus'>Russian</div>
+<!-- 		<div class="commentary">
+			<div id='demo-title'>Demo</div>
+			<p>Wherein we show you that Tesseract.js works, and let you try it with your own images.</p>
 		</div>
-		<div id='demo-content'>
-			<div>
-				<canvas id='input-overlay'></canvas>
-				<img id='input' src="img/eng_bw.png"/>			
+
+ -->	
+		<div class='commentary'>
+			<p><b>Tesseract.js</b> can recognize text in <b>over 60 languanges</b>, in <b><code>&lt;img></code> elements</b>,  <b><code>&lt;video></code> elements</b>, <b><code>&lt;canvas></code> elements</b>, <b>remote urls</b>, <b>dropped files</b>, and more! <a href='https://github.com/naptha/tesseract.js#tesseractjs'>Example code and API docs are on GitHub</a>.</p>
+		</div>
+		<div id='demo-body'>
+			<div id='options'>
+				<div class="option selected" lang='eng'>English Demo</div>
+				<div class="option" lang='chi_sim'>Chinese Demo</div>
+				<div class="option" lang='rus'>Russian Demo</div>
 			</div>
-			<div id='arrow'></div>
-			<div>
-				<canvas id='output'></canvas>	
+			<div id='drop-instructions-main'><p>Drop <span class='drop-instructions'>an English</span> image on this page to OCR it!</p></div>
+			<div id='demo-content'>
+				<div>
+					<canvas id='input-overlay'></canvas>
+					<img id='input' src="img/eng_bw.png"/>			
+				</div>
+				<div id='arrow'></div>
+				<div>
+					<div id='output-overlay'></div>
+					<textarea id='output-text'></textarea>
+					<div id='demo-instructions'>
+						<span id='clickme' onclick='play()'>Click here to recognize text in the demo image</span>, or drop <span class='drop-instructions'>an English</span> image anywhere on this page.
+					</div>
+					<!-- <canvas id='output'></canvas>	 -->
+				</div>
 			</div>
+			<div class='get-started-wrap'>
+				<br/>
+				<a href="https://github.com/naptha/tesseract.js#tesseractjs">
+					<div class='get-started'>
+						<svg id="github" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg>
+						Actually Get Started
+					</div>
+				</a>
+			</div>
+
 		</div>
 	</div>
 
@@ -56,7 +82,7 @@
 	<script src="animation/hypercube.js"></script>
 	<script src="animation/animate.js"></script>
 
-	<script src='https://cdn.rawgit.com/naptha/tesseract.js/a01d2a2/dist/tesseract.js'></script>
+  	<script src="https://cdn.rawgit.com/naptha/tesseract.js/0.1.5/dist/tesseract.js"></script>
 	<script src="demo.js"></script>
 </body>
 </html>

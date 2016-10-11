@@ -15,13 +15,19 @@ body, html{
 #splash {
     overflow: hidden;
     background-color: #425565;
-    // background: linear-gradient(90deg, #eb6b8f, #ffee75);
+    background: url(../img/bg.png);
+    background-size: cover;
+    background-position: center;
 }
 
 #logo-wrap {
 	margin-top: 50px;
 	text-align: center;
 	position: relative;
+}
+
+#demo-instructions {
+	display: none;
 }
 
 #logo-canvas {
@@ -36,12 +42,13 @@ body, html{
 	max-width: 100%;
 }
 
-#get-started-wrap {
+.get-started-wrap {
 	text-align: center;
 	position: relative;
+	padding: 0 20px;
 }
 
-#get-started {
+.get-started {
     display: inline-block;
     color: #714d26;
     background: #fff;
@@ -49,13 +56,14 @@ body, html{
     font-size: 30px;
     margin: 50px 0;
     border-radius: 7px;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
 #demo-title {
 	padding: 40px 0;
 	color: #714d26;
 	font-size: 30px;
-	text-align: center;
+	// text-align: center;
 }
 
 
@@ -63,23 +71,25 @@ body, html{
     display: flex;
     justify-content: space-around;
     font-size: 20px;
-    color: #714d26;
+    color: #3580c0;
     padding: 0 15px;
     max-width: 700px;
     margin-left: auto;
     margin-right: auto;
+    box-sizing: border-box;
 }
 
 .option {
 	padding: 10px;
 	border-radius: 5px;
 	cursor: pointer;
+	text-align: center;
 }
 
 .option.selected {
-	color: #fff;
-	background: #5781a5;
-	font-weight: 400;
+    color: #3580c0;
+    background: #d8edff;
+    font-weight: 400;
 }
 
 #input {
@@ -87,6 +97,7 @@ body, html{
 	box-sizing: border-box;
 	padding: 20px;
 	margin-top: 30px;
+    border: 1px solid #ddd;
 }
 
 #input-overlay {
@@ -108,10 +119,11 @@ body, html{
 	fill: #826f5c;
 }
 
-#arrow {
+#demo-content > #arrow {
 	text-align: center;
     font-size: 30px;
     color: #826f5c;
+	flex: 0;    
 }
 
 #arrow::before {
@@ -124,9 +136,26 @@ body, html{
 	padding: 20px;
 }
 
+#output-overlay {
+    white-space: pre;
+    font-family: Monaco, monospace;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    overflow: scroll;
+    border: 20px solid transparent;
+    box-sizing: border-box;
+}
+
+#clickme {
+    color: #2374b7;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 #footer {
     color: #826f5c;
-    background-color: #ffffff;
+    background-color: #f6f6f6;
     text-align: right;
     padding: 0 20px;
 }
@@ -144,14 +173,46 @@ body, html{
     height: .7em;
 }
 
+#demo-content > div {
+	position: relative;
+	flex: 1;
+	border: 20px solid transparent;
+}
+
+#drop-instructions-main {
+	display: none;
+}
+
+.commentary {
+    position: relative;
+    padding: 20px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+	line-height: 180%;
+    letter-spacing: .5	px;
+}
+
+#output-text {
+    margin: 0px;
+    width: 100%;
+    min-height: 200px;
+    box-sizing: border-box;
+    padding: 20px;
+    border: 1px solid #ddd;
+}
+
 @media (min-width: 900px) {
+	
+	#drop-instructions-main {
+	    display: block;
+	    text-align: center;
+	    color: #b1a79c;
+	}
+
 	#demo-content {
 		display: flex;
 		align-items: center;
-	}
-
-	#demo-content > div {
-		position: relative;
 	}
 
 	#input, #input-overlay {
@@ -159,27 +220,42 @@ body, html{
 	}
 
 	#arrow::before {
-		content: '\2192'
+		content: '\2192';
 	}
 
 	#options {
 		margin: 40px auto;
 	}
 
-	#demo-title {
-		width: 250px;
-		background: #fff;
-		margin-top: -70px;
-		position: relative;
-		padding: 20px 0;
-	}
+	// #demo-title {
+	// 	width: 250px;
+	// 	background: #fff;
+	// 	margin-top: -70px;
+	// 	margin-left: 40px;
+	// 	position: relative;
+	// 	padding: 20px 0;
+	// }
 
-	#demo-title::after {
-	    border-right: 40px solid transparent;
-	    border-bottom: 70px solid white;
-	    content: ' ';
-	    position: absolute;
-	    top: 0;
-	    left: 100%;
-	}
+	// #demo-title::after {
+	//     border-right: 40px solid transparent;
+	//     border-bottom: 70px solid white;
+	//     content: ' ';
+	//     position: absolute;
+	//     top: 0;
+	//     left: 100%;
+	// }
+
+	// #demo-title::before {
+	//     border-left: 40px solid transparent;
+	//     border-bottom: 70px solid white;
+	//     content: ' ';
+	//     position: absolute;
+	//     top: 0;
+	//     left: -40px;
+	// }
+
+	// body {
+	// 	box-sizing: border-box;
+	// 	border: 20px solid #425565;
+	// }
 }
