@@ -270,7 +270,6 @@ Then, cd in to the folder, `npm install`, and `npm start`
     http://127.0.0.1:7355
     http://18.111.40.187:7355
 
-Listening at http://localhost:7355
 ```
 
 Then open `http://localhost:7355` in your favorite browser. The devServer automatically rebuilds tesseract.js and tesseract.worker.js when you change files in the src folder.
