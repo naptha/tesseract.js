@@ -201,7 +201,7 @@ Sets `callback` as the function that will be called if and when the job successf
 For example: 
 ```javascript
 Tesseract.recognize(myImage)
-    .then(function(result){console.log('result is: 'result)})
+    .then(function(result){console.log('result is: ', result)})
 ```
 
 The console will show something like: 
