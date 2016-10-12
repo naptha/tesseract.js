@@ -1,6 +1,6 @@
 var defaultOptions = {
     workerPath: 'https://cdn.rawgit.com/naptha/tesseract.js/0.1.3/dist/worker.js',
-    tesseractPath: 'https://cdn.rawgit.com/naptha/tesseract.js-core/0.1.0/index.js',    
+    corePath: 'https://cdn.rawgit.com/naptha/tesseract.js-core/0.1.0/index.js',    
     langPath: 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/',
 }
 
@@ -56,6 +56,12 @@ function loadImage(image, cb){
             xhr.open('GET', image, true)
             xhr.responseType = "blob";
             xhr.onload = e => loadImage(xhr.response, cb);
+            xhr.onerror = function(e){
+                if(/^https?:\/\//.test(image) && !/^https:\/\/crossorigin.me/.test(image)){
+                    console.debug('Attempting to load image with CORS proxy')
+                    loadImage('https://crossorigin.me/' + image, cb)
+                }
+            }
             xhr.send(null)
             return
         }

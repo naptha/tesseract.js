@@ -12,7 +12,7 @@ global.addEventListener('message', function(e){
 exports.getCore = function(req, res){
     if(!global.TesseractCore){
         res.progress({ status: 'loading tesseract core' })
-        importScripts(req.workerOptions.tesseractPath)
+        importScripts(req.workerOptions.corePath)
         res.progress({ status: 'loaded tesseract core' })
     }
     return TesseractCore

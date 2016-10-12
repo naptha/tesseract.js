@@ -37,7 +37,7 @@ Or you can grab copies of `tesseract.js` and `worker.js` from the [dist folder](
 window.Tesseract = Tesseract.create({
     workerPath: '/path/to/worker.js',
     langPath: 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/',
-    tesseractPath: 'https://cdn.rawgit.com/naptha/tesseract.js-core/0.1.0/index.js',
+    corePath: 'https://cdn.rawgit.com/naptha/tesseract.js-core/0.1.0/index.js',
 })
 </script>
 ```
