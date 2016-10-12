@@ -237,6 +237,23 @@ body, html{
     opacity: 0.5;
 }
 
+
+#footer {
+    color: #ffffff;
+    background-color: #f6f6f6;
+    text-align: right;
+    padding: 0 20px;
+    background-color: #425565;
+    background: url(../img/bg.jpg);
+    background-size: cover;
+    background-position: bottom;
+}
+
+#footer a {
+	color: white !important;
+
+}
+
 @media (min-width: 900px) {
 	
 	#drop-instructions-main {
