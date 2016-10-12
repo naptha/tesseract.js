@@ -72,7 +72,7 @@ You can [head to the docs](#docs) for a full treatment of the API.
 
 ## Tesseract.recognize(image: [ImageLike](#imagelike)[, options]) -> [TesseractJob](#tesseractjob)
 Figures out what words are in `image`, where the words are in `image`, etc. 
-> Note: image should be be sufficiently high resolution.
+> Note: `image` should be be sufficiently high resolution.
 > Often, the same image will get much better results if you upscale it before calling `recognize`.
 
 - `image` is any [ImageLike](#imagelike) object.
