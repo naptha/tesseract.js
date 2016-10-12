@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/tesseract.js.svg)](https://badge.fury.io/js/tesseract.js)
 
-Tesseract.js is a javascript library that gets words in [almost any language](./tesseract_lang_list.md) out of images. ([Demo](http://tesseract.projectnaptha.com/))
+Tesseract.js is a javascript library that gets words in [almost any language](./docs/tesseract_lang_list.md) out of images. ([Demo](http://tesseract.projectnaptha.com/))
 
 <!-- Under the hood, Tesseract.js wraps [tesseract.js-core](https://github.com/naptha/tesseract.js-core), an [emscripten](https://github.com/kripken/emscripten) port of the [Tesseract OCR Engine](https://github.com/tesseract-ocr/tesseract).
  -->
