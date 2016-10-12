@@ -1,6 +1,3 @@
-> # UNDER CONSTRUCTION
-> Just working on Firefox support!
-
 # [Tesseract.js](http://tesseract.projectnaptha.com/)
 
 Tesseract.js is a javascript library that gets words in [almost any language](./tesseract_lang_list.md) out of images. ([Demo](http://tesseract.projectnaptha.com/))
@@ -25,21 +22,9 @@ Tesseract.js works with a `<script>` tag via local copy or cdn, with webpack and
 
 ## &lt;script />
 
-You can either include Tesseract.js on you page with a cdn like this:
+You can simply include Tesseract.js with a cdn like this:
 ```html
 <script src='https://cdn.rawgit.com/naptha/tesseract.js/0.2.0/dist/tesseract.js'></script>
-```
-
-Or you can grab copies of `tesseract.js` and `worker.js` from the [dist folder](https://github.com/naptha/tesseract.js/tree/master/dist) and include your local copies like this:
-```html
-<script src='/path/to/tesseract.js'></script>
-<script>
-window.Tesseract = Tesseract.create({
-    workerPath: '/path/to/worker.js',
-    langPath: 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/',
-    corePath: 'https://cdn.rawgit.com/naptha/tesseract.js-core/0.1.0/index.js',
-})
-</script>
 ```
 
 After including your scripts, the `Tesseract` variable should be defined! You can [head to the docs](#docs) for a full treatment of the API.
@@ -186,7 +171,7 @@ Sets `callback` as the function that will be called every time the job progresse
 For example: 
 ```javascript
 Tesseract.recognize(myImage)
-    .progress(function(message){console.log('progress is: 'message)})
+    .progress(function(message){console.log('progress is: ', message)})
 ```
 
 The console will show something like: 
@@ -252,7 +237,7 @@ A string specifying the location of the [tesseract.js-core library](https://gith
 A string specifying the location of the [tesseract.worker.js](./dist/tesseract.worker.js) file, with default value 'https://cdn.rawgit.com/naptha/tesseract.js/8b915dc/dist/tesseract.worker.js'. Set this string before calling `Tesseract.recognize` and `Tesseract.detect` if you want Tesseract.js to use a different file.
 
 ### langPath
-A string specifying the location of the tesseract language files, with default value 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/'. Language file urls are calculated according to the formula `Tesseract.langUrl + lang + '.traineddata.gz'`. Set this string before calling `Tesseract.recognize` and `Tesseract.detect` if you want Tesseract.js to use different language files.
+A string specifying the location of the tesseract language files, with default value 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/'. Language file urls are calculated according to the formula `langPath + langCode + '.traineddata.gz'`. Set this string before calling `Tesseract.recognize` and `Tesseract.detect` if you want Tesseract.js to use different language files.
 
 
 ## Contributing
