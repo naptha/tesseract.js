@@ -1,0 +1,2 @@
+<script src="/dist/tesseract.dev.js"></script>
+<input type="file" onchange="Tesseract.recognize(this.files[0]).progress(function(data){console.log(data)}).then(function(data){console.log(data)})">

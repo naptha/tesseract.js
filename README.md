@@ -235,37 +235,24 @@ progress is: {
 Sets `callback` as the function that will be called if the job fails. 
 - `callback` is a function with the signature `callback(erros)` where `error` is a json object.
 
-## Tesseract Remote File Options
-### Tesseract.coreUrl
-A string specifying the location of the [tesseract.js-core library](https://github.com/naptha/tesseract.js-core), with default value 'https://cdn.rawgit.com/naptha/tesseract.js-core/master/index.js'. Set this string before calling `Tesseract.recognize` and `Tesseract.detect` if you want Tesseract.js to use a different file.
+## Tesseract Configuration
 
-For example:
 ```javascript
-Tesseract.coreUrl = 'https://absolute-path-to/tesseract.js-core/index.js'
-```
-
-### Tesseract.workerUrl
-A string specifying the location of the [tesseract.worker.js](./dist/tesseract.worker.js) file, with default value 'https://cdn.rawgit.com/naptha/tesseract.js/8b915dc/dist/tesseract.worker.js'. Set this string before calling `Tesseract.recognize` and `Tesseract.detect` if you want Tesseract.js to use a different file.
-
-For example:
-```javascript
-Tesseract.workerUrl = 'https://absolute-path-to/tesseract.worker.js'
-```
-
-
-### Tesseract.langUrl
-A string specifying the location of the tesseract language files, with default value 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/'. Language file urls are calculated according to the formula `Tesseract.langUrl + lang + '.traineddata.gz'`. Set this string before calling `Tesseract.recognize` and `Tesseract.detect` if you want Tesseract.js to use different language files.
-
-In the following exampple, Tesseract.js will download the language file from 'https://absolute-path-to/lang/folder/rus.traineddata.gz':
-```javascript
-Tesseract.langUrl = 'https://absolute-path-to/lang/folder/'
-
-Tesseract.recognize('#my-im', {
-    lang: 'rus'
+window.Tesseract = Tesseract.create({
+    workerPath: '/path/to/worker.js',
+    langPath: 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/',
+    corePath: 'https://cdn.rawgit.com/naptha/tesseract.js-core/0.1.0/index.js',
 })
 ```
 
+### corePath
+A string specifying the location of the [tesseract.js-core library](https://github.com/naptha/tesseract.js-core), with default value 'https://cdn.rawgit.com/naptha/tesseract.js-core/master/index.js'. Set this string before calling `Tesseract.recognize` and `Tesseract.detect` if you want Tesseract.js to use a different file.
 
+### workerPath
+A string specifying the location of the [tesseract.worker.js](./dist/tesseract.worker.js) file, with default value 'https://cdn.rawgit.com/naptha/tesseract.js/8b915dc/dist/tesseract.worker.js'. Set this string before calling `Tesseract.recognize` and `Tesseract.detect` if you want Tesseract.js to use a different file.
+
+### langPath
+A string specifying the location of the tesseract language files, with default value 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/'. Language file urls are calculated according to the formula `Tesseract.langUrl + lang + '.traineddata.gz'`. Set this string before calling `Tesseract.recognize` and `Tesseract.detect` if you want Tesseract.js to use different language files.
 
 
 ## Contributing
@@ -289,7 +276,7 @@ Then, cd in to the folder, `npm install`, and `npm start`
 
 ```
 
-Then open `http://localhost:7355` in your favorite browser. The devServer automatically rebuilds tesseract.js and tesseract.worker.js when you change files in the src folder.
+Then open `http://localhost:7355/examples/file-input/demo.html` in your favorite browser. The devServer automatically rebuilds tesseract.js and tesseract.worker.js when you change files in the src folder.
 
 ### Building Static Files
 After you've cloned the repo and run `npm install` as described in the [Development Section](#development), you can build static library files in the dist folder with 

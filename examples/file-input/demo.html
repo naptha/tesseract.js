@@ -1,2 +1,89 @@
 <script src="/dist/tesseract.dev.js"></script>
-<input type="file" onchange="Tesseract.recognize(this.files[0]).progress(console.log)">
+<script>
+
+function progressUpdate(packet){
+	var log = document.getElementById('log');
+
+	if(log.firstChild && log.firstChild.status === packet.status){
+		if('progress' in packet){
+			var progress = log.firstChild.querySelector('progress')
+			progress.value = packet.progress
+		}
+	}else{
+		var line = document.createElement('div');
+		line.status = packet.status;
+		var status = document.createElement('div')
+		status.className = 'status'
+		status.appendChild(document.createTextNode(packet.status))
+		line.appendChild(status)
+
+		if('progress' in packet){
+			var progress = document.createElement('progress')
+			progress.value = packet.progress
+			progress.max = 1
+			line.appendChild(progress)
+		}
+
+
+		if(packet.status == 'done'){
+			var pre = document.createElement('pre')
+			pre.appendChild(document.createTextNode(packet.data.text))
+			line.appendChild(pre)
+		}
+
+		log.insertBefore(line, log.firstChild)
+	}
+}
+
+function recognizeFile(file){
+	Tesseract.recognize(file)
+		.progress(function(packet){
+			console.info(packet)
+			progressUpdate(packet)
+
+		})
+		.then(function(data){
+			console.log(data)
+			progressUpdate({ status: 'done', data: data })
+		})
+}
+</script>
+<input type="file" onchange="recognizeFile(this.files[0])">
+<div id="log"></div>
+
+
+<style>
+#log > div {
+    color: #313131;
+    border-top: 1px solid #dadada;
+    padding: 9px;
+    display: flex;
+}
+#log > div:first-child {
+    border: 0;
+}
+
+
+.status {
+	min-width: 250px;
+}
+#log {
+    border: 1px solid #dadada;
+    padding: 10px;
+    margin-top: 20px;
+    min-height: 100px;
+}
+body {
+    font-family: sans-serif;
+    margin: 30px;
+}
+
+progress {
+    display: block;
+    width: 100%;
+    transition: opacity 0.5s linear;
+}
+progress[value="1"] {
+    opacity: 0.5;
+}
+</style>
