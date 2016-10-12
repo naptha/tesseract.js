@@ -206,7 +206,7 @@ document.body.addEventListener('drop', function(e){
 	var reader = new FileReader();
 
 	Tesseract.recognize(file, language)
-	.progress( progress )
+	.progress( progressUpdate )
 	.then( result )
 
 	reader.onload = function(e){
