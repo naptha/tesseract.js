@@ -71,7 +71,7 @@ You can [head to the docs](#docs) for a full treatment of the API.
 
 
 ## Tesseract.recognize(image: [ImageLike](#imagelike)[, options]) -> [TesseractJob](#tesseractjob)
-Figures out what words are in `image`, where the words are in `image`, etc.
+Figures out what words are in `image`, where the words are in `image`, etc. Note: image should be be sufficiently high resolution. Often, the same image will get much better results if you upscale it before calling `recognize`.
 - `image` is any [ImageLike](#imagelike) object.
 - `options` is either absent (in which case it is interpreted as `'eng'`), a string specifing a language short code from the [language list](./docs/tesseract_lang_list.md), or a flat json object that may:
     + include properties that override some subset of the [default tesseract parameters](./docs/tesseract_parameters.md)
