@@ -28,7 +28,9 @@ function progressUpdate(packet){
 		if(packet.status == 'done'){
 			var pre = document.createElement('pre')
 			pre.appendChild(document.createTextNode(packet.data.text))
+			line.innerHTML = ''
 			line.appendChild(pre)
+
 		}
 
 		log.insertBefore(line, log.firstChild)
@@ -37,7 +39,7 @@ function progressUpdate(packet){
 
 function recognizeFile(file){
 	document.querySelector("#log").innerHTML = ''
-	
+
 	Tesseract.recognize(file, {
 		lang: document.querySelector('#langsel').value
 	})
@@ -69,7 +71,7 @@ function recognizeFile(file){
 <option value='ell'     > Greek                 </option>
 <option value='eng'     selected> English                </option>
 <option value='enm'     > English (Old)         </option>
-<option value='joh'     > Internet Meme                </option>
+<option value='meme'     > Internet Meme                </option>
 <option value='epo'     > Esperanto             </option>
 <option value='epo_alt' > Esperanto alternative </option>
 <option value='equ'     > Math                  </option>
