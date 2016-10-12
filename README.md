@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/tesseract.js.svg)](https://badge.fury.io/js/tesseract.js)
 
-Tesseract.js is a javascript library that gets words in [almost any language](./tesseract_lang_list.md) out of images. ([Demo](http://tesseract.projectnaptha.com/))
+Tesseract.js is a javascript library that gets words in [almost any language](./docs/tesseract_lang_list.md) out of images. ([Demo](http://tesseract.projectnaptha.com/))
 
 <!-- Under the hood, Tesseract.js wraps [tesseract.js-core](https://github.com/naptha/tesseract.js-core), an [emscripten](https://github.com/kripken/emscripten) port of the [Tesseract OCR Engine](https://github.com/tesseract-ocr/tesseract).
  -->
@@ -73,9 +73,9 @@ You can [head to the docs](#docs) for a full treatment of the API.
 ## Tesseract.recognize(image: [ImageLike](#imagelike)[, options]) -> [TesseractJob](#tesseractjob)
 Figures out what words are in `image`, where the words are in `image`, etc.
 - `image` is any [ImageLike](#imagelike) object.
-- `options` is either absent (in which case it is interpreted as `'eng'`), a string specifing a language short code from the [language list](./tesseract_lang_list.md), or a flat json object that may:
-    + include properties that override some subset of the [default tesseract parameters](./tesseract_parameters.md)
-    + include a `lang` property with a value from the [list of lang parameters](./tesseract_lang_list.md)
+- `options` is either absent (in which case it is interpreted as `'eng'`), a string specifing a language short code from the [language list](./docs/tesseract_lang_list.md), or a flat json object that may:
+    + include properties that override some subset of the [default tesseract parameters](./docs/tesseract_parameters.md)
+    + include a `lang` property with a value from the [list of lang parameters](./docs/tesseract_lang_list.md)
 
 Returns a [TesseractJob](#tesseractjob) whose `then`, `progress`, and `catch` methods can be used to act on the result.
 
