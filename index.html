@@ -12,7 +12,7 @@
 		<div id="logo-wrap" class="header">
 			<canvas id="logo-canvas"></canvas>
 			<img id="logo-img" src="img/logowhite.png">
-			<div id='slogan'>Pure Javascript OCR</div>
+			<div id='slogan'>Pure Javascript Multilingual OCR</div>
 		</div>
 		<div class='get-started-wrap'>
 			<a href="https://github.com/naptha/tesseract.js#tesseractjs">
@@ -48,8 +48,10 @@
 				</div>
 				<div id='arrow'></div>
 				<div>
-					<div id='output-overlay'></div>
-					<textarea id='output-text'></textarea>
+					<!-- <div id='output-overlay'></div> -->
+					<!-- <textarea id='output-text'></textarea> -->
+
+					<div id='log'></div>
 					<div id='demo-instructions'>
 						<span id='clickme' onclick='play()'>Click here to recognize text in the demo image</span>, or drop <span class='drop-instructions'>an English</span> image anywhere on this page.
 					</div>
@@ -82,7 +84,7 @@
 	<script src="animation/hypercube.js"></script>
 	<script src="animation/animate.js"></script>
 
-  	<script src="https://cdn.rawgit.com/naptha/tesseract.js/0.1.5/dist/tesseract.js"></script>
+  	<script src="https://cdn.rawgit.com/naptha/tesseract.js/0.2.0/dist/tesseract.js"></script>
 	<script src="demo.js"></script>
 </body>
 </html>

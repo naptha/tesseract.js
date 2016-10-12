@@ -203,6 +203,40 @@ body, html{
     border: 1px solid #ddd;
 }
 
+#demo-instructions {
+	border: 1px solid #dadada;
+    padding: 20px;
+}
+
+#log > div {
+    color: #313131;
+    border-top: 1px solid #dadada;
+    padding: 10px 0;
+    display: flex;
+}
+#log > div:first-child {
+    border: 0;
+}
+
+
+#log .status {
+	min-width: 250px;
+}
+#log {
+    border: 1px solid #dadada;
+    padding: 20px;
+    overflow: auto;
+}
+
+#log progress {
+    display: block;
+    width: 100%;
+    transition: opacity 0.5s linear;
+}
+#log progress[value="1"] {
+    opacity: 0.5;
+}
+
 @media (min-width: 900px) {
 	
 	#drop-instructions-main {
