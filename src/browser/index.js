@@ -1,9 +1,18 @@
-exports.defaultOptions = {
-    langPath: 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/',
-    // workerPath: 'dist/worker.js',
+var defaultOptions = {
     workerPath: 'https://cdn.rawgit.com/naptha/tesseract.js/0.1.3/dist/worker.js',
     tesseractPath: 'https://cdn.rawgit.com/naptha/tesseract.js-core/0.1.0/index.js',    
+    langPath: 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/',
 }
+
+if(location.hostname === '127.0.0.1' && location.port == '7355'){
+    console.debug('Using Development Configuration')
+    defaultOptions.workerPath = location.protocol + '//' + location.host + '/dist/worker.js'
+}
+
+
+exports.defaultOptions = defaultOptions;
+
+
 
 exports.spawnWorker = function spawnWorker(instance, workerOptions){
     if(window.Blob && window.URL){

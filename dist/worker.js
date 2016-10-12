@@ -82,7 +82,7 @@ AbstractChainedBatch.prototype.write = function (options, callback) {
 
 module.exports = AbstractChainedBatch
 }).call(this,require('_process'))
-},{"_process":36}],2:[function(require,module,exports){
+},{"_process":37}],2:[function(require,module,exports){
 (function (process){
 /* Copyright (c) 2013 Rod Vagg, MIT License */
 
@@ -135,7 +135,7 @@ AbstractIterator.prototype.end = function (callback) {
 module.exports = AbstractIterator
 
 }).call(this,require('_process'))
-},{"_process":36}],3:[function(require,module,exports){
+},{"_process":37}],3:[function(require,module,exports){
 (function (Buffer,process){
 /* Copyright (c) 2013 Rod Vagg, MIT License */
 
@@ -395,7 +395,7 @@ module.exports.AbstractIterator     = AbstractIterator
 module.exports.AbstractChainedBatch = AbstractChainedBatch
 
 }).call(this,{"isBuffer":require("../is-buffer/index.js")},require('_process'))
-},{"../is-buffer/index.js":10,"./abstract-chained-batch":1,"./abstract-iterator":2,"_process":36,"xtend":4}],4:[function(require,module,exports){
+},{"../is-buffer/index.js":9,"./abstract-chained-batch":1,"./abstract-iterator":2,"_process":37,"xtend":4}],4:[function(require,module,exports){
 module.exports = extend
 
 function extend() {
@@ -2323,7 +2323,7 @@ function isnan (val) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"base64-js":5,"ieee754":8,"isarray":11}],7:[function(require,module,exports){
+},{"base64-js":5,"ieee754":8,"isarray":10}],7:[function(require,module,exports){
 /*global window:false, self:false, define:false, module:false */
 
 /**
@@ -3817,31 +3817,6 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 }
 
 },{}],9:[function(require,module,exports){
-if (typeof Object.create === 'function') {
-  // implementation from standard node.js 'util' module
-  module.exports = function inherits(ctor, superCtor) {
-    ctor.super_ = superCtor
-    ctor.prototype = Object.create(superCtor.prototype, {
-      constructor: {
-        value: ctor,
-        enumerable: false,
-        writable: true,
-        configurable: true
-      }
-    });
-  };
-} else {
-  // old school shim for old browsers
-  module.exports = function inherits(ctor, superCtor) {
-    ctor.super_ = superCtor
-    var TempCtor = function () {}
-    TempCtor.prototype = superCtor.prototype
-    ctor.prototype = new TempCtor()
-    ctor.prototype.constructor = ctor
-  }
-}
-
-},{}],10:[function(require,module,exports){
 /*!
  * Determine if an object is a Buffer
  *
@@ -3864,14 +3839,14 @@ function isSlowBuffer (obj) {
   return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
 }
 
-},{}],11:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 var toString = {}.toString;
 
 module.exports = Array.isArray || function (arr) {
   return toString.call(arr) == '[object Array]';
 };
 
-},{}],12:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 var Buffer = require('buffer').Buffer;
 
 module.exports = isBuffer;
@@ -3881,7 +3856,7 @@ function isBuffer (o) {
     || /\[object (.+Array|Array.+)\]/.test(Object.prototype.toString.call(o));
 }
 
-},{"buffer":6}],13:[function(require,module,exports){
+},{"buffer":6}],12:[function(require,module,exports){
 (function (Buffer){
 module.exports = Level
 
@@ -4059,7 +4034,7 @@ var checkKeyValue = Level.prototype._checkKeyValue = function (obj, type) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"./iterator":14,"abstract-leveldown":3,"buffer":6,"idb-wrapper":7,"isbuffer":12,"typedarray-to-buffer":37,"util":39,"xtend":41}],14:[function(require,module,exports){
+},{"./iterator":13,"abstract-leveldown":3,"buffer":6,"idb-wrapper":7,"isbuffer":11,"typedarray-to-buffer":38,"util":41,"xtend":15}],13:[function(require,module,exports){
 var util = require('util')
 var AbstractIterator  = require('abstract-leveldown').AbstractIterator
 var ltgt = require('ltgt')
@@ -4133,7 +4108,43 @@ Iterator.prototype._next = function (callback) {
   this.callback = callback
 }
 
-},{"abstract-leveldown":3,"ltgt":15,"util":39}],15:[function(require,module,exports){
+},{"abstract-leveldown":3,"ltgt":16,"util":41}],14:[function(require,module,exports){
+module.exports = hasKeys
+
+function hasKeys(source) {
+    return source !== null &&
+        (typeof source === "object" ||
+        typeof source === "function")
+}
+
+},{}],15:[function(require,module,exports){
+var Keys = require("object-keys")
+var hasKeys = require("./has-keys")
+
+module.exports = extend
+
+function extend() {
+    var target = {}
+
+    for (var i = 0; i < arguments.length; i++) {
+        var source = arguments[i]
+
+        if (!hasKeys(source)) {
+            continue
+        }
+
+        var keys = Keys(source)
+
+        for (var j = 0; j < keys.length; j++) {
+            var name = keys[j]
+            target[name] = source[name]
+        }
+    }
+
+    return target
+}
+
+},{"./has-keys":14,"object-keys":18}],16:[function(require,module,exports){
 (function (Buffer){
 
 exports.compare = function (a, b) {
@@ -4283,7 +4294,7 @@ exports.filter = function (range, compare) {
 }
 
 }).call(this,{"isBuffer":require("../is-buffer/index.js")})
-},{"../is-buffer/index.js":10}],16:[function(require,module,exports){
+},{"../is-buffer/index.js":9}],17:[function(require,module,exports){
 var hasOwn = Object.prototype.hasOwnProperty;
 var toString = Object.prototype.toString;
 
@@ -4325,11 +4336,11 @@ module.exports = function forEach(obj, fn) {
 };
 
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 module.exports = Object.keys || require('./shim');
 
 
-},{"./shim":19}],18:[function(require,module,exports){
+},{"./shim":20}],19:[function(require,module,exports){
 var toString = Object.prototype.toString;
 
 module.exports = function isArguments(value) {
@@ -4347,7 +4358,7 @@ module.exports = function isArguments(value) {
 };
 
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 (function () {
 	"use strict";
 
@@ -4411,7 +4422,7 @@ module.exports = function isArguments(value) {
 }());
 
 
-},{"./foreach":16,"./isArguments":18}],20:[function(require,module,exports){
+},{"./foreach":17,"./isArguments":19}],21:[function(require,module,exports){
 // Top level file is just a mixin of submodules & constants
 'use strict';
 
@@ -4427,7 +4438,7 @@ assign(pako, deflate, inflate, constants);
 
 module.exports = pako;
 
-},{"./lib/deflate":21,"./lib/inflate":22,"./lib/utils/common":23,"./lib/zlib/constants":26}],21:[function(require,module,exports){
+},{"./lib/deflate":22,"./lib/inflate":23,"./lib/utils/common":24,"./lib/zlib/constants":27}],22:[function(require,module,exports){
 'use strict';
 
 
@@ -4829,7 +4840,7 @@ exports.deflate = deflate;
 exports.deflateRaw = deflateRaw;
 exports.gzip = gzip;
 
-},{"./utils/common":23,"./utils/strings":24,"./zlib/deflate":28,"./zlib/messages":33,"./zlib/zstream":35}],22:[function(require,module,exports){
+},{"./utils/common":24,"./utils/strings":25,"./zlib/deflate":29,"./zlib/messages":34,"./zlib/zstream":36}],23:[function(require,module,exports){
 'use strict';
 
 
@@ -5249,7 +5260,7 @@ exports.inflate = inflate;
 exports.inflateRaw = inflateRaw;
 exports.ungzip  = inflate;
 
-},{"./utils/common":23,"./utils/strings":24,"./zlib/constants":26,"./zlib/gzheader":29,"./zlib/inflate":31,"./zlib/messages":33,"./zlib/zstream":35}],23:[function(require,module,exports){
+},{"./utils/common":24,"./utils/strings":25,"./zlib/constants":27,"./zlib/gzheader":30,"./zlib/inflate":32,"./zlib/messages":34,"./zlib/zstream":36}],24:[function(require,module,exports){
 'use strict';
 
 
@@ -5353,7 +5364,7 @@ exports.setTyped = function (on) {
 
 exports.setTyped(TYPED_OK);
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 // String encode/decode helpers
 'use strict';
 
@@ -5540,7 +5551,7 @@ exports.utf8border = function (buf, max) {
   return (pos + _utf8len[buf[pos]] > max) ? pos : max;
 };
 
-},{"./common":23}],25:[function(require,module,exports){
+},{"./common":24}],26:[function(require,module,exports){
 'use strict';
 
 // Note: adler32 takes 12% for level 0 and 2% for level 6.
@@ -5574,7 +5585,7 @@ function adler32(adler, buf, len, pos) {
 
 module.exports = adler32;
 
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 'use strict';
 
 
@@ -5626,7 +5637,7 @@ module.exports = {
   //Z_NULL:                 null // Use -1 or null inline, depending on var type
 };
 
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 'use strict';
 
 // Note: we can't get significant speed boost here.
@@ -5669,7 +5680,7 @@ function crc32(crc, buf, len, pos) {
 
 module.exports = crc32;
 
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 'use strict';
 
 var utils   = require('../utils/common');
@@ -7526,7 +7537,7 @@ exports.deflatePrime = deflatePrime;
 exports.deflateTune = deflateTune;
 */
 
-},{"../utils/common":23,"./adler32":25,"./crc32":27,"./messages":33,"./trees":34}],29:[function(require,module,exports){
+},{"../utils/common":24,"./adler32":26,"./crc32":28,"./messages":34,"./trees":35}],30:[function(require,module,exports){
 'use strict';
 
 
@@ -7568,7 +7579,7 @@ function GZheader() {
 
 module.exports = GZheader;
 
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 'use strict';
 
 // See state defs from inflate.js
@@ -7896,7 +7907,7 @@ module.exports = function inflate_fast(strm, start) {
   return;
 };
 
-},{}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 'use strict';
 
 
@@ -9436,7 +9447,7 @@ exports.inflateSyncPoint = inflateSyncPoint;
 exports.inflateUndermine = inflateUndermine;
 */
 
-},{"../utils/common":23,"./adler32":25,"./crc32":27,"./inffast":30,"./inftrees":32}],32:[function(require,module,exports){
+},{"../utils/common":24,"./adler32":26,"./crc32":28,"./inffast":31,"./inftrees":33}],33:[function(require,module,exports){
 'use strict';
 
 
@@ -9765,7 +9776,7 @@ module.exports = function inflate_table(type, lens, lens_index, codes, table, ta
   return 0;
 };
 
-},{"../utils/common":23}],33:[function(require,module,exports){
+},{"../utils/common":24}],34:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -9780,7 +9791,7 @@ module.exports = {
   '-6':   'incompatible version' /* Z_VERSION_ERROR (-6) */
 };
 
-},{}],34:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 'use strict';
 
 
@@ -10984,7 +10995,7 @@ exports._tr_flush_block  = _tr_flush_block;
 exports._tr_tally = _tr_tally;
 exports._tr_align = _tr_align;
 
-},{"../utils/common":23}],35:[function(require,module,exports){
+},{"../utils/common":24}],36:[function(require,module,exports){
 'use strict';
 
 
@@ -11015,7 +11026,7 @@ function ZStream() {
 
 module.exports = ZStream;
 
-},{}],36:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -11197,7 +11208,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],37:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 (function (Buffer){
 /**
  * Convert a typed array to a Buffer without a copy
@@ -11220,14 +11231,39 @@ module.exports = function (arr) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":6}],38:[function(require,module,exports){
+},{"buffer":6}],39:[function(require,module,exports){
+if (typeof Object.create === 'function') {
+  // implementation from standard node.js 'util' module
+  module.exports = function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor
+    ctor.prototype = Object.create(superCtor.prototype, {
+      constructor: {
+        value: ctor,
+        enumerable: false,
+        writable: true,
+        configurable: true
+      }
+    });
+  };
+} else {
+  // old school shim for old browsers
+  module.exports = function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor
+    var TempCtor = function () {}
+    TempCtor.prototype = superCtor.prototype
+    ctor.prototype = new TempCtor()
+    ctor.prototype.constructor = ctor
+  }
+}
+
+},{}],40:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],39:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -11817,185 +11853,170 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":38,"_process":36,"inherits":9}],40:[function(require,module,exports){
-module.exports = hasKeys
+},{"./support/isBuffer":40,"_process":37,"inherits":39}],42:[function(require,module,exports){
+'use strict';
 
-function hasKeys(source) {
-    return source !== null &&
-        (typeof source === "object" ||
-        typeof source === "function")
-}
+var leveljs = require('level-js');
+var db = typeof indexedDB === 'undefined' ? { open: function open(_, cb) {
+        return cb(true);
+    } } : leveljs('./tessdata2');
 
-},{}],41:[function(require,module,exports){
-var Keys = require("object-keys")
-var hasKeys = require("./has-keys")
+var langdata = require('../common/langdata.json');
 
-module.exports = extend
-
-function extend() {
-    var target = {}
-
-    for (var i = 0; i < arguments.length; i++) {
-        var source = arguments[i]
-
-        if (!hasKeys(source)) {
-            continue
-        }
-
-        var keys = Keys(source)
-
-        for (var j = 0; j < keys.length; j++) {
-            var name = keys[j]
-            target[name] = source[name]
-        }
-    }
-
-    return target
-}
-
-},{"./has-keys":40,"object-keys":17}],42:[function(require,module,exports){
-var leveljs = require('level-js')
-var db = typeof indexedDB === 'undefined' ? { open: (_, cb) =>  cb(true) } : leveljs('./tessdata2')
-
-var langdata = require('../common/langdata.json')
-
-module.exports = function getLanguageData(req, res, cb){
+module.exports = function getLanguageData(req, res, cb) {
     var lang = req.options.lang;
-    
-    function saveDataFile(data){
-        db.put(lang, data, err => console.log('cached', lang, err))
-        cb(data)
+
+    function saveDataFile(data) {
+        db.put(lang, data, function (err) {
+            return console.log('cached', lang, err);
+        });
+        cb(data);
     }
 
-    db.open({ compression: false }, err => {
+    db.open({ compression: false }, function (err) {
         if (err) return fetchLanguageData(req, res, cb);
-        db.get(lang, (err, data) => {
+        db.get(lang, function (err, data) {
             if (err) return fetchLanguageData(req, res, saveDataFile);
-            res.progress({ status: 'found in cache ' + lang + '.traineddata' })
-            cb(data)
-        })
-    })
-}
-
+            res.progress({ status: 'found in cache ' + lang + '.traineddata' });
+            cb(data);
+        });
+    });
+};
 
 var ungzip = require('pako').ungzip;
 
-function fetchLanguageData(req, res, cb){
+function fetchLanguageData(req, res, cb) {
     var lang = req.options.lang;
     var langfile = lang + '.traineddata.gz';
     var url = req.workerOptions.langPath + langfile;
 
     var xhr = new XMLHttpRequest();
-    xhr.responseType = 'arraybuffer';
     xhr.open('GET', url, true);
-    xhr.onerror = e => {
-        xhr.onprogress = xhr.onload = null
-        cb(xhr, null)
-    }
-    xhr.onprogress = e => 
-        res.progress({
+    xhr.responseType = 'arraybuffer';
+    xhr.onerror = function (e) {
+        xhr.onprogress = xhr.onload = null;
+        cb(xhr, null);
+    };
+    xhr.onprogress = function (e) {
+        return res.progress({
             status: 'downloading ' + langfile,
             loaded: e.loaded,
             progress: Math.min(1, e.loaded / langdata[lang])
         });
+    };
 
-    xhr.onload = e => {
-        if (!(xhr.status == 200 || (xhr.status == 0 && xhr.response))) return res.reject('Error downloading language ' + url);
-        res.progress({ status: 'unzipping ' + langfile })
+    xhr.onload = function (e) {
+        if (!(xhr.status == 200 || xhr.status == 0 && xhr.response)) return res.reject('Error downloading language ' + url);
+        res.progress({ status: 'unzipping ' + langfile });
 
         // in case the gzips are already ungzipped or extra gzipped
-        var response = new Uint8Array(xhr.response)
+        var response = new Uint8Array(xhr.response);
         try {
-            while(response[0] == 0x1f && response[1] == 0x8b) response = ungzip(response);
+            while (response[0] == 0x1f && response[1] == 0x8b) {
+                response = ungzip(response);
+            }
         } catch (err) {
-            return res.reject('Error unzipping language file ' + langfile + '\n' + err.message)
+            return res.reject('Error unzipping language file ' + langfile + '\n' + err.message);
         }
-        
-        cb(response)
-    }
-    xhr.send()
+
+        cb(response);
+    };
+    xhr.send();
 }
 
-},{"../common/langdata.json":46,"level-js":13,"pako":20}],43:[function(require,module,exports){
+},{"../common/langdata.json":46,"level-js":12,"pako":21}],43:[function(require,module,exports){
 (function (global){
 "use strict";
 
-var workerUtils = require('../common/worker.js')
+var workerUtils = require('../common/worker.js');
 
-global.addEventListener('message', function(e){
+global.addEventListener('message', function (e) {
     var packet = e.data;
-    workerUtils.dispatchHandlers(packet, obj => postMessage(obj))
-})
+    workerUtils.dispatchHandlers(packet, function (obj) {
+        return postMessage(obj);
+    });
+});
 
-exports.getCore = function(req, res){
-    if(!global.TesseractCore){
-        res.progress({ status: 'loading tesseract core' })
-        importScripts(req.workerOptions.tesseractPath)
-        res.progress({ status: 'loaded tesseract core' })
+exports.getCore = function (req, res) {
+    if (!global.TesseractCore) {
+        res.progress({ status: 'loading tesseract core' });
+        importScripts(req.workerOptions.tesseractPath);
+        res.progress({ status: 'loaded tesseract core' });
     }
-    return TesseractCore
-}
+    return TesseractCore;
+};
 
-exports.getLanguageData = require('./lang.js')
+exports.getLanguageData = require('./lang.js');
 
 workerUtils.setAdapter(module.exports);
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"../common/worker.js":47,"./lang.js":42}],44:[function(require,module,exports){
+'use strict';
+
 // This converts an image to grayscale
 
-module.exports = function desaturate(image){
+module.exports = function desaturate(image) {
     var width, height;
-    if(image.data){
-        var src       = image.data;
-            width     = image.width, 
-            height    = image.height;
-        var dst       = new Uint8Array(width * height);
-        var srcLength = src.length | 0, srcLength_16 = (srcLength - 16) | 0;
-        
+    if (image.data) {
+        var src = image.data;
+        width = image.width, height = image.height;
+        var dst = new Uint8Array(width * height);
+        var srcLength = src.length | 0,
+            srcLength_16 = srcLength - 16 | 0;
+
         for (var i = 0, j = 0; i <= srcLength_16; i += 16, j += 4) {
             // convert to grayscale 4 pixels at a time; eveything with alpha gets put in front of 50% gray
-            dst[j]     = (((src[i] * 77 + src[i+1] * 151 + src[i+2] * 28) * src[i+3]) + ((255-src[i+3]) << 15) + 32768) >> 16
-            dst[j+1]   = (((src[i+4] * 77 + src[i+5] * 151 + src[i+6] * 28) * src[i+7]) + ((255-src[i+7]) << 15) + 32768) >> 16
-            dst[j+2]   = (((src[i+8] * 77 + src[i+9] * 151 + src[i+10] * 28) * src[i+11]) + ((255-src[i+11]) << 15) + 32768) >> 16
-            dst[j+3]   = (((src[i+12] * 77 + src[i+13] * 151 + src[i+14] * 28) * src[i+15]) + ((255-src[i+15]) << 15) + 32768) >> 16
+            dst[j] = (src[i] * 77 + src[i + 1] * 151 + src[i + 2] * 28) * src[i + 3] + (255 - src[i + 3] << 15) + 32768 >> 16;
+            dst[j + 1] = (src[i + 4] * 77 + src[i + 5] * 151 + src[i + 6] * 28) * src[i + 7] + (255 - src[i + 7] << 15) + 32768 >> 16;
+            dst[j + 2] = (src[i + 8] * 77 + src[i + 9] * 151 + src[i + 10] * 28) * src[i + 11] + (255 - src[i + 11] << 15) + 32768 >> 16;
+            dst[j + 3] = (src[i + 12] * 77 + src[i + 13] * 151 + src[i + 14] * 28) * src[i + 15] + (255 - src[i + 15] << 15) + 32768 >> 16;
         }
-        for (; i < srcLength; i += 4, ++j) //finish up
-            dst[j]     = (((src[i] * 77 + src[i+1] * 151 + src[i+2] * 28) * src[i+3]) + ((255-src[i+3]) << 15) + 32768) >> 16
-        image = dst;
-    } else { throw 'Invalid ImageData' }
-    return image
-}
+        for (; i < srcLength; i += 4, ++j) {
+            //finish up
+            dst[j] = (src[i] * 77 + src[i + 1] * 151 + src[i + 2] * 28) * src[i + 3] + (255 - src[i + 3] << 15) + 32768 >> 16;
+        }image = dst;
+    } else {
+        throw 'Invalid ImageData';
+    }
+    return image;
+};
+
 },{}],45:[function(require,module,exports){
-module.exports = function DumpLiterallyEverything(Module, base){
+'use strict';
+
+module.exports = function DumpLiterallyEverything(Module, base) {
     var ri = base.GetIterator();
     var blocks = [];
     var block, para, textline, word, symbol;
 
-    function enumToString(value, prefix){
-       return (Object.keys(Module)
-           .filter(function(e){ return e.substr(0, prefix.length + 1) == prefix + '_' })
-           .filter(function(e){ return Module[e] === value })
-           .map(function(e){ return e.slice(prefix.length + 1) })[0])
+    function enumToString(value, prefix) {
+        return Object.keys(Module).filter(function (e) {
+            return e.substr(0, prefix.length + 1) == prefix + '_';
+        }).filter(function (e) {
+            return Module[e] === value;
+        }).map(function (e) {
+            return e.slice(prefix.length + 1);
+        })[0];
     }
 
-    ri.Begin()
+    ri.Begin();
     do {
-        if(ri.IsAtBeginningOf(Module.RIL_BLOCK)){
+        if (ri.IsAtBeginningOf(Module.RIL_BLOCK)) {
             var poly = ri.BlockPolygon();
             var polygon = null;
             // BlockPolygon() returns null when automatic page segmentation is off
-            if(Module.getPointer(poly) > 0){
+            if (Module.getPointer(poly) > 0) {
                 var n = poly.get_n(),
                     px = poly.get_x(),
                     py = poly.get_y(),
                     polygon = [];
-                for(var i = 0; i < n; i++){
+                for (var i = 0; i < n; i++) {
                     polygon.push([px.getValue(i), py.getValue(i)]);
                 }
-                Module._ptaDestroy(Module.getPointer(poly));    
+                Module._ptaDestroy(Module.getPointer(poly));
             }
-            
+
             block = {
                 paragraphs: [],
 
@@ -12006,10 +12027,10 @@ module.exports = function DumpLiterallyEverything(Module, base){
 
                 blocktype: enumToString(ri.BlockType(), 'PT'),
                 polygon: polygon
-            }
-            blocks.push(block)
+            };
+            blocks.push(block);
         }
-        if(ri.IsAtBeginningOf(Module.RIL_PARA)){
+        if (ri.IsAtBeginningOf(Module.RIL_PARA)) {
             para = {
                 lines: [],
 
@@ -12019,10 +12040,10 @@ module.exports = function DumpLiterallyEverything(Module, base){
                 bbox: ri.getBoundingBox(Module.RIL_PARA),
 
                 is_ltr: !!ri.ParagraphIsLtr()
-            }
-            block.paragraphs.push(para)
+            };
+            block.paragraphs.push(para);
         }
-        if(ri.IsAtBeginningOf(Module.RIL_TEXTLINE)){
+        if (ri.IsAtBeginningOf(Module.RIL_TEXTLINE)) {
             textline = {
                 words: [],
 
@@ -12030,10 +12051,10 @@ module.exports = function DumpLiterallyEverything(Module, base){
                 confidence: ri.Confidence(Module.RIL_TEXTLINE),
                 baseline: ri.getBaseline(Module.RIL_TEXTLINE),
                 bbox: ri.getBoundingBox(Module.RIL_TEXTLINE)
-            }
-            para.lines.push(textline)
+            };
+            para.lines.push(textline);
         }
-        if(ri.IsAtBeginningOf(Module.RIL_WORD)){
+        if (ri.IsAtBeginningOf(Module.RIL_WORD)) {
             var fontInfo = ri.getWordFontAttributes(),
                 wordDir = ri.WordDirection();
             word = {
@@ -12058,25 +12079,25 @@ module.exports = function DumpLiterallyEverything(Module, base){
                 is_smallcaps: fontInfo.is_smallcaps,
                 font_size: fontInfo.pointsize,
                 font_id: fontInfo.font_id,
-                font_name: fontInfo.font_name,
-            }
+                font_name: fontInfo.font_name
+            };
             var wc = new Module.WordChoiceIterator(ri);
             do {
                 word.choices.push({
                     text: wc.GetUTF8Text(),
                     confidence: wc.Confidence()
-                })
+                });
             } while (wc.Next());
-            Module.destroy(wc)
-            textline.words.push(word)
+            Module.destroy(wc);
+            textline.words.push(word);
         }
-        
+
         var image = null;
         // var pix = ri.GetBinaryImage(Module.RIL_SYMBOL)
         // var image = pix2array(pix);
         // // for some reason it seems that things stop working if you destroy pics
         // Module._pixDestroy(Module.getPointer(pix));
-        if(ri.IsAtBeginningOf(Module.RIL_SYMBOL)){
+        if (ri.IsAtBeginningOf(Module.RIL_SYMBOL)) {
             symbol = {
                 choices: [],
                 image: image,
@@ -12088,20 +12109,20 @@ module.exports = function DumpLiterallyEverything(Module, base){
 
                 is_superscript: !!ri.SymbolIsSuperscript(),
                 is_subscript: !!ri.SymbolIsSubscript(),
-                is_dropcap: !!ri.SymbolIsDropcap(),
-            }
-            word.symbols.push(symbol)
+                is_dropcap: !!ri.SymbolIsDropcap()
+            };
+            word.symbols.push(symbol);
             var ci = new Module.ChoiceIterator(ri);
             do {
                 symbol.choices.push({
                     text: ci.GetUTF8Text(),
                     confidence: ci.Confidence()
-                })
+                });
             } while (ci.Next());
-            Module.destroy(ci)
+            Module.destroy(ci);
         }
     } while (ri.Next(Module.RIL_SYMBOL));
-    Module.destroy(ri)
+    Module.destroy(ri);
 
     return {
         text: base.GetUTF8Text(),
@@ -12113,120 +12134,116 @@ module.exports = function DumpLiterallyEverything(Module, base){
 
         psm: enumToString(base.GetPageSegMode(), 'PSM'),
         oem: enumToString(base.oem(), 'OEM'),
-        version: base.Version(),
-    }
-}
+        version: base.Version()
+    };
+};
 
 // the generated HOCR is excessively indented, so
 // we get rid of that indentation
 
-function deindent(html){
-    var lines = html.split('\n')
-    if(lines[0].substring(0, 2) === "  "){
+function deindent(html) {
+    var lines = html.split('\n');
+    if (lines[0].substring(0, 2) === "  ") {
         for (var i = 0; i < lines.length; i++) {
-            if (lines[i].substring(0,2) === "  ") {
-                lines[i] = lines[i].slice(2)
+            if (lines[i].substring(0, 2) === "  ") {
+                lines[i] = lines[i].slice(2);
             }
         };
     }
-    return lines.join('\n')
+    return lines.join('\n');
 }
 
 },{}],46:[function(require,module,exports){
 module.exports={"afr": 1079573, "ara": 1701536, "aze": 1420865, "bel": 1276820, "ben": 6772012, "bul": 1605615, "cat": 1652368, "ces": 1035441, "chi_sim": 17710414, "chi_tra": 24717749, "chr": 320649, "dan-frak": 677656, "dan": 1972936, "deu-frak": 822644, "deu": 991656, "ell": 859719, "eng": 9453554, "enm": 619254, "epo": 1241212, "equ": 821130, "est": 1905040, "eus": 1641190, "fin": 979418, "fra": 1376221, "frk": 5912963, "frm": 5147082, "glg": 1674938, "grc": 3012615, "heb": 1051501, "hin": 6590065, "hrv": 1926995, "hun": 3074473, "ind": 1874776, "isl": 1634041, "ita": 948593, "ita_old": 3436571, "jpn": 13507168, "kan": 4390317, "kor": 5353098, "lav": 1843944, "lit": 1779240, "mal": 5966263, "meme": 88453, "mkd": 1163087, "mlt": 1463001, "msa": 1665427, "nld": 1134708, "nor": 2191610, "osd": 4274649, "pol": 7024662, "por": 909359, "ron": 915680, "rus": 5969957, "slk-frak": 289885, "slk": 2217342, "slv": 1611338, "spa": 883170, "spa_old": 5647453, "sqi": 1667041, "srp": 1770244, "swa": 757916, "swe": 2451917, "tam": 3498763, "tel": 5795246, "tgl": 1496256, "tha": 3811136, "tur": 3563264, "ukr": 937566, "vie": 2195922}
 },{}],47:[function(require,module,exports){
+'use strict';
+
 var latestJob;
 var Module;
 var base;
 var adapter = {};
 
-function dispatchHandlers(packet, send){
-    function respond(status, data){
+function dispatchHandlers(packet, send) {
+    function respond(status, data) {
         send({
             jobId: packet.jobId,
             status: status,
             action: packet.action,
             data: data
-        })
+        });
     }
-    respond.resolve = respond.bind(this, 'resolve')
-    respond.reject = respond.bind(this, 'reject')
-    respond.progress = respond.bind(this, 'progress')
-    
+    respond.resolve = respond.bind(this, 'resolve');
+    respond.reject = respond.bind(this, 'reject');
+    respond.progress = respond.bind(this, 'progress');
+
     latestJob = respond;
 
-    if(packet.action === 'recognize'){
-        handleRecognize(packet.payload, respond)
-    }else if(packet.action === 'detect'){
-        handleDetect(packet.payload, respond)
+    if (packet.action === 'recognize') {
+        handleRecognize(packet.payload, respond);
+    } else if (packet.action === 'detect') {
+        handleDetect(packet.payload, respond);
     }
 }
 exports.dispatchHandlers = dispatchHandlers;
 
-exports.setAdapter = function setAdapter(impl){
+exports.setAdapter = function setAdapter(impl) {
     adapter = impl;
-}
+};
 
-
-function handleInit(req, res){
-    if(!Module){
+function handleInit(req, res) {
+    if (!Module) {
         var Core = adapter.getCore(req, res);
 
-        res.progress({ status: 'initializing tesseract api' })
+        res.progress({ status: 'initializing tesseract api' });
         Module = Core({
             TOTAL_MEMORY: req.memory,
-            TesseractProgress(percent){
-                latestJob.progress({ status: 'recognizing text', progress: Math.max(0, (percent-30)/70) })
+            TesseractProgress: function TesseractProgress(percent) {
+                latestJob.progress({ status: 'recognizing text', progress: Math.max(0, (percent - 30) / 70) });
             },
-            onRuntimeInitialized() {}
-        })
-        Module.FS_createPath("/", "tessdata", true, true)
-        base = new Module.TessBaseAPI()
-        res.progress({ status: 'initialized tesseract api' })
+            onRuntimeInitialized: function onRuntimeInitialized() {}
+        });
+        Module.FS_createPath("/", "tessdata", true, true);
+        base = new Module.TessBaseAPI();
+        res.progress({ status: 'initialized tesseract api' });
     }
 }
 
+var dump = require('./dump.js');
+var desaturate = require('./desaturate.js');
 
-
-var dump = require('./dump.js')
-var desaturate = require('./desaturate.js')
-
-
-function setImage(Module, base, image){
+function setImage(Module, base, image) {
     var imgbin = desaturate(image),
         width = image.width,
         height = image.height;
 
     var ptr = Module.allocate(imgbin, 'i8', Module.ALLOC_NORMAL);
     base.SetImage(Module.wrapPointer(ptr), width, height, 1, width);
-    base.SetRectangle(0, 0, width, height)
+    base.SetRectangle(0, 0, width, height);
     return ptr;
 }
 
-function loadLanguage(req, res, cb){
+function loadLanguage(req, res, cb) {
     var lang = req.options.lang;
-    
-    if(!Module._loadedLanguages) Module._loadedLanguages = {};
-    if(lang in Module._loadedLanguages) return cb();
 
-    adapter.getLanguageData(req, res, function(data){
+    if (!Module._loadedLanguages) Module._loadedLanguages = {};
+    if (lang in Module._loadedLanguages) return cb();
+
+    adapter.getLanguageData(req, res, function (data) {
         Module.FS_createDataFile('tessdata', lang + ".traineddata", data, true, false);
-        res.progress({ status: 'loaded ' + lang + '.traineddata' })
+        res.progress({ status: 'loaded ' + lang + '.traineddata' });
         Module._loadedLanguages[lang] = true;
-        cb()
-    })
+        cb();
+    });
 }
 
+function handleRecognize(req, res) {
+    handleInit(req, res);
 
-
-function handleRecognize(req, res){
-    handleInit(req, res)
-    
-    loadLanguage(req, res, function(){  
+    loadLanguage(req, res, function () {
         var lang = req.options.lang;
 
-        base.Init(null, lang)
-        res.progress({ status: 'initialized with language' })
+        base.Init(null, lang);
+        res.progress({ status: 'initialized with language' });
 
         var options = req.options;
         for (var option in options) {
@@ -12236,38 +12253,37 @@ function handleRecognize(req, res){
         }
 
         var ptr = setImage(Module, base, req.image);
-        base.Recognize(null)
-        
-        var result = dump(Module, base)
+        base.Recognize(null);
+
+        var result = dump(Module, base);
 
         base.End();
-        Module._free(ptr); 
+        Module._free(ptr);
 
         res.resolve(result);
-    })
+    });
 }
 
-
-function handleDetect(req, res){
-    handleInit(req, res)
+function handleDetect(req, res) {
+    handleInit(req, res);
     req.options.lang = 'osd';
-    loadLanguage(req, res, function(){
+    loadLanguage(req, res, function () {
 
-        base.Init(null, 'osd')
-        base.SetPageSegMode(Module.PSM_OSD_ONLY)
-        
+        base.Init(null, 'osd');
+        base.SetPageSegMode(Module.PSM_OSD_ONLY);
+
         var ptr = setImage(Module, base, req.image);
 
         var results = new Module.OSResults();
         var success = base.DetectOS(results);
-        if(!success){
+        if (!success) {
             base.End();
             Module._free(ptr);
-            res.reject("failed to detect os")
+            res.reject("failed to detect os");
         } else {
-            var charset = results.get_unicharset()
-            
-            var best = results.get_best_result()
+            var charset = results.get_unicharset();
+
+            var best = results.get_best_result();
             var oid = best.get_orientation_id(),
                 sid = best.get_script_id();
 
@@ -12277,14 +12293,14 @@ function handleDetect(req, res){
                 script_confidence: best.get_sconfidence(),
                 orientation_degrees: [0, 270, 180, 90][oid],
                 orientation_confidence: best.get_oconfidence()
-            }
+            };
 
             base.End();
             Module._free(ptr);
 
-            res.resolve(result)
+            res.resolve(result);
         }
-    })
+    });
 }
 
 },{"./desaturate.js":44,"./dump.js":45}]},{},[43]);

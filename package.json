@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" & exit 1",
-    "start": "watchify src/index.js -o dist/tesseract.js --standalone Tesseract & watchify src/browser/worker.js -o dist/worker.js & http-server -p 7355",
+    "start": "watchify src/index.js  -t [ babelify --presets [ es2015 ] ] -o dist/tesseract.js --standalone Tesseract & watchify src/browser/worker.js  -t [ babelify --presets [ es2015 ] ] -o dist/worker.js & http-server -p 7355",
     "build": "browserify src/index.js -t [ babelify --presets [ es2015 ] ] -o dist/tesseract.js --standalone Tesseract && browserify src/browser/worker.js -t [ babelify --presets [ es2015 ] ] -o dist/worker.js"
   },
   "browser": {

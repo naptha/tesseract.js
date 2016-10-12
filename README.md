@@ -27,15 +27,19 @@ Tesseract.js works with a `<script>` tag via local copy or cdn, with webpack and
 
 You can either include Tesseract.js on you page with a cdn like this:
 ```html
-<script src='https://cdn.rawgit.com/naptha/tesseract.js/a01d2a2/dist/tesseract.js'></script>
+<script src='https://cdn.rawgit.com/naptha/tesseract.js/0.2.0/dist/tesseract.js'></script>
 ```
 
-Or you can grab copies of `tesseract.js` and `tesseract.worker.js` from the [dist folder](https://github.com/naptha/tesseract.js/tree/master/dist) and include your local copies like this:
+Or you can grab copies of `tesseract.js` and `worker.js` from the [dist folder](https://github.com/naptha/tesseract.js/tree/master/dist) and include your local copies like this:
 ```html
 <script src='/path/to/tesseract.js'></script>
-
 <script>
-Tesseract.workerUrl = 'http://www.absolute-path-to/tesseract.worker.js'
+var LocalTesseract = Tesseract.create({
+    workerPath: '/path/to/worker.js',
+    langPath: 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/',
+    tesseractPath: 'https://cdn.rawgit.com/naptha/tesseract.js-core/0.1.0/index.js',
+})
+// from now on use LocalTesseract instead of Tesseract
 </script>
 ```
 
@@ -69,7 +73,7 @@ You can [head to the docs](#docs) for a full treatment of the API.
 * [TesseractJob](#tesseractjob)
   + [TesseractJob.progress(callback: function) -> TesseractJob](#tesseractjobprogresscallback-function---tesseractjob)
   + [TesseractJob.then(callback: function) -> TesseractJob](#tesseractjobthencallback-function---tesseractjob)
-  + [TesseractJob.error(callback: function) -> TesseractJob](#tesseractjoberrorcallback-function---tesseractjob)
+  + [TesseractJob.catch(callback: function) -> TesseractJob](#tesseractjoberrorcallback-function---tesseractjob)
 * [Tesseract Remote File Options](#tesseract-remote-file-options)
   + [Tesseract.coreUrl](#tesseractcoreurl)
   + [Tesseract.workerUrl](#tesseractworkerurl)
@@ -87,11 +91,11 @@ Figures out what words are in `image`, where the words are in `image`, etc.
     + include properties that override some subset of the [default tesseract parameters](./tesseract_parameters.md)
     + include a `lang` property with a value from the [list of lang parameters](./tesseract_lang_list.md)
 
-Returns a [TesseractJob](#tesseractjob) whose `then`, `progress`, and `error` methods can be used to act on the result.
+Returns a [TesseractJob](#tesseractjob) whose `then`, `progress`, and `catch` methods can be used to act on the result.
 
 ### Simple Example:
 ```javascript
-Tesseract.recognize('#my-image')
+Tesseract.recognize(document.querySelector('#my-image'))
 .then(function(result){
     console.log(result)
 })
@@ -100,7 +104,7 @@ Tesseract.recognize('#my-image')
 ### More Complicated Example:
 ```javascript
 // if we know our image is of spanish words without the letter 'e':
-Tesseract.recognize('#my-image', {
+Tesseract.recognize(document.querySelector('#my-image'), {
     lang: 'spa',
     tessedit_char_blacklist: 'e'
 })
@@ -113,14 +117,16 @@ Tesseract.recognize('#my-image', {
 
 
 ## Tesseract.detect(image: [ImageLike](#imagelike)) -> [TesseractJob](#tesseractjob)
+
 Figures out what script (e.g. 'Latin', 'Chinese') the words in  image are written in.
+
 - `image` is any [ImageLike](#imagelike) object.
 
 Returns a [TesseractJob](#tesseractjob) whose `then`, `progress`, and `error` methods can be used to act on the result of the script.
 
 
 ```javascript
-Tesseract.detect('#my-image')
+Tesseract.detect(document.querySelector('#my-image'))
 .then(function(result){
     console.log(result)
 })
@@ -128,13 +134,25 @@ Tesseract.detect('#my-image')
 
 
 ## ImageLike
-The main Tesseract.js functions take an `image` parameter, which should be something that is 'image-like'. 
-That means `image` should be 
-- an `img` element or querySelector that matches an `img` element
-- a `video` element or querySelector that matches a `video` element
-- a `canvas` element or querySelector that matches a `canvas` element
+
+The main Tesseract.js functions take an `image` parameter, which should be something that is like an image. What's considered "image-like" differs depending on whether it is being run from the browser or through NodeJS.
+
+
+On a browser, an image can be:
+- an `img`, `video`, or `canvas` element
 - a CanvasRenderingContext2D (returned by `canvas.getContext('2d')`)
-- the absolute `url` of an image from the same website that is running your script. Browser security policies don't allow access to the content of images from other websites :(
+- a `File` object (from a file `<input>` or drag-drop event)
+- a `Blob` object
+- a `ImageData` instance (an object containing `width`, `height` and `data` properties)
+- a path or URL to an accessible image (the image must either be hosted locally or accessible by CORS)
+
+
+
+
+In NodeJS, an image can be
+- a path to a local image
+- a `Buffer` instance containing a `PNG` or `JPEG` image
+- a `ImageData` instance (an object containing `width`, `height` and `data` properties)
 
 
 ## TesseractJob
@@ -143,19 +161,19 @@ All methods of a given TesseractJob return that TesseractJob to enable chaining.
 
 Typical use is: 
 ```javascript
-Tesseract.recognize('#my-image')
+Tesseract.recognize(document.querySelector('#my-image'))
     .progress(function(message){console.log(message)})
-    .error(function(err){console.error(err)})
+    .catch(function(err){console.error(err)})
     .then(function(result){console.log(result)})
 ```
 
 Which is equivalent to:
 ```javascript
-var job1 = Tesseract.recognize('#my-image');
+var job1 = Tesseract.recognize(document.querySelector('#my-image'));
 
 job1.progress(function(message){console.log(message)});
 
-job1.error(function(err){console.error(err)});
+job1.catch(function(err){console.error(err)});
 
 job1.then(function(result){console.log(result)})
 ```
@@ -168,7 +186,7 @@ Sets `callback` as the function that will be called every time the job progresse
 
 For example: 
 ```javascript
-Tesseract.recognize('#my-image')
+Tesseract.recognize(document.querySelector('#my-image'))
     .progress(function(message){console.log('progress is: 'message)})
 ```
 
@@ -193,7 +211,7 @@ Sets `callback` as the function that will be called if and when the job successf
 
 For example: 
 ```javascript
-Tesseract.recognize('#my-image')
+Tesseract.recognize(document.querySelector('#my-image'))
     .then(function(result){console.log('result is: 'result)})
 ```
 
@@ -214,7 +232,7 @@ progress is: {
 }
 ```
 
-### TesseractJob.error(callback: function) -> TesseractJob
+### TesseractJob.catch(callback: function) -> TesseractJob
 Sets `callback` as the function that will be called if the job fails. 
 - `callback` is a function with the signature `callback(erros)` where `error` is a json object.
 

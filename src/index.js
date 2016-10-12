@@ -4,7 +4,7 @@ var adapter = require('./node/index.js')
 var circularize = require('./common/circularize.js')
 
 
-function createWorker(workerOptions){
+function create(workerOptions){
 	return new TesseractWorker(workerOptions)
 }
 
@@ -142,8 +142,8 @@ class TesseractJob {
 }
 
 
-var DefaultTesseract = createWorker(adapter.defaultOptions)
-DefaultTesseract.createWorker = createWorker;
+var DefaultTesseract = create(adapter.defaultOptions)
+DefaultTesseract.create = create;
 
 module.exports = DefaultTesseract
 

@@ -29,6 +29,7 @@ exports.sendPacket = function sendPacket(instance, packet){
 
 
 function loadImage(image, cb){
+    // TODO: support URLs
     if(typeof image === 'string'){
         fs.readFile(image, function(err, buffer){
             loadImage(buffer, cb)
