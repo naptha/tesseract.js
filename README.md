@@ -60,7 +60,7 @@ You can [head to the docs](#docs) for a full treatment of the API.
   + [TesseractJob.progress(callback: function) -> TesseractJob](#tesseractjobprogresscallback-function---tesseractjob)
   + [TesseractJob.then(callback: function) -> TesseractJob](#tesseractjobthencallback-function---tesseractjob)
   + [TesseractJob.catch(callback: function) -> TesseractJob](#tesseractjoberrorcallback-function---tesseractjob)
-* [Tesseract Configuration](#tesseract-configuration)
+* [Local Installation](#local-installation)
   + [corePath](#corepath)
   + [workerPath](#workerpath)
   + [langPath](#langpath)
@@ -222,7 +222,11 @@ progress is: {
 Sets `callback` as the function that will be called if the job fails. 
 - `callback` is a function with the signature `callback(erros)` where `error` is a json object.
 
-## Tesseract Configuration
+## Local Installation
+
+In the browser, `tesseract.js` simply provides the API layer. Internally, it opens a WebWorker to handle requests. That worker itself loads code from the Emscripten-built `tesseract.js-core` which itself is hosted on a CDN. Then it dynamically loads language files hosted on another CDN. 
+
+Because of this we recommend loading `tesseract.js` from a CDN. But if you really need to have all your files local, you can use the `Tesseract.create` function which allows you to specify custom paths for workers, languages, and core. 
 
 ```javascript
 window.Tesseract = Tesseract.create({
