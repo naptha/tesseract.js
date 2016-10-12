@@ -12,7 +12,7 @@ Tesseract.js is a javascript library that gets words in [almost any language](./
 
 Tesseract.js works with script tags, webpack/browserify, and node. [After you install it](#installation), using it is as simple as 
 ```javascript
-Tesseract.recognize(my_image)
+Tesseract.recognize(myImage)
          .progress(function  (p) { console.log('progress', p)    })
          .then(function (result) { console.log('result', result) })
 ```
@@ -23,7 +23,7 @@ Tesseract.recognize(my_image)
 # Installation
 Tesseract.js works with a `<script>` tag via local copy or cdn, with webpack and browserify via `npm`, and on node via `npm`. [Check out the docs](#docs) for a full treatment of the API.
 
-## &lt;script/>
+## &lt;script />
 
 You can either include Tesseract.js on you page with a cdn like this:
 ```html
@@ -94,7 +94,7 @@ Returns a [TesseractJob](#tesseractjob) whose `then`, `progress`, and `catch` me
 
 ### Simple Example:
 ```javascript
-Tesseract.recognize(document.querySelector('#my-image'))
+Tesseract.recognize(myImage)
 .then(function(result){
     console.log(result)
 })
@@ -103,7 +103,7 @@ Tesseract.recognize(document.querySelector('#my-image'))
 ### More Complicated Example:
 ```javascript
 // if we know our image is of spanish words without the letter 'e':
-Tesseract.recognize(document.querySelector('#my-image'), {
+Tesseract.recognize(myImage, {
     lang: 'spa',
     tessedit_char_blacklist: 'e'
 })
@@ -125,7 +125,7 @@ Returns a [TesseractJob](#tesseractjob) whose `then`, `progress`, and `error` me
 
 
 ```javascript
-Tesseract.detect(document.querySelector('#my-image'))
+Tesseract.detect(myImage)
 .then(function(result){
     console.log(result)
 })
@@ -160,7 +160,7 @@ A TesseractJob is an an object returned by a call to `recognize` or `detect`. It
 
 Typical use is: 
 ```javascript
-Tesseract.recognize(document.querySelector('#my-image'))
+Tesseract.recognize(myImage)
     .progress(function(message){console.log(message)})
     .catch(function(err){console.error(err)})
     .then(function(result){console.log(result)})
@@ -168,7 +168,7 @@ Tesseract.recognize(document.querySelector('#my-image'))
 
 Which is equivalent to:
 ```javascript
-var job1 = Tesseract.recognize(document.querySelector('#my-image'));
+var job1 = Tesseract.recognize(myImage);
 
 job1.progress(function(message){console.log(message)});
 
@@ -185,7 +185,7 @@ Sets `callback` as the function that will be called every time the job progresse
 
 For example: 
 ```javascript
-Tesseract.recognize(document.querySelector('#my-image'))
+Tesseract.recognize(myImage)
     .progress(function(message){console.log('progress is: 'message)})
 ```
 
@@ -210,7 +210,7 @@ Sets `callback` as the function that will be called if and when the job successf
 
 For example: 
 ```javascript
-Tesseract.recognize(document.querySelector('#my-image'))
+Tesseract.recognize(myImage)
     .then(function(result){console.log('result is: 'result)})
 ```
 
