@@ -270,7 +270,7 @@ process.umask = function() { return 0; };
 'use strict';
 
 var defaultOptions = {
-    workerPath: 'https://cdn.rawgit.com/naptha/tesseract.js/0.1.3/dist/worker.js',
+    workerPath: 'https://cdn.rawgit.com/naptha/tesseract.js/0.2.0/dist/worker.js',
     corePath: 'https://cdn.rawgit.com/naptha/tesseract.js-core/0.1.0/index.js',
     langPath: 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/'
 };

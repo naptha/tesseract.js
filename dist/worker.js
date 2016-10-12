@@ -11943,9 +11943,9 @@ global.addEventListener('message', function (e) {
 
 exports.getCore = function (req, res) {
     if (!global.TesseractCore) {
-        res.progress({ status: 'loading tesseract core' });
+        res.progress({ status: 'loading tesseract core', progress: 0 });
         importScripts(req.workerOptions.corePath);
-        res.progress({ status: 'loaded tesseract core' });
+        res.progress({ status: 'loading tesseract core', progress: 1 });
     }
     return TesseractCore;
 };
@@ -12198,7 +12198,7 @@ function handleInit(req, res) {
     if (!Module) {
         var Core = adapter.getCore(req, res);
 
-        res.progress({ status: 'initializing tesseract api' });
+        res.progress({ status: 'initializing tesseract', progress: 0 });
         Module = Core({
             TOTAL_MEMORY: req.memory,
             TesseractProgress: function TesseractProgress(percent) {
@@ -12208,7 +12208,7 @@ function handleInit(req, res) {
         });
         Module.FS_createPath("/", "tessdata", true, true);
         base = new Module.TessBaseAPI();
-        res.progress({ status: 'initialized tesseract api' });
+        res.progress({ status: 'initializing tesseract', progress: 1 });
     }
 }
 
@@ -12234,7 +12234,7 @@ function loadLanguage(req, res, cb) {
 
     adapter.getLanguageData(req, res, function (data) {
         Module.FS_createDataFile('tessdata', lang + ".traineddata", data, true, false);
-        res.progress({ status: 'loaded ' + lang + '.traineddata' });
+        res.progress({ status: 'loading ' + lang + '.traineddata', progress: 1 });
         Module._loadedLanguages[lang] = true;
         cb();
     });
@@ -12246,8 +12246,9 @@ function handleRecognize(req, res) {
     loadLanguage(req, res, function () {
         var lang = req.options.lang;
 
+        res.progress({ status: 'initializing api', progress: 0 });
         base.Init(null, lang);
-        res.progress({ status: 'initialized with language' });
+        res.progress({ status: 'initializing api', progress: 0.3 });
 
         var options = req.options;
         for (var option in options) {
@@ -12256,7 +12257,10 @@ function handleRecognize(req, res) {
             }
         }
 
+        res.progress({ status: 'initializing api', progress: 0.6 });
         var ptr = setImage(Module, base, req.image);
+        res.progress({ status: 'initializing api', progress: 1 });
+
         base.Recognize(null);
 
         var result = dump(Module, base);
