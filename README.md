@@ -34,12 +34,11 @@ Or you can grab copies of `tesseract.js` and `worker.js` from the [dist folder](
 ```html
 <script src='/path/to/tesseract.js'></script>
 <script>
-var LocalTesseract = Tesseract.create({
+window.Tesseract = Tesseract.create({
     workerPath: '/path/to/worker.js',
     langPath: 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/',
     tesseractPath: 'https://cdn.rawgit.com/naptha/tesseract.js-core/0.1.0/index.js',
 })
-// from now on use LocalTesseract instead of Tesseract
 </script>
 ```
 
@@ -156,8 +155,8 @@ In NodeJS, an image can be
 
 
 ## TesseractJob
-A TesseractJob is an an object returned by a call to recognize or detect.
-All methods of a given TesseractJob return that TesseractJob to enable chaining. 
+
+A TesseractJob is an an object returned by a call to `recognize` or `detect`. It's inspired by the ES6 Promise interface and provides `then` and `catch` methods. One important difference is that these methods return the job itself (to enable chaining) rather than new. 
 
 Typical use is: 
 ```javascript

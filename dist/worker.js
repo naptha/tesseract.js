@@ -11925,10 +11925,14 @@ function fetchLanguageData(req, res, cb) {
 }
 
 },{"../common/langdata.json":46,"level-js":12,"pako":21}],43:[function(require,module,exports){
-(function (global){
-"use strict";
+(function (process,global){
+'use strict';
 
 var workerUtils = require('../common/worker.js');
+
+if (process.env.NODE_ENV === "development") {
+    console.debug('Using Development Worker');
+}
 
 global.addEventListener('message', function (e) {
     var packet = e.data;
@@ -11950,8 +11954,8 @@ exports.getLanguageData = require('./lang.js');
 
 workerUtils.setAdapter(module.exports);
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../common/worker.js":47,"./lang.js":42}],44:[function(require,module,exports){
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../common/worker.js":47,"./lang.js":42,"_process":37}],44:[function(require,module,exports){
 'use strict';
 
 // This converts an image to grayscale

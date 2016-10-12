@@ -1,6 +1,4 @@
-"use strict";
-
-var workerUtils = require('../common/worker.js')
+const workerUtils = require('../common/worker.js')
 
 process.on('message', function(packet){
     workerUtils.dispatchHandlers(packet, obj => process.send(obj))

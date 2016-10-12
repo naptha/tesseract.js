@@ -4,14 +4,13 @@ var defaultOptions = {
     langPath: 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/',
 }
 
-if(location.hostname === '127.0.0.1' && location.port == '7355'){
+if (process.env.NODE_ENV === "development") {
     console.debug('Using Development Configuration')
-    defaultOptions.workerPath = location.protocol + '//' + location.host + '/dist/worker.js'
+    defaultOptions.workerPath = location.protocol + '//' + location.host + '/dist/worker.dev.js'
 }
 
 
 exports.defaultOptions = defaultOptions;
-
 
 
 exports.spawnWorker = function spawnWorker(instance, workerOptions){
@@ -46,11 +45,18 @@ function loadImage(image, cb){
         if(/^\#/.test(image)){
             // element css selector
             return loadImage(document.querySelector(image), cb)
-        }else{
-            // url or path
+        }else if(/(blob|data)\:/.test(image)){
+            // data url
             var im = new Image
             im.src = image;
             im.onload = e => loadImage(im, cb);
+            return
+        }else{
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', image, true)
+            xhr.responseType = "blob";
+            xhr.onload = e => loadImage(xhr.response, cb);
+            xhr.send(null)
             return
         }
     }else if(image instanceof File){
@@ -76,6 +82,9 @@ function loadImage(image, cb){
         // canvas context
         var data = image.getImageData(0, 0, image.canvas.width, image.canvas.height);
         return loadImage(data, cb)
+    }else{
+        return cb(image)
     }
-    cb(image)
+    throw new Error('Missing return in loadImage cascade')
+
 }

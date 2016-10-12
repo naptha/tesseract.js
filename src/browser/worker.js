@@ -1,6 +1,8 @@
-"use strict";
+const workerUtils = require('../common/worker.js')
 
-var workerUtils = require('../common/worker.js')
+if (process.env.NODE_ENV === "development") {
+    console.debug('Using Development Worker')
+}
 
 global.addEventListener('message', function(e){
     var packet = e.data;

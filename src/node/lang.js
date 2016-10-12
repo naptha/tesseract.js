@@ -1,7 +1,7 @@
-var http = require("http"),
-    zlib = require("zlib"),
-    fs   = require("fs"),
-    path = require("path");
+const http = require("http"),
+      zlib = require("zlib"),
+      fs   = require("fs"),
+      path = require("path");
 
 var langdata = require('../common/langdata.json')
 

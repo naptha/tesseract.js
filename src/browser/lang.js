@@ -1,4 +1,4 @@
-var leveljs = require('level-js')
+const leveljs = require('level-js')
 var db = typeof indexedDB === 'undefined' ? { open: (_, cb) =>  cb(true) } : leveljs('./tessdata2')
 
 var langdata = require('../common/langdata.json')
@@ -22,7 +22,7 @@ module.exports = function getLanguageData(req, res, cb){
 }
 
 
-var ungzip = require('pako').ungzip;
+const ungzip = require('pako').ungzip;
 
 function fetchLanguageData(req, res, cb){
     var lang = req.options.lang;

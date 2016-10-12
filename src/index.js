@@ -1,11 +1,12 @@
-"use strict";
-
-var adapter = require('./node/index.js')
-var circularize = require('./common/circularize.js')
-
+const adapter = require('./node/index.js')
+const circularize = require('./common/circularize.js')
+const objectAssign = require('object-assign');
 
 function create(workerOptions){
-	return new TesseractWorker(workerOptions)
+	workerOptions = workerOptions || {};
+	var worker = new TesseractWorker(objectAssign({}, adapter.defaultOptions, workerOptions))
+	worker.create = create;
+	return worker;
 }
 
 class TesseractWorker {
@@ -142,8 +143,7 @@ class TesseractJob {
 }
 
 
-var DefaultTesseract = create(adapter.defaultOptions)
-DefaultTesseract.create = create;
+var DefaultTesseract = create()
 
 module.exports = DefaultTesseract
 

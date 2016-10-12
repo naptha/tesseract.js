@@ -1,12 +1,12 @@
-var path = require('path')
+const path = require('path')
 
 exports.defaultOptions = {
     workerPath: path.join(__dirname, 'worker.js'),
     langPath: 'http://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/',
 }
 
-var fork = require('child_process').fork;
-var fs = require('fs')
+const fork = require('child_process').fork;
+const fs = require('fs')
 
 exports.spawnWorker = function spawnWorker(instance, workerOptions){
     var cp = fork(workerOptions.workerPath);
@@ -38,7 +38,6 @@ function loadImage(image, cb){
     }else if(image instanceof Buffer){
         var fileType = require('file-type');
         var mime = fileType(image).mime
-
 
         if(mime === 'image/png'){
             var PNGReader = require('png.js');
