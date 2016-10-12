@@ -1,6 +1,6 @@
 {
   "name": "tesseract.js",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Pure Javascript Multilingual OCR",
   "main": "src/index.js",
   "scripts": {
@@ -19,14 +19,14 @@
     "browserify": "^13.1.0",
     "envify": "^3.4.1",
     "http-server": "^0.9.0",
-    "watchify": "^3.7.0"
+    "watchify": "^3.7.0",
+    "pako": "^1.0.3"
   },
   "dependencies": {
     "file-type": "^3.8.0",
     "jpeg-js": "^0.2.0",
     "level-js": "^2.2.4",
     "object-assign": "^4.1.0",
-    "pako": "^1.0.3",
     "png.js": "^0.2.1",
     "tesseract.js-core": "^1.0.2"
   },
