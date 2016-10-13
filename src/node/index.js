@@ -32,6 +32,7 @@ function loadImage(image, cb){
     // TODO: support URLs
     if(typeof image === 'string'){
         fs.readFile(image, function(err, buffer){
+            if (err) throw err;
             loadImage(buffer, cb)
         })
         return
