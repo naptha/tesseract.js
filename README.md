@@ -223,7 +223,7 @@ result is: {
 
 ### TesseractJob.catch(callback: function) -> TesseractJob
 Sets `callback` as the function that will be called if the job fails. 
-- `callback` is a function with the signature `callback(erros)` where `error` is a json object.
+- `callback` is a function with the signature `callback(error)` where `error` is a json object. 
 
 ## Local Installation
 
