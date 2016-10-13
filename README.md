@@ -206,7 +206,7 @@ Tesseract.recognize(myImage)
 
 The console will show something like: 
 ```javascript
-progress is: {
+result is: {
     blocks: Array[1]
     confidence: 87
     html: "<div class='ocr_page' id='page_1' ..."
