@@ -60,6 +60,7 @@ You can [head to the docs](#docs) for a full treatment of the API.
   + [TesseractJob.progress(callback: function) -> TesseractJob](#tesseractjobprogresscallback-function---tesseractjob)
   + [TesseractJob.then(callback: function) -> TesseractJob](#tesseractjobthencallback-function---tesseractjob)
   + [TesseractJob.catch(callback: function) -> TesseractJob](#tesseractjoberrorcallback-function---tesseractjob)
+  + [TesseractJob.finally(callback: function) -> TesseractJob](#tesseractjobfinallycallback-function---tesseractjob)
 * [Local Installation](#local-installation)
   + [corePath](#corepath)
   + [workerPath](#workerpath)
@@ -80,7 +81,7 @@ Figures out what words are in `image`, where the words are in `image`, etc.
     + include properties that override some subset of the [default tesseract parameters](./docs/tesseract_parameters.md)
     + include a `lang` property with a value from the [list of lang parameters](./docs/tesseract_lang_list.md)
 
-Returns a [TesseractJob](#tesseractjob) whose `then`, `progress`, and `catch` methods can be used to act on the result.
+Returns a [TesseractJob](#tesseractjob) whose `then`, `progress`, `catch` and `finally` methods can be used to act on the result.
 
 ### Simple Example:
 ```javascript
@@ -111,7 +112,7 @@ Figures out what script (e.g. 'Latin', 'Chinese') the words in  image are writte
 
 - `image` is any [ImageLike](#imagelike) object.
 
-Returns a [TesseractJob](#tesseractjob) whose `then`, `progress`, and `error` methods can be used to act on the result of the script.
+Returns a [TesseractJob](#tesseractjob) whose `then`, `progress`, `error` and `finally` methods can be used to act on the result of the script.
 
 
 ```javascript
@@ -146,25 +147,28 @@ In NodeJS, an image can be
 
 ## TesseractJob
 
-A TesseractJob is an an object returned by a call to `recognize` or `detect`. It's inspired by the ES6 Promise interface and provides `then` and `catch` methods. One important difference is that these methods return the job itself (to enable chaining) rather than new. 
+A TesseractJob is an an object returned by a call to `recognize` or `detect`. It's inspired by the ES6 Promise interface and provides `then` and `catch` methods. It also provides `finally` method, which will be fired regardless of the job fate. One important difference is that these methods return the job itself (to enable chaining) rather than new. 
 
 Typical use is: 
 ```javascript
 Tesseract.recognize(myImage)
-    .progress(function(message){console.log(message)})
-    .catch(function(err){console.error(err)})
-    .then(function(result){console.log(result)})
+    .progress(message => console.log(message))
+    .catch(err => console.error(err))
+    .then(result => console.log(result))
+    .finally(resultOrError => console.log(resultOrError))
 ```
 
 Which is equivalent to:
 ```javascript
 var job1 = Tesseract.recognize(myImage);
 
-job1.progress(function(message){console.log(message)});
+job1.progress(message => console.log(message));
 
-job1.catch(function(err){console.error(err)});
+job1.catch(err => console.error(err));
 
-job1.then(function(result){console.log(result)})
+job1.then(result => console.log(result));
+
+job1.finally(resultOrError => console.log(resultOrError));
 ```
 
 
@@ -224,6 +228,10 @@ result is: {
 ### TesseractJob.catch(callback: function) -> TesseractJob
 Sets `callback` as the function that will be called if the job fails. 
 - `callback` is a function with the signature `callback(erros)` where `error` is a json object.
+
+### TesseractJob.finally(callback: function) -> TesseractJob
+Sets `callback` as the function that will be called regardless if the job fails or success.
+- `callback` is a function with the signature `callback(resultOrError)` where `resultOrError` is a json object.
 
 ## Local Installation
 

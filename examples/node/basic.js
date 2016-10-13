@@ -3,6 +3,12 @@ var Tesseract = require('../../') // replace this with require('tesseract.js')
 var image = path.resolve(__dirname, 'cosmic.png');
 
 Tesseract.recognize(image)
-.then(function(data){
-	console.log(data.text)
+.then(data => {
+	console.log('then\n', data.text)
 })
+.catch(err => {
+  console.log('catch\n', err);
+})
+.finally(data => {
+  console.log('finally\n', data.text);
+});
