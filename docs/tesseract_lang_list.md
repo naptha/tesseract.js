@@ -18,7 +18,7 @@ The `lang` property of the options object passed to `Tesseract.recognize` can ha
 | 'dan'     | Danish                | 
 | 'deu'     | German                | 
 | 'ell'     | Greek                 | 
-| 'eng'     | Enlish                | 
+| 'eng'     | English                | 
 | 'enm'     | English (Old)         | 
 | 'epo'     | Esperanto             | 
 | 'epo_alt' | Esperanto alternative | 
