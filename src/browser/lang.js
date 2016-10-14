@@ -14,8 +14,11 @@ module.exports = function getLanguageData(req, res, cb){
     var lang = req.options.lang;
 
     function saveDataFile(data){
-        db.put(lang, data, err => console.log('cached', lang, err))
-        cb(data)
+        try {
+            db.put(lang, data, err => console.log('cached', lang, err))
+        } finally {
+            cb(data)    
+        }
     }
 
     db.open({ compression: false }, err => {
