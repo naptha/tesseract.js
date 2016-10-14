@@ -36,6 +36,8 @@ First:
 ```shell
 > npm install tesseract.js --save
 ```
+> Note: Tesseract.js currently requires node v6.8.0 or greater.
+
 
 Then
 ```javascript
