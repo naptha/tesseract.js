@@ -26,7 +26,7 @@ Tesseract.js works with a `<script>` tag via local copy or cdn, with webpack and
 
 You can simply include Tesseract.js with a cdn like this:
 ```html
-<script src='https://cdn.rawgit.com/naptha/tesseract.js/1.0.5/dist/tesseract.js'></script>
+<script src='https://cdn.rawgit.com/naptha/tesseract.js/1.0.6/dist/tesseract.js'></script>
 ```
 
 After including your scripts, the `Tesseract` variable should be defined! You can [head to the docs](#docs) for a full treatment of the API.

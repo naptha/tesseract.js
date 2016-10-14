@@ -268,14 +268,14 @@ process.umask = function() { return 0; };
 },{}],3:[function(require,module,exports){
 module.exports={
   "name": "tesseract.js",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Pure Javascript Multilingual OCR",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" & exit 1",
     "start": "watchify src/index.js  -t [ envify --NODE_ENV development ] -t [ babelify --presets [ es2015 ] ] -o dist/tesseract.dev.js --standalone Tesseract & watchify src/browser/worker.js  -t [ envify --NODE_ENV development ] -t [ babelify --presets [ es2015 ] ] -o dist/worker.dev.js & http-server -p 7355",
     "build": "browserify src/index.js -t [ babelify --presets [ es2015 ] ] -o dist/tesseract.js --standalone Tesseract && browserify src/browser/worker.js -t [ babelify --presets [ es2015 ] ] -o dist/worker.js",
-    "release": "git tag `jq -r '.version' package.json`"
+    "release": "git tag `jq -r '.version' package.json` && git push origin --tags && npm publish"
   },
   "browser": {
     "./src/node/index.js": "./src/browser/index.js"
@@ -321,7 +321,7 @@ var defaultOptions = {
 
 if (process.env.NODE_ENV === "development") {
     console.debug('Using Development Configuration');
-    defaultOptions.workerPath = location.protocol + '//' + location.host + '/dist/worker.dev.js';
+    defaultOptions.workerPath = location.protocol + '//' + location.host + '/dist/worker.dev.js?nocache=' + Math.random().toString(36).slice(3);
 } else {
     var version = require('../../package.json').version;
     defaultOptions.workerPath = 'https://cdn.rawgit.com/naptha/tesseract.js/' + version + '/dist/worker.js';

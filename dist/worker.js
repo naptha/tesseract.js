@@ -11857,7 +11857,14 @@ function hasOwnProperty(obj, prop) {
 'use strict';
 
 var leveljs = require('level-js');
-var db = typeof indexedDB === 'undefined' ? { open: function open(_, cb) {
+
+// something about trying to store these language files in indexedDB
+// causes iOS Safari to crash
+
+var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+var noIDB = typeof indexedDB === 'undefined' || iOS;
+
+var db = noIDB ? { open: function open(_, cb) {
         return cb(true);
     } } : leveljs('./tessdata2');
 
@@ -11867,10 +11874,13 @@ module.exports = function getLanguageData(req, res, cb) {
     var lang = req.options.lang;
 
     function saveDataFile(data) {
-        db.put(lang, data, function (err) {
-            return console.log('cached', lang, err);
-        });
-        cb(data);
+        try {
+            db.put(lang, data, function (err) {
+                return console.log('cached', lang, err);
+            });
+        } finally {
+            cb(data);
+        }
     }
 
     db.open({ compression: false }, function (err) {
@@ -11907,17 +11917,20 @@ function fetchLanguageData(req, res, cb) {
 
     xhr.onload = function (e) {
         if (!(xhr.status == 200 || xhr.status == 0 && xhr.response)) return res.reject('Error downloading language ' + url);
-        res.progress({ status: 'unzipping ' + langfile });
+        res.progress({ status: 'unzipping ' + langfile, progress: 0 });
 
         // in case the gzips are already ungzipped or extra gzipped
         var response = new Uint8Array(xhr.response);
         try {
+            var n = 2;
             while (response[0] == 0x1f && response[1] == 0x8b) {
                 response = ungzip(response);
+                res.progress({ status: 'unzipping ' + langfile, progress: 1 - 1 / n++ });
             }
         } catch (err) {
             return res.reject('Error unzipping language file ' + langfile + '\n' + err.message);
         }
+        res.progress({ status: 'unzipping ' + langfile, progress: 1 });
 
         cb(response);
     };
@@ -12245,9 +12258,10 @@ function loadLanguage(req, res, cb) {
     if (lang in Module._loadedLanguages) return cb();
 
     adapter.getLanguageData(req, res, function (data) {
+        res.progress({ status: 'loading ' + lang + '.traineddata', progress: 0 });
         Module.FS_createDataFile('tessdata', lang + ".traineddata", data, true, false);
-        res.progress({ status: 'loading ' + lang + '.traineddata', progress: 1 });
         Module._loadedLanguages[lang] = true;
+        res.progress({ status: 'loading ' + lang + '.traineddata', progress: 1 });
         cb();
     });
 }
