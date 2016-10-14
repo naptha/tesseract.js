@@ -32,7 +32,7 @@ module.exports = function getLanguageData(req, res, cb){
 }
 
 
-const ungzip = require('pako').ungzip;
+const ungzip = require('pako/lib/inflate.js').ungzip;
 
 function fetchLanguageData(req, res, cb){
     var lang = req.options.lang;
