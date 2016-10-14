@@ -1,11 +1,18 @@
 const leveljs = require('level-js')
-var db = typeof indexedDB === 'undefined' ? { open: (_, cb) =>  cb(true) } : leveljs('./tessdata2')
+
+// something about trying to store these language files in indexedDB
+// causes iOS Safari to crash
+
+var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+var noIDB = typeof indexedDB === 'undefined' || iOS;
+
+var db = noIDB ? { open: (_, cb) =>  cb(true) } : leveljs('./tessdata2')
 
 var langdata = require('../common/langdata.json')
 
 module.exports = function getLanguageData(req, res, cb){
     var lang = req.options.lang;
-    
+
     function saveDataFile(data){
         db.put(lang, data, err => console.log('cached', lang, err))
         cb(data)
@@ -45,15 +52,20 @@ function fetchLanguageData(req, res, cb){
 
     xhr.onload = e => {
         if (!(xhr.status == 200 || (xhr.status == 0 && xhr.response))) return res.reject('Error downloading language ' + url);
-        res.progress({ status: 'unzipping ' + langfile })
+        res.progress({ status: 'unzipping ' + langfile, progress: 0 })
 
         // in case the gzips are already ungzipped or extra gzipped
         var response = new Uint8Array(xhr.response)
         try {
-            while(response[0] == 0x1f && response[1] == 0x8b) response = ungzip(response);
+            var n = 2;
+            while(response[0] == 0x1f && response[1] == 0x8b){
+                response = ungzip(response);
+                res.progress({ status: 'unzipping ' + langfile, progress: 1 - 1 / (n++) })
+            }
         } catch (err) {
             return res.reject('Error unzipping language file ' + langfile + '\n' + err.message)
         }
+        res.progress({ status: 'unzipping ' + langfile, progress: 1 })
         
         cb(response)
     }

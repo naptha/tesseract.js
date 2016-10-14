@@ -85,9 +85,10 @@ function loadLanguage(req, res, cb){
     if(lang in Module._loadedLanguages) return cb();
 
     adapter.getLanguageData(req, res, function(data){
+        res.progress({ status: 'loading ' + lang + '.traineddata', progress: 0 })
         Module.FS_createDataFile('tessdata', lang + ".traineddata", data, true, false);
-        res.progress({ status: 'loading ' + lang + '.traineddata', progress: 1 })
         Module._loadedLanguages[lang] = true;
+        res.progress({ status: 'loading ' + lang + '.traineddata', progress: 1 })
         cb()
     })
 }

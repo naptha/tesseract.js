@@ -122,7 +122,10 @@ function recognizeFile(file){
 <option value='ukr'     > Ukrainian             </option>
 <option value='vie'     > Vietnamese            </option>
 </select>
+
+<button onclick="recognizeFile('../node/cosmic.png')">Sample Image</button>
 <input type="file" onchange="recognizeFile(window.lastFile=this.files[0])">
+
 <div id="log"></div>
 
 
