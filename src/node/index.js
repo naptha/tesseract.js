@@ -1,4 +1,6 @@
 const path = require('path')
+const fetch = require('isomorphic-fetch')
+const isURL = require('is-url')
 
 exports.defaultOptions = {
     workerPath: path.join(__dirname, 'worker.js'),
@@ -29,7 +31,17 @@ exports.sendPacket = function sendPacket(instance, packet){
 
 
 function loadImage(image, cb){
-    // TODO: support URLs
+    
+    if(isURL(image) {
+        fetch(image).then(function (resp) {
+            return resp.buffer();
+        }).then(function (buffer) {
+            return loadImage(buffer, cb);
+        }).catch(function (err) {
+            return console.error(err);
+        });
+    })
+
     if(typeof image === 'string'){
         fs.readFile(image, function(err, buffer){
             if (err) throw err;
