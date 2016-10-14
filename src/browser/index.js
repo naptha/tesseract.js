@@ -1,5 +1,5 @@
 var defaultOptions = {
-    workerPath: 'https://cdn.rawgit.com/naptha/tesseract.js/0.2.0/dist/worker.js',
+    // workerPath: 'https://cdn.rawgit.com/naptha/tesseract.js/0.2.0/dist/worker.js',
     corePath: 'https://cdn.rawgit.com/naptha/tesseract.js-core/0.1.0/index.js',    
     langPath: 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/',
 }
@@ -7,6 +7,9 @@ var defaultOptions = {
 if (process.env.NODE_ENV === "development") {
     console.debug('Using Development Configuration')
     defaultOptions.workerPath = location.protocol + '//' + location.host + '/dist/worker.dev.js'
+}else{
+    var version = require('../../package.json').version;
+    defaultOptions.workerPath = 'https://cdn.rawgit.com/naptha/tesseract.js/' + version + '/dist/worker.js'
 }
 
 exports.defaultOptions = defaultOptions;

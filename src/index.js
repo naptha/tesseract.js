@@ -2,11 +2,13 @@ const adapter = require('./node/index.js')
 const circularize = require('./common/circularize.js')
 const TesseractJob = require('./common/job');
 const objectAssign = require('object-assign');
+const version = require('../package.json').version;
 
 function create(workerOptions){
 	workerOptions = workerOptions || {};
 	var worker = new TesseractWorker(objectAssign({}, adapter.defaultOptions, workerOptions))
 	worker.create = create;
+	worker.version = version;
 	return worker;
 }
 
