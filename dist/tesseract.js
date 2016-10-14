@@ -1,4 +1,89 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Tesseract = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
+/* eslint-disable no-unused-vars */
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+function toObject(val) {
+	if (val === null || val === undefined) {
+		throw new TypeError('Object.assign cannot be called with null or undefined');
+	}
+
+	return Object(val);
+}
+
+function shouldUseNative() {
+	try {
+		if (!Object.assign) {
+			return false;
+		}
+
+		// Detect buggy property enumeration order in older V8 versions.
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=4118
+		var test1 = new String('abc');  // eslint-disable-line
+		test1[5] = 'de';
+		if (Object.getOwnPropertyNames(test1)[0] === '5') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test2 = {};
+		for (var i = 0; i < 10; i++) {
+			test2['_' + String.fromCharCode(i)] = i;
+		}
+		var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
+			return test2[n];
+		});
+		if (order2.join('') !== '0123456789') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test3 = {};
+		'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
+			test3[letter] = letter;
+		});
+		if (Object.keys(Object.assign({}, test3)).join('') !==
+				'abcdefghijklmnopqrst') {
+			return false;
+		}
+
+		return true;
+	} catch (e) {
+		// We don't expect any of the above to throw, but better to be safe.
+		return false;
+	}
+}
+
+module.exports = shouldUseNative() ? Object.assign : function (target, source) {
+	var from;
+	var to = toObject(target);
+	var symbols;
+
+	for (var s = 1; s < arguments.length; s++) {
+		from = Object(arguments[s]);
+
+		for (var key in from) {
+			if (hasOwnProperty.call(from, key)) {
+				to[key] = from[key];
+			}
+		}
+
+		if (Object.getOwnPropertySymbols) {
+			symbols = Object.getOwnPropertySymbols(from);
+			for (var i = 0; i < symbols.length; i++) {
+				if (propIsEnumerable.call(from, symbols[i])) {
+					to[symbols[i]] = from[symbols[i]];
+				}
+			}
+		}
+	}
+
+	return to;
+};
+
+},{}],2:[function(require,module,exports){
 exports.defaultOptions = {
     langPath: 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/',
     // workerPath: 'dist/worker.js',
@@ -72,7 +157,7 @@ function loadImage(image, cb){
     cb(image)
 }
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 // The result of dump.js is a big JSON tree
 // which can be easily serialized (for instance
 // to be sent from a webworker to the main app
@@ -136,15 +221,99 @@ module.exports = function circularize(page){
     })
     return page
 }
-},{}],3:[function(require,module,exports){
-"use strict";
+},{}],4:[function(require,module,exports){
+const adapter = require('../node/index.js')
 
-var adapter = require('./node/index.js')
-var circularize = require('./common/circularize.js')
+let jobCounter = 0;
 
+module.exports = class TesseractJob {
+  constructor(instance){
+    this.id = 'Job-' + (++jobCounter) + '-' + Math.random().toString(16).slice(3, 8)
 
-function createWorker(workerOptions){
-	return new TesseractWorker(workerOptions)
+    this._instance = instance;
+    this._resolve = []
+    this._reject = []
+    this._progress = []
+    this._finally = []
+  }
+
+  then(resolve, reject){
+    if(this._resolve.push){
+      this._resolve.push(resolve) 
+    }else{
+      resolve(this._resolve)
+    }
+
+    if(reject) this.catch(reject);
+    return this;
+  }
+  catch(reject){
+    if(this._reject.push){
+      this._reject.push(reject) 
+    }else{
+      reject(this._reject)
+    }
+    return this;
+  }
+  progress(fn){
+    this._progress.push(fn)
+    return this;
+  }
+  finally(fn) {
+    this._finally.push(fn)
+    return this;  
+  }
+  _send(action, payload){
+    adapter.sendPacket(this._instance, {
+      jobId: this.id,
+      action: action,
+      payload: payload
+    })
+  }
+
+  _handle(packet){
+    var data = packet.data;
+    let runFinallyCbs = false;
+
+    if(packet.status === 'resolve'){
+      if(this._resolve.length === 0) console.debug(data);
+      this._resolve.forEach(fn => {
+        var ret = fn(data);
+        if(ret && typeof ret.then == 'function'){
+          console.warn('TesseractJob instances do not chain like ES6 Promises. To convert it into a real promise, use Promise.resolve.')
+        }
+      })
+      this._resolve = data;
+      this._instance._dequeue()
+      runFinallyCbs = true;
+    }else if(packet.status === 'reject'){
+      if(this._reject.length === 0) console.error(data);
+      this._reject.forEach(fn => fn(data))
+      this._reject = data;
+      this._instance._dequeue()
+      runFinallyCbs = true;
+    }else if(packet.status === 'progress'){
+      this._progress.forEach(fn => fn(data))
+    }else{
+      console.warn('Message type unknown', packet.status)
+    }
+
+    if (runFinallyCbs) {
+      this._finally.forEach(fn => fn(data));
+    }
+  }
+}
+},{"../node/index.js":2}],5:[function(require,module,exports){
+const adapter = require('./node/index.js')
+const circularize = require('./common/circularize.js')
+const TesseractJob = require('./common/job');
+const objectAssign = require('object-assign');
+
+function create(workerOptions){
+	workerOptions = workerOptions || {};
+	var worker = new TesseractWorker(objectAssign({}, adapter.defaultOptions, workerOptions))
+	worker.create = create;
+	return worker;
 }
 
 class TesseractWorker {
@@ -213,79 +382,8 @@ class TesseractWorker {
 	}
 }
 
-var jobCounter = 0;
-
-class TesseractJob {
-	constructor(instance){
-		this.id = 'Job-' + (++jobCounter) + '-' + Math.random().toString(16).slice(3, 8)
-
-		this._instance = instance;
-		this._resolve = []
-		this._reject = []
-		this._progress = []
-	}
-
-	then(resolve, reject){
-		if(this._resolve.push){
-			this._resolve.push(resolve)	
-		}else{
-			resolve(this._resolve)
-		}
-
-		if(reject) this.catch(reject);
-		return this;
-	}
-	catch(reject){
-		if(this._reject.push){
-			this._reject.push(reject)	
-		}else{
-			reject(this._reject)
-		}
-		return this;
-	}
-	progress(fn){
-		this._progress.push(fn)
-		return this;
-	}
-	_send(action, payload){
-		adapter.sendPacket(this._instance, {
-			jobId: this.id,
-			action: action,
-			payload: payload
-		})
-	}
-
-	_handle(packet){
-		var data = packet.data;
-		if(packet.status === 'resolve'){
-			if(this._resolve.length === 0) console.debug(data);
-			this._resolve.forEach(fn => {
-				var ret = fn(data);
-				if(ret && typeof ret.then == 'function'){
-					console.warn('TesseractJob instances do not chain like ES6 Promises. To convert it into a real promise, use Promise.resolve.')
-				}
-			})
-			this._resolve = data;
-			this._instance._dequeue()
-		}else if(packet.status === 'reject'){
-			if(this._reject.length === 0) console.error(data);
-			this._reject.forEach(fn => fn(data))
-			this._reject = data;
-			this._instance._dequeue()
-		}else if(packet.status === 'progress'){
-			this._progress.forEach(fn => fn(data))
-		}else{
-			console.warn('Message type unknown', packet.status)
-		}
-	}
-}
-
-
-var DefaultTesseract = createWorker(adapter.defaultOptions)
-DefaultTesseract.createWorker = createWorker;
+var DefaultTesseract = create()
 
 module.exports = DefaultTesseract
-
-
-},{"./common/circularize.js":2,"./node/index.js":1}]},{},[3])(3)
+},{"./common/circularize.js":3,"./common/job":4,"./node/index.js":2,"object-assign":1}]},{},[5])(5)
 });
