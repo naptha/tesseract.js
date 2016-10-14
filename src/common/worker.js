@@ -18,10 +18,14 @@ function dispatchHandlers(packet, send){
     
     latestJob = respond;
 
-    if(packet.action === 'recognize'){
-        handleRecognize(packet.payload, respond)
-    }else if(packet.action === 'detect'){
-        handleDetect(packet.payload, respond)
+    try {
+        if(packet.action === 'recognize'){
+            handleRecognize(packet.payload, respond)
+        }else if(packet.action === 'detect'){
+            handleDetect(packet.payload, respond)
+        }
+    } catch (err) {
+        respond.reject(err)
     }
 }
 exports.dispatchHandlers = dispatchHandlers;
@@ -32,17 +36,25 @@ exports.setAdapter = function setAdapter(impl){
 
 
 function handleInit(req, res){
-    if(!Module){
+    var MIN_MEMORY = 100663296;
+    
+    if(['chi_sim', 'chi_tra', 'jpn'].indexOf(req.options.lang) != -1){
+        MIN_MEMORY = 167772160;
+    }
+
+    if(!Module || Module.TOTAL_MEMORY < MIN_MEMORY){
         var Core = adapter.getCore(req, res);
 
         res.progress({ status: 'initializing tesseract', progress: 0 })
+
         Module = Core({
-            TOTAL_MEMORY: req.memory,
+            TOTAL_MEMORY: MIN_MEMORY,
             TesseractProgress(percent){
                 latestJob.progress({ status: 'recognizing text', progress: Math.max(0, (percent-30)/70) })
             },
             onRuntimeInitialized() {}
         })
+
         Module.FS_createPath("/", "tessdata", true, true)
         base = new Module.TessBaseAPI()
         res.progress({ status: 'initializing tesseract', progress: 1 })

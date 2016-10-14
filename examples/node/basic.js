@@ -9,6 +9,6 @@ Tesseract.recognize(image)
 .catch(err => {
   console.log('catch\n', err);
 })
-.finally(data => {
-  console.log('finally\n', data.text);
+.finally(e => {
+  console.log('finally\n');
 });
