@@ -42,17 +42,17 @@ function loadImage(image, cb){
         });
     })
 
-    if(typeof image === 'string'){
+    if (typeof image === 'string') {
         fs.readFile(image, function(err, buffer){
             if (err) throw err;
             loadImage(buffer, cb)
         })
         return
-    }else if(image instanceof Buffer){
+    } else if (image instanceof Buffer) {
         var fileType = require('file-type');
         var mime = fileType(image).mime
 
-        if(mime === 'image/png'){
+        if (mime === 'image/png') {
             var PNGReader = require('png.js');
             var reader = new PNGReader(image);
             reader.parse(function(err, png){
@@ -78,13 +78,16 @@ function loadImage(image, cb){
                 loadImage(image, cb)
             });
             return
-        }else if(mime === 'image/jpeg'){
+        } else if(mime === 'image/jpeg') {
             var jpeg = require('jpeg-js');
             loadImage(jpeg.decode(image), cb)
             return
+        } else if(mime === 'image/bmp') {
+            var bmp = require('bmp-js');
+            loadImage(bmp.decode(bmp), cb)
+            return
         }
-
-        // TODO: support for TIFF, NetPBM, BMP, etc.
+        // TODO: support for TIFF, NetPBM, etc.
     }
 
     // node uses json.stringify for ipc which means we need to turn

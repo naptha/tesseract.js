@@ -24,6 +24,7 @@
     "watchify": "^3.7.0"
   },
   "dependencies": {
+    "bmp-js": "0.0.2",
     "file-type": "^3.8.0",
     "is-url": "^1.2.2",
     "isomorphic-fetch": "^2.2.1",
