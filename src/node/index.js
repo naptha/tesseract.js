@@ -31,7 +31,8 @@ exports.sendPacket = function sendPacket(instance, packet){
 function loadImage(image, cb){
     
     if(isURL(image)) {
-        fetch(image).then(resp => resp.buffer())
+        fetch(image)
+            .then(resp => resp.buffer())
             .then(buffer => loadImage(buffer, cb))
             .catch(err => console.error(err));
     }
