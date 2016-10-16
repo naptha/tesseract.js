@@ -4,6 +4,10 @@
   "description": "Pure Javascript Multilingual OCR",
   "main": "src/index.js",
   "scripts": {
+    "lint:node": "eslint --env es6,node -c src/.eslintrc src/node/ || exit 0",
+    "lint:browser": "eslint --env es6,browser -c src/.eslintrc src/browser/ || exit 0",
+    "lint:common": "eslint --env es6,browser,node -c src/.eslintrc src/common/ || exit 0",
+    "lint": "npm run lint:node && npm run lint:browser && npm run lint:common || exit 0",
     "test": "echo \"Error: no test specified\" & exit 1",
     "start": "watchify src/index.js  -t [ envify --NODE_ENV development ] -t [ babelify --presets [ es2015 ] ] -o dist/tesseract.dev.js --standalone Tesseract & watchify src/browser/worker.js  -t [ envify --NODE_ENV development ] -t [ babelify --presets [ es2015 ] ] -o dist/worker.dev.js & http-server -p 7355",
     "build": "browserify src/index.js -t [ babelify --presets [ es2015 ] ] -o dist/tesseract.js --standalone Tesseract && browserify src/browser/worker.js -t [ babelify --presets [ es2015 ] ] -o dist/worker.js",
@@ -19,6 +23,7 @@
     "babelify": "^7.3.0",
     "browserify": "^13.1.0",
     "envify": "^3.4.1",
+    "eslint": "^3.8.0",
     "http-server": "^0.9.0",
     "pako": "^1.0.3",
     "watchify": "^3.7.0"

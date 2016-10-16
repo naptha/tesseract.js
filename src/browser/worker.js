@@ -1,23 +1,23 @@
-const workerUtils = require('../common/worker.js')
+const workerUtils = require('../common/worker.js');
 
-if (process.env.NODE_ENV === "development") {
-    console.debug('Using Development Worker')
+if (process.env.NODE_ENV === 'development') {
+    console.debug('Using Development Worker');
 }
 
 global.addEventListener('message', function(e){
     var packet = e.data;
-    workerUtils.dispatchHandlers(packet, obj => postMessage(obj))
-})
+    workerUtils.dispatchHandlers(packet, obj => postMessage(obj));
+});
 
 exports.getCore = function(req, res){
-    if(!global.TesseractCore){
-        res.progress({ status: 'loading tesseract core', progress: 0 })
-        importScripts(req.workerOptions.corePath)
-        res.progress({ status: 'loading tesseract core', progress: 1 })
+    if (!global.TesseractCore){
+        res.progress({status: 'loading tesseract core', progress: 0});
+        importScripts(req.workerOptions.corePath);
+        res.progress({status: 'loading tesseract core', progress: 1});
     }
-    return TesseractCore
-}
+    return TesseractCore;
+};
 
-exports.getLanguageData = require('./lang.js')
+exports.getLanguageData = require('./lang.js');
 
 workerUtils.setAdapter(module.exports);

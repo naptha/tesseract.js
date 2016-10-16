@@ -3,34 +3,34 @@
 // to be sent from a webworker to the main app
 // or through Node's IPC), but we want
 // a (circular) DOM-like interface for walking
-// through the data. 
+// through the data.
 
 module.exports = function circularize(page){
-    page.paragraphs = []
-    page.lines = []
-    page.words = []
-    page.symbols = []
+    page.paragraphs = [];
+    page.lines = [];
+    page.words = [];
+    page.symbols = [];
 
     page.blocks.forEach(function(block){
         block.page = page;
 
-        block.lines = []
-        block.words = []
-        block.symbols = []
+        block.lines = [];
+        block.words = [];
+        block.symbols = [];
 
         block.paragraphs.forEach(function(para){
             para.block = block;
             para.page = page;
 
-            para.words = []
-            para.symbols = []
-            
+            para.words = [];
+            para.symbols = [];
+
             para.lines.forEach(function(line){
                 line.paragraph = para;
                 line.block = block;
                 line.page = page;
 
-                line.symbols = []
+                line.symbols = [];
 
                 line.words.forEach(function(word){
                     word.line = line;
@@ -43,21 +43,21 @@ module.exports = function circularize(page){
                         sym.paragraph = para;
                         sym.block = block;
                         sym.page = page;
-                        
-                        sym.line.symbols.push(sym)
-                        sym.paragraph.symbols.push(sym)
-                        sym.block.symbols.push(sym)
-                        sym.page.symbols.push(sym)
-                    })
-                    word.paragraph.words.push(word)
-                    word.block.words.push(word)
-                    word.page.words.push(word)
-                })
-                line.block.lines.push(line)
-                line.page.lines.push(line)
-            })
-            para.page.paragraphs.push(para)
-        })
-    })
-    return page
-}
+
+                        sym.line.symbols.push(sym);
+                        sym.paragraph.symbols.push(sym);
+                        sym.block.symbols.push(sym);
+                        sym.page.symbols.push(sym);
+                    });
+                    word.paragraph.words.push(word);
+                    word.block.words.push(word);
+                    word.page.words.push(word);
+                });
+                line.block.lines.push(line);
+                line.page.lines.push(line);
+            });
+            para.page.paragraphs.push(para);
+        });
+    });
+    return page;
+};
