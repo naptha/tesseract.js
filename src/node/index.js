@@ -32,7 +32,7 @@ exports.sendPacket = function sendPacket(instance, packet){
 
 function loadImage(image, cb){
     
-    if(isURL(image) {
+    if(isURL(image)) {
         fetch(image).then(function (resp) {
             return resp.buffer();
         }).then(function (buffer) {
