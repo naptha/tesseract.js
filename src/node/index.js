@@ -40,7 +40,7 @@ function loadImage(image, cb){
         }).catch(function (err) {
             return console.error(err);
         });
-    })
+    }
 
     if(typeof image === 'string'){
         fs.readFile(image, function(err, buffer){
