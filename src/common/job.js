@@ -52,7 +52,7 @@ module.exports = class TesseractJob {
         let runFinallyCbs = false;
 
         if(packet.status === 'resolve'){
-            if(this._resolve.length === 0) console.debug(data);
+            if(this._resolve.length === 0) console.log(data);
             this._resolve.forEach(fn => {
                 var ret = fn(data);
                 if(ret && typeof ret.then == 'function'){
