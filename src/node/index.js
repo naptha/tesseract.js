@@ -1,5 +1,5 @@
 const path = require('path')
-const fetch = require('isomorphic-fetch')
+const fetch = require('node-fetch')
 const isURL = require('is-url')
 
 exports.defaultOptions = {

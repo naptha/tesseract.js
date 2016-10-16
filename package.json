@@ -26,9 +26,9 @@
   "dependencies": {
     "file-type": "^3.8.0",
     "is-url": "^1.2.2",
-    "isomorphic-fetch": "^2.2.1",
     "jpeg-js": "^0.2.0",
     "level-js": "^2.2.4",
+    "node-fetch": "^1.6.3",
     "object-assign": "^4.1.0",
     "png.js": "^0.2.1",
     "tesseract.js-core": "^1.0.2"
