@@ -1,89 +1,4 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Tesseract = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-'use strict';
-/* eslint-disable no-unused-vars */
-var hasOwnProperty = Object.prototype.hasOwnProperty;
-var propIsEnumerable = Object.prototype.propertyIsEnumerable;
-
-function toObject(val) {
-	if (val === null || val === undefined) {
-		throw new TypeError('Object.assign cannot be called with null or undefined');
-	}
-
-	return Object(val);
-}
-
-function shouldUseNative() {
-	try {
-		if (!Object.assign) {
-			return false;
-		}
-
-		// Detect buggy property enumeration order in older V8 versions.
-
-		// https://bugs.chromium.org/p/v8/issues/detail?id=4118
-		var test1 = new String('abc');  // eslint-disable-line
-		test1[5] = 'de';
-		if (Object.getOwnPropertyNames(test1)[0] === '5') {
-			return false;
-		}
-
-		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
-		var test2 = {};
-		for (var i = 0; i < 10; i++) {
-			test2['_' + String.fromCharCode(i)] = i;
-		}
-		var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
-			return test2[n];
-		});
-		if (order2.join('') !== '0123456789') {
-			return false;
-		}
-
-		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
-		var test3 = {};
-		'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
-			test3[letter] = letter;
-		});
-		if (Object.keys(Object.assign({}, test3)).join('') !==
-				'abcdefghijklmnopqrst') {
-			return false;
-		}
-
-		return true;
-	} catch (e) {
-		// We don't expect any of the above to throw, but better to be safe.
-		return false;
-	}
-}
-
-module.exports = shouldUseNative() ? Object.assign : function (target, source) {
-	var from;
-	var to = toObject(target);
-	var symbols;
-
-	for (var s = 1; s < arguments.length; s++) {
-		from = Object(arguments[s]);
-
-		for (var key in from) {
-			if (hasOwnProperty.call(from, key)) {
-				to[key] = from[key];
-			}
-		}
-
-		if (Object.getOwnPropertySymbols) {
-			symbols = Object.getOwnPropertySymbols(from);
-			for (var i = 0; i < symbols.length; i++) {
-				if (propIsEnumerable.call(from, symbols[i])) {
-					to[symbols[i]] = from[symbols[i]];
-				}
-			}
-		}
-	}
-
-	return to;
-};
-
-},{}],2:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -265,7 +180,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],3:[function(require,module,exports){
+},{}],2:[function(require,module,exports){
 module.exports={
   "name": "tesseract.js",
   "version": "1.0.7",
@@ -311,7 +226,7 @@ module.exports={
   "homepage": "https://github.com/naptha/tesseract.js"
 }
 
-},{}],4:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -418,7 +333,7 @@ function loadImage(image, cb) {
 }
 
 }).call(this,require('_process'))
-},{"../../package.json":3,"_process":2}],5:[function(require,module,exports){
+},{"../../package.json":2,"_process":1}],4:[function(require,module,exports){
 "use strict";
 
 // The result of dump.js is a big JSON tree
@@ -485,7 +400,7 @@ module.exports = function circularize(page) {
     return page;
 };
 
-},{}],6:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -596,7 +511,7 @@ module.exports = function () {
     return TesseractJob;
 }();
 
-},{"../node/index.js":4}],7:[function(require,module,exports){
+},{"../node/index.js":3}],6:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -606,15 +521,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var adapter = require('./node/index.js');
 var circularize = require('./common/circularize.js');
 var TesseractJob = require('./common/job');
-var objectAssign = require('object-assign');
 var version = require('../package.json').version;
 
-function create(workerOptions) {
-	workerOptions = workerOptions || {};
-	var worker = new TesseractWorker(objectAssign({}, adapter.defaultOptions, workerOptions));
-	worker.create = create;
-	worker.version = version;
-	return worker;
+function create() {
+	var workerOptions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+	return new TesseractWorker(Object.assign({}, adapter.defaultOptions, workerOptions, { create: create, version: version }));
 }
 
 var TesseractWorker = function () {
@@ -629,26 +541,24 @@ var TesseractWorker = function () {
 
 	_createClass(TesseractWorker, [{
 		key: 'recognize',
-		value: function recognize(image, options) {
+		value: function recognize(image) {
 			var _this = this;
 
+			var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
 			return this._delay(function (job) {
-				if (typeof options === 'string') {
-					options = { lang: options };
-				} else {
-					options = options || {};
-					options.lang = options.lang || 'eng';
-				}
+				options.lang = options.lang || 'eng';
 
 				job._send('recognize', { image: image, options: options, workerOptions: _this.workerOptions });
 			});
 		}
 	}, {
 		key: 'detect',
-		value: function detect(image, options) {
+		value: function detect(image) {
 			var _this2 = this;
 
-			options = options || {};
+			var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
 			return this._delay(function (job) {
 				job._send('detect', { image: image, options: options, workerOptions: _this2.workerOptions });
 			});
@@ -679,14 +589,13 @@ var TesseractWorker = function () {
 		key: '_dequeue',
 		value: function _dequeue() {
 			this._currentJob = null;
-			if (this._queue.length > 0) {
+			if (this._queue.length) {
 				this._queue[0]();
 			}
 		}
 	}, {
 		key: '_recv',
 		value: function _recv(packet) {
-
 			if (packet.status === 'resolve' && packet.action === 'recognize') {
 				packet.data = circularize(packet.data);
 			}
@@ -702,9 +611,7 @@ var TesseractWorker = function () {
 	return TesseractWorker;
 }();
 
-var DefaultTesseract = create();
+module.exports = create();
 
-module.exports = DefaultTesseract;
-
-},{"../package.json":3,"./common/circularize.js":5,"./common/job":6,"./node/index.js":4,"object-assign":1}]},{},[7])(7)
+},{"../package.json":2,"./common/circularize.js":4,"./common/job":5,"./node/index.js":3}]},{},[6])(6)
 });

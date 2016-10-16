@@ -8696,10 +8696,12 @@ module.exports={"afr": 1079573, "ara": 1701536, "aze": 1420865, "bel": 1276820, 
 },{}],43:[function(require,module,exports){
 'use strict';
 
-var latestJob;
-var Module;
-var base;
-var adapter = {};
+var latestJob,
+    Module,
+    base,
+    adapter = {},
+    dump = require('./dump.js'),
+    desaturate = require('./desaturate.js');
 
 function dispatchHandlers(packet, send) {
     function respond(status, data) {
@@ -8735,7 +8737,7 @@ exports.setAdapter = function setAdapter(impl) {
 function handleInit(req, res) {
     var MIN_MEMORY = 100663296;
 
-    if (['chi_sim', 'chi_tra', 'jpn'].indexOf(req.options.lang) != -1) {
+    if (['chi_sim', 'chi_tra', 'jpn'].includes(req.options.lang)) {
         MIN_MEMORY = 167772160;
     }
 
@@ -8758,9 +8760,6 @@ function handleInit(req, res) {
     }
 }
 
-var dump = require('./dump.js');
-var desaturate = require('./desaturate.js');
-
 function setImage(Module, base, image) {
     var imgbin = desaturate(image),
         width = image.width,
@@ -8773,16 +8772,17 @@ function setImage(Module, base, image) {
 }
 
 function loadLanguage(req, res, cb) {
-    var lang = req.options.lang;
+    var lang = req.options.lang,
+        langFile = lang + '.traineddata';
 
     if (!Module._loadedLanguages) Module._loadedLanguages = {};
     if (lang in Module._loadedLanguages) return cb();
 
     adapter.getLanguageData(req, res, function (data) {
-        res.progress({ status: 'loading ' + lang + '.traineddata', progress: 0 });
-        Module.FS_createDataFile('tessdata', lang + ".traineddata", data, true, false);
+        res.progress({ status: 'loading ' + langFile, progress: 0 });
+        Module.FS_createDataFile('tessdata', langFile, data, true, false);
         Module._loadedLanguages[lang] = true;
-        res.progress({ status: 'loading ' + lang + '.traineddata', progress: 1 });
+        res.progress({ status: 'loading ' + langFile, progress: 1 });
         cb();
     });
 }
@@ -8791,22 +8791,25 @@ function handleRecognize(req, res) {
     handleInit(req, res);
 
     loadLanguage(req, res, function () {
-        var lang = req.options.lang;
-
-        res.progress({ status: 'initializing api', progress: 0 });
-        base.Init(null, lang);
-        res.progress({ status: 'initializing api', progress: 0.3 });
-
         var options = req.options;
+
+        function progressUpdate(progress) {
+            res.progress({ status: 'initializing api', progress: progress });
+        }
+
+        progressUpdate(0);
+        base.Init(null, req.options.lang);
+        progressUpdate(.3);
+
         for (var option in options) {
             if (options.hasOwnProperty(option)) {
                 base.SetVariable(option, options[option]);
             }
         }
 
-        res.progress({ status: 'initializing api', progress: 0.6 });
+        progressUpdate(.6);
         var ptr = setImage(Module, base, req.image);
-        res.progress({ status: 'initializing api', progress: 1 });
+        progressUpdate(1);
 
         base.Recognize(null);
 
@@ -8823,37 +8826,31 @@ function handleDetect(req, res) {
     handleInit(req, res);
     req.options.lang = 'osd';
     loadLanguage(req, res, function () {
-
         base.Init(null, 'osd');
         base.SetPageSegMode(Module.PSM_OSD_ONLY);
 
-        var ptr = setImage(Module, base, req.image);
+        var ptr = setImage(Module, base, req.image),
+            results = new Module.OSResults();
 
-        var results = new Module.OSResults();
-        var success = base.DetectOS(results);
-        if (!success) {
+        if (!base.DetectOS(results)) {
             base.End();
             Module._free(ptr);
-            res.reject("failed to detect os");
+            res.reject("Failed to detect OS");
         } else {
-            var charset = results.get_unicharset();
-
-            var best = results.get_best_result();
-            var oid = best.get_orientation_id(),
+            var best = results.get_best_result(),
+                oid = best.get_orientation_id(),
                 sid = best.get_script_id();
 
-            var result = {
+            base.End();
+            Module._free(ptr);
+
+            res.resolve({
                 tesseract_script_id: sid,
-                script: charset.get_script_from_script_id(sid),
+                script: results.get_unicharset().get_script_from_script_id(sid),
                 script_confidence: best.get_sconfidence(),
                 orientation_degrees: [0, 270, 180, 90][oid],
                 orientation_confidence: best.get_oconfidence()
-            };
-
-            base.End();
-            Module._free(ptr);
-
-            res.resolve(result);
+            });
         }
     });
 }
