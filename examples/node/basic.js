@@ -11,4 +11,5 @@ Tesseract.recognize(image)
 })
 .finally(e => {
   console.log('finally\n');
+  process.exit();
 });
