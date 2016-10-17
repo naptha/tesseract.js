@@ -15,7 +15,7 @@
     "eol-last": 2,
     "eqeqeq": [2, "smart"],
     "max-depth": [1, 3],
-    "max-len": [1, 80],
+    "max-len": [1, 100],
     "max-statements": [1, 15],
     "new-cap": 1,
     "no-extend-native": 2,
