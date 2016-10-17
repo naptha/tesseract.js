@@ -313,107 +313,114 @@ module.exports={
 
 },{}],4:[function(require,module,exports){
 (function (process){
+'use strict';
+
 var defaultOptions = {
     // workerPath: 'https://cdn.rawgit.com/naptha/tesseract.js/0.2.0/dist/worker.js',
-    corePath: 'https://cdn.rawgit.com/naptha/tesseract.js-core/0.1.0/index.js',    
-    langPath: 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/',
-}
+    corePath: 'https://cdn.rawgit.com/naptha/tesseract.js-core/0.1.0/index.js',
+    langPath: 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/'
+};
 
 if (process.env.NODE_ENV === "development") {
-    console.debug('Using Development Configuration')
-    defaultOptions.workerPath = location.protocol + '//' + location.host + '/dist/worker.dev.js?nocache=' + Math.random().toString(36).slice(3)
-}else{
+    console.debug('Using Development Configuration');
+    defaultOptions.workerPath = location.protocol + '//' + location.host + '/dist/worker.dev.js?nocache=' + Math.random().toString(36).slice(3);
+} else {
     var version = require('../../package.json').version;
-    defaultOptions.workerPath = 'https://cdn.rawgit.com/naptha/tesseract.js/' + version + '/dist/worker.js'
+    defaultOptions.workerPath = 'https://cdn.rawgit.com/naptha/tesseract.js/' + version + '/dist/worker.js';
 }
 
 exports.defaultOptions = defaultOptions;
 
-
-exports.spawnWorker = function spawnWorker(instance, workerOptions){
-    if(window.Blob && window.URL){
-        var blob = new Blob(['importScripts("' + workerOptions.workerPath + '");'])
+exports.spawnWorker = function spawnWorker(instance, workerOptions) {
+    if (window.Blob && window.URL) {
+        var blob = new Blob(['importScripts("' + workerOptions.workerPath + '");']);
         var worker = new Worker(window.URL.createObjectURL(blob));
-    }else{
-        var worker = new Worker(workerOptions.workerPath)
+    } else {
+        var worker = new Worker(workerOptions.workerPath);
     }
 
-    worker.onmessage = function(e){
+    worker.onmessage = function (e) {
         var packet = e.data;
-        instance._recv(packet)
-    }
-    return worker
-}
+        instance._recv(packet);
+    };
+    return worker;
+};
 
-exports.terminateWorker = function(instance){
-    instance.worker.terminate()
-}
+exports.terminateWorker = function (instance) {
+    instance.worker.terminate();
+};
 
-exports.sendPacket = function sendPacket(instance, packet){
-    loadImage(packet.payload.image, function(img){
-        packet.payload.image = img
-        instance.worker.postMessage(packet) 
-    })
-}
+exports.sendPacket = function sendPacket(instance, packet) {
+    loadImage(packet.payload.image, function (img) {
+        packet.payload.image = img;
+        instance.worker.postMessage(packet);
+    });
+};
 
-
-function loadImage(image, cb){
-    if(typeof image === 'string'){
-        if(/^\#/.test(image)){
+function loadImage(image, cb) {
+    if (typeof image === 'string') {
+        if (/^\#/.test(image)) {
             // element css selector
-            return loadImage(document.querySelector(image), cb)
-        }else if(/(blob|data)\:/.test(image)){
+            return loadImage(document.querySelector(image), cb);
+        } else if (/(blob|data)\:/.test(image)) {
             // data url
-            var im = new Image
+            var im = new Image();
             im.src = image;
-            im.onload = e => loadImage(im, cb);
-            return
-        }else{
+            im.onload = function (e) {
+                return loadImage(im, cb);
+            };
+            return;
+        } else {
             var xhr = new XMLHttpRequest();
-            xhr.open('GET', image, true)
+            xhr.open('GET', image, true);
             xhr.responseType = "blob";
-            xhr.onload = e => loadImage(xhr.response, cb);
-            xhr.onerror = function(e){
-                if(/^https?:\/\//.test(image) && !/^https:\/\/crossorigin.me/.test(image)){
-                    console.debug('Attempting to load image with CORS proxy')
-                    loadImage('https://crossorigin.me/' + image, cb)
+            xhr.onload = function (e) {
+                return loadImage(xhr.response, cb);
+            };
+            xhr.onerror = function (e) {
+                if (/^https?:\/\//.test(image) && !/^https:\/\/crossorigin.me/.test(image)) {
+                    console.debug('Attempting to load image with CORS proxy');
+                    loadImage('https://crossorigin.me/' + image, cb);
                 }
-            }
-            xhr.send(null)
-            return
+            };
+            xhr.send(null);
+            return;
         }
-    }else if(image instanceof File){
+    } else if (image instanceof File) {
         // files
-        var fr = new FileReader()
-        fr.onload = e => loadImage(fr.result, cb);
-        fr.readAsDataURL(image)
-        return
-    }else if(image instanceof Blob){
-        return loadImage(URL.createObjectURL(image), cb)
-    }else if(image.getContext){
+        var fr = new FileReader();
+        fr.onload = function (e) {
+            return loadImage(fr.result, cb);
+        };
+        fr.readAsDataURL(image);
+        return;
+    } else if (image instanceof Blob) {
+        return loadImage(URL.createObjectURL(image), cb);
+    } else if (image.getContext) {
         // canvas element
-        return loadImage(image.getContext('2d'), cb)
-    }else if(image.tagName == "IMG" || image.tagName == "VIDEO"){
+        return loadImage(image.getContext('2d'), cb);
+    } else if (image.tagName == "IMG" || image.tagName == "VIDEO") {
         // image element or video element
         var c = document.createElement('canvas');
-        c.width  = image.naturalWidth  || image.videoWidth;
+        c.width = image.naturalWidth || image.videoWidth;
         c.height = image.naturalHeight || image.videoHeight;
         var ctx = c.getContext('2d');
         ctx.drawImage(image, 0, 0);
-        return loadImage(ctx, cb)
-    }else if(image.getImageData){
+        return loadImage(ctx, cb);
+    } else if (image.getImageData) {
         // canvas context
         var data = image.getImageData(0, 0, image.canvas.width, image.canvas.height);
-        return loadImage(data, cb)
-    }else{
-        return cb(image)
+        return loadImage(data, cb);
+    } else {
+        return cb(image);
     }
-    throw new Error('Missing return in loadImage cascade')
-
+    throw new Error('Missing return in loadImage cascade');
 }
 
 }).call(this,require('_process'))
 },{"../../package.json":3,"_process":2}],5:[function(require,module,exports){
+"use strict";
+
 // The result of dump.js is a big JSON tree
 // which can be easily serialized (for instance
 // to be sent from a webworker to the main app
@@ -421,228 +428,283 @@ function loadImage(image, cb){
 // a (circular) DOM-like interface for walking
 // through the data. 
 
-module.exports = function circularize(page){
-    page.paragraphs = []
-    page.lines = []
-    page.words = []
-    page.symbols = []
+module.exports = function circularize(page) {
+    page.paragraphs = [];
+    page.lines = [];
+    page.words = [];
+    page.symbols = [];
 
-    page.blocks.forEach(function(block){
+    page.blocks.forEach(function (block) {
         block.page = page;
 
-        block.lines = []
-        block.words = []
-        block.symbols = []
+        block.lines = [];
+        block.words = [];
+        block.symbols = [];
 
-        block.paragraphs.forEach(function(para){
+        block.paragraphs.forEach(function (para) {
             para.block = block;
             para.page = page;
 
-            para.words = []
-            para.symbols = []
-            
-            para.lines.forEach(function(line){
+            para.words = [];
+            para.symbols = [];
+
+            para.lines.forEach(function (line) {
                 line.paragraph = para;
                 line.block = block;
                 line.page = page;
 
-                line.symbols = []
+                line.symbols = [];
 
-                line.words.forEach(function(word){
+                line.words.forEach(function (word) {
                     word.line = line;
                     word.paragraph = para;
                     word.block = block;
                     word.page = page;
-                    word.symbols.forEach(function(sym){
+                    word.symbols.forEach(function (sym) {
                         sym.word = word;
                         sym.line = line;
                         sym.paragraph = para;
                         sym.block = block;
                         sym.page = page;
-                        
-                        sym.line.symbols.push(sym)
-                        sym.paragraph.symbols.push(sym)
-                        sym.block.symbols.push(sym)
-                        sym.page.symbols.push(sym)
-                    })
-                    word.paragraph.words.push(word)
-                    word.block.words.push(word)
-                    word.page.words.push(word)
-                })
-                line.block.lines.push(line)
-                line.page.lines.push(line)
-            })
-            para.page.paragraphs.push(para)
-        })
-    })
-    return page
-}
+
+                        sym.line.symbols.push(sym);
+                        sym.paragraph.symbols.push(sym);
+                        sym.block.symbols.push(sym);
+                        sym.page.symbols.push(sym);
+                    });
+                    word.paragraph.words.push(word);
+                    word.block.words.push(word);
+                    word.page.words.push(word);
+                });
+                line.block.lines.push(line);
+                line.page.lines.push(line);
+            });
+            para.page.paragraphs.push(para);
+        });
+    });
+    return page;
+};
+
 },{}],6:[function(require,module,exports){
-const adapter = require('../node/index.js')
+'use strict';
 
-let jobCounter = 0;
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-module.exports = class TesseractJob {
-    constructor(instance){
-        this.id = 'Job-' + (++jobCounter) + '-' + Math.random().toString(16).slice(3, 8)
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var adapter = require('../node/index.js');
+
+var jobCounter = 0;
+
+module.exports = function () {
+    function TesseractJob(instance) {
+        _classCallCheck(this, TesseractJob);
+
+        this.id = 'Job-' + ++jobCounter + '-' + Math.random().toString(16).slice(3, 8);
 
         this._instance = instance;
-        this._resolve = []
-        this._reject = []
-        this._progress = []
-        this._finally = []
+        this._resolve = [];
+        this._reject = [];
+        this._progress = [];
+        this._finally = [];
     }
 
-    then(resolve, reject){
-        if(this._resolve.push){
-            this._resolve.push(resolve) 
-        }else{
-            resolve(this._resolve)
+    _createClass(TesseractJob, [{
+        key: 'then',
+        value: function then(resolve, reject) {
+            if (this._resolve.push) {
+                this._resolve.push(resolve);
+            } else {
+                resolve(this._resolve);
+            }
+
+            if (reject) this.catch(reject);
+            return this;
         }
-
-        if(reject) this.catch(reject);
-        return this;
-    }
-    catch(reject){
-        if(this._reject.push){
-            this._reject.push(reject) 
-        }else{
-            reject(this._reject)
+    }, {
+        key: 'catch',
+        value: function _catch(reject) {
+            if (this._reject.push) {
+                this._reject.push(reject);
+            } else {
+                reject(this._reject);
+            }
+            return this;
         }
-        return this;
-    }
-    progress(fn){
-        this._progress.push(fn)
-        return this;
-    }
-    finally(fn) {
-        this._finally.push(fn)
-        return this;  
-    }
-    _send(action, payload){
-        adapter.sendPacket(this._instance, {
-            jobId: this.id,
-            action: action,
-            payload: payload
-        })
-    }
-
-    _handle(packet){
-        var data = packet.data;
-        let runFinallyCbs = false;
-
-        if(packet.status === 'resolve'){
-            if(this._resolve.length === 0) console.log(data);
-            this._resolve.forEach(fn => {
-                var ret = fn(data);
-                if(ret && typeof ret.then == 'function'){
-                    console.warn('TesseractJob instances do not chain like ES6 Promises. To convert it into a real promise, use Promise.resolve.')
-                }
-            })
-            this._resolve = data;
-            this._instance._dequeue()
-            runFinallyCbs = true;
-        }else if(packet.status === 'reject'){
-            if(this._reject.length === 0) console.error(data);
-            this._reject.forEach(fn => fn(data))
-            this._reject = data;
-            this._instance._dequeue()
-            runFinallyCbs = true;
-        }else if(packet.status === 'progress'){
-            this._progress.forEach(fn => fn(data))
-        }else{
-            console.warn('Message type unknown', packet.status)
+    }, {
+        key: 'progress',
+        value: function progress(fn) {
+            this._progress.push(fn);
+            return this;
         }
-
-        if (runFinallyCbs) {
-            this._finally.forEach(fn => fn(data));
+    }, {
+        key: 'finally',
+        value: function _finally(fn) {
+            this._finally.push(fn);
+            return this;
         }
-    }
-}
+    }, {
+        key: '_send',
+        value: function _send(action, payload) {
+            adapter.sendPacket(this._instance, {
+                jobId: this.id,
+                action: action,
+                payload: payload
+            });
+        }
+    }, {
+        key: '_handle',
+        value: function _handle(packet) {
+            var data = packet.data;
+            var runFinallyCbs = false;
+
+            if (packet.status === 'resolve') {
+                if (this._resolve.length === 0) console.log(data);
+                this._resolve.forEach(function (fn) {
+                    var ret = fn(data);
+                    if (ret && typeof ret.then == 'function') {
+                        console.warn('TesseractJob instances do not chain like ES6 Promises. To convert it into a real promise, use Promise.resolve.');
+                    }
+                });
+                this._resolve = data;
+                this._instance._dequeue();
+                runFinallyCbs = true;
+            } else if (packet.status === 'reject') {
+                if (this._reject.length === 0) console.error(data);
+                this._reject.forEach(function (fn) {
+                    return fn(data);
+                });
+                this._reject = data;
+                this._instance._dequeue();
+                runFinallyCbs = true;
+            } else if (packet.status === 'progress') {
+                this._progress.forEach(function (fn) {
+                    return fn(data);
+                });
+            } else {
+                console.warn('Message type unknown', packet.status);
+            }
+
+            if (runFinallyCbs) {
+                this._finally.forEach(function (fn) {
+                    return fn(data);
+                });
+            }
+        }
+    }]);
+
+    return TesseractJob;
+}();
 
 },{"../node/index.js":4}],7:[function(require,module,exports){
-const adapter = require('./node/index.js')
-const circularize = require('./common/circularize.js')
-const TesseractJob = require('./common/job');
-const objectAssign = require('object-assign');
-const version = require('../package.json').version;
+'use strict';
 
-function create(workerOptions){
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var adapter = require('./node/index.js');
+var circularize = require('./common/circularize.js');
+var TesseractJob = require('./common/job');
+var objectAssign = require('object-assign');
+var version = require('../package.json').version;
+
+function create(workerOptions) {
 	workerOptions = workerOptions || {};
-	var worker = new TesseractWorker(objectAssign({}, adapter.defaultOptions, workerOptions))
+	var worker = new TesseractWorker(objectAssign({}, adapter.defaultOptions, workerOptions));
 	worker.create = create;
 	worker.version = version;
 	return worker;
 }
 
-class TesseractWorker {
-	constructor(workerOptions){
+var TesseractWorker = function () {
+	function TesseractWorker(workerOptions) {
+		_classCallCheck(this, TesseractWorker);
+
 		this.worker = null;
 		this.workerOptions = workerOptions;
 		this._currentJob = null;
-		this._queue = []
+		this._queue = [];
 	}
 
-	recognize(image, options){
-		return this._delay(job => {
-			if(typeof options === 'string'){
-				options = { lang: options };
-			}else{
-				options = options || {}
-				options.lang = options.lang || 'eng';	
+	_createClass(TesseractWorker, [{
+		key: 'recognize',
+		value: function recognize(image, options) {
+			var _this = this;
+
+			return this._delay(function (job) {
+				if (typeof options === 'string') {
+					options = { lang: options };
+				} else {
+					options = options || {};
+					options.lang = options.lang || 'eng';
+				}
+
+				job._send('recognize', { image: image, options: options, workerOptions: _this.workerOptions });
+			});
+		}
+	}, {
+		key: 'detect',
+		value: function detect(image, options) {
+			var _this2 = this;
+
+			options = options || {};
+			return this._delay(function (job) {
+				job._send('detect', { image: image, options: options, workerOptions: _this2.workerOptions });
+			});
+		}
+	}, {
+		key: 'terminate',
+		value: function terminate() {
+			if (this.worker) adapter.terminateWorker(this);
+			this.worker = null;
+		}
+	}, {
+		key: '_delay',
+		value: function _delay(fn) {
+			var _this3 = this;
+
+			if (!this.worker) this.worker = adapter.spawnWorker(this, this.workerOptions);
+
+			var job = new TesseractJob(this);
+			this._queue.push(function (e) {
+				_this3._queue.shift();
+				_this3._currentJob = job;
+				fn(job);
+			});
+			if (!this._currentJob) this._dequeue();
+			return job;
+		}
+	}, {
+		key: '_dequeue',
+		value: function _dequeue() {
+			this._currentJob = null;
+			if (this._queue.length > 0) {
+				this._queue[0]();
 			}
-			
-			job._send('recognize', { image: image, options: options, workerOptions: this.workerOptions })
-		})
-	}
-	detect(image, options){
-		options = options || {}
-		return this._delay(job => {
-			job._send('detect', { image: image, options: options, workerOptions: this.workerOptions })
-		})
-	}
-
-	terminate(){ 
-		if(this.worker) adapter.terminateWorker(this);
-		this.worker = null;
-	}
-
-	_delay(fn){
-		if(!this.worker) this.worker = adapter.spawnWorker(this, this.workerOptions);
-
-		var job = new TesseractJob(this);
-		this._queue.push(e => {
-			this._queue.shift()
-			this._currentJob = job;
-			fn(job)
-		})
-		if(!this._currentJob) this._dequeue();
-		return job
-	}
-
-	_dequeue(){
-		this._currentJob = null;
-		if(this._queue.length > 0){
-			this._queue[0]()
 		}
-	}
+	}, {
+		key: '_recv',
+		value: function _recv(packet) {
 
-	_recv(packet){
+			if (packet.status === 'resolve' && packet.action === 'recognize') {
+				packet.data = circularize(packet.data);
+			}
 
-        if(packet.status === 'resolve' && packet.action === 'recognize'){
-            packet.data = circularize(packet.data);
-        }
-
-		if(this._currentJob.id === packet.jobId){
-			this._currentJob._handle(packet)
-		}else{
-			console.warn('Job ID ' + packet.jobId + ' not known.')
+			if (this._currentJob.id === packet.jobId) {
+				this._currentJob._handle(packet);
+			} else {
+				console.warn('Job ID ' + packet.jobId + ' not known.');
+			}
 		}
-	}
-}
+	}]);
 
-var DefaultTesseract = create()
+	return TesseractWorker;
+}();
 
-module.exports = DefaultTesseract
+var DefaultTesseract = create();
+
+module.exports = DefaultTesseract;
+
 },{"../package.json":3,"./common/circularize.js":5,"./common/job":6,"./node/index.js":4,"object-assign":1}]},{},[7])(7)
 });
