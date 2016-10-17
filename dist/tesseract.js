@@ -268,7 +268,7 @@ process.umask = function() { return 0; };
 },{}],3:[function(require,module,exports){
 module.exports={
   "name": "tesseract.js",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Pure Javascript Multilingual OCR",
   "main": "src/index.js",
   "scripts": {
@@ -281,20 +281,22 @@ module.exports={
     "./src/node/index.js": "./src/browser/index.js"
   },
   "author": "",
-  "license": "Apache",
+  "license": "Apache-2.0",
   "devDependencies": {
     "babel-preset-es2015": "^6.16.0",
     "babelify": "^7.3.0",
     "browserify": "^13.1.0",
     "envify": "^3.4.1",
     "http-server": "^0.9.0",
-    "watchify": "^3.7.0",
-    "pako": "^1.0.3"
+    "pako": "^1.0.3",
+    "watchify": "^3.7.0"
   },
   "dependencies": {
     "file-type": "^3.8.0",
+    "is-url": "^1.2.2",
     "jpeg-js": "^0.2.0",
     "level-js": "^2.2.4",
+    "node-fetch": "^1.6.3",
     "object-assign": "^4.1.0",
     "png.js": "^0.2.1",
     "tesseract.js-core": "^1.0.2"
@@ -557,7 +559,7 @@ module.exports = function () {
             var runFinallyCbs = false;
 
             if (packet.status === 'resolve') {
-                if (this._resolve.length === 0) console.debug(data);
+                if (this._resolve.length === 0) console.log(data);
                 this._resolve.forEach(function (fn) {
                     var ret = fn(data);
                     if (ret && typeof ret.then == 'function') {
