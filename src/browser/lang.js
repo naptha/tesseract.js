@@ -22,9 +22,13 @@ module.exports = function getLanguageData(req, res, cb){
     }
 
     db.open({compression: false}, err => {
-        if (err) {return fetchLanguageData(req, res, cb);}
+        if (err) {
+            return fetchLanguageData(req, res, cb);
+        }
         db.get(lang, (err, data) => {
-            if (err) {return fetchLanguageData(req, res, saveDataFile);}
+            if (err) {
+                return fetchLanguageData(req, res, saveDataFile);
+            }
             res.progress({status: 'found in cache ' + lang + '.traineddata'});
             cb(data);
         });
@@ -54,14 +58,17 @@ function fetchLanguageData(req, res, cb){
         });
 
     xhr.onload = e => {
-        if (!(xhr.status == 200 || (xhr.status == 0 && xhr.response))) {return res.reject('Error downloading language ' + url);}
+        console.log(e);
+        if (!(xhr.status === 200 || (xhr.status === 0 && xhr.response))) {
+            return res.reject('Error downloading language ' + url);
+        }
         res.progress({status: 'unzipping ' + langfile, progress: 0});
 
         // in case the gzips are already ungzipped or extra gzipped
         var response = new Uint8Array(xhr.response);
         try {
             var n = 2;
-            while (response[0] == 0x1f && response[1] == 0x8b){
+            while (response[0] === 0x1f && response[1] === 0x8b){
                 response = ungzip(response);
                 res.progress({status: 'unzipping ' + langfile, progress: 1 - 1 / (n++)});
             }

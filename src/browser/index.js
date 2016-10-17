@@ -6,21 +6,28 @@ var defaultOptions = {
 
 if (process.env.NODE_ENV === 'development') {
     console.debug('Using Development Configuration');
-    defaultOptions.workerPath = location.protocol + '//' + location.host + '/dist/worker.dev.js?nocache=' + Math.random().toString(36).slice(3);
+
+    defaultOptions.workerPath = location.protocol + '//' +
+                                location.host +
+                                '/dist/worker.dev.js?nocache=' +
+                                Math.random().toString(36).slice(3);
 } else {
     var version = require('../../package.json').version;
-    defaultOptions.workerPath = 'https://cdn.rawgit.com/naptha/tesseract.js/' + version + '/dist/worker.js';
+    defaultOptions.workerPath = 'https://cdn.rawgit.com/naptha/tesseract.js/'
+                                + version
+                                + '/dist/worker.js';
 }
 
 exports.defaultOptions = defaultOptions;
 
 
 exports.spawnWorker = function spawnWorker(instance, workerOptions){
+    var worker;
     if (window.Blob && window.URL){
         var blob = new Blob(['importScripts("' + workerOptions.workerPath + '");']);
-        var worker = new Worker(window.URL.createObjectURL(blob));
+        worker = new Worker(window.URL.createObjectURL(blob));
     } else {
-        var worker = new Worker(workerOptions.workerPath);
+        worker = new Worker(workerOptions.workerPath);
     }
 
     worker.onmessage = function(e){
@@ -78,7 +85,7 @@ function loadImage(image, cb){
     } else if (image.getContext){
         // canvas element
         return loadImage(image.getContext('2d'), cb);
-    } else if (image.tagName == 'IMG' || image.tagName == 'VIDEO'){
+    } else if (image.tagName === 'IMG' || image.tagName === 'VIDEO'){
         // image element or video element
         var c = document.createElement('canvas');
         c.width  = image.naturalWidth  || image.videoWidth;
