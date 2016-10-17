@@ -31,7 +31,6 @@ exports.sendPacket = function sendPacket(instance, packet){
 
 
 function loadImage(image, cb){
-
     if (isURL(image)) {
         fetch(image).then(function (resp) {
             return resp.buffer();
@@ -43,50 +42,11 @@ function loadImage(image, cb){
     }
 
     if (typeof image === 'string'){
-        fs.readFile(image, function(err, buffer){
-            if (err) {throw err;}
-            loadImage(buffer, cb);
-        });
-        return;
+        return imageHandler(image, cb, 'string');
     } else if (image instanceof Buffer){
-        var fileType = require('file-type');
-        var mime = fileType(image).mime;
-
-        if (mime === 'image/png'){
-            var PNGReader = require('png.js');
-            var reader = new PNGReader(image);
-            reader.parse(function(err, png){
-                if (err) {throw err;}
-
-                var image = {
-                    width: png.getWidth(),
-                    height: png.getHeight()
-                };
-                image.data = new Uint8Array(image.width * image.height * 4);
-                for (var j = 0; j < image.height; j++){
-                    for (var i = 0; i < image.width; i++){
-                        var offset = 4 * (i + j * image.width),
-                            pix = png.getPixel(i, j);
-
-                        image.data[offset] = pix[0];
-                        image.data[offset + 1] = pix[1];
-                        image.data[offset + 2] = pix[2];
-                        image.data[offset + 3] = pix[3];
-                    }
-                }
-                // console.log(image)
-                loadImage(image, cb);
-            });
-            return;
-        } else if (mime === 'image/jpeg'){
-            var jpeg = require('jpeg-js');
-            loadImage(jpeg.decode(image), cb);
-            return;
-        }
-
-        // TODO: support for TIFF, NetPBM, BMP, etc.
+        var mime = require('file-type')(image).mime;
+        return imageHandler(image, cb, mime);
     }
-
     // node uses json.stringify for ipc which means we need to turn
     // fancy arrays into raw arrays
     if (image && image.data && image.data.length && !Array.isArray(image.data)){
@@ -94,4 +54,61 @@ function loadImage(image, cb){
         return loadImage(image, cb);
     }
     cb(image);
-}
+};
+function imageHandler(image, cb, type){
+    switch (type){
+    case 'string':
+        loadStringImage();
+        break;
+    case 'image/png':
+        loadPNGImage();
+        break;
+    case 'image/jpeg':
+        loadJPGImage();
+        break;
+    };
+    function loadPNGImage () {
+        var PNGReader = require('png.js');
+        var reader = new PNGReader(image);
+        reader.parse(function(err, png){
+            if (err) {
+                throw err;
+            }
+
+            var image = {
+                width: png.getWidth(),
+                height: png.getHeight()
+            };
+            image.data = new Uint8Array(image.width * image.height * 4);
+            for (var j = 0; j < image.height; j++){
+                for (var i = 0; i < image.width; i++){
+                    var offset = 4 * (i + j * image.width),
+                        pix = png.getPixel(i, j);
+
+                    image.data[offset] = pix[0];
+                    image.data[offset + 1] = pix[1];
+                    image.data[offset + 2] = pix[2];
+                    image.data[offset + 3] = pix[3];
+                }
+            }
+
+            loadImage(image, cb);
+        });
+        return;
+    };
+
+    function loadJPGImage () {
+        var jpeg = require('jpeg-js');
+        loadImage(jpeg.decode(image), cb);
+        return;
+    }
+    function loadStringImage () {
+        fs.readFile(image, function(err, buffer){
+            if (err) {
+                throw err;
+            }
+            loadImage(buffer, cb);
+        });
+        return;
+    };
+};

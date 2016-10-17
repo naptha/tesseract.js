@@ -1,33 +1,36 @@
 const http = require('http'),
     zlib = require('zlib'),
-    fs   = require('fs'),
-    path = require('path');
+    fs   = require('fs');
 
 var langdata = require('../common/langdata.json');
 
 function getLanguageData(req, res, cb){
     var lang = req.options.lang;
-    var langfile = lang + '.traineddata.gz';
+    var langFile = lang + '.traineddata.gz';
     var url = req.workerOptions.langPath + langfile;
 
-    fs.readFile(lang + '.traineddata', function (err, data) {
-        if (!err) {return cb(new Uint8Array(data));}
+    fs.readFile(langFile, function (err, data) {
+        if (!err) {
+            return cb(new Uint8Array(data));
+        }
 
         http.get(url, function(stream){
-            var received_bytes = 0;
+            var receivedBytes = 0;
             stream.on('data', function(chunk) {
-                received_bytes += chunk.length;
+                receivedBytes += chunk.length;
                 res.progress({
-                    status: 'downloading ' + langfile,
-                    loaded: received_bytes,
-                    progress: Math.min(1, received_bytes / langdata[lang])
+                    status: 'downloading ' + langFile,
+                    loaded: receivedBytes,
+                    progress: Math.min(1, receivedBytes / langdata[lang])
                 });
 
             });
 
             var gunzip = zlib.createGunzip();
-            stream.pipe(gunzip).pipe(fs.createWriteStream(lang + '.traineddata'));
-            gunzip.on('end', function(){ getLanguageData(req, stream, cb); });
+            stream.pipe(gunzip).pipe(fs.createWriteStream(langFile));
+            gunzip.on('end', function(){
+                getLanguageData(req, stream, cb);
+            });
         });
     });
 }
