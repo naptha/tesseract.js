@@ -1,11 +1,9 @@
 # [Tesseract.js](http://tesseract.projectnaptha.com/)
 
 [![npm version](https://badge.fury.io/js/tesseract.js.svg)](https://badge.fury.io/js/tesseract.js)
+[![Beerpay](https://img.shields.io/badge/Buy%20Us%20a%20Beer-on%20BeerPay-red.svg)](https://beerpay.io/naptha/tesseract.js)
 
 Tesseract.js is a javascript library that gets words in [almost any language](./docs/tesseract_lang_list.md) out of images. ([Demo](http://tesseract.projectnaptha.com/))
-
-<!-- Under the hood, Tesseract.js wraps [tesseract.js-core](https://github.com/naptha/tesseract.js-core), an [emscripten](https://github.com/kripken/emscripten) port of the [Tesseract OCR Engine](https://github.com/tesseract-ocr/tesseract).
- -->
 
 [![fancy demo gif](./demo.gif "Demo")](http://tesseract.projectnaptha.com)
 
@@ -18,6 +16,9 @@ Tesseract.recognize(myImage)
 
 [Check out the docs](#docs) for a full treatment of the API.
 
+## Provenance
+Tesseract.js wraps an [emscripten](https://github.com/kripken/emscripten) [port](https://github.com/naptha/tesseract.js-core) of the [Tesseract OCR Engine](https://github.com/tesseract-ocr/tesseract).
+
 
 # Installation
 Tesseract.js works with a `<script>` tag via local copy or cdn, with webpack and browserify via `npm`, and on node via `npm`. [Check out the docs](#docs) for a full treatment of the API.
@@ -26,7 +27,7 @@ Tesseract.js works with a `<script>` tag via local copy or cdn, with webpack and
 
 You can simply include Tesseract.js with a cdn like this:
 ```html
-<script src='https://cdn.rawgit.com/naptha/tesseract.js/1.0.7/dist/tesseract.js'></script>
+<script src='https://cdn.rawgit.com/naptha/tesseract.js/1.0.10/dist/tesseract.js'></script>
 ```
 
 After including your scripts, the `Tesseract` variable should be defined! You can [head to the docs](#docs) for a full treatment of the API.
