@@ -4,7 +4,10 @@ const TesseractJob = require('./common/job');
 const version = require('../package.json').version;
 
 function create(workerOptions = {}){
-	return new TesseractWorker(Object.assign({}, adapter.defaultOptions, workerOptions, {create, version}));
+	var worker = new TesseractWorker(Object.assign({}, adapter.defaultOptions, workerOptions));
+	worker.create = create;
+	worker.version = version;
+	return worker;
 }
 
 class TesseractWorker {
