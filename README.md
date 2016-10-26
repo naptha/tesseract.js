@@ -1,7 +1,7 @@
 # [Tesseract.js](http://tesseract.projectnaptha.com/)
 
 [![npm version](https://badge.fury.io/js/tesseract.js.svg)](https://badge.fury.io/js/tesseract.js)
-[![Beerpay](https://img.shields.io/badge/Buy%20Us%20a%20Beer-on%20BeerPay-red.svg)](https://beerpay.io/naptha/tesseract.js)
+[![Beerpay](https://img.shields.io/badge/Click%20Here%20-to%20Buy%20Us%20A%20Beer-red.svg)](https://beerpay.io/naptha/tesseract.js)
 
 Tesseract.js is a javascript library that gets words in [almost any language](./docs/tesseract_lang_list.md) out of images. ([Demo](http://tesseract.projectnaptha.com/))
 
