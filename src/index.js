@@ -3,7 +3,7 @@ const circularize = require('./common/circularize.js')
 const TesseractJob = require('./common/job');
 const version = require('../package.json').version;
 
-function create(workerOptions = {}){
+const create = (workerOptions = {}) => {
 	return new TesseractWorker(Object.assign({}, adapter.defaultOptions, workerOptions, {create, version}));
 }
 
@@ -19,7 +19,7 @@ class TesseractWorker {
 		return this._delay(job => {
 			if (typeof options === 'string') options = {lang: options}
 			options.lang = options.lang || 'eng';
-			
+
 			job._send('recognize', { image, options, workerOptions: this.workerOptions });
 		})
 	}
@@ -29,7 +29,7 @@ class TesseractWorker {
 		})
 	}
 
-	terminate(){ 
+	terminate(){
 		if(this.worker) adapter.terminateWorker(this);
 		this.worker = null;
 	}
