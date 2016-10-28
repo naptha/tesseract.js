@@ -525,7 +525,10 @@ var version = require('../package.json').version;
 function create() {
 	var workerOptions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-	return new TesseractWorker(Object.assign({}, adapter.defaultOptions, workerOptions, { create: create, version: version }));
+	var worker = new TesseractWorker(Object.assign({}, adapter.defaultOptions, workerOptions));
+	worker.create = create;
+	worker.version = version;
+	return worker;
 }
 
 var TesseractWorker = function () {
