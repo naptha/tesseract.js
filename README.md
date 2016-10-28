@@ -3,7 +3,7 @@
 [![npm version](https://badge.fury.io/js/tesseract.js.svg)](https://badge.fury.io/js/tesseract.js)
 [![Beerpay](https://img.shields.io/badge/Click%20Here%20-to%20Buy%20Us%20A%20Beer-red.svg)](https://beerpay.io/naptha/tesseract.js)
 
-Tesseract.js is a javascript library that gets words in [almost any language](./docs/tesseract_lang_list.md) out of images. ([Demo](http://tesseract.projectnaptha.com/))
+Tesseract.js is a javascript library that gets words in [almost any language](./docs/tesseract_lang_list.md) out of images through [Optical Character Recognition(OCR)](https://en.wikipedia.org/wiki/Optical_character_recognition). ([Demo]https://en.wikipedia.org/wiki/Optical_character_recognition(http://tesseract.projectnaptha.com/))
 
 [![fancy demo gif](./demo.gif "Demo")](http://tesseract.projectnaptha.com)
 
