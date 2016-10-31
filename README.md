@@ -76,7 +76,7 @@ You can [head to the docs](#docs) for a full treatment of the API.
 
 ## Tesseract.recognize(image: [ImageLike](#imagelike)[, options]) -> [TesseractJob](#tesseractjob)
 Figures out what words are in `image`, where the words are in `image`, etc. 
-> Note: `image` should be be sufficiently high resolution.
+> Note: `image` should be sufficiently high resolution.
 > Often, the same image will get much better results if you upscale it before calling `recognize`.
 
 - `image` is any [ImageLike](#imagelike) object.
@@ -150,7 +150,7 @@ In NodeJS, an image can be
 
 ## TesseractJob
 
-A TesseractJob is an an object returned by a call to `recognize` or `detect`. It's inspired by the ES6 Promise interface and provides `then` and `catch` methods. It also provides `finally` method, which will be fired regardless of the job fate. One important difference is that these methods return the job itself (to enable chaining) rather than new. 
+A TesseractJob is an object returned by a call to `recognize` or `detect`. It's inspired by the ES6 Promise interface and provides `then` and `catch` methods. It also provides `finally` method, which will be fired regardless of the job fate. One important difference is that these methods return the job itself (to enable chaining) rather than new. 
 
 Typical use is: 
 ```javascript
