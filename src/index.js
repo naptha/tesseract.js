@@ -35,6 +35,8 @@ class TesseractWorker {
 	terminate(){ 
 		if(this.worker) adapter.terminateWorker(this);
 		this.worker = null;
+		this._currentJob = null;
+		this._queue = [];
 	}
 
 	_delay(fn){
