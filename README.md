@@ -1,13 +1,15 @@
 # [Tesseract.js](http://tesseract.projectnaptha.com/)
 
-[![npm version](https://badge.fury.io/js/tesseract.js.svg)](https://badge.fury.io/js/tesseract.js)
+[![NPM version][tesseractjs-npm-image]][tesseractjs-npm-url]
 
+[tesseractjs-npm-image]: https://img.shields.io/npm/v/tesseract.js.svg
+[tesseractjs-npm-url]: https://npmjs.org/package/tesseract.js
 
 Tesseract.js is a javascript library that gets words in [almost any language](./docs/tesseract_lang_list.md) out of images. ([Demo](http://tesseract.projectnaptha.com/))
 
-[![fancy demo gif](./demo.gif "Demo")](http://tesseract.projectnaptha.com)
+[![fancy demo gif](https://github.com/naptha/tesseract.js/blob/master/demo.gif)](http://tesseract.projectnaptha.com)
 
-Tesseract.js works with script tags, webpack/browserify, and node. [After you install it](#installation), using it is as simple as 
+Tesseract.js works with script tags, [webpack](https://webpack.js.org/)/[browserify](http://browserify.org/), and [node](nodejs.org). [After you install it](#installation), using it is as simple as
 ```javascript
 Tesseract.recognize(myImage)
          .progress(function  (p) { console.log('progress', p)    })
@@ -30,17 +32,18 @@ You can simply include Tesseract.js with a cdn like this:
 <script src='https://cdn.rawgit.com/naptha/tesseract.js/1.0.10/dist/tesseract.js'></script>
 ```
 
-After including your scripts, the `Tesseract` variable should be defined! You can [head to the docs](#docs) for a full treatment of the API.
+After including your scripts, the `Tesseract` variable will be defined globally!
 
-## npm
+## Dependency
 First:
 ```shell
+> yarn add tesseract
 > npm install tesseract.js --save
 ```
 > Note: Tesseract.js currently requires node v6.8.0 or greater.
 
 
-Then
+## Usage
 ```javascript
 var Tesseract = require('tesseract.js')
 ```
@@ -50,32 +53,31 @@ or
 import Tesseract from 'tesseract.js'
 ```
 
-You can [head to the docs](#docs) for a full treatment of the API.
 
-# Docs 
+# Docs
 
-* [Tesseract.recognize(image: ImageLike[, options]) -> [TesseractJob](#tesseractjob)](#tesseractrecognizeimage-imagelike-options---tesseractjob)
+* [Tesseract.recognize](#tesseractrecognizeimage-imagelike-options---tesseractjob)
   + [Simple Example](#simple-example)
   + [More Complicated Example](#more-complicated-example)
-* [Tesseract.detect(image: ImageLike) -> [TesseractJob](#tesseractjob)](#tesseractdetectimage-imagelike---tesseractjob)
+* [Tesseract.detect](#tesseractdetectimage-imagelike---tesseractjob) [TesseractJob](#tesseractjob)(#tesseractdetectimage-imagelike---tesseractjob)
 * [ImageLike](#imagelike)
 * [TesseractJob](#tesseractjob)
-  + [TesseractJob.progress(callback: function) -> TesseractJob](#tesseractjobprogresscallback-function---tesseractjob)
-  + [TesseractJob.then(callback: function) -> TesseractJob](#tesseractjobthencallback-function---tesseractjob)
-  + [TesseractJob.catch(callback: function) -> TesseractJob](#tesseractjoberrorcallback-function---tesseractjob)
-  + [TesseractJob.finally(callback: function) -> TesseractJob](#tesseractjobfinallycallback-function---tesseractjob)
+  + [TesseractJob.progress](#tesseractjobprogresscallback-function---tesseractjob)
+  + [TesseractJob.then](#tesseractjobthencallback-function---tesseractjob)
+  + [TesseractJob.catch](#tesseractjobcatchcallback-function---tesseractjob)
+  + [TesseractJob.finally](#tesseractjobfinallycallback-function---tesseractjob)
 * [Local Installation](#local-installation)
   + [corePath](#corepath)
   + [workerPath](#workerpath)
   + [langPath](#langpath)
 * [Contributing](#contributing)
-  + [Development](#development) 
+  + [Development](#development)
   + [Building Static Files](#building-static-files)
   + [Send us a Pull Request!](#send-us-a-pull-request)
 
 
 ## Tesseract.recognize(image: [ImageLike](#imagelike)[, options]) -> [TesseractJob](#tesseractjob)
-Figures out what words are in `image`, where the words are in `image`, etc. 
+Figures out what words are in `image`, where the words are in `image`, etc.
 > Note: `image` should be sufficiently high resolution.
 > Often, the same image will get much better results if you upscale it before calling `recognize`.
 
@@ -115,7 +117,7 @@ Figures out what script (e.g. 'Latin', 'Chinese') the words in  image are writte
 
 - `image` is any [ImageLike](#imagelike) object.
 
-Returns a [TesseractJob](#tesseractjob) whose `then`, `progress`, `error` and `finally` methods can be used to act on the result of the script.
+Returns a [TesseractJob](#tesseractjob) whose `then`, `progress`, `catch` and `finally` methods can be used to act on the result of the script.
 
 
 ```javascript
@@ -150,9 +152,9 @@ In NodeJS, an image can be
 
 ## TesseractJob
 
-A TesseractJob is an object returned by a call to `recognize` or `detect`. It's inspired by the ES6 Promise interface and provides `then` and `catch` methods. It also provides `finally` method, which will be fired regardless of the job fate. One important difference is that these methods return the job itself (to enable chaining) rather than new. 
+A TesseractJob is an object returned by a call to `recognize` or `detect`. It's inspired by the ES6 Promise interface and provides `then` and `catch` methods. It also provides `finally` method, which will be fired regardless of the job fate. One important difference is that these methods return the job itself (to enable chaining) rather than new.
 
-Typical use is: 
+Typical use is:
 ```javascript
 Tesseract.recognize(myImage)
     .progress(message => console.log(message))
@@ -177,16 +179,16 @@ job1.finally(resultOrError => console.log(resultOrError));
 
 
 ### TesseractJob.progress(callback: function) -> TesseractJob
-Sets `callback` as the function that will be called every time the job progresses. 
+Sets `callback` as the function that will be called every time the job progresses.
 - `callback` is a function with the signature `callback(progress)` where `progress` is a json object.
 
-For example: 
+For example:
 ```javascript
 Tesseract.recognize(myImage)
     .progress(function(message){console.log('progress is: ', message)})
 ```
 
-The console will show something like: 
+The console will show something like:
 ```javascript
 progress is: {loaded_lang_model: "eng", from_cache: true}
 progress is: {initialized_with_lang: "eng"}
@@ -201,17 +203,17 @@ progress is: {recognized: 1}
 
 
 ### TesseractJob.then(callback: function) -> TesseractJob
-Sets `callback` as the function that will be called if and when the job successfully completes. 
+Sets `callback` as the function that will be called if and when the job successfully completes.
 - `callback` is a function with the signature `callback(result)` where `result` is a json object.
 
 
-For example: 
+For example:
 ```javascript
 Tesseract.recognize(myImage)
     .then(function(result){console.log('result is: ', result)})
 ```
 
-The console will show something like: 
+The console will show something like:
 ```javascript
 result is: {
     blocks: Array[1]
@@ -229,8 +231,8 @@ result is: {
 ```
 
 ### TesseractJob.catch(callback: function) -> TesseractJob
-Sets `callback` as the function that will be called if the job fails. 
-- `callback` is a function with the signature `callback(error)` where `error` is a json object. 
+Sets `callback` as the function that will be called if the job fails.
+- `callback` is a function with the signature `callback(error)` where `error` is a json object.
 
 ### TesseractJob.finally(callback: function) -> TesseractJob
 Sets `callback` as the function that will be called regardless if the job fails or success.
@@ -238,9 +240,9 @@ Sets `callback` as the function that will be called regardless if the job fails 
 
 ## Local Installation
 
-In the browser, `tesseract.js` simply provides the API layer. Internally, it opens a WebWorker to handle requests. That worker itself loads code from the Emscripten-built `tesseract.js-core` which itself is hosted on a CDN. Then it dynamically loads language files hosted on another CDN. 
+In the browser, `tesseract.js` simply provides the API layer. Internally, it opens a WebWorker to handle requests. That worker itself loads code from the Emscripten-built `tesseract.js-core` which itself is hosted on a CDN. Then it dynamically loads language files hosted on another CDN.
 
-Because of this we recommend loading `tesseract.js` from a CDN. But if you really need to have all your files local, you can use the `Tesseract.create` function which allows you to specify custom paths for workers, languages, and core. 
+Because of this we recommend loading `tesseract.js` from a CDN. But if you really need to have all your files local, you can use the `Tesseract.create` function which allows you to specify custom paths for workers, languages, and core.
 
 ```javascript
 window.Tesseract = Tesseract.create({
@@ -267,12 +269,12 @@ To run a development copy of tesseract.js, first clone this repo.
 > git clone https://github.com/naptha/tesseract.js.git
 ```
 
-Then, cd in to the folder, `npm install`, and `npm start`
+Then, `cd tesseract.js && npm install && npm start`
 ```shell
 > cd tesseract.js
 > npm install && npm start
 
-  ... a bunch of npm stuff ... 
+  ... a bunch of npm stuff ...
 
   Starting up http-server, serving ./
   Available on:
@@ -281,10 +283,10 @@ Then, cd in to the folder, `npm install`, and `npm start`
 
 ```
 
-Then open `http://localhost:7355/examples/file-input/demo.html` in your favorite browser. The devServer automatically rebuilds tesseract.js and tesseract.worker.js when you change files in the src folder.
+Then open `http://localhost:7355/examples/file-input/demo.html` in your favorite browser. The devServer automatically rebuilds `tesseract.js` and `tesseract.worker.js` when you change files in the src folder.
 
 ### Building Static Files
-After you've cloned the repo and run `npm install` as described in the [Development Section](#development), you can build static library files in the dist folder with 
+After you've cloned the repo and run `npm install` as described in the [Development Section](#development), you can build static library files in the dist folder with
 ```shell
 > npm run build
 ```
