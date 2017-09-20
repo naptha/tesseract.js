@@ -169,6 +169,10 @@ process.off = noop;
 process.removeListener = noop;
 process.removeAllListeners = noop;
 process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
 
 process.binding = function (name) {
     throw new Error('process.binding is not supported');
@@ -203,6 +207,7 @@ module.exports={
     "browserify": "^13.1.0",
     "envify": "^3.4.1",
     "http-server": "^0.9.0",
+    "isomorphic-fetch": "^2.2.1",
     "pako": "^1.0.3",
     "watchify": "^3.7.0"
   },
@@ -225,6 +230,7 @@ module.exports={
   },
   "homepage": "https://github.com/naptha/tesseract.js"
 }
+
 },{}],3:[function(require,module,exports){
 (function (process){
 'use strict';
@@ -571,6 +577,8 @@ var TesseractWorker = function () {
 		value: function terminate() {
 			if (this.worker) adapter.terminateWorker(this);
 			this.worker = null;
+			this._currentJob = null;
+			this._queue = [];
 		}
 	}, {
 		key: '_delay',

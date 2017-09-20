@@ -1,15 +1,22 @@
 const http = require("http"),
       zlib = require("zlib"),
       fs   = require("fs"),
-      path = require("path");
+      path = require("path"),
+      isURL = require("is-url");
 
 var langdata = require('../common/langdata.json')
 
 function getLanguageData(req, res, cb){
     var lang = req.options.lang,
         langfile = lang + '.traineddata.gz';
+    
+    // langPath defaults to a URL where languages can be downloaded. If a custom path is specified
+    // and it is a local path, use that instead
+    var localPath = isURL(req.workerOptions.langPath) ? 
+        lang + '.traineddata' : 
+        path.join(req.workerOptions.langPath, lang + '.traineddata');
 
-    fs.readFile(lang + '.traineddata', function (err, data) {
+    fs.readFile(localPath, function (err, data) {
         if(!err) return cb(new Uint8Array(data));
 
         http.get(req.workerOptions.langPath + langfile, stream => {
