@@ -37,7 +37,10 @@ After including your scripts, the `Tesseract` variable will be defined globally!
 ## Dependency
 First:
 ```shell
-> yarn add tesseract
+> yarn add tesseract.js
+```
+or
+```
 > npm install tesseract.js --save
 ```
 > Note: Tesseract.js currently requires node v6.8.0 or greater.
