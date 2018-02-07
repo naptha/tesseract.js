@@ -5,8 +5,6 @@
 [tesseractjs-npm-image]: https://img.shields.io/npm/v/tesseract.js.svg
 [tesseractjs-npm-url]: https://npmjs.org/package/tesseract.js
 
-Tesseract.js is a JavaScript library that gets words in [almost any language](./docs/tesseract_lang_list.md) out of images. ([Demo](http://tesseract.projectnaptha.com/))
-
 Tesseract.js is a javascript library that gets words in [almost any language](./docs/tesseract_lang_list.md) out of images. ([Demo](http://tesseract.projectnaptha.com/))
 
 [![fancy demo gif](https://github.com/naptha/tesseract.js/blob/master/demo.gif)](http://tesseract.projectnaptha.com)
