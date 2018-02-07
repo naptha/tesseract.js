@@ -5,12 +5,15 @@
 [tesseractjs-npm-image]: https://img.shields.io/npm/v/tesseract.js.svg
 [tesseractjs-npm-url]: https://npmjs.org/package/tesseract.js
 
+Tesseract.js is a JavaScript library that gets words in [almost any language](./docs/tesseract_lang_list.md) out of images. ([Demo](http://tesseract.projectnaptha.com/))
+
 Tesseract.js is a javascript library that gets words in [almost any language](./docs/tesseract_lang_list.md) out of images. ([Demo](http://tesseract.projectnaptha.com/))
 
 [![fancy demo gif](https://github.com/naptha/tesseract.js/blob/master/demo.gif)](http://tesseract.projectnaptha.com)
 
-Tesseract.js works with script tags, [webpack](https://webpack.js.org/)/[browserify](http://browserify.org/), and [node](nodejs.org). [After you install it](#installation), using it is as simple as
-```javascript
+Tesseract.js works with script tags, [webpack](https://webpack.js.org/)/[Browserify](http://browserify.org/), and [Node.js](https://nodejs.org/en/). [After you install it](#installation), using it is as simple as
+
+  ```javascript
 Tesseract.recognize(myImage)
          .progress(function  (p) { console.log('progress', p)    })
          .then(function (result) { console.log('result', result) })
@@ -23,11 +26,11 @@ Tesseract.js wraps an [emscripten](https://github.com/kripken/emscripten) [port]
 
 
 # Installation
-Tesseract.js works with a `<script>` tag via local copy or cdn, with webpack and browserify via `npm`, and on node via `npm`. [Check out the docs](#docs) for a full treatment of the API.
+Tesseract.js works with a `<script>` tag via local copy or CDN, with webpack and Browserify via `npm`, and on Node.js via `npm`. [Check out the docs](#docs) for a full treatment of the API.
 
 ## &lt;script />
 
-You can simply include Tesseract.js with a cdn like this:
+You can simply include Tesseract.js with a CDN like this:
 ```html
 <script src='https://cdn.rawgit.com/naptha/tesseract.js/1.0.10/dist/tesseract.js'></script>
 ```
@@ -43,7 +46,7 @@ or
 ```
 > npm install tesseract.js --save
 ```
-> Note: Tesseract.js currently requires node v6.8.0 or greater.
+> Note: Tesseract.js currently requires Node.js v6.8.0 or higher.
 
 
 ## Usage
@@ -147,7 +150,7 @@ On a browser, an image can be:
 
 
 
-In NodeJS, an image can be
+In Node.js, an image can be
 - a path to a local image
 - a `Buffer` instance containing a `PNG` or `JPEG` image
 - a `ImageData` instance (an object containing `width`, `height` and `data` properties)
@@ -262,7 +265,7 @@ A string specifying the location of the [tesseract.js-core library](https://gith
 A string specifying the location of the [tesseract.worker.js](./dist/tesseract.worker.js) file. Set this string before calling `Tesseract.recognize` and `Tesseract.detect` if you want Tesseract.js to use a different file.
 
 ### langPath
-A string specifying the location of the tesseract language files, with default value 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/'. Language file urls are calculated according to the formula `langPath + langCode + '.traineddata.gz'`. Set this string before calling `Tesseract.recognize` and `Tesseract.detect` if you want Tesseract.js to use different language files.
+A string specifying the location of the tesseract language files, with default value 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/'. Language file URLs are calculated according to the formula `langPath + langCode + '.traineddata.gz'`. Set this string before calling `Tesseract.recognize` and `Tesseract.detect` if you want Tesseract.js to use different language files.
 
 
 ## Contributing
