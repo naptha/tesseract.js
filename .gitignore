@@ -4,3 +4,4 @@ yarn.lock
 tesseract.dev.js
 worker.dev.js
 *.traineddata
+lib
