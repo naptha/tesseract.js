@@ -16,7 +16,11 @@ class TesseractWorker {
 		this.workerOptions = workerOptions;
 		this._currentJob = null;
 		this._queue = [];
-	}
+  }
+
+  configure(workerOptions) {
+    this.workerOptions = Object.assign({}, this.workerOptions, workerOptions);
+  }
 
 	recognize(image, options = {}){
 		return this._delay(job => {
