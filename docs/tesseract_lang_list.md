@@ -25,6 +25,7 @@ The `lang` property of the options object passed to `Tesseract.recognize` can ha
 | 'equ'     | Math                  | 
 | 'est'     | Estonian              | 
 | 'eus'     | Basque                | 
+| 'fas'     |Persian (Farsi)        |
 | 'fin'     | Finnish               | 
 | 'fra'     | French                | 
 | 'frk'     | Frankish              | 
