@@ -65,7 +65,7 @@ import Tesseract from 'tesseract.js'
 * [Tesseract.recognize](#tesseractrecognizeimage-imagelike-options---tesseractjob)
   + [Simple Example](#simple-example)
   + [More Complicated Example](#more-complicated-example)
-* [Tesseract.detect](#tesseractdetectimage-imagelike---tesseractjob) [TesseractJob](#tesseractjob)(#tesseractdetectimage-imagelike---tesseractjob)
+* [Tesseract.detect](#tesseractdetectimage-imagelike---tesseractjob)
 * [ImageLike](#imagelike)
 * [TesseractJob](#tesseractjob)
   + [TesseractJob.progress](#tesseractjobprogresscallback-function---tesseractjob)
