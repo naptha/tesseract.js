@@ -30,18 +30,18 @@ exports.sendPacket = function sendPacket(instance, packet){
 
 function loadImage(image, cb){
     
-    if(isURL(image)) {
-        fetch(image)
+    if(typeof image === 'string'){
+        if (isURL(image)) {
+            fetch(image)
             .then(resp => resp.buffer())
             .then(buffer => loadImage(buffer, cb))
             .catch(err => console.error(err));
-    }
-
-    if(typeof image === 'string'){
-        fs.readFile(image, function(err, buffer){
-            if (err) throw err;
-            loadImage(buffer, cb);
-        });
+        } else {
+            fs.readFile(image, function(err, buffer){
+                if (err) throw err;
+                loadImage(buffer, cb);
+            });
+        }
         return;
     } else if (image instanceof Buffer){
         var mime = require('file-type')(image).mime
