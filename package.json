@@ -26,7 +26,7 @@
   "dependencies": {
     "file-type": "^3.8.0",
     "isomorphic-fetch": "^2.2.1",
-    "is-url": "^1.2.2",
+    "is-url": "1.2.2",
     "jpeg-js": "^0.2.0",
     "level-js": "^2.2.4",
     "node-fetch": "^1.6.3",
