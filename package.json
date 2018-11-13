@@ -4,9 +4,8 @@
   "description": "Pure Javascript Multilingual OCR",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" & exit 1",
     "start": "watchify src/index.js  -t [ envify --NODE_ENV development ] -t [ babelify --presets [ es2015 ] ] -o dist/tesseract.dev.js --standalone Tesseract & watchify src/browser/worker.js  -t [ envify --NODE_ENV development ] -t [ babelify --presets [ es2015 ] ] -o dist/worker.dev.js & http-server -p 7355",
-    "build": "browserify src/index.js -t [ babelify --presets [ es2015 ] ] -o dist/tesseract.js --standalone Tesseract && browserify src/browser/worker.js -t [ babelify --presets [ es2015 ] ] -o dist/worker.js",
+    "build": "browserify src/index.js -t [ babelify --presets [ es2015 ] ] -o dist/tesseract.js --standalone Tesseract && browserify src/browser/worker.js -t [ babelify --presets [ es2015 ] ] -o dist/worker.js && uglifyjs dist/tesseract.js --source-map -o dist/tesseract.min.js && uglifyjs dist/worker.js --source-map -o dist/worker.min.js",
     "release": "npm run build && git commit -am 'new release' && git push && git tag `jq -r '.version' package.json` && git push origin --tags && npm publish"
   },
   "browser": {
@@ -21,6 +20,7 @@
     "envify": "^3.4.1",
     "http-server": "^0.9.0",
     "pako": "^1.0.3",
+    "uglify-js": "^3.4.9",
     "watchify": "^3.7.0"
   },
   "dependencies": {
