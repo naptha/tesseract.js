@@ -207,12 +207,12 @@ module.exports={
     "browserify": "^13.1.0",
     "envify": "^3.4.1",
     "http-server": "^0.9.0",
-    "isomorphic-fetch": "^2.2.1",
     "pako": "^1.0.3",
     "watchify": "^3.7.0"
   },
   "dependencies": {
     "file-type": "^3.8.0",
+    "isomorphic-fetch": "^2.2.1",
     "is-url": "^1.2.2",
     "jpeg-js": "^0.2.0",
     "level-js": "^2.2.4",
@@ -236,9 +236,9 @@ module.exports={
 'use strict';
 
 var defaultOptions = {
-    // workerPath: 'https://cdn.rawgit.com/naptha/tesseract.js/0.2.0/dist/worker.js',
-    corePath: 'https://cdn.rawgit.com/naptha/tesseract.js-core/0.1.0/index.js',
-    langPath: 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/'
+    // workerPath: 'https://rawcdn.githack.com/naptha/tesseract.js/0.2.0/dist/worker.js',
+    corePath: 'https://cdnjs.cloudflare.com/naptha/tesseract.js-core/0.1.0/index.js',
+    langPath: 'https://rawcdn.githack.com/naptha/tessdata/gh-pages/3.02/'
 };
 
 if (process.env.NODE_ENV === "development") {
@@ -246,7 +246,7 @@ if (process.env.NODE_ENV === "development") {
     defaultOptions.workerPath = location.protocol + '//' + location.host + '/dist/worker.dev.js?nocache=' + Math.random().toString(36).slice(3);
 } else {
     var version = require('../../package.json').version;
-    defaultOptions.workerPath = 'https://cdn.rawgit.com/naptha/tesseract.js/' + version + '/dist/worker.js';
+    defaultOptions.workerPath = 'https://rawcdn.githack.com/naptha/tesseract.js/' + version + '/dist/worker.js';
 }
 
 exports.defaultOptions = defaultOptions;

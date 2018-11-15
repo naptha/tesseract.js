@@ -5,7 +5,7 @@ const fetch = require('isomorphic-fetch'),
 
 exports.defaultOptions = {
     workerPath: require('path').join(__dirname, 'worker.js'),
-    langPath: 'http://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/',
+    langPath: 'http://rawcdn.githack.com/naptha/tessdata/gh-pages/3.02/',
 }
 
 exports.spawnWorker = function spawnWorker(instance, workerOptions){
