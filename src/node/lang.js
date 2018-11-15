@@ -1,4 +1,5 @@
-const http = require("http"),
+const https = require("https"),
+      http = require("http"),
       zlib = require("zlib"),
       fs   = require("fs"),
       path = require("path"),
@@ -16,10 +17,12 @@ function getLanguageData(req, res, cb){
         lang + '.traineddata' : 
         path.join(req.workerOptions.langPath, lang + '.traineddata');
 
+    var fetchProtocol = req.workerOptions.langPath.startsWith('http://') ? http : https;
+
     fs.readFile(localPath, function (err, data) {
         if(!err) return cb(new Uint8Array(data));
 
-        http.get(req.workerOptions.langPath + langfile, stream => {
+        fetchProtocol.get(req.workerOptions.langPath + langfile, stream => {
             var received_bytes = 0;
             stream.on('data', function(chunk) {
                 received_bytes += chunk.length;
