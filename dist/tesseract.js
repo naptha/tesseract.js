@@ -187,7 +187,7 @@ process.umask = function() { return 0; };
 },{}],2:[function(require,module,exports){
 module.exports={
   "name": "tesseract.js",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Pure Javascript Multilingual OCR",
   "main": "src/index.js",
   "scripts": {
@@ -237,7 +237,7 @@ module.exports={
 
 var defaultOptions = {
     // workerPath: 'https://rawcdn.githack.com/naptha/tesseract.js/0.2.0/dist/worker.js',
-    corePath: 'https://cdnjs.cloudflare.com/naptha/tesseract.js-core/0.1.0/index.js',
+    corePath: 'https://rawcdn.githack.com/naptha/tesseract.js-core/0.1.0/index.js',
     langPath: 'https://rawcdn.githack.com/naptha/tessdata/gh-pages/3.02/'
 };
 
