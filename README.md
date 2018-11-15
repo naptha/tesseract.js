@@ -30,7 +30,7 @@ Tesseract.js works with a `<script>` tag via local copy or CDN, with webpack and
 
 You can simply include Tesseract.js with a CDN like this:
 ```html
-<script src='https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/1.0.10/tesseract.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/1.0.11/tesseract.min.js'></script>
 ```
 
 After including your scripts, the `Tesseract` variable will be defined globally!
@@ -251,19 +251,19 @@ Because of this we recommend loading `tesseract.js` from a CDN. But if you reall
 ```javascript
 window.Tesseract = Tesseract.create({
     workerPath: '/path/to/worker.js',
-    langPath: 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/',
-    corePath: 'https://cdn.rawgit.com/naptha/tesseract.js-core/0.1.0/index.js',
+    langPath: 'https://rawcdn.githack.com/naptha/tessdata/gh-pages/3.02/',
+    corePath: 'https://rawcdn.githack.com/naptha/tesseract.js-core/0.1.0/index.js',
 })
 ```
 
 ### corePath
-A string specifying the location of the [tesseract.js-core library](https://github.com/naptha/tesseract.js-core), with default value 'https://cdn.rawgit.com/naptha/tesseract.js-core/master/index.js'. Set this string before calling `Tesseract.recognize` and `Tesseract.detect` if you want Tesseract.js to use a different file.
+A string specifying the location of the [tesseract.js-core library](https://github.com/naptha/tesseract.js-core), with default value 'https://rawcdn.githack.com/naptha/tesseract.js-core/master/index.js'. Set this string before calling `Tesseract.recognize` and `Tesseract.detect` if you want Tesseract.js to use a different file.
 
 ### workerPath
 A string specifying the location of the [worker.js](./dist/worker.js) file. Set this string before calling `Tesseract.recognize` and `Tesseract.detect` if you want Tesseract.js to use a different file.
 
 ### langPath
-A string specifying the location of the tesseract language files, with default value 'https://cdn.rawgit.com/naptha/tessdata/gh-pages/3.02/'. Language file URLs are calculated according to the formula `langPath + langCode + '.traineddata.gz'`. Set this string before calling `Tesseract.recognize` and `Tesseract.detect` if you want Tesseract.js to use different language files.
+A string specifying the location of the tesseract language files, with default value 'https://rawcdn.githack.com/naptha/tessdata/gh-pages/3.02/'. Language file URLs are calculated according to the formula `langPath + langCode + '.traineddata.gz'`. Set this string before calling `Tesseract.recognize` and `Tesseract.detect` if you want Tesseract.js to use different language files.
 
 
 ## Contributing
