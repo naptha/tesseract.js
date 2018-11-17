@@ -1,6 +1,6 @@
 {
   "name": "tesseract.js",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "Pure Javascript Multilingual OCR",
   "main": "src/index.js",
   "scripts": {
