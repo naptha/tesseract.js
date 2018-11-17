@@ -191,9 +191,8 @@ module.exports={
   "description": "Pure Javascript Multilingual OCR",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" & exit 1",
     "start": "watchify src/index.js  -t [ envify --NODE_ENV development ] -t [ babelify --presets [ es2015 ] ] -o dist/tesseract.dev.js --standalone Tesseract & watchify src/browser/worker.js  -t [ envify --NODE_ENV development ] -t [ babelify --presets [ es2015 ] ] -o dist/worker.dev.js & http-server -p 7355",
-    "build": "browserify src/index.js -t [ babelify --presets [ es2015 ] ] -o dist/tesseract.js --standalone Tesseract && browserify src/browser/worker.js -t [ babelify --presets [ es2015 ] ] -o dist/worker.js",
+    "build": "browserify src/index.js -t [ babelify --presets [ es2015 ] ] -o dist/tesseract.js --standalone Tesseract && browserify src/browser/worker.js -t [ babelify --presets [ es2015 ] ] -o dist/worker.js && uglifyjs dist/tesseract.js --source-map -o dist/tesseract.min.js && uglifyjs dist/worker.js --source-map -o dist/worker.min.js",
     "release": "npm run build && git commit -am 'new release' && git push && git tag `jq -r '.version' package.json` && git push origin --tags && npm publish"
   },
   "browser": {
@@ -208,12 +207,13 @@ module.exports={
     "envify": "^3.4.1",
     "http-server": "^0.9.0",
     "pako": "^1.0.3",
+    "uglify-js": "^3.4.9",
     "watchify": "^3.7.0"
   },
   "dependencies": {
     "file-type": "^3.8.0",
     "isomorphic-fetch": "^2.2.1",
-    "is-url": "^1.2.2",
+    "is-url": "1.2.2",
     "jpeg-js": "^0.2.0",
     "level-js": "^2.2.4",
     "node-fetch": "^1.6.3",
@@ -528,14 +528,14 @@ var circularize = require('./common/circularize.js');
 var TesseractJob = require('./common/job');
 var version = require('../package.json').version;
 
-function create() {
+var create = function create() {
 	var workerOptions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
 	var worker = new TesseractWorker(Object.assign({}, adapter.defaultOptions, workerOptions));
 	worker.create = create;
 	worker.version = version;
 	return worker;
-}
+};
 
 var TesseractWorker = function () {
 	function TesseractWorker(workerOptions) {
