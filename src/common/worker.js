@@ -17,7 +17,7 @@ function dispatchHandlers(packet, send){
     respond.resolve = respond.bind(this, 'resolve');
     respond.reject = respond.bind(this, 'reject');
     respond.progress = respond.bind(this, 'progress');
-    
+
     latestJob = respond;
 
     try {
@@ -27,6 +27,9 @@ function dispatchHandlers(packet, send){
             handleDetect(packet.payload, respond);
         }
     } catch (err) {
+        // Prepare exception to travel through postMessage
+        err = err.toString();
+
         respond.reject(err)
     }
 }
@@ -39,7 +42,7 @@ exports.setAdapter = function setAdapter(impl){
 
 function handleInit(req, res){
     var MIN_MEMORY = 100663296;
-    
+
     if(['chi_sim', 'chi_tra', 'jpn'].includes(req.options.lang)){
         MIN_MEMORY = 167772160;
     }
@@ -77,7 +80,7 @@ function setImage(Module, base, image){
 function loadLanguage(req, res, cb){
     var lang = req.options.lang,
         langFile = lang + '.traineddata';
-    
+
     if(!Module._loadedLanguages) Module._loadedLanguages = {};
     if(lang in Module._loadedLanguages) return cb();
 
@@ -94,7 +97,7 @@ function loadLanguage(req, res, cb){
 
 function handleRecognize(req, res){
     handleInit(req, res);
-    
+
     loadLanguage(req, res, () => {
         var options = req.options;
 
@@ -117,11 +120,11 @@ function handleRecognize(req, res){
         progressUpdate(1);
 
         base.Recognize(null);
-        
+
         var result = dump(Module, base);
 
         base.End();
-        Module._free(ptr); 
+        Module._free(ptr);
 
         res.resolve(result);
     })
