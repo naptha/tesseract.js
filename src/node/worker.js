@@ -1,19 +1,20 @@
-const workerUtils = require('../common/worker.js')
+const check = require('check-types');
+const workerUtils = require('../common/worker');
 
-process.on('message', function(packet){
-    workerUtils.dispatchHandlers(packet, obj => process.send(obj))
-})
+let TesseractCore = null;
 
-var TesseractCore;
-exports.getCore = function(req, res){
-    if(!TesseractCore){
-        res.progress({ status: 'loading tesseract core' })
-        TesseractCore = require('tesseract.js-core')
-        res.progress({ status: 'loaded tesseract core' })
+process.on('message', (packet) => {
+  workerUtils.dispatchHandlers(packet, obj => process.send(obj));
+});
+
+workerUtils.setAdapter({
+  getCore: (req, res) => {
+    if (check.null(TesseractCore)) {
+      res.progress({ status: 'loading tesseract core' });
+      TesseractCore = require('tesseract.js-core');
+      res.progress({ status: 'loaded tesseract core' });
     }
-    return TesseractCore
-}
-
-exports.getLanguageData = require('./lang.js')
-
-workerUtils.setAdapter(module.exports);
+    return TesseractCore;
+  },
+  getLanguageData: require('./lang'),
+});
