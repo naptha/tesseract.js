@@ -48,19 +48,24 @@ function handleInit(req, res){
     }
 
     if(!Module || Module.TOTAL_MEMORY < MIN_MEMORY){
-        var Core = adapter.getCore(req, res);
+      var Core = adapter.getCore(req, res);
 
       res.progress({ status: 'initializing tesseract', progress: 0 })
 
-        Module = Core({
-            TOTAL_MEMORY: MIN_MEMORY,
-            TesseractProgress(percent){
-                latestJob.progress({ status: 'recognizing text', progress: Math.max(0, (percent-30)/70) });
-            },
+      return Core({
+        // TOTAL_MEMORY: MIN_MEMORY,
+        TesseractProgress(percent){
+          latestJob.progress({ status: 'recognizing text', progress: Math.max(0, (percent-30)/70) });
+        },
+      })
+        .then((TessModule) => {
+          Module = TessModule;
+          base = new Module.TessBaseAPI();
+          res.progress({ status: 'initializing tesseract', progress: 1 });
         });
-      base = new Module.TessBaseAPI();
-      res.progress({ status: 'initializing tesseract', progress: 1 });
     }
+
+  return new Promise();
 }
 
 function setImage(Module, base, image) {
@@ -93,13 +98,13 @@ function loadLanguage(req, res, cb){
 
 
 function handleRecognize(req, res){
-    handleInit(req, res);
-
-    loadLanguage(req, res, () => {
+  handleInit(req, res)
+    .then(() => {
+      loadLanguage(req, res, () => {
         var options = req.options;
 
         function progressUpdate(progress){
-            res.progress({ status: 'initializing api', progress: progress });
+          res.progress({ status: 'initializing api', progress: progress });
         }
 
         progressUpdate(0);
@@ -107,9 +112,9 @@ function handleRecognize(req, res){
         progressUpdate(.3);
 
         for (var option in options) {
-            if (options.hasOwnProperty(option)) {
-                base.SetVariable(option, options[option]);
-            }
+          if (options.hasOwnProperty(option)) {
+            base.SetVariable(option, options[option]);
+          }
         }
 
         progressUpdate(.6);
@@ -124,39 +129,42 @@ function handleRecognize(req, res){
         Module._free(ptr);
 
         res.resolve(result);
-    })
+      })
+    });
 }
 
 
 function handleDetect(req, res){
-    handleInit(req, res);
-    req.options.lang = 'osd';
-    loadLanguage(req, res, () => {
+  handleInit(req, res)
+    .then(() => {
+      req.options.lang = 'osd';
+      loadLanguage(req, res, () => {
         base.Init(null, 'osd');
         base.SetPageSegMode(Module.PSM_OSD_ONLY);
 
         var ptr = setImage(Module, base, req.image),
-            results = new Module.OSResults();
+          results = new Module.OSResults();
 
         if(!base.DetectOS(results)){
-            base.End();
-            Module._free(ptr);
-            res.reject("Failed to detect OS");
+          base.End();
+          Module._free(ptr);
+          res.reject("Failed to detect OS");
         } else {
-            var best = results.get_best_result(),
-                oid = best.get_orientation_id(),
-                sid = best.get_script_id();
+          var best = results.get_best_result(),
+            oid = best.get_orientation_id(),
+            sid = best.get_script_id();
 
-            base.End();
-            Module._free(ptr);
+          base.End();
+          Module._free(ptr);
 
-            res.resolve({
-                tesseract_script_id: sid,
-                script: results.get_unicharset().get_script_from_script_id(sid),
-                script_confidence: best.get_sconfidence(),
-                orientation_degrees: [0, 270, 180, 90][oid],
-                orientation_confidence: best.get_oconfidence()
-            });
+          res.resolve({
+            tesseract_script_id: sid,
+            script: results.get_unicharset().get_script_from_script_id(sid),
+            script_confidence: best.get_sconfidence(),
+            orientation_degrees: [0, 270, 180, 90][oid],
+            orientation_confidence: best.get_oconfidence()
+          });
         }
+      });
     });
 }

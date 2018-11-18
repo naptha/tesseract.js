@@ -11,7 +11,7 @@ workerUtils.setAdapter({
   getCore: (req, res) => {
     if (check.null(TesseractCore)) {
       res.progress({ status: 'loading tesseract core' });
-      TesseractCore = require('tesseract.js-core/src/tesseract-core.asm');
+      TesseractCore = require('tesseract.js-core');
       res.progress({ status: 'loaded tesseract core' });
     }
     return TesseractCore;

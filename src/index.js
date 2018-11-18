@@ -75,10 +75,10 @@ class TesseractWorker {
   _recv(packet) {
     if (this._currentJob.id === packet.jobId) {
       this._currentJob._handle({
+        ...packet,
         data: packet.status === 'resolve' && packet.action === 'recognize'
           ? circularize(packet.data)
           : packet.data,
-        ...packet,
       });
     } else {
       console.warn(`Job ID ${packet.jobId} not known.`);
