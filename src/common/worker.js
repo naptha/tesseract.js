@@ -50,31 +50,28 @@ function handleInit(req, res){
     if(!Module || Module.TOTAL_MEMORY < MIN_MEMORY){
         var Core = adapter.getCore(req, res);
 
-        res.progress({ status: 'initializing tesseract', progress: 0 })
+      res.progress({ status: 'initializing tesseract', progress: 0 })
 
         Module = Core({
             TOTAL_MEMORY: MIN_MEMORY,
             TesseractProgress(percent){
                 latestJob.progress({ status: 'recognizing text', progress: Math.max(0, (percent-30)/70) });
             },
-            onRuntimeInitialized() {}
         });
-
-        Module.FS_createPath("/", "tessdata", true, true);
-        base = new Module.TessBaseAPI();
-        res.progress({ status: 'initializing tesseract', progress: 1 });
+      base = new Module.TessBaseAPI();
+      res.progress({ status: 'initializing tesseract', progress: 1 });
     }
 }
 
-function setImage(Module, base, image){
-    var imgbin = desaturate(image),
-        width = image.width,
-        height = image.height;
+function setImage(Module, base, image) {
+  const imgbin = desaturate(image);
+  const { width, height } = image;
 
-    var ptr = Module.allocate(imgbin, 'i8', Module.ALLOC_NORMAL);
-    base.SetImage(Module.wrapPointer(ptr), width, height, 1, width);
-    base.SetRectangle(0, 0, width, height);
-    return ptr;
+  const ptr = Module._malloc(imgbin.length, Uint8Array.BYTES_PER_ELEMENT);
+  Module.HEAPU8.set(imgbin, ptr);
+  base.SetImage(ptr, width, height, Uint8Array.BYTES_PER_ELEMENT, width);
+  base.SetRectangle(0, 0, width, height);
+  return ptr;
 }
 
 function loadLanguage(req, res, cb){
@@ -85,8 +82,8 @@ function loadLanguage(req, res, cb){
     if(lang in Module._loadedLanguages) return cb();
 
     adapter.getLanguageData(req, res, function(data){
-        res.progress({ status: 'loading ' + langFile, progress: 0 });
-        Module.FS_createDataFile('tessdata', langFile, data, true, false);
+      res.progress({ status: 'loading ' + langFile, progress: 0 });
+        Module.FS.writeFile(langFile, data);
         Module._loadedLanguages[lang] = true;
         res.progress({ status: 'loading ' + langFile, progress: 1 });
         cb();

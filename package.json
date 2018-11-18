@@ -42,7 +42,7 @@
     "node-fetch": "^1.6.3",
     "object-assign": "^4.1.0",
     "png.js": "^0.2.1",
-    "tesseract.js-core": "^1.0.2"
+    "tesseract.js-core": "^2.0.0-beta.2"
   },
   "repository": {
     "type": "git",
