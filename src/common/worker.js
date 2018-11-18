@@ -1,3 +1,4 @@
+const readImage = require('tesseract.js-core/src/utils/readImage');
 var latestJob,
     Module,
     base,
@@ -69,14 +70,11 @@ function handleInit(req, res){
 }
 
 function setImage(Module, base, image) {
-  const imgbin = desaturate(image);
-  const { width, height } = image;
+  const { w, h, data } = readImage(Module, Array.from(image));
 
-  const ptr = Module._malloc(imgbin.length, Uint8Array.BYTES_PER_ELEMENT);
-  Module.HEAPU8.set(imgbin, ptr);
-  base.SetImage(ptr, width, height, Uint8Array.BYTES_PER_ELEMENT, width);
-  base.SetRectangle(0, 0, width, height);
-  return ptr;
+  base.SetImage(data);
+  base.SetRectangle(0, 0, w, h);
+  return data;
 }
 
 function loadLanguage(req, res, cb){
