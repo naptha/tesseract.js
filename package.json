@@ -12,6 +12,9 @@
     "./src/node/index.js": "./src/browser/index.js"
   },
   "author": "",
+  "contributors": [
+    "jeromewu"
+  ],
   "license": "Apache-2.0",
   "devDependencies": {
     "babel-preset-es2015": "^6.16.0",
