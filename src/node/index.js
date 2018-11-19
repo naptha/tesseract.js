@@ -1,6 +1,6 @@
 const util = require('util');
 const fs = require('fs');
-const fetch = require('isomorphic-fetch');
+const fetch = require('node-fetch');
 const isURL = require('is-url');
 const { fork } = require('child_process');
 const path = require('path');

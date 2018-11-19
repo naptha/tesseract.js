@@ -1,6 +1,6 @@
 const check = require('check-types');
-const adapter = require('./node/index.js');
-const circularize = require('./common/circularize.js');
+const adapter = require('./node');
+const circularize = require('./common/circularize');
 const TesseractJob = require('./common/job');
 
 class TesseractWorker {

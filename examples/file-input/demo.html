@@ -40,7 +40,11 @@ function progressUpdate(packet){
 function recognizeFile(file){
 	document.querySelector("#log").innerHTML = ''
 
-	Tesseract.recognize(file, {
+  const { TesseractWorker } = Tesseract;
+
+  const worker = new TesseractWorker();
+
+	worker.recognize(file, {
 		lang: document.querySelector('#langsel').value
 	})
 		.progress(function(packet){
@@ -123,7 +127,7 @@ function recognizeFile(file){
 <option value='vie'     > Vietnamese            </option>
 </select>
 
-<button onclick="recognizeFile('../node/cosmic.png')">Sample Image</button>
+<button onclick="recognizeFile('http://localhost:3000/examples/node/cosmic.png')">Sample Image</button>
 <input type="file" onchange="recognizeFile(window.lastFile=this.files[0])">
 
 <div id="log"></div>

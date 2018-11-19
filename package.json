@@ -4,9 +4,9 @@
   "description": "Pure Javascript Multilingual OCR",
   "main": "src/index.js",
   "scripts": {
-    "start": "concurrently --kill-others \"watchify src/index.js  -t [ envify --NODE_ENV development ] -t [ babelify --presets [ es2015 ] ] -o dist/tesseract.dev.js --standalone Tesseract\" \"watchify src/browser/worker.js  -t [ envify --NODE_ENV development ] -t [ babelify --presets [ es2015 ] ] -o dist/worker.dev.js\" \"http-server -p 7355\"",
-    "build": "browserify src/index.js -t [ babelify --presets [ es2015 ] ] -o dist/tesseract.js --standalone Tesseract && browserify src/browser/worker.js -t [ babelify --presets [ es2015 ] ] -o dist/worker.js && uglifyjs dist/tesseract.js --source-map -o dist/tesseract.min.js && uglifyjs dist/worker.js --source-map -o dist/worker.min.js",
-    "release": "npm run build && git commit -am 'new release' && git push && git tag `jq -r '.version' package.json` && git push origin --tags && npm publish",
+    "start": "node scripts/server.js",
+    "build": "webpack --config scripts/webpack.config.prod.js",
+    "prepublishOnly": "npm run build",
     "lint": "eslint src"
   },
   "browser": {
@@ -18,32 +18,21 @@
   ],
   "license": "Apache-2.0",
   "devDependencies": {
-    "babel-preset-es2015": "^6.16.0",
-    "babelify": "^7.3.0",
-    "browserify": "^13.1.0",
-    "concurrently": "^3.1.0",
-    "envify": "^3.4.1",
     "eslint": "^5.9.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-react": "^7.11.1",
-    "http-server": "^0.9.0",
-    "pako": "^1.0.3",
-    "uglify-js": "^3.4.9",
-    "watchify": "^3.7.0"
+    "express": "^4.16.4",
+    "webpack": "^4.26.0",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-middleware": "^3.4.0"
   },
   "dependencies": {
     "check-types": "^7.4.0",
-    "file-type": "^3.8.0",
     "is-url": "1.2.2",
-    "isomorphic-fetch": "^2.2.1",
-    "jpeg-js": "^0.2.0",
-    "level-js": "^2.2.4",
-    "node-fetch": "^1.6.3",
-    "object-assign": "^4.1.0",
-    "png.js": "^0.2.1",
-    "tesseract.js-core": "^2.0.0-beta.4",
+    "node-fetch": "^1.7.3",
+    "tesseract.js-core": "^2.0.0-beta.5",
     "tesseract.js-utils": "^1.0.0-beta.1"
   },
   "repository": {
