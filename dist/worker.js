@@ -8915,6 +8915,9 @@ function dispatchHandlers(packet, send) {
             handleDetect(packet.payload, respond);
         }
     } catch (err) {
+        // Prepare exception to travel through postMessage
+        err = err.toString();
+
         respond.reject(err);
     }
 }

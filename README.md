@@ -30,7 +30,7 @@ Tesseract.js works with a `<script>` tag via local copy or CDN, with webpack and
 
 You can simply include Tesseract.js with a CDN like this:
 ```html
-<script src='https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/1.0.13/tesseract.min.js'></script>
+<script src='https://cdn.jsdelivr.net/gh/naptha/tesseract.js@v1.0.14/dist/tesseract.min.js'></script>
 ```
 
 After including your scripts, the `Tesseract` variable will be defined globally!
@@ -251,7 +251,7 @@ Because of this we recommend loading `tesseract.js` from a CDN. But if you reall
 ```javascript
 window.Tesseract = Tesseract.create({
     workerPath: '/path/to/worker.js',
-    langPath: 'https://cdn.jsdelivr.net/gh/naptha/tessdata@gh-pages/3.02/',
+    langPath: 'https://tessdata.projectnaptha.com/3.02/',
     corePath: 'https://cdn.jsdelivr.net/gh/naptha/tesseract.js-core@0.1.0/index.js',
 })
 ```

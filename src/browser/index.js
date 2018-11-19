@@ -1,7 +1,7 @@
 var defaultOptions = {
     // workerPath: 'https://cdn.jsdelivr.net/gh/naptha/tesseract.js@0.2.0/dist/worker.js',
     corePath: 'https://cdn.jsdelivr.net/gh/naptha/tesseract.js-core@0.1.0/index.js',    
-    langPath: 'https://cdn.jsdelivr.net/gh/naptha/tessdata@gh-pages/3.02/',
+    langPath: 'https://tessdata.projectnaptha.com/3.02/',
 }
 
 if (process.env.NODE_ENV === "development") {
