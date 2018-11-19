@@ -17,7 +17,7 @@ const loadImage = (imageURI) => {
 
 exports.defaultOptions = {
   workerPath: path.join(__dirname, 'worker.js'),
-  langPath: 'https://cdn.jsdelivr.net/gh/naptha/tessdata@gh-pages/4.0.0/',
+  langPath: 'https://tessdata.projectnaptha.com/4.0.0/',
 };
 
 exports.spawnWorker = (instance, { workerPath }) => {

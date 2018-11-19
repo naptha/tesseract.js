@@ -4,7 +4,7 @@ const { version } = require('../../package.json');
 
 const defaultOptions = {
   corePath: `https://cdn.jsdelivr.net/gh/naptha/tesseract.js-core@v2.0.0-beta.5/tesseract-core${typeof WebAssembly === 'object' ? '' : '.asm'}.js`,
-  langPath: 'https://cdn.jsdelivr.net/gh/naptha/tessdata@gh-pages/4.0.0',
+  langPath: 'https://tessdata.projectnaptha.com/4.0.0',
 };
 
 if (process.env.NODE_ENV === 'development') {
