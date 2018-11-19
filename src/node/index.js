@@ -4,6 +4,7 @@ const fetch = require('node-fetch');
 const isURL = require('is-url');
 const { fork } = require('child_process');
 const path = require('path');
+const { defaultOptions } = require('../common/options');
 
 const readFile = util.promisify(fs.readFile);
 
@@ -16,8 +17,8 @@ const loadImage = (imageURI) => {
 };
 
 exports.defaultOptions = {
+  ...defaultOptions,
   workerPath: path.join(__dirname, 'worker.js'),
-  langPath: 'https://tessdata.projectnaptha.com/4.0.0/',
 };
 
 exports.spawnWorker = (instance, { workerPath }) => {

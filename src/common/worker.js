@@ -6,6 +6,20 @@ let base;
 let latestJob;
 let adapter = {};
 
+const setImage = (image) => {
+  const {
+    w, h, bytesPerPixel, data, pix,
+  } = readImage(Module, Array.from(image));
+
+  if (data === null) {
+    base.SetImage(pix);
+  } else {
+    base.SetImage(data, w, h, bytesPerPixel, w * bytesPerPixel);
+  }
+  base.SetRectangle(0, 0, w, h);
+  return data;
+};
+
 const handleInit = (req, res) => {
   let MIN_MEMORY = 100663296;
 
@@ -31,101 +45,80 @@ const handleInit = (req, res) => {
       });
   }
 
-  return new Promise();
+  return Promise.resolve();
 };
 
-const setImage = (image) => {
-  const {
-    w, h, bytesPerPixel, data, pix,
-  } = readImage(Module, Array.from(image));
-
-  if (data === null) {
-    base.SetImage(pix);
-  } else {
-    base.SetImage(data, w, h, bytesPerPixel, w * bytesPerPixel);
-  }
-  base.SetRectangle(0, 0, w, h);
-  return data;
-};
-
-const loadLanguage = (req, res, cb) => {
+const loadLanguage = (req) => {
   const { options: { lang }, workerOptions: { langPath } } = req;
   return loadLang({
     langs: lang,
     tessModule: Module,
     langURI: langPath,
-  }).then(cb);
+  });
 };
 
-const handleRecognize = (req, res) => {
+const handleRecognize = (req, res) => (
   handleInit(req, res)
-    .then(() => {
-      loadLanguage(req, res, () => {
-        const { options } = req;
-
-        const progressUpdate = (progress) => {
-          res.progress({ status: 'initializing api', progress });
-        };
-
-        progressUpdate(0);
-        base.Init(null, options.lang);
-        progressUpdate(0.3);
-
-        Object.keys(options).forEach((key) => {
-          base.SetVariable(key, options[key]);
-        });
-
-        progressUpdate(0.6);
-        const ptr = setImage(req.image);
-        progressUpdate(1);
-
-        base.Recognize(null);
-
-        const result = dump(Module, base);
-
-        base.End();
-        Module._free(ptr);
-
-        res.resolve(result);
-      });
-    });
-};
-
-
-const handleDetect = (req, res) => {
-  handleInit(req, res)
-    .then(() => {
-      req.options.lang = 'osd';
-      loadLanguage(req, res, () => {
-        base.Init(null, 'osd');
-        base.SetPageSegMode(Module.PSM_OSD_ONLY);
-
-        const ptr = setImage(req.image);
-        const results = new Module.OSResults();
-
-        if (!base.DetectOS(results)) {
-          base.End();
-          Module._free(ptr);
-          res.reject('Failed to detect OS');
-        } else {
-          const best = results.get_best_result();
-          const oid = best.get_orientation_id();
-          const sid = best.get_script_id();
-
-          base.End();
-          Module._free(ptr);
-
-          res.resolve({
-            tesseract_script_id: sid,
-            script: results.get_unicharset().get_script_from_script_id(sid),
-            script_confidence: best.get_sconfidence(),
-            orientation_degrees: [0, 270, 180, 90][oid],
-            orientation_confidence: best.get_oconfidence(),
+    .then(() => (
+      loadLanguage(req)
+        .then(() => {
+          const { options } = req;
+          const progressUpdate = (progress) => {
+            res.progress({ status: 'initializing api', progress });
+          };
+          progressUpdate(0);
+          base.Init(null, options.lang);
+          progressUpdate(0.3);
+          Object.keys(options).forEach((key) => {
+            base.SetVariable(key, options[key]);
           });
-        }
-      });
-    });
-};
+          progressUpdate(0.6);
+          const ptr = setImage(req.image);
+          progressUpdate(1);
+          base.Recognize(null);
+          const result = dump(Module, base);
+          base.End();
+          Module._free(ptr);
+          res.resolve(result);
+        })
+    ))
+);
+
+
+const handleDetect = (req, res) => (
+  handleInit(req, res)
+    .then(() => (
+      loadLanguage({ ...req, options: { ...req.options, lang: 'osd' } })
+        .then(() => {
+          base.Init(null, 'osd');
+          base.SetPageSegMode(Module.PSM_OSD_ONLY);
+
+          const ptr = setImage(req.image);
+          const results = new Module.OSResults();
+
+          if (!base.DetectOS(results)) {
+            base.End();
+            Module._free(ptr);
+            res.reject('Failed to detect OS');
+          } else {
+            const best = results.get_best_result();
+            const oid = best.get_orientation_id();
+            const sid = best.get_script_id();
+
+            base.End();
+            Module._free(ptr);
+
+            res.resolve({
+              tesseract_script_id: sid,
+              script: results.get_unicharset().get_script_from_script_id(sid),
+              script_confidence: best.get_sconfidence(),
+              orientation_degrees: [0, 270, 180, 90][oid],
+              orientation_confidence: best.get_oconfidence(),
+            });
+          }
+        })
+    ))
+);
 
 exports.dispatchHandlers = (packet, send) => {
   const respond = (status, data) => {
