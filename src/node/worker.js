@@ -16,5 +16,4 @@ workerUtils.setAdapter({
     }
     return TesseractCore;
   },
-  getLanguageData: require('./lang'),
 });
