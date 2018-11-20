@@ -42,6 +42,7 @@ First:
 ```
 or
 ```
+> npm init
 > npm install tesseract.js --save
 ```
 > Note: Tesseract.js currently requires Node.js v6.8.0 or higher.
