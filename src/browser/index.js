@@ -1,27 +1,34 @@
-const isURL = require('is-url');
+const check = require('check-types');
+const resolveURL = require('resolve-url');
+const { version } = require('../../package.json');
 
 const defaultOptions = {
-  // workerPath: 'https://cdn.jsdelivr.net/gh/naptha/tesseract.js@0.2.0/dist/worker.js',
   corePath: `https://cdn.jsdelivr.net/gh/naptha/tesseract.js-core@v2.0.0-beta.5/tesseract-core${typeof WebAssembly === 'object' ? '' : '.asm'}.js`,
-  langPath: 'https://cdn.jsdelivr.net/gh/naptha/tessdata@gh-pages/4.0.0/',
+  langPath: 'https://cdn.jsdelivr.net/gh/naptha/tessdata@gh-pages/4.0.0',
 };
 
 if (process.env.NODE_ENV === 'development') {
   console.debug('Using Development Configuration');
-  // eslint-disable-next-line
-  const { protocol, host } = location;
-  defaultOptions.workerPath = `${protocol}//${host}/dist/worker.dev.js?nocache=${Math.random().toString(36).slice(3)}`;
+  defaultOptions.workerPath = resolveURL(`/dist/worker.dev.js?nocache=${Math.random().toString(36).slice(3)}`);
 } else {
-  const { version } = require('../../package.json');
-  defaultOptions.workerPath = `https://cdn.jsdelivr.net/gh/naptha/tesseract.js@${version}/dist/worker.js`;
+  defaultOptions.workerPath = `https://cdn.jsdelivr.net/gh/naptha/tesseract.js@${version}/dist/worker.min.js`;
 }
 
-const loadImage = (imageURI) => {
-  if (isURL(imageURI)) {
-    return fetch(imageURI)
+const loadImage = (image) => {
+  if (check.string(image)) {
+    return fetch(resolveURL(image))
       .then(resp => resp.arrayBuffer());
   }
-  return new Promise();
+  if (check.instance(image, File)) {
+    return new Promise((res) => {
+      const fileReader = new FileReader();
+      fileReader.onload = () => {
+        res(fileReader.result);
+      };
+      fileReader.readAsArrayBuffer(image);
+    });
+  }
+  return Promise.reject();
 };
 
 exports.defaultOptions = defaultOptions;
