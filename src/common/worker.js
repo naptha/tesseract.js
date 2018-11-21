@@ -35,9 +35,15 @@ const handleInit = (req, res) => {
 };
 
 const setImage = (image) => {
-  const { w, h, data } = readImage(Module, Array.from(image));
+  const {
+    w, h, bytesPerPixel, data, pix,
+  } = readImage(Module, Array.from(image));
 
-  base.SetImage(data);
+  if (data === null) {
+    base.SetImage(pix);
+  } else {
+    base.SetImage(data, w, h, bytesPerPixel, w * bytesPerPixel);
+  }
   base.SetRectangle(0, 0, w, h);
   return data;
 };
@@ -48,7 +54,6 @@ const loadLanguage = (req, res, cb) => {
     langs: lang,
     tessModule: Module,
     langURI: langPath,
-    cache: true,
   }).then(cb);
 };
 
