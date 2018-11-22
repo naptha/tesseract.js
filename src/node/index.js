@@ -11,7 +11,7 @@ const readFile = util.promisify(fs.readFile);
 const loadImage = (imageURI) => {
   if (isURL(imageURI)) {
     return fetch(imageURI)
-      .then(resp => resp.buffer());
+      .then(resp => resp.arrayBuffer());
   }
   return readFile(imageURI);
 };

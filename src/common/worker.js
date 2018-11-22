@@ -48,14 +48,21 @@ const handleInit = (req, res) => {
   return Promise.resolve();
 };
 
-const loadLanguage = (req) => {
-  const { options: { lang }, workerOptions: { langPath } } = req;
-  return loadLang({
+const loadLanguage = ({
+  options: { lang },
+  workerOptions: {
+    langPath, cachePath, cacheMethod, dataPath,
+  },
+}) => (
+  loadLang({
     langs: lang,
     tessModule: Module,
     langURI: langPath,
-  });
-};
+    cachePath,
+    cacheMethod,
+    dataPath,
+  })
+);
 
 const handleRecognize = (req, res) => (
   handleInit(req, res)

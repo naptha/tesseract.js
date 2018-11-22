@@ -7,6 +7,7 @@
     "start": "node scripts/server.js",
     "build": "webpack --config scripts/webpack.config.prod.js",
     "prepublishOnly": "npm run build",
+    "test:node": "nyc mocha --exit --require ./scripts/test-helper.js ./tests/*.test.js",
     "lint": "eslint src"
   },
   "browser": {
@@ -23,7 +24,10 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-react": "^7.11.1",
+    "expect.js": "^0.3.1",
     "express": "^4.16.4",
+    "mocha": "^5.2.0",
+    "nyc": "^13.1.0",
     "webpack": "^4.26.0",
     "webpack-cli": "^3.1.2",
     "webpack-dev-middleware": "^3.4.0"
@@ -31,7 +35,7 @@
   "dependencies": {
     "check-types": "^7.4.0",
     "is-url": "1.2.2",
-    "node-fetch": "^1.7.3",
+    "node-fetch": "^2.3.0",
     "resolve-url": "^0.2.1",
     "tesseract.js-core": "^2.0.0-beta.5",
     "tesseract.js-utils": "^1.0.0-beta.2"

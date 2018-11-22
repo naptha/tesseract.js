@@ -7,7 +7,7 @@ const genConfig = ({
   devtool: 'source-map',
   entry,
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, '..', 'dist'),
     filename,
     library,
     libraryTarget,
