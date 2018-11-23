@@ -23,7 +23,7 @@ const setImage = (image) => {
 const handleInit = (req, res) => {
   let MIN_MEMORY = 100663296;
 
-  if (['chi_sim', 'chi_tra', 'jpn'].includes(req.options.lang)) {
+  if (['chi_sim', 'chi_tra', 'jpn'].includes(req.lang)) {
     MIN_MEMORY = 167772160;
   }
 
@@ -49,8 +49,8 @@ const handleInit = (req, res) => {
 };
 
 const loadLanguage = ({
-  options: { lang },
-  workerOptions: {
+  lang,
+  options: {
     langPath, cachePath, cacheMethod, dataPath,
   },
 }) => (
@@ -69,18 +69,18 @@ const handleRecognize = (req, res) => (
     .then(() => (
       loadLanguage(req)
         .then(() => {
-          const { options } = req;
+          const { image, lang, params } = req;
           const progressUpdate = (progress) => {
             res.progress({ status: 'initializing api', progress });
           };
           progressUpdate(0);
-          base.Init(null, options.lang);
+          base.Init(null, lang);
           progressUpdate(0.3);
-          Object.keys(options).forEach((key) => {
-            base.SetVariable(key, options[key]);
+          Object.keys(params).forEach((key) => {
+            base.SetVariable(key, params[key]);
           });
           progressUpdate(0.6);
-          const ptr = setImage(req.image);
+          const ptr = setImage(image);
           progressUpdate(1);
           base.Recognize(null);
           const result = dump(Module, base);
@@ -95,12 +95,13 @@ const handleRecognize = (req, res) => (
 const handleDetect = (req, res) => (
   handleInit(req, res)
     .then(() => (
-      loadLanguage({ ...req, options: { ...req.options, lang: 'osd' } })
+      loadLanguage(req)
         .then(() => {
-          base.Init(null, 'osd');
+          const { image, lang } = req;
+          base.Init(null, lang);
           base.SetPageSegMode(Module.PSM_OSD_ONLY);
 
-          const ptr = setImage(req.image);
+          const ptr = setImage(image);
           const results = new Module.OSResults();
 
           if (!base.DetectOS(results)) {
