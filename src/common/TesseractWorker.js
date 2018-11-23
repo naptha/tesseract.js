@@ -54,10 +54,88 @@ class TesseractWorker {
     this._queue = [];
   }
 
+  /**
+   * recognize
+   *
+   * @name recognize
+   * @function recognize text in given image
+   * @access public
+   * @param {Buffer, string} image - image to be recognized
+   * @param {string} [lang=eng] - language to recognize
+   * @param {object} params - tesseract parameters
+   *
+   */
   recognize(image, lang = 'eng', params = {}) {
+    return this._sendJob('recognize', image, lang, params);
+  }
+
+  /**
+   * detect
+   *
+   * @name detect
+   * @function detect language of the text in the image
+   * @access public
+   * @param {Buffer, string} image - image to be recognized
+   * @param {object} params - tesseract parameters
+   *
+   */
+  detect(image, params = {}) {
+    return this._sendJob('detect', image, 'osd', params);
+  }
+
+  /**
+   * recv
+   *
+   * @name recv
+   * @function handle completed job
+   * @access public
+   * @param {object} packet job data
+   */
+  recv(packet) {
+    if (this._currentJob.id === packet.jobId) {
+      this._currentJob.handle({
+        ...packet,
+        data: packet.status === 'resolve' && packet.action === 'recognize'
+          ? circularize(packet.data)
+          : packet.data,
+      });
+    } else {
+      console.warn(`Job ID ${packet.jobId} not known.`);
+    }
+  }
+
+  /**
+   * terminate
+   *
+   * @name terminate
+   * @function terminate the worker
+   * @access public
+   *
+   */
+  terminate() {
+    if (this.worker) {
+      adapter.terminateWorker(this);
+    }
+    this.worker = null;
+    this._currentJob = null;
+    this._queue = [];
+  }
+
+  /**
+   * _sendJob
+   *
+   * @name _sendJob
+   * @function append a new job to the job queue
+   * @access private
+   * @param {string} type job type, should be recognize or detect
+   * @param {Buffer, string} image image to recognize
+   * @param {string} lang language to recognize
+   * @param {object} params tesseract parameters
+   */
+  _sendJob(type, image, lang, params) {
     return this._delay((job) => {
-      job._send(
-        'recognize',
+      job.send(
+        type,
         {
           image,
           lang,
@@ -68,29 +146,14 @@ class TesseractWorker {
     });
   }
 
-  detect(image, params = {}) {
-    return this._delay((job) => {
-      job._send(
-        'detect',
-        {
-          image,
-          lang: 'osd',
-          params,
-          options: this.options,
-        },
-      );
-    });
-  }
-
-  terminate() {
-    if (this.worker) {
-      adapter.terminateWorker(this);
-    }
-    this.worker = null;
-    this._currentJob = null;
-    this._queue = [];
-  }
-
+  /**
+   * _delay
+   *
+   * @name _delay
+   * @function delays the fn to execute until it is on the rear of the queue
+   * @access private
+   * @param {function} fn A handler function for the job
+   */
   _delay(fn) {
     if (check.null(this.worker)) {
       this.worker = adapter.spawnWorker(this, this.options);
@@ -108,23 +171,17 @@ class TesseractWorker {
     return job;
   }
 
+  /**
+   * _dequeue
+   *
+   * @name _dequeue
+   * @function dequeue and execute the rear job
+   * @access private
+   */
   _dequeue() {
     this._currentJob = null;
     if (this._queue.length) {
       this._queue[0]();
-    }
-  }
-
-  _recv(packet) {
-    if (this._currentJob.id === packet.jobId) {
-      this._currentJob._handle({
-        ...packet,
-        data: packet.status === 'resolve' && packet.action === 'recognize'
-          ? circularize(packet.data)
-          : packet.data,
-      });
-    } else {
-      console.warn(`Job ID ${packet.jobId} not known.`);
     }
   }
 }

@@ -1,3 +1,12 @@
+/**
+ *
+ * The job exectued by worker, each job is basically a recognition of an image.
+ *
+ * @fileoverview Job excuted by Worker
+ * @author Kevin Kwok <antimatter15@gmail.com>
+ * @author Guillermo Webster <gui@mit.edu>
+ * @author Jerome Wu <jeromewus@gmail.com>
+ */
 const adapter = require('../node/');
 
 let jobCounter = 0;
@@ -44,7 +53,7 @@ class TesseractJob {
     return this;
   }
 
-  _send(action, payload) {
+  send(action, payload) {
     adapter.sendPacket(this._instance, {
       jobId: this.id,
       action,
@@ -52,7 +61,7 @@ class TesseractJob {
     });
   }
 
-  _handle(packet) {
+  handle(packet) {
     const { data } = packet;
     let runFinallyCbs = false;
 

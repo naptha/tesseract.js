@@ -24,7 +24,7 @@ exports.defaultOptions = {
 exports.spawnWorker = (instance, { workerPath }) => {
   const cp = fork(workerPath);
   cp.on('message', (packet) => {
-    instance._recv(packet);
+    instance.recv(packet);
   });
   return cp;
 };

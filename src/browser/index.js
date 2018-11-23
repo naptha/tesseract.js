@@ -38,7 +38,7 @@ exports.spawnWorker = (instance, workerOptions) => {
   }
 
   worker.onmessage = ({ data }) => {
-    instance._recv(data);
+    instance.recv(data);
   };
 
   return worker;
