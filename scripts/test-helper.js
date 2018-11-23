@@ -8,10 +8,19 @@ const app = express();
 let devServer = null;
 
 global.startServer = (done) => {
-  app.use('/', express.static(path.resolve(__dirname, '..')));
-  devServer = app.listen(3000, done);
+  if (devServer === null) {
+    app.use('/', express.static(path.resolve(__dirname, '..')));
+    devServer = app.listen(3000, done);
+  } else {
+    done();
+  }
 };
 
 global.stopServer = (done) => {
-  devServer.close(done);
+  if (devServer !== null) {
+    devServer.close(done);
+    devServer = null;
+  } else {
+    done();
+  }
 };
