@@ -2,7 +2,7 @@ const adapter = require('../node/');
 
 let jobCounter = 0;
 
-module.exports = class TesseractJob {
+class TesseractJob {
   constructor(instance) {
     jobCounter += 1;
     this.id = `Job-${jobCounter}-${Math.random().toString(16).slice(3, 8)}`;
@@ -83,4 +83,6 @@ module.exports = class TesseractJob {
       this._finally.forEach(fn => fn(data));
     }
   }
-};
+}
+
+module.exports = TesseractJob;
