@@ -1,28 +1,28 @@
 const { readImage, loadLang } = require('tesseract.js-utils');
 const dump = require('./dump');
 
-let Module;
-let base;
+let TessModule;
+let api;
 let latestJob;
 let adapter = {};
 
 const setImage = (image) => {
   const {
     w, h, bytesPerPixel, data, pix,
-  } = readImage(Module, Array.from(image));
+  } = readImage(TessModule, Array.from(image));
 
   if (data === null) {
-    base.SetImage(pix);
+    api.SetImage(pix);
   } else {
-    base.SetImage(data, w, h, bytesPerPixel, w * bytesPerPixel);
+    api.SetImage(data, w, h, bytesPerPixel, w * bytesPerPixel);
   }
-  base.SetRectangle(0, 0, w, h);
+  api.SetRectangle(0, 0, w, h);
   return data;
 };
 
-const handleInit = (req, res) => {
-  if (!Module) {
-    const Core = adapter.getCore(req, res);
+const handleInit = ({ corePath }, res) => {
+  if (!TessModule) {
+    const Core = adapter.getCore(corePath, res);
 
     res.progress({ status: 'initializing tesseract', progress: 0 });
 
@@ -31,9 +31,9 @@ const handleInit = (req, res) => {
         latestJob.progress({ status: 'recognizing text', progress: Math.max(0, (percent - 30) / 70) });
       },
     })
-      .then((TessModule) => {
-        Module = TessModule;
-        base = new Module.TessBaseAPI();
+      .then((tessModule) => {
+        TessModule = tessModule;
+        api = new TessModule.TessBaseAPI();
         res.progress({ status: 'initialized tesseract', progress: 1 });
       });
   }
@@ -46,68 +46,74 @@ const loadLanguage = ({
   options: {
     langPath, cachePath, cacheMethod, dataPath,
   },
-}) => (
-  loadLang({
+}, res) => {
+  res.progress({ status: 'loading language traineddata', progress: 0 });
+  return loadLang({
     langs: lang,
-    tessModule: Module,
+    tessModule: TessModule,
     langURI: langPath,
     cachePath,
     cacheMethod,
     dataPath,
-  })
-);
+  }).then((...args) => {
+    res.progress({ status: 'loaded language traineddata', progress: 1 });
+    return args;
+  });
+};
 
-const handleRecognize = (req, res) => (
-  handleInit(req, res)
+const handleRecognize = ({
+  image, lang, options, params,
+}, res) => (
+  handleInit(options, res)
     .then(() => (
-      loadLanguage(req)
+      loadLanguage({ lang, options }, res)
         .then(() => {
-          const { image, lang, params } = req;
           const progressUpdate = (progress) => {
             res.progress({ status: 'initializing api', progress });
           };
           progressUpdate(0);
-          base.Init(null, lang);
+          api.Init(null, lang);
           progressUpdate(0.3);
           Object.keys(params).forEach((key) => {
-            base.SetVariable(key, params[key]);
+            api.SetVariable(key, params[key]);
           });
           progressUpdate(0.6);
           const ptr = setImage(image);
           progressUpdate(1);
-          base.Recognize(null);
-          const result = dump(Module, base);
-          base.End();
-          Module._free(ptr);
+          api.Recognize(null);
+          const result = dump(TessModule, api);
+          api.End();
+          TessModule._free(ptr);
           res.resolve(result);
         })
     ))
 );
 
 
-const handleDetect = (req, res) => (
-  handleInit(req, res)
+const handleDetect = ({
+  image, lang, options,
+}, res) => (
+  handleInit(options, res)
     .then(() => (
-      loadLanguage(req)
+      loadLanguage({ lang, options }, res)
         .then(() => {
-          const { image, lang } = req;
-          base.Init(null, lang);
-          base.SetPageSegMode(Module.PSM_OSD_ONLY);
+          api.Init(null, lang);
+          api.SetPageSegMode(TessModule.PSM_OSD_ONLY);
 
           const ptr = setImage(image);
-          const results = new Module.OSResults();
+          const results = new TessModule.OSResults();
 
-          if (!base.DetectOS(results)) {
-            base.End();
-            Module._free(ptr);
+          if (!api.DetectOS(results)) {
+            api.End();
+            TessModule._free(ptr);
             res.reject('Failed to detect OS');
           } else {
             const best = results.get_best_result();
             const oid = best.get_orientation_id();
             const sid = best.get_script_id();
 
-            base.End();
-            Module._free(ptr);
+            api.End();
+            TessModule._free(ptr);
 
             res.resolve({
               tesseract_script_id: sid,
@@ -121,12 +127,12 @@ const handleDetect = (req, res) => (
     ))
 );
 
-exports.dispatchHandlers = (packet, send) => {
+exports.dispatchHandlers = ({ jobId, action, payload }, send) => {
   const respond = (status, data) => {
     send({
-      jobId: packet.jobId,
+      jobId,
       status,
-      action: packet.action,
+      action,
       data,
     });
   };
@@ -137,13 +143,13 @@ exports.dispatchHandlers = (packet, send) => {
   latestJob = respond;
 
   try {
-    if (packet.action === 'recognize') {
-      handleRecognize(packet.payload, respond);
-    } else if (packet.action === 'detect') {
-      handleDetect(packet.payload, respond);
+    if (action === 'recognize') {
+      handleRecognize(payload, respond);
+    } else if (action === 'detect') {
+      handleDetect(payload, respond);
     }
   } catch (err) {
-    // Prepare exception to travel through postMessage
+    /** Prepare exception to travel through postMessage */
     respond.reject(err.toString());
   }
 };

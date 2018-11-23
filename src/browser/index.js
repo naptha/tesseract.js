@@ -28,13 +28,13 @@ exports.defaultOptions = {
   corePath: `https://cdn.jsdelivr.net/gh/naptha/tesseract.js-core@v2.0.0-beta.5/tesseract-core${typeof WebAssembly === 'object' ? '' : '.asm'}.js`,
 };
 
-exports.spawnWorker = (instance, workerOptions) => {
+exports.spawnWorker = (instance, { workerPath }) => {
   let worker;
   if (window.Blob && window.URL) {
-    const blob = new Blob([`importScripts("${workerOptions.workerPath}");`]);
+    const blob = new Blob([`importScripts("${resolveURL(workerPath)}");`]);
     worker = new Worker(window.URL.createObjectURL(blob));
   } else {
-    worker = new Worker(workerOptions.workerPath);
+    worker = new Worker(workerPath);
   }
 
   worker.onmessage = ({ data }) => {
@@ -48,16 +48,12 @@ exports.terminateWorker = (instance) => {
   instance.worker.terminate();
 };
 
-exports.sendPacket = (instance, packet) => {
+exports.sendPacket = (instance, iPacket) => {
+  const packet = { ...iPacket };
   loadImage(packet.payload.image)
     .then(buf => new Uint8Array(buf))
     .then((img) => {
-      instance.worker.postMessage({
-        ...packet,
-        payload: {
-          ...packet.payload,
-          image: Array.from(img),
-        },
-      });
+      packet.payload.image = Array.from(img);
+      instance.worker.postMessage(packet);
     });
 };

@@ -1,3 +1,4 @@
+const resolveURL = require('resolve-url');
 const workerUtils = require('../common/worker');
 
 global.addEventListener('message', ({ data }) => {
@@ -5,10 +6,10 @@ global.addEventListener('message', ({ data }) => {
 });
 
 workerUtils.setAdapter({
-  getCore: (req, res) => {
+  getCore: (corePath, res) => {
     if (!global.TesseractCore) {
       res.progress({ status: 'loading tesseract core', progress: 0 });
-      global.importScripts(req.workerOptions.corePath);
+      global.importScripts(resolveURL(corePath));
       global.TesseractCore = typeof WebAssembly === 'object' ? global.TesseractCoreWASM : global.TesseractCoreASM;
       res.progress({ status: 'loading tesseract core', progress: 1 });
     }

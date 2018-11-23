@@ -8,11 +8,11 @@ process.on('message', (packet) => {
 });
 
 workerUtils.setAdapter({
-  getCore: (req, res) => {
+  getCore: (corePath, res) => {
     if (check.null(TesseractCore)) {
-      res.progress({ status: 'loading tesseract core' });
+      res.progress({ status: 'loading tesseract core', progress: 0 });
       TesseractCore = require('tesseract.js-core');
-      res.progress({ status: 'loaded tesseract core' });
+      res.progress({ status: 'loaded tesseract core', progress: 1 });
     }
     return TesseractCore;
   },
