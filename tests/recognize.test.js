@@ -1,23 +1,44 @@
-const { TesseractWorker } = Tesseract;
+const { TesseractWorker, utils: { loadLang } } = Tesseract;
 
 const IMAGE_PATH = 'http://localhost:3000/tests/assets/images';
-const cachePath = './tests/assets/traineddata';
-const cacheMethod = 'readOnly';
 const SIMPLE_TEXT = 'Tesseract.js\n';
 const COMSIC_TEXT = 'HellO World\nfrom beyond\nthe Cosmic Void\n';
 const TESTOCR_TEXT = 'This is a lot of 12 point text to test the\nocr code and see if it works on all types\nof file format.\n\nThe quick brown dog jumped over the\nlazy fox. The quick brown dog jumped\nover the lazy fox. The quick brown dog\njumped over the lazy fox. The quick\nbrown dog jumped over the lazy fox.\n';
 
-before((done) => {
-  if (typeof startServer !== 'undefined') {
-    startServer(done);
-  } else {
-    done();
-  }
+const loadLangOptions = {
+  langPath: 'http://localhost:3000/tests/assets/traineddata',
+  cachePath: './tests/assets/traineddata',
+};
+
+const getWorker = options => (
+  new TesseractWorker({
+    cacheMethod: 'readOnly',
+    ...loadLangOptions,
+    ...options,
+  })
+);
+
+before(function cb(done) {
+  this.timeout(10000);
+  loadLang({
+    langs: 'eng',
+    cacheMethod: 'write',
+    langURI: loadLangOptions.langPath,
+    ...loadLangOptions,
+  }).then(() => {
+    if (typeof startServer !== 'undefined') {
+      startServer(done);
+    } else {
+      done();
+    }
+  });
 });
 
 after((done) => {
   if (typeof stopServer !== 'undefined') {
     stopServer(done);
+  } else {
+    done();
   }
 });
 
@@ -25,7 +46,7 @@ describe('recognize()', () => {
   describe('supports multiple formats', () => {
     ['bmp', 'jpg', 'png', 'pbm'].forEach(format => (
       it(`support ${format} format`, (done) => {
-        const worker = new TesseractWorker({ cachePath, cacheMethod });
+        const worker = getWorker();
         worker
           .recognize(`${IMAGE_PATH}/simple.${format}`)
           .then((result) => {
@@ -40,7 +61,7 @@ describe('recognize()', () => {
   describe('1 worker multiple recognition', () => {
     [3, 10, 20].forEach(num => (
       it(`recognize ${num} images with 1 worker`, (done) => {
-        const worker = new TesseractWorker({ cachePath, cacheMethod });
+        const worker = getWorker();
         Promise.all(
           Array(num).fill(0).map(() => worker.recognize(`${IMAGE_PATH}/simple.png`)),
         ).then((results) => {
@@ -57,7 +78,7 @@ describe('recognize()', () => {
   describe('should recognize in order', () => {
     [1, 2].forEach((num) => {
       it(`recognize ${num * 2} images with 1 worker in order`, (done) => {
-        const worker = new TesseractWorker({ cachePath, cacheMethod });
+        const worker = getWorker();
         const cases = Array(num).fill(0)
           .reduce(acc => (
             acc.concat([
@@ -86,7 +107,7 @@ describe('recognize()', () => {
       { name: 'testocr.png', desc: 'complex', ans: TESTOCR_TEXT },
     ].forEach(({ name, desc, ans }) => (
       it(`recongize ${desc} image`, (done) => {
-        const worker = new TesseractWorker({ cachePath, cacheMethod });
+        const worker = getWorker();
         worker
           .recognize(`${IMAGE_PATH}/${name}`)
           .then(({ text }) => {
@@ -94,7 +115,7 @@ describe('recognize()', () => {
             worker.terminate();
             done();
           });
-      }).timeout(10000)
+      }).timeout(20000)
     ));
   });
 });
