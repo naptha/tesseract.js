@@ -21,19 +21,12 @@ const setImage = (image) => {
 };
 
 const handleInit = (req, res) => {
-  let MIN_MEMORY = 100663296;
-
-  if (['chi_sim', 'chi_tra', 'jpn'].includes(req.lang)) {
-    MIN_MEMORY = 167772160;
-  }
-
-  if (!Module || Module.TOTAL_MEMORY < MIN_MEMORY) {
+  if (!Module) {
     const Core = adapter.getCore(req, res);
 
     res.progress({ status: 'initializing tesseract', progress: 0 });
 
     return Core({
-      // TOTAL_MEMORY: MIN_MEMORY,
       TesseractProgress(percent) {
         latestJob.progress({ status: 'recognizing text', progress: Math.max(0, (percent - 30) / 70) });
       },
