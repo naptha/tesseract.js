@@ -105,6 +105,20 @@ class TesseractWorker {
   }
 
   /**
+   * dequeue
+   *
+   * @name dequeue
+   * @function dequeue and execute the rear job
+   * @access public
+   */
+  dequeue() {
+    this._currentJob = null;
+    if (this._queue.length) {
+      this._queue[0]();
+    }
+  }
+
+  /**
    * terminate
    *
    * @name terminate
@@ -166,23 +180,9 @@ class TesseractWorker {
       fn(job);
     });
     if (check.null(this._currentJob)) {
-      this._dequeue();
+      this.dequeue();
     }
     return job;
-  }
-
-  /**
-   * _dequeue
-   *
-   * @name _dequeue
-   * @function dequeue and execute the rear job
-   * @access private
-   */
-  _dequeue() {
-    this._currentJob = null;
-    if (this._queue.length) {
-      this._queue[0]();
-    }
   }
 }
 
