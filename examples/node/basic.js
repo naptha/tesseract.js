@@ -2,7 +2,7 @@
 const path = require('path');
 const { TesseractWorker } = require('../../');
 
-const image = path.resolve(__dirname, 'cosmic.png');
+const image = path.resolve(__dirname, '../../tests/assets/images/cosmic.png');
 const tessWorker = new TesseractWorker();
 
 tessWorker.recognize(image)
