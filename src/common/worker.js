@@ -41,21 +41,9 @@ const handleInit = ({ corePath }, res) => {
   return Promise.resolve();
 };
 
-const loadLanguage = ({
-  lang,
-  options: {
-    langPath, cachePath, cacheMethod, dataPath,
-  },
-}, res) => {
+const loadLanguage = ({ lang, options }, res) => {
   res.progress({ status: 'loading language traineddata', progress: 0 });
-  return loadLang({
-    langs: lang,
-    tessModule: TessModule,
-    langURI: langPath,
-    cachePath,
-    cacheMethod,
-    dataPath,
-  }).then((...args) => {
+  return loadLang({ lang, TessModule, ...options }).then((...args) => {
     res.progress({ status: 'loaded language traineddata', progress: 1 });
     return args;
   });

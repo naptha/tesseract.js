@@ -38,7 +38,7 @@
     "node-fetch": "^2.3.0",
     "resolve-url": "^0.2.1",
     "tesseract.js-core": "^2.0.0-beta.5",
-    "tesseract.js-utils": "^1.0.0-beta.2"
+    "tesseract.js-utils": "^1.0.0-beta.3"
   },
   "repository": {
     "type": "git",

@@ -23,9 +23,8 @@ before(function cb(done) {
   this.timeout(30000);
   const load = () => (
     loadLang({
-      langs: 'eng+chi_tra',
+      lang: 'eng+chi_tra',
       cacheMethod: 'write',
-      langURI: loadLangOptions.langPath,
       ...loadLangOptions,
     }).then(() => {
       done();
@@ -92,7 +91,7 @@ describe('recognize()', () => {
           worker.terminate();
           done();
         });
-      }).timeout(30000)
+      }).timeout(60000)
     ));
   });
 
@@ -136,7 +135,7 @@ describe('recognize()', () => {
             worker.terminate();
             done();
           });
-      }).timeout(20000)
+      }).timeout(60000)
     ));
   });
 });
