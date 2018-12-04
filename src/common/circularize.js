@@ -1,9 +1,16 @@
-// The result of dump.js is a big JSON tree
-// which can be easily serialized (for instance
-// to be sent from a webworker to the main app
-// or through Node's IPC), but we want
-// a (circular) DOM-like interface for walking
-// through the data.
+/**
+ * The result of dump.js is a big JSON tree
+ * which can be easily serialized (for instance
+ * to be sent from a webworker to the main app
+ * or through Node's IPC), but we want
+ * a (circular) DOM-like interface for walking
+ * through the data.
+ *
+ * @fileoverview DOM-like interface for walking through data
+ * @author Kevin Kwok <antimatter15@gmail.com>
+ * @author Guillermo Webster <gui@mit.edu>
+ * @author Jerome Wu <jeromewus@gmail.com>
+ */
 
 module.exports = (iPage) => {
   const page = {
