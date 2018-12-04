@@ -47,7 +47,7 @@ exports.defaultOptions = {
   ...defaultOptions,
   workerPath: process.env.NODE_ENV === 'development'
     ? resolveURL(`/dist/worker.dev.js?nocache=${Math.random().toString(36).slice(3)}`)
-  : `https://cdn.jsdelivr.net/gh/naptha/tesseract.js@v${version}/dist/worker.min.js`,
+    : `https://cdn.jsdelivr.net/gh/naptha/tesseract.js@v${version}/dist/worker.min.js`,
   /*
    * If browser doesn't support WebAssembly,
    * load ASM version instead
@@ -68,7 +68,7 @@ exports.defaultOptions = {
 exports.spawnWorker = (instance, { workerPath }) => {
   let worker;
   if (window.Blob && window.URL) {
-    const blob = new Blob([`importScripts("${resolveURL(workerPath)}");`]);
+    const blob = new Blob([`importScripts("${workerPath}");`]);
     worker = new Worker(window.URL.createObjectURL(blob));
   } else {
     worker = new Worker(workerPath);

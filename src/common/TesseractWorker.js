@@ -8,6 +8,7 @@
  * @author Jerome Wu <jeromewus@gmail.com>
  */
 const check = require('check-types');
+const resolveURL = process.browser ? require('resolve-url') : s => s;
 const adapter = require('../node');
 const circularize = require('./circularize');
 const TesseractJob = require('./TesseractJob');
@@ -50,6 +51,11 @@ class TesseractWorker {
       ...adapter.defaultOptions,
       ...options,
     };
+    ['corePath', 'workerPath', 'langPath'].forEach((key) => {
+      if (check.not.undefined(options[key])) {
+        this.options = { ...this.options, [key]: resolveURL(options[key]) };
+      }
+    });
     this._currentJob = null;
     this._queue = [];
   }

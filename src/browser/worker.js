@@ -9,7 +9,6 @@
  */
 
 const check = require('check-types');
-const resolveURL = require('resolve-url');
 const workerUtils = require('../common/workerUtils');
 
 /*
@@ -27,7 +26,7 @@ workerUtils.setAdapter({
   getCore: (corePath, res) => {
     if (check.undefined(global.TesseractCore)) {
       res.progress({ status: 'loading tesseract core', progress: 0 });
-      global.importScripts(resolveURL(corePath));
+      global.importScripts(corePath);
       /*
        * Depending on whether the browser supports WebAssembly,
        * the version of the TesseractCore will be different.
