@@ -1,7 +1,12 @@
 # [Tesseract.js](http://tesseract.projectnaptha.com/)
 
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![NPM version][tesseractjs-npm-image]][tesseractjs-npm-url]
 [![Build Status](https://travis-ci.org/naptha/tesseract.js.svg?branch=develop)](https://travis-ci.org/naptha/tesseract.js)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/naptha/tesseract.js/graphs/commit-activity)
+[![Downloads Total](https://img.shields.io/npm/dt/tesseract.js.svg)](https://www.npmjs.com/package/tesseract.js)
+[![Downloads Month](https://img.shields.io/npm/dm/tesseract.js.svg)](https://www.npmjs.com/package/tesseract.js)
+
 
 [tesseractjs-npm-image]: https://img.shields.io/npm/v/tesseract.js.svg
 [tesseractjs-npm-url]: https://npmjs.org/package/tesseract.js
