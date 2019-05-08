@@ -44,9 +44,9 @@ function recognizeFile(file){
 
   const worker = new TesseractWorker();
 
-	worker.recognize(file, {
-		lang: document.querySelector('#langsel').value
-	})
+	worker.recognize(file,
+		document.querySelector('#langsel').value
+	)
 		.progress(function(packet){
 			console.info(packet)
 			progressUpdate(packet)
