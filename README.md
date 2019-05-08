@@ -20,8 +20,8 @@ import { TesseractWorker } from 'tesseract.js';
 const worker = new TesseractWorker();
 
 worker.recognize(myImage)
-  .progress(function(p) { console.log('progress', p)    })
-  .then(function()result) { console.log('result', result) })
+  .progress((p) => { console.log('progress', p);    })
+  .then((result) => { console.log('result', result); });
 ```
 
 [Check out the docs](#docs) for a full treatment of the API.
@@ -33,7 +33,7 @@ Tesseract.js wraps an [emscripten](https://github.com/kripken/emscripten) [port]
 # Installation
 Tesseract.js works with a `<script>` tag via local copy or CDN, with webpack via `npm`, and on Node.js via `npm`. [Check out the docs](#docs) for a full treatment of the API.
 
-## &lt;script />
+## CDN 
 
 You can simply include Tesseract.js with a CDN like this:
 ```html
@@ -42,7 +42,7 @@ You can simply include Tesseract.js with a CDN like this:
 
 After including your scripts, the `Tesseract` variable will be defined globally!
 
-## Dependency
+## npm
 First:
 ```shell
 > yarn add tesseract.js
@@ -53,8 +53,9 @@ or
 ```
 > Note: Tesseract.js currently requires Node.js v6.8.0 or higher.
 
-# Docs
+# Documentation
 
+* [Examples](./docs/examples.md)
 * [Tesseract.recognize](#tesseractrecognizeimage-imagelike-options---tesseractjob)
   + [Simple Example](#simple-example)
   + [More Complicated Example](#more-complicated-example)
