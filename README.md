@@ -11,14 +11,17 @@
 
 Tesseract.js is a javascript library that gets words in [almost any language](./docs/tesseract_lang_list.md) out of images. ([Demo](http://tesseract.projectnaptha.com/))
 
-[![fancy demo gif](https://github.com/naptha/tesseract.js/blob/master/demo.gif)](http://tesseract.projectnaptha.com)
+[![fancy demo gif](./docs/demo.gif)](http://tesseract.projectnaptha.com)
 
-Tesseract.js works with script tags, [webpack](https://webpack.js.org/)/[Browserify](http://browserify.org/), and [Node.js](https://nodejs.org/en/). [After you install it](#installation), using it is as simple as
+Tesseract.js works with script tags, [webpack](https://webpack.js.org/), and [Node.js](https://nodejs.org/en/). [After you install it](#installation), using it is as simple as
 
-  ```javascript
-Tesseract.recognize(myImage)
-         .progress(function  (p) { console.log('progress', p)    })
-         .then(function (result) { console.log('result', result) })
+```javascript
+import { TesseractWorker } from 'tesseract.js';
+const worker = new TesseractWorker();
+
+worker.recognize(myImage)
+  .progress(function(p) { console.log('progress', p)    })
+  .then(function()result) { console.log('result', result) })
 ```
 
 [Check out the docs](#docs) for a full treatment of the API.
@@ -28,13 +31,13 @@ Tesseract.js wraps an [emscripten](https://github.com/kripken/emscripten) [port]
 
 
 # Installation
-Tesseract.js works with a `<script>` tag via local copy or CDN, with webpack and Browserify via `npm`, and on Node.js via `npm`. [Check out the docs](#docs) for a full treatment of the API.
+Tesseract.js works with a `<script>` tag via local copy or CDN, with webpack via `npm`, and on Node.js via `npm`. [Check out the docs](#docs) for a full treatment of the API.
 
 ## &lt;script />
 
 You can simply include Tesseract.js with a CDN like this:
 ```html
-<script src='https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/1.0.13/tesseract.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/2.0.0/tesseract.min.js'></script>
 ```
 
 After including your scripts, the `Tesseract` variable will be defined globally!
@@ -49,18 +52,6 @@ or
 > npm install tesseract.js --save
 ```
 > Note: Tesseract.js currently requires Node.js v6.8.0 or higher.
-
-
-## Usage
-```javascript
-var Tesseract = require('tesseract.js')
-```
-
-or
-```javascript
-import Tesseract from 'tesseract.js'
-```
-
 
 # Docs
 
