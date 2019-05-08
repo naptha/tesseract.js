@@ -45,7 +45,7 @@ const loadImage = (image) => {
  */
 exports.defaultOptions = {
   ...defaultOptions,
-  workerPath: process.env.NODE_ENV === 'development'
+  workerPath: process.env.TESS_ENV === 'development'
     ? resolveURL(`/dist/worker.dev.js?nocache=${Math.random().toString(36).slice(3)}`)
     : `https://cdn.jsdelivr.net/gh/naptha/tesseract.js@v${version}/dist/worker.min.js`,
   /*
