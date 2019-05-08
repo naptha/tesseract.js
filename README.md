@@ -4,10 +4,12 @@
 [![Code Style](https://badgen.net/badge/code%20style/airbnb/ff5a5f?icon=airbnb)](https://github.com/airbnb/javascript)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/naptha/tesseract.js/graphs/commit-activity)
 
-[![Build Status](https://travis-ci.org/naptha/tesseract.js.svg?branch=develop)](https://travis-ci.org/naptha/tesseract.js)
+[![Build Status](https://travis-ci.org/naptha/tesseract.js.svg?branch=master)](https://travis-ci.org/naptha/tesseract.js)
 [![npm version](https://badge.fury.io/js/tesseract.js.svg)](https://badge.fury.io/js/tesseract.js)
 [![Downloads Total](https://img.shields.io/npm/dt/tesseract.js.svg)](https://www.npmjs.com/package/tesseract.js)
 [![Downloads Month](https://img.shields.io/npm/dm/tesseract.js.svg)](https://www.npmjs.com/package/tesseract.js)
+
+**Tessearct.js v2 is now available and under development in master branch, check support/1.x branch for v1.**
 
 Tesseract.js is a javascript library that gets words in [almost any language](./docs/tesseract_lang_list.md) out of images. ([Demo](http://tesseract.projectnaptha.com/))
 
@@ -43,7 +45,9 @@ You can simply include Tesseract.js with a CDN like this:
 After including your scripts, the `Tesseract` variable will be defined globally!
 
 ## npm
-First:
+
+### 1.x
+
 ```shell
 > yarn add tesseract.js
 ```
@@ -51,6 +55,17 @@ or
 ```
 > npm install tesseract.js --save
 ```
+
+### 2.x
+
+```shell
+> yarn add tesseract.js@next
+```
+or
+```
+> npm install tesseract.js@next --save
+```
+
 > Note: Tesseract.js currently requires Node.js v6.8.0 or higher.
 
 # Documentation
