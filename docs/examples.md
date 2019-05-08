@@ -1,5 +1,7 @@
 # Tesseract.js Examples
 
+You can also check [examples](../examples) folder.
+
 ### basic
 
 ```javascript
