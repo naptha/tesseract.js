@@ -187,7 +187,7 @@ process.umask = function() { return 0; };
 },{}],2:[function(require,module,exports){
 module.exports={
   "name": "tesseract.js",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "Pure Javascript Multilingual OCR",
   "main": "src/index.js",
   "scripts": {
