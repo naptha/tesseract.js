@@ -8654,7 +8654,7 @@ function fetchLanguageData(req, res, cb) {
 
 var workerUtils = require('../common/worker.js');
 
-if (process.env.NODE_ENV === "development") {
+if (process.env.TESS_ENV === "development") {
     console.debug('Using Development Worker');
 }
 

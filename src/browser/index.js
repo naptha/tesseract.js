@@ -4,7 +4,7 @@ var defaultOptions = {
     langPath: 'https://tessdata.projectnaptha.com/3.02/',
 }
 
-if (process.env.NODE_ENV === "development") {
+if (process.env.TESS_ENV === "development") {
     console.debug('Using Development Configuration')
     defaultOptions.workerPath = location.protocol + '//' + location.host + '/dist/worker.dev.js?nocache=' + Math.random().toString(36).slice(3)
 }else{
