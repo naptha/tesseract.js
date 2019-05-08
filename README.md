@@ -1,6 +1,7 @@
 # [Tesseract.js](http://tesseract.projectnaptha.com/)
 
 [![NPM version][tesseractjs-npm-image]][tesseractjs-npm-url]
+[![Build Status](https://travis-ci.org/naptha/tesseract.js.svg?branch=develop)](https://travis-ci.org/naptha/tesseract.js)
 
 [tesseractjs-npm-image]: https://img.shields.io/npm/v/tesseract.js.svg
 [tesseractjs-npm-url]: https://npmjs.org/package/tesseract.js
