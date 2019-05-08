@@ -7,6 +7,7 @@
     "start": "node scripts/server.js",
     "build": "webpack --config scripts/webpack.config.prod.js",
     "prepublishOnly": "npm run build",
+    "test": "npm run test:node",
     "test:node": "nyc mocha --exit --bail --require ./scripts/test-helper.js ./tests/*.test.js",
     "lint": "eslint src"
   },
