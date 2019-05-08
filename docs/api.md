@@ -1,14 +1,13 @@
 # API
 
-## Tesseract.recognize(image [, options]) -> [TesseractJob](#tesseractjob)
+## Tesseract.recognize(image, lang, [, options]) -> [TesseractJob](#tesseractjob)
 Figures out what words are in `image`, where the words are in `image`, etc.
 > Note: `image` should be sufficiently high resolution.
 > Often, the same image will get much better results if you upscale it before calling `recognize`.
 
 - `image` see [Image Format](./image-format.md) for more details.
-- `options` is either absent (in which case it is interpreted as `'eng'`), a string specifing a language short code from the [language list](./tesseract_lang_list.md), or a flat json object that may:
-    + include properties that override some subset of the [default tesseract parameters](./tesseract_parameters.md)
-    + include a `lang` property with a value from the [list of lang parameters](./tesseract_lang_list.md), you can use multiple languages separated by '+', ex. `eng+chi_tra`
+- `lang` property with a value from the [list of lang parameters](./tesseract_lang_list.md), you can use multiple languages separated by '+', ex. `eng+chi_tra`
+- `options` a flat json object that may include properties that override some subset of the [default tesseract parameters](./tesseract_parameters.md)
 
 Returns a [TesseractJob](#tesseractjob) whose `then`, `progress`, `catch` and `finally` methods can be used to act on the result.
 
@@ -27,8 +26,7 @@ worker
 const worker = new Tessearct.TesseractWorker();
 // if we know our image is of spanish words without the letter 'e':
 worker
-  .recognize(myImage, {
-    lang: 'spa',
+  .recognize(myImage, 'spa', {
     tessedit_char_blacklist: 'e',
   })
   .then(function(result){

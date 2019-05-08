@@ -46,7 +46,7 @@ const worker = new TessearctWorker();
 worker
   .recognize(
     'http://jeroen.github.io/images/testocr.png',
-    { lang: 'eng+chi_tra' }
+    'eng+chi_tra'
   )
   .progress((p) => {
     console.log('progress', p);
