@@ -173,19 +173,19 @@ const handleDetect = ({
             TessModule._free(ptr);
             res.reject('Failed to detect OS');
           } else {
-            const best = results.get_best_result();
-            const oid = best.get_orientation_id();
-            const sid = best.get_script_id();
+            const best = results.best_result;
+            const oid = best.orientation_id;
+            const sid = best.script_id;
 
             api.End();
             TessModule._free(ptr);
 
             res.resolve({
               tesseract_script_id: sid,
-              script: results.get_unicharset().get_script_from_script_id(sid),
-              script_confidence: best.get_sconfidence(),
+              script: results.unicharset.get_script_from_script_id(sid),
+              script_confidence: best.sconfidence,
               orientation_degrees: [0, 270, 180, 90][oid],
-              orientation_confidence: best.get_oconfidence(),
+              orientation_confidence: best.oconfidence,
             });
           }
         })

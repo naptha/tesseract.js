@@ -6,13 +6,18 @@ const [,, imagePath] = process.argv;
 const image = path.resolve(__dirname, (imagePath || '../../tests/assets/images/cosmic.png'));
 const tessWorker = new TesseractWorker();
 
-console.log(`Detecting ${image}`);
+console.log(`Recognizing ${image}`);
 
-tessWorker.detect(image)
+tessWorker.recognize(image)
   .progress((info) => {
     console.log(info);
   })
   .then((data) => {
-    console.log('done', data);
+    console.log(data.text);
+  })
+  .catch((err) => {
+    console.log('Error\n', err);
+  })
+  .finally(() => {
     process.exit();
   });
