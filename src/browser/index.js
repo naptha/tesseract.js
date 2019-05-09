@@ -13,13 +13,33 @@ const { defaultOptions } = require('../common/options');
 const { version } = require('../../package.json');
 
 /**
+ * readFromBlobOrFile
+ *
+ * @name readFromBlobOrFile
+ * @function
+ * @access private
+ * @param {object} blob A blob or file objec to read
+ * @param {function} res callback function after reading completes
+ */
+const readFromBlobOrFile = (blob, res) => {
+  const fileReader = new FileReader();
+  fileReader.onload = () => {
+    res(fileReader.result);
+  };
+  fileReader.readAsArrayBuffer(blob);
+};
+
+/**
  * loadImage
  *
  * @name loadImage
  * @function load image from different source
- * @access public
+ * @access private
  * @param {string, object} image - image source, supported formats:
  *   string: URL string, can be relative path
+ *   img HTMLElement: extract image source from src attribute
+ *   video HTMLElement: extract image source from poster attribute
+ *   canvas HTMLElement: extract image data by converting to Blob 
  *   File instance: data from <input type="file" />
  * @returns {array} binary image in array format
  */
@@ -28,13 +48,24 @@ const loadImage = (image) => {
     return fetch(resolveURL(image))
       .then(resp => resp.arrayBuffer());
   }
+  if (check.instance(image, HTMLElement)) {
+    if (image.tagName === 'IMG') {
+      return loadImage(image.src);
+    }
+    if (image.tagName === 'VIDEO') {
+      return loadImage(image.poster);
+    }
+    if (image.tagName === 'CANVAS') {
+      return new Promise((res) => {
+        image.toBlob((blob) => {
+          readFromBlobOrFile(blob, res);
+        });
+      });
+    }
+  }
   if (check.instance(image, File)) {
     return new Promise((res) => {
-      const fileReader = new FileReader();
-      fileReader.onload = () => {
-        res(fileReader.result);
-      };
-      fileReader.readAsArrayBuffer(image);
+      readFromBlobOrFile(image, res);
     });
   }
   return Promise.reject();

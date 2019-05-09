@@ -105,7 +105,7 @@ Tesseract.recognize(myImage)
 ```javascript
 // if we know our image is of spanish words without the letter 'e':
 Tesseract.recognize(myImage, {
-    lang: 'spa',
+    langs: 'spa',
     tessedit_char_blacklist: 'e'
 })
 .then(function(result){
@@ -137,22 +137,13 @@ Tesseract.detect(myImage)
 
 The main Tesseract.js functions take an `image` parameter, which should be something that is like an image. What's considered "image-like" differs depending on whether it is being run from the browser or through NodeJS.
 
-
 On a browser, an image can be:
 - an `img`, `video`, or `canvas` element
-- a CanvasRenderingContext2D (returned by `canvas.getContext('2d')`)
 - a `File` object (from a file `<input>` or drag-drop event)
-- a `Blob` object
-- a `ImageData` instance (an object containing `width`, `height` and `data` properties)
-- a path or URL to an accessible image (the image must either be hosted locally or accessible by CORS)
-
-
-
+- a path or URL to an accessible image (the image must either be hosted locally)
 
 In Node.js, an image can be
 - a path to a local image
-- a `Buffer` instance containing a `PNG` or `JPEG` image
-- a `ImageData` instance (an object containing `width`, `height` and `data` properties)
 
 
 ## TesseractJob

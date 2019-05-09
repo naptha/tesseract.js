@@ -1,10 +1,12 @@
 const { TesseractWorker, utils: { loadLang } } = Tesseract;
 
+const isBrowser = typeof window !== 'undefined' && typeof window.document !== 'undefined';
 const IMAGE_PATH = 'http://localhost:3000/tests/assets/images';
 const SIMPLE_TEXT = 'Tesseract.js\n';
 const COMSIC_TEXT = 'HellO World\nfrom beyond\nthe Cosmic Void\n';
 const TESTOCR_TEXT = 'This is a lot of 12 point text to test the\nocr code and see if it works on all types\nof file format.\n\nThe quick brown dog jumped over the\nlazy fox. The quick brown dog jumped\nover the lazy fox. The quick brown dog\njumped over the lazy fox. The quick\nbrown dog jumped over the lazy fox.\n';
 const CHINESE_TEXT = '繁 體 中 文 測 試\n';
+const FORMATS = ['png', 'jpg', 'bmp', 'pbm'];
 
 const loadLangOptions = {
   langPath: 'http://localhost:3000/tests/assets/traineddata',
@@ -45,7 +47,8 @@ after((done) => {
   }
 });
 
-describe('recognize()', () => {
+describe('recognize()',() => {
+  
   describe('should recognize different langs', () => {
     [
       { name: 'chinese.png', lang: 'chi_tra', ans: CHINESE_TEXT },
@@ -64,7 +67,7 @@ describe('recognize()', () => {
   });
 
   describe('should read bmp, jpg, png and pbm format images', () => {
-    ['bmp', 'jpg', 'png', 'pbm'].forEach(format => (
+    FORMATS.forEach(format => (
       it(`support ${format} format`, (done) => {
         const worker = getWorker();
         worker
@@ -138,4 +141,78 @@ describe('recognize()', () => {
       }).timeout(60000)
     ));
   });
+
+  (isBrowser ? describe : describe.skip)('should read image from img DOM element (browser only)', () => {
+    FORMATS.forEach(format => (
+      it(`support ${format} format`, (done) => {
+        const imageDOM = document.createElement('img');
+        imageDOM.setAttribute('src', `${IMAGE_PATH}/simple.${format}`);
+        const worker = getWorker();
+        worker
+          .recognize(imageDOM)
+          .then(({ text }) => {
+            expect(text).to.be(SIMPLE_TEXT);
+            worker.terminate();
+            imageDOM.remove();
+            done();
+          });
+      }).timeout(10000)
+    ));
+  });
+  
+  (isBrowser ? describe : describe.skip)('should read image from video DOM element (browser only)', () => {
+    FORMATS.forEach(format => (
+      it(`support ${format} format`, (done) => {
+        const videoDOM = document.createElement('video');
+        videoDOM.setAttribute('poster', `${IMAGE_PATH}/simple.${format}`);
+        const worker = getWorker();
+        worker
+          .recognize(videoDOM)
+          .then(({ text }) => {
+            expect(text).to.be(SIMPLE_TEXT);
+            worker.terminate();
+            videoDOM.remove();
+            done();
+          });
+      }).timeout(10000)
+    ));
+  });
+
+  (isBrowser ? describe : describe.skip)('should read video from canvas DOM element (browser only)', () => {
+    /*
+     * img tag is unable to render pbm, so let's skip it.
+     */
+    const formats = FORMATS.filter(f => f !== 'pbm');
+    let canvasDOM = null;
+    let imageDOM = null;
+    let idx = 0;
+    beforeEach(function cb(done) {
+      canvasDOM = document.createElement('canvas');
+      imageDOM = document.createElement('img');
+      imageDOM.onload = () => {
+        canvasDOM.getContext('2d').drawImage(imageDOM, 0, 0);
+        done();
+      }
+      imageDOM.setAttribute('src', `${IMAGE_PATH}/simple.${formats[idx++]}`);
+    });
+
+    afterEach(() => {
+      canvasDOM.remove();
+      imageDOM.remove();
+    });
+    
+    formats.forEach(format => (
+      it(`support ${format} format`, (done) => {
+        const worker = getWorker();
+        worker
+          .recognize(canvasDOM)
+          .then(({ text }) => {
+            expect(text).to.be(SIMPLE_TEXT);
+            worker.terminate();
+            done();
+          });
+      }).timeout(10000)
+    ));
+  });
+
 });
