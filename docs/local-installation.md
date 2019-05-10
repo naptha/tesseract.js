@@ -1,5 +1,7 @@
 ## Local Installation
 
+Check here for an example: https://github.com/jeromewu/tesseract.js-offline
+
 In browser environment, `tesseract.js` simply provides the API layer. Internally, it opens a WebWorker to handle requests. That worker itself loads code from the Emscripten-built `tesseract.js-core` which itself is hosted on a CDN. Then it dynamically loads language files hosted on another CDN.
 
 Because of this we recommend loading `tesseract.js` from a CDN. But if you really need to have all your files local, you can pass extra arguments to `TessearctWorker` to specify custom paths for workers, languages, and core.
@@ -21,4 +23,4 @@ A string specifying the location of the [worker.js](./dist/worker.min.js) file.
 A string specifying the location of the tesseract language files, with default value 'https://tessdata.projectnaptha.com/4.0.0'. Language file URLs are calculated according to the formula `langPath + langCode + '.traineddata.gz'`.
 
 ### corePath
-A string specifying the location of the [tesseract.js-core library](https://github.com/naptha/tesseract.js-core), with default value 'https://cdn.jsdelivr.net/gh/naptha/tesseract.js-core@v2.0.0-beta.5/tesseract-core.js'.
+A string specifying the location of the [tesseract.js-core library](https://github.com/naptha/tesseract.js-core), with default value 'https://unpkg.com/tesseract.js-core@v2.0.0-beta.5/tesseract-core.js'.
