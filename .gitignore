@@ -6,3 +6,4 @@ worker.dev.js
 /*.traineddata
 /examples/**/*.traineddata
 .nyc_output
+dist

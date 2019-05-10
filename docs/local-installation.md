@@ -8,9 +8,9 @@ In Node.js environment, the only path you may want to customize is languages/lan
 
 ```javascript
 const worker = Tesseract.TesseractWorker({
-  workerPath: 'https://cdn.jsdelivr.net/gh/naptha/tesseract.js@v2.0.0-alpha.2/dist/worker.min.js',
+  workerPath: 'https://unpkg.com/tesseract.js@v2.0.0-alpha.3/dist/worker.min.js',
   langPath: 'https://tessdata.projectnaptha.com/4.0.0',
-  corePath: 'https://cdn.jsdelivr.net/gh/naptha/tesseract.js-core@v2.0.0-beta.5/tesseract-core.js',
+  corePath: 'https://unpkg.com/tesseract.js-core@v2.0.0-beta.5/tesseract-core.js',
 });
 ```
 

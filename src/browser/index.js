@@ -78,12 +78,12 @@ exports.defaultOptions = {
   ...defaultOptions,
   workerPath: process.env.TESS_ENV === 'development'
     ? resolveURL(`/dist/worker.dev.js?nocache=${Math.random().toString(36).slice(3)}`)
-    : `https://cdn.jsdelivr.net/gh/naptha/tesseract.js@v${version}/dist/worker.min.js`,
+    : `https://unpkg.com/tesseract.js@v${version}/dist/worker.min.js`,
   /*
    * If browser doesn't support WebAssembly,
    * load ASM version instead
    */
-  corePath: `https://cdn.jsdelivr.net/gh/naptha/tesseract.js-core@v2.0.0-beta.5/tesseract-core${typeof WebAssembly === 'object' ? '' : '.asm'}.js`,
+  corePath: `https://unpkg.com/tesseract.js-core@v2.0.0-beta.5/tesseract-core${typeof WebAssembly === 'object' ? '' : '.asm'}.js`,
 };
 
 /**
