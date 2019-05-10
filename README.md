@@ -9,7 +9,7 @@
 [![Downloads Total](https://img.shields.io/npm/dt/tesseract.js.svg)](https://www.npmjs.com/package/tesseract.js)
 [![Downloads Month](https://img.shields.io/npm/dm/tesseract.js.svg)](https://www.npmjs.com/package/tesseract.js)
 
-**Tessearct.js v2 is now available and under development in master branch, check support/1.x branch for v1.**
+**Tessearct.js v2 is now available and under development in master branch, check [support/1.x](https://github.com/naptha/tesseract.js/tree/support/1.x) branch for v1.**
 
 Tesseract.js is a javascript library that gets words in [almost any language](./docs/tesseract_lang_list.md) out of images. ([Demo](http://tesseract.projectnaptha.com/))
 
@@ -46,6 +46,22 @@ After including your scripts, the `Tesseract` variable will be defined globally!
 
 ## npm
 
+### 2.x
+
+Major Changes
+
+- Upgrade to tesseract v4
+- Support multiple languages, ex: eng+chi_tra
+- Support image formats: png, jpg, bmp, pbm
+
+```shell
+> yarn add tesseract.js@next
+```
+or
+```
+> npm install tesseract.js@next --save
+```
+
 ### 1.x
 
 ```shell
@@ -54,16 +70,6 @@ After including your scripts, the `Tesseract` variable will be defined globally!
 or
 ```
 > npm install tesseract.js --save
-```
-
-### 2.x
-
-```shell
-> yarn add tesseract.js@next
-```
-or
-```
-> npm install tesseract.js@next --save
 ```
 
 > Note: Tesseract.js currently requires Node.js v6.8.0 or higher.
