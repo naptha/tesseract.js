@@ -25,7 +25,9 @@ var lang_drop_instructions = {
 	rus: 'a Russian'
 }
 
-var tessWorker = new Tesseract.TesseractWorker();
+var tessWorker = new Tesseract.TesseractWorker({
+  langPath: 'http://tessdata.projectnaptha.com/4.0.0',
+});
 
 function setUp(){
 	input_overlay.width = input.naturalWidth
