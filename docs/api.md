@@ -1,6 +1,6 @@
 # API
 
-## Tesseract.recognize(image, lang, [, options]) -> [TesseractJob](#tesseractjob)
+## TesseractWorker.recognize(image, lang, [, options]) -> [TesseractJob](#tesseractjob)
 Figures out what words are in `image`, where the words are in `image`, etc.
 > Note: `image` should be sufficiently high resolution.
 > Often, the same image will get much better results if you upscale it before calling `recognize`.
@@ -34,7 +34,7 @@ worker
   });
 ```
 
-## Tesseract.detect(image) -> [TesseractJob](#tesseractjob)
+## TesseractWorker.detect(image) -> [TesseractJob](#tesseractjob)
 
 Figures out what script (e.g. 'Latin', 'Chinese') the words in  image are written in.
 
