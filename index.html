@@ -87,7 +87,7 @@
 	<script src="animation/hypercube.js"></script>
 	<script src="animation/animate.js"></script>
 
-  	<script src="https://cdn.rawgit.com/naptha/tesseract.js/1.0.7/dist/tesseract.js"></script>
+  	<script src="https://cdn.jsdelivr.net/gh/naptha/tesseract.js@v2.0.0-alpha.1/dist/tesseract.min.js"></script>
 	<script src="demo.js"></script>
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -95,8 +95,10 @@
 	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 	  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-	  ga('create', 'UA-83153710-3', 'auto');
-	  ga('send', 'pageview');
+	  ga('create', 'UA-83153710-3', 'auto', 'origin');
+	  ga('origin.send', 'pageview');
+	  ga('create', 'UA-139963961-1', 'auto', 'addon');
+	  ga('addon.send', 'pageview');
 
 	</script>
 </body>
