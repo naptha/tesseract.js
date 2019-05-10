@@ -25,6 +25,8 @@ var lang_drop_instructions = {
 	rus: 'a Russian'
 }
 
+var tessWorker = new Tessearct.TesseractWorker();
+
 function setUp(){
 	input_overlay.width = input.naturalWidth
 	input_overlay.height = input.naturalHeight
@@ -48,7 +50,7 @@ function startDemo(){
 	demoStarted = true
 
 	function start(){
-		Tesseract.recognize(input)
+		tessWorker.recognize(input)
 		.progress(progressUpdate)
 		.then(result)
 
@@ -158,7 +160,7 @@ function clearOverLayAndOutput(){
 // 	output.addEventListener('click', function play(){
 // 		output.removeEventListener('click', play)
 		
-// 		Tesseract.recognize(input, lang)
+// 		tessWorker.recognize(input, lang)
 // 		.progress( progress )
 // 		.then( result )
 // 	})
@@ -172,7 +174,7 @@ function play(){
 	output_text.innerHTML = ''
 	// output_overlay.innerHTML = ''
 
-	Tesseract.recognize(input, language)
+	tessWorker.recognize(input, language)
 	.progress( progressUpdate )
 	.then( result )
 }
@@ -205,7 +207,7 @@ document.body.addEventListener('drop', function(e){
     var file = e.dataTransfer.files[0]
 	var reader = new FileReader();
 
-	Tesseract.recognize(file, language)
+	tessWorker.recognize(file, language)
 	.progress( progressUpdate )
 	.then( result )
 
