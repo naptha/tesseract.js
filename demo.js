@@ -25,7 +25,7 @@ var lang_drop_instructions = {
 	rus: 'a Russian'
 }
 
-var tessWorker = new Tessearct.TesseractWorker();
+var tessWorker = new Tesseract.TesseractWorker();
 
 function setUp(){
 	input_overlay.width = input.naturalWidth
