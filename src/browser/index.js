@@ -52,18 +52,22 @@ function loadImage(image, cb){
             var im = new Image
             im.src = image;
             im.onload = e => loadImage(im, cb);
+            //im.onerror = e => ?; TODO handle error
             return
         }else{
             var xhr = new XMLHttpRequest();
             xhr.open('GET', image, true)
             xhr.responseType = "blob";
-            xhr.onload = e => loadImage(xhr.response, cb);
-            xhr.onerror = function(e){
-                if(/^https?:\/\//.test(image) && !/^https:\/\/crossorigin.me/.test(image)){
-                    console.debug('Attempting to load image with CORS proxy')
-                    loadImage('https://crossorigin.me/' + image, cb)
+            
+            xhr.onload = e => {
+                if (xhr.status >= 400){
+                    //TODO handle error
+                }else{
+                    loadImage(xhr.response, cb);
                 }
-            }
+            };
+            //xhr.onerror = e => ?; TODO handle error
+            
             xhr.send(null)
             return
         }
@@ -71,6 +75,7 @@ function loadImage(image, cb){
         // files
         var fr = new FileReader()
         fr.onload = e => loadImage(fr.result, cb);
+        //fr.onerror = e => ?; TODO handle error
         fr.readAsDataURL(image)
         return
     }else if(image instanceof Blob){
