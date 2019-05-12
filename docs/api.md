@@ -13,7 +13,7 @@ Returns a [TesseractJob](#tesseractjob) whose `then`, `progress`, `catch` and `f
 
 ### Simple Example:
 ```javascript
-const worker = new Tessearct.TesseractWorker();
+const worker = new Tesseract.TesseractWorker();
 worker
   .recognize(myImage)
   .then(function(result){
@@ -23,7 +23,7 @@ worker
 
 ### More Complicated Example:
 ```javascript
-const worker = new Tessearct.TesseractWorker();
+const worker = new Tesseract.TesseractWorker();
 // if we know our image is of spanish words without the letter 'e':
 worker
   .recognize(myImage, 'spa', {
@@ -43,7 +43,7 @@ Figures out what script (e.g. 'Latin', 'Chinese') the words in  image are writte
 Returns a [TesseractJob](#tesseractjob) whose `then`, `progress`, `catch` and `finally` methods can be used to act on the result of the script.
 
 ```javascript
-const worker = new Tessearct.TesseractWorker();
+const worker = new Tesseract.TesseractWorker();
 worker
   .detect(myImage)
   .then(function(result){
@@ -57,7 +57,7 @@ A TesseractJob is an object returned by a call to `recognize` or `detect`. It's 
 
 Typical use is:
 ```javascript
-const worker = new Tessearct.TesseractWorker();
+const worker = new Tesseract.TesseractWorker();
 worker.recognize(myImage)
   .progress(message => console.log(message))
   .catch(err => console.error(err))
@@ -67,7 +67,7 @@ worker.recognize(myImage)
 
 Which is equivalent to:
 ```javascript
-const worker = new Tessearct.TesseractWorker();
+const worker = new Tesseract.TesseractWorker();
 const job1 = worker.recognize(myImage);
 
 job1.progress(message => console.log(message));
@@ -87,7 +87,7 @@ Sets `callback` as the function that will be called every time the job progresse
 
 For example:
 ```javascript
-const worker = new Tessearct.TesseractWorker();
+const worker = new Tesseract.TesseractWorker();
 worker.recognize(myImage)
   .progress(function(message){console.log('progress is: ', message)});
 ```
@@ -113,7 +113,7 @@ Sets `callback` as the function that will be called if and when the job successf
 
 For example:
 ```javascript
-const worker = new Tessearct.TesseractWorker();
+const worker = new Tesseract.TesseractWorker();
 worker.recognize(myImage)
   .then(function(result){console.log('result is: ', result)});
 ```

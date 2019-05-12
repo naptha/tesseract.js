@@ -4,7 +4,7 @@ Check here for an example: https://github.com/jeromewu/tesseract.js-offline
 
 In browser environment, `tesseract.js` simply provides the API layer. Internally, it opens a WebWorker to handle requests. That worker itself loads code from the Emscripten-built `tesseract.js-core` which itself is hosted on a CDN. Then it dynamically loads language files hosted on another CDN.
 
-Because of this we recommend loading `tesseract.js` from a CDN. But if you really need to have all your files local, you can pass extra arguments to `TessearctWorker` to specify custom paths for workers, languages, and core.
+Because of this we recommend loading `tesseract.js` from a CDN. But if you really need to have all your files local, you can pass extra arguments to `TesseractWorker` to specify custom paths for workers, languages, and core.
 
 In Node.js environment, the only path you may want to customize is languages/langPath.
 

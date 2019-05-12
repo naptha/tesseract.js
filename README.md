@@ -9,7 +9,7 @@
 [![Downloads Total](https://img.shields.io/npm/dt/tesseract.js.svg)](https://www.npmjs.com/package/tesseract.js)
 [![Downloads Month](https://img.shields.io/npm/dm/tesseract.js.svg)](https://www.npmjs.com/package/tesseract.js)
 
-**Tessearct.js v2 is now available and under development in master branch, check [support/1.x](https://github.com/naptha/tesseract.js/tree/support/1.x) branch for v1.**
+**Tesseract.js v2 is now available and under development in master branch, check [support/1.x](https://github.com/naptha/tesseract.js/tree/support/1.x) branch for v1.**
 
 Tesseract.js is a javascript library that gets words in [almost any language](./docs/tesseract_lang_list.md) out of images. ([Demo](http://tesseract.projectnaptha.com/))
 

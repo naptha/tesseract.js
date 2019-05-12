@@ -8,7 +8,7 @@ You can also check [examples](../examples) folder.
 import Tesseract from 'tesseract.js';
 
 const { TesseractWorker } = Tesseract;
-const worker = new TessearctWorker();
+const worker = new TesseractWorker();
 
 worker
   .recognize('http://jeroen.github.io/images/testocr.png')
@@ -23,7 +23,7 @@ worker
 import Tesseract from 'tesseract.js';
 
 const { TesseractWorker } = Tesseract;
-const worker = new TessearctWorker();
+const worker = new TesseractWorker();
 
 worker
   .recognize('http://jeroen.github.io/images/testocr.png')
@@ -41,7 +41,7 @@ worker
 import Tesseract from 'tesseract.js';
 
 const { TesseractWorker } = Tesseract;
-const worker = new TessearctWorker();
+const worker = new TesseractWorker();
 
 worker
   .recognize(
