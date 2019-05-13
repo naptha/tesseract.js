@@ -16,9 +16,11 @@ exports.defaultOptions = defaultOptions;
 
 
 exports.spawnWorker = function spawnWorker(instance, workerOptions){
-    if(window.Blob && window.URL){
-        var blob = new Blob(['importScripts("' + workerOptions.workerPath + '");'])
-        var worker = new Worker(window.URL.createObjectURL(blob));
+    if(Blob && URL){
+        var blob = new Blob(['importScripts("' + workerOptions.workerPath + '");'], {
+            type: 'application/javascript'
+        });
+        var worker = new Worker(URL.createObjectURL(blob));
     }else{
         var worker = new Worker(workerOptions.workerPath)
     }
