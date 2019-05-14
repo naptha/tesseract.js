@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node scripts/server.js",
     "build": "webpack --config scripts/webpack.config.prod.js",
+    "prepublishOnly": "npm run build",
     "wait": "wait-on http://localhost:3000/package.json",
     "test": "npm-run-all -p -r start test:all",
     "test:all": "npm-run-all wait test:browser:* test:node",
