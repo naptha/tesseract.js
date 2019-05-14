@@ -8,6 +8,7 @@
  * @author Jerome Wu <jeromewus@gmail.com>
  */
 const { readImage, loadLang } = require('tesseract.js-utils');
+const check = require('check-types');
 const dump = require('./dump');
 
 /*
@@ -122,13 +123,16 @@ const handleRecognize = ({
     .then(() => (
       loadLanguage({ lang, options }, res)
         .then(() => {
+          const OEM = check.undefined(params['init_oem'])
+            ? TessModule.OEM_DEFAULT
+            : params['init_oem'];
           const progressUpdate = (progress) => {
             res.progress({ status: 'initializing api', progress });
           };
           progressUpdate(0);
-          api.Init(null, lang);
+          api.Init(null, lang, OEM);
           progressUpdate(0.3);
-          Object.keys(params).forEach((key) => {
+          Object.keys(params).filter(key => !key.startsWith('init_')).forEach((key) => {
             api.SetVariable(key, params[key]);
           });
           progressUpdate(0.6);
