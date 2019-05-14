@@ -1,13 +1,16 @@
 # [Tesseract.js](http://tesseract.projectnaptha.com/)
 
+
 [![NPM version][tesseractjs-npm-image]][tesseractjs-npm-url]
 
 [tesseractjs-npm-image]: https://img.shields.io/npm/v/tesseract.js.svg
 [tesseractjs-npm-url]: https://npmjs.org/package/tesseract.js
 
+**Tesseract.js v2 alpha is now available!! Check [HERE](https://github.com/naptha/tesseract.js) for more information.**
+
 Tesseract.js is a javascript library that gets words in [almost any language](./docs/tesseract_lang_list.md) out of images. ([Demo](http://tesseract.projectnaptha.com/))
 
-[![fancy demo gif](https://github.com/naptha/tesseract.js/blob/master/demo.gif)](http://tesseract.projectnaptha.com)
+[![fancy demo gif](./demo.gif)](http://tesseract.projectnaptha.com)
 
 Tesseract.js works with script tags, [webpack](https://webpack.js.org/)/[Browserify](http://browserify.org/), and [Node.js](https://nodejs.org/en/). [After you install it](#installation), using it is as simple as
 
@@ -24,8 +27,6 @@ Tesseract.js wraps an [emscripten](https://github.com/kripken/emscripten) [port]
 
 
 # Installation
-
-**Tesseract.js v2 alpha is now available!! Check [HERE](https://github.com/naptha/tesseract.js) for more information.**
 
 Tesseract.js works with a `<script>` tag via local copy or CDN, with webpack and Browserify via `npm`, and on Node.js via `npm`. [Check out the docs](#docs) for a full treatment of the API.
 
