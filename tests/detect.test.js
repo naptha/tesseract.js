@@ -1,4 +1,5 @@
 const { TesseractWorker, utils: { loadLang } } = Tesseract;
+const isBrowser = typeof window !== 'undefined' && typeof window.document !== 'undefined';
 const IMAGE_PATH = 'http://localhost:3000/tests/assets/images';
 const loadLangOptions = {
   langPath: 'http://localhost:3000/tests/assets/traineddata',
@@ -8,6 +9,7 @@ const loadLangOptions = {
 const getWorker = options => (
   new TesseractWorker({
     cacheMethod: 'readOnly',
+    ...(isBrowser ? { workerPath: 'http://localhost:3000/dist/worker.dev.js' } : {}),
     ...loadLangOptions,
     ...options,
   })

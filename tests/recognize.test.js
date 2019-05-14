@@ -16,6 +16,7 @@ const loadLangOptions = {
 const getWorker = options => (
   new TesseractWorker({
     cacheMethod: 'readOnly',
+    ...(isBrowser ? { workerPath: 'http://localhost:3000/dist/worker.dev.js' } : {}),
     ...loadLangOptions,
     ...options,
   })
@@ -189,6 +190,7 @@ describe('recognize()',() => {
     beforeEach(function cb(done) {
       canvasDOM = document.createElement('canvas');
       imageDOM = document.createElement('img');
+      imageDOM.setAttribute('crossOrigin', 'Anonymous');
       imageDOM.onload = () => {
         canvasDOM.getContext('2d').drawImage(imageDOM, 0, 0);
         done();
