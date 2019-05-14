@@ -54,7 +54,7 @@ function loadImage(image, cb){
             var im = new Image
             im.src = image;
             im.onload = e => loadImage(im, cb);
-            //im.onerror = e => ?; TODO handle error
+            im.onerror = e => { throw e; };
             return
         }else{
             var xhr = new XMLHttpRequest();
@@ -63,12 +63,12 @@ function loadImage(image, cb){
             
             xhr.onload = e => {
                 if (xhr.status >= 400){
-                    //TODO handle error
+                  throw new Error('Fail to get image as Blob');
                 }else{
                     loadImage(xhr.response, cb);
                 }
             };
-            //xhr.onerror = e => ?; TODO handle error
+            xhr.onerror = e => { throw e; }; 
             
             xhr.send(null)
             return
@@ -77,7 +77,7 @@ function loadImage(image, cb){
         // files
         var fr = new FileReader()
         fr.onload = e => loadImage(fr.result, cb);
-        //fr.onerror = e => ?; TODO handle error
+        fr.onerror = e => { throw e; }; 
         fr.readAsDataURL(image)
         return
     }else if(image instanceof Blob){

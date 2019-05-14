@@ -24,6 +24,9 @@ Tesseract.js wraps an [emscripten](https://github.com/kripken/emscripten) [port]
 
 
 # Installation
+
+**Tesseract.js v2 alpha is now available!! Check [HERE](https://github.com/naptha/tesseract.js) for more information.**
+
 Tesseract.js works with a `<script>` tag via local copy or CDN, with webpack and Browserify via `npm`, and on Node.js via `npm`. [Check out the docs](#docs) for a full treatment of the API.
 
 ## &lt;script />

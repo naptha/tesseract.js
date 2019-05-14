@@ -253,9 +253,11 @@ if (process.env.TESS_ENV === "development") {
 exports.defaultOptions = defaultOptions;
 
 exports.spawnWorker = function spawnWorker(instance, workerOptions) {
-    if (window.Blob && window.URL) {
-        var blob = new Blob(['importScripts("' + workerOptions.workerPath + '");']);
-        var worker = new Worker(window.URL.createObjectURL(blob));
+    if (Blob && URL) {
+        var blob = new Blob(['importScripts("' + workerOptions.workerPath + '");'], {
+            type: 'application/javascript'
+        });
+        var worker = new Worker(URL.createObjectURL(blob));
     } else {
         var worker = new Worker(workerOptions.workerPath);
     }
@@ -290,20 +292,26 @@ function loadImage(image, cb) {
             im.onload = function (e) {
                 return loadImage(im, cb);
             };
+            im.onerror = function (e) {
+                throw e;
+            };
             return;
         } else {
             var xhr = new XMLHttpRequest();
             xhr.open('GET', image, true);
             xhr.responseType = "blob";
+
             xhr.onload = function (e) {
-                return loadImage(xhr.response, cb);
-            };
-            xhr.onerror = function (e) {
-                if (/^https?:\/\//.test(image) && !/^https:\/\/crossorigin.me/.test(image)) {
-                    console.debug('Attempting to load image with CORS proxy');
-                    loadImage('https://crossorigin.me/' + image, cb);
+                if (xhr.status >= 400) {
+                    throw new Error('Fail to get image as Blob');
+                } else {
+                    loadImage(xhr.response, cb);
                 }
             };
+            xhr.onerror = function (e) {
+                throw e;
+            };
+
             xhr.send(null);
             return;
         }
@@ -312,6 +320,9 @@ function loadImage(image, cb) {
         var fr = new FileReader();
         fr.onload = function (e) {
             return loadImage(fr.result, cb);
+        };
+        fr.onerror = function (e) {
+            throw e;
         };
         fr.readAsDataURL(image);
         return;
