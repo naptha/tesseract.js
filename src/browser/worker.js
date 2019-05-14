@@ -31,7 +31,13 @@ workerUtils.setAdapter({
        * Depending on whether the browser supports WebAssembly,
        * the version of the TesseractCore will be different.
        */
-      global.TesseractCore = typeof WebAssembly === 'object' ? global.TesseractCoreWASM : global.TesseractCoreASM;
+      if (check.not.undefined(global.TesseractCoreWASM) && typeof WebAssembly === 'object') {
+        global.TesseractCore = global.TesseractCoreWASM;
+      } else if (check.not.undefined(global.TesseractCoreASM)){
+        global.TesseractCore = global.TesseractCoreASM;
+      } else {
+        throw Error('Failed to load TesseractCore');
+      }
       res.progress({ status: 'loading tesseract core', progress: 1 });
     }
     return global.TesseractCore;

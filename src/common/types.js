@@ -3,7 +3,7 @@ module.exports = {
    * OEM = OCR Engine Mode, and there are 5 possible modes.
    *
    * By default tesseract.js uses DEFAULT mode, which uses LSTM when possible.
-   * If you need to use some tesseract v3 features (like tessedit_chars_whitelist),
+   * If you need to use some tesseract v3 features (like tessedit_char_whitelist),
    * you need to use TESSERACT_ONLY mode.
    *
    */
