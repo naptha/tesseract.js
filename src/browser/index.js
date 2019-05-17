@@ -102,7 +102,7 @@ exports.defaultOptions = {
    * If browser doesn't support WebAssembly,
    * load ASM version instead
    */
-  corePath: `https://unpkg.com/tesseract.js-core@v2.0.0-beta.9/tesseract-core.${typeof WebAssembly === 'object' ? 'wasm' : 'asm'}.js`,
+  corePath: `https://unpkg.com/tesseract.js-core@v2.0.0-beta.10/tesseract-core.${typeof WebAssembly === 'object' ? 'wasm' : 'asm'}.js`,
 };
 
 /**
