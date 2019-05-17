@@ -36,8 +36,8 @@ workerUtils.setAdapter({
   b64toU8Array: s => Buffer.from(s, 'base64'),
   writeFile: (path, data) => {
     const fs = require('fs');
-    fs.writeFile(path, data, () => {
-      console.log('File Write Succeeded!');
+    fs.writeFile(path, data, (err) => {
+      if (err) throw err;
     });
   },
 });

@@ -130,7 +130,8 @@ exports.spawnWorker = (instance, { workerPath }) => {
     if (data.jobId.startsWith('Job')) {
       instance.recv(data);
     } else if (data.jobId.startsWith('Download')) {
-      const { path, blob } = data;
+      const { path, data: d, type } = data;
+      const blob = new Blob([d], { type });
       downloadFile(path, blob);
     }
   };

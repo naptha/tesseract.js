@@ -44,11 +44,11 @@ workerUtils.setAdapter({
   },
   b64toU8Array: s => new Uint8Array(atob(s).split('').map(c => c.charCodeAt(0))),
   writeFile: (path, data, type) => {
-    const blob = new Blob([data], { type });
     self.postMessage({
       jobId: 'Download',
       path,
-      blob,
+      data,
+      type,
     });
   },
 });

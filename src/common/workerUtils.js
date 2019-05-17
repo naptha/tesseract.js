@@ -85,11 +85,14 @@ const handleParams = (lang, customParams) => {
  * @param {object} customParams - an object of params
  */
 const handleOutput = (customParams) => {
+  let files = {};
   const {
     tessedit_create_pdf,
     textonly_pdf,
     pdf_name,
     pdf_title,
+    pdf_auto_download,
+    pdf_bin,
   } = {
     ...defaultParams,
     ...customParams,
@@ -100,9 +103,20 @@ const handleOutput = (customParams) => {
     pdfRenderer.BeginDocument(pdf_title);
     pdfRenderer.AddImage(api);
     pdfRenderer.EndDocument();
-    adapter.writeFile(`${pdf_name}.pdf`, TessModule.FS.readFile(`/${pdf_name}.pdf`), 'application/pdf');
     TessModule._free(pdfRenderer);
+
+    const data = TessModule.FS.readFile(`/${pdf_name}.pdf`);
+
+    if (pdf_bin) {
+      files = { pdf: data, ...files };
+    }
+    
+    if (pdf_auto_download) {
+      adapter.writeFile(`${pdf_name}.pdf`, data, 'application/pdf');
+    }
   }
+
+  return files;
 }
 
 /**
@@ -187,11 +201,11 @@ const handleRecognize = ({
           const ptr = setImage(image);
           progressUpdate(1);
           api.Recognize(null);
-          handleOutput(params);
+          const files = handleOutput(params);
           const result = dump(TessModule, api);
           api.End();
           TessModule._free(ptr);
-          res.resolve(result);
+          res.resolve({ files, ...result });
         })
     ))
 );

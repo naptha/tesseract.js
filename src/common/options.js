@@ -20,5 +20,7 @@ module.exports = {
     textonly_pdf: '0',
     pdf_name: 'tesseract.js-ocr-result',
     pdf_title: 'Tesseract.js OCR Result',
+    pdf_auto_download: true,
+    pdf_bin: false,
   },
 };
