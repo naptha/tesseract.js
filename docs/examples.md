@@ -109,7 +109,9 @@ worker
   });
 ```
 
-### with pdf output (^2.0.0-alpha.5)
+### with pdf output (^2.0.0-alpha.7)
+
+In this example, pdf file will be downloaded in browser and write to file system in Node.js
 
 ```javascript
 import Tesseract from 'tesseract.js';
@@ -130,5 +132,31 @@ worker
   })
   .then((result) => {
     console.log(result);
+  });
+```
+
+If you want to handle pdf file by yourself
+
+```javascript
+import Tesseract from 'tesseract.js';
+
+const { TesseractWorker } = Tesseract;
+const worker = new TesseractWorker();
+
+worker
+  .recognize(
+    'http://jeroen.github.io/images/testocr.png',
+    'eng',
+    {
+      'tessedit_create_pdf': '1',
+      'pdf_auto_download': false, // disable auto download
+      'pdf_bin': true,            // add pdf file bin array in result
+    }
+  )
+  .progress((p) => {
+    console.log('progress', p);
+  })
+  .then((result) => {
+    console.log(result.files.pdf); // You can access pdf binary array here.
   });
 ```
