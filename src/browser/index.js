@@ -71,6 +71,25 @@ const loadImage = (image) => {
   return Promise.reject();
 };
 
+const downloadFile = (path, blob) => {
+  if (navigator.msSaveBlob) {
+    // IE 10+
+    navigator.msSaveBlob(blob, path);
+  } else {
+    const link = document.createElement('a');
+    // Browsers that support HTML5 download attribute
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', path);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  }
+}
+
 /*
  * Default options for browser worker
  */
@@ -83,7 +102,7 @@ exports.defaultOptions = {
    * If browser doesn't support WebAssembly,
    * load ASM version instead
    */
-  corePath: `https://unpkg.com/tesseract.js-core@v2.0.0-beta.8/tesseract-core.${typeof WebAssembly === 'object' ? 'wasm' : 'asm'}.js`,
+  corePath: `https://unpkg.com/tesseract.js-core@v2.0.0-beta.9/tesseract-core.${typeof WebAssembly === 'object' ? 'wasm' : 'asm'}.js`,
 };
 
 /**
@@ -108,7 +127,12 @@ exports.spawnWorker = (instance, { workerPath }) => {
   }
 
   worker.onmessage = ({ data }) => {
-    instance.recv(data);
+    if (data.jobId.startsWith('Job')) {
+      instance.recv(data);
+    } else if (data.jobId.startsWith('Download')) {
+      const { path, blob } = data;
+      downloadFile(path, blob);
+    }
   };
 
   return worker;

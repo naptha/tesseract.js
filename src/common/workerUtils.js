@@ -9,7 +9,9 @@
  */
 const { readImage, loadLang } = require('tesseract.js-utils');
 const check = require('check-types');
+const pdfTTF = require('./pdf-ttf');
 const dump = require('./dump');
+const { defaultParams } = require('./options');
 
 /*
  * Tesseract Module returned by TesseractCore.
@@ -52,6 +54,58 @@ const setImage = (image) => {
 };
 
 /**
+ * handleParams
+ *
+ * @name handleParams
+ * @function hanlde params from users
+ * @access private
+ * @param {string} lang - lang string for Init() 
+ * @param {object} customParams - an object of params
+ */
+const handleParams = (lang, customParams) => {
+  const {
+    tessedit_ocr_engine_mode,
+    ...params
+  } = {
+    ...defaultParams,
+    ...customParams,
+  };
+  api.Init(null, lang, tessedit_ocr_engine_mode);
+  Object.keys(params).forEach((key) => {
+    api.SetVariable(key, params[key]);
+  });
+};
+
+/**
+ * handleOutput
+ *
+ * @name handleOutput
+ * @function handle file output
+ * @access private
+ * @param {object} customParams - an object of params
+ */
+const handleOutput = (customParams) => {
+  const {
+    tessedit_create_pdf,
+    textonly_pdf,
+    pdf_name,
+    pdf_title,
+  } = {
+    ...defaultParams,
+    ...customParams,
+  };
+
+  if (tessedit_create_pdf === '1') {
+    const pdfRenderer = new TessModule.TessPDFRenderer(pdf_name, '/', textonly_pdf === '1');
+    pdfRenderer.BeginDocument(pdf_title);
+    pdfRenderer.AddImage(api);
+    pdfRenderer.EndDocument();
+    adapter.writeFile(`${pdf_name}.pdf`, TessModule.FS.readFile(`/${pdf_name}.pdf`), 'application/pdf');
+    TessModule._free(pdfRenderer);
+  }
+}
+
+/**
  * handleInit
  *
  * @name handleInit
@@ -75,6 +129,7 @@ const handleInit = ({ corePath }, res) => {
     })
       .then((tessModule) => {
         TessModule = tessModule;
+        TessModule.FS.writeFile('/pdf.ttf', adapter.b64toU8Array(pdfTTF));
         api = new TessModule.TessBaseAPI();
         res.progress({ status: 'initialized tesseract', progress: 1 });
       });
@@ -123,22 +178,16 @@ const handleRecognize = ({
     .then(() => (
       loadLanguage({ lang, options }, res)
         .then(() => {
-          const OEM = check.undefined(params['init_oem'])
-            ? TessModule.OEM_DEFAULT
-            : params['init_oem'];
           const progressUpdate = (progress) => {
             res.progress({ status: 'initializing api', progress });
           };
           progressUpdate(0);
-          api.Init(null, lang, OEM);
-          progressUpdate(0.3);
-          Object.keys(params).filter(key => !key.startsWith('init_')).forEach((key) => {
-            api.SetVariable(key, params[key]);
-          });
-          progressUpdate(0.6);
+          handleParams(lang, params);
+          progressUpdate(0.5);
           const ptr = setImage(image);
           progressUpdate(1);
           api.Recognize(null);
+          handleOutput(params);
           const result = dump(TessModule, api);
           api.End();
           TessModule._free(ptr);
