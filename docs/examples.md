@@ -2,6 +2,11 @@
 
 You can also check [examples](../examples) folder.
 
+Example repositories:
+
+- Offline version: https://github.com/jeromewu/tesseract.js-offline
+- With Vue (similar with React/Angular): https://github.com/jeromewu/tesseract-vue-app
+
 ### basic
 
 ```javascript
