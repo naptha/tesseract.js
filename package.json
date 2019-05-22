@@ -44,12 +44,13 @@
     "webpack-dev-middleware": "^3.4.0"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "check-types": "^7.4.0",
     "is-url": "1.2.2",
     "node-fetch": "^2.3.0",
     "resolve-url": "^0.2.1",
     "tesseract.js-core": "^2.0.0-beta.10",
-    "tesseract.js-utils": "^1.0.0-beta.5"
+    "tesseract.js-utils": "^1.0.0-beta.6"
   },
   "repository": {
     "type": "git",

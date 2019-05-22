@@ -9,7 +9,7 @@
  */
 const util = require('util');
 const fs = require('fs');
-const fetch = require('node-fetch');
+const axios = require('axios');
 const isURL = require('is-url');
 const { fork } = require('child_process');
 const path = require('path');
@@ -29,8 +29,10 @@ const readFile = util.promisify(fs.readFile);
  */
 const loadImage = (image) => {
   if (isURL(image)) {
-    return fetch(image)
-      .then(resp => resp.arrayBuffer());
+    return axios.get(image, {
+      responseType: 'arraybuffer',
+    })
+      .then(resp => resp.data);
   }
   return readFile(image);
 };

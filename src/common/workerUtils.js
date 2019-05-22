@@ -190,6 +190,17 @@ const handleRecognize = ({
   handleInit(options, res)
     .then(() => (
       loadLanguage({ lang, options }, res)
+        .catch((e) => {
+          if (e instanceof DOMException) {
+            /*
+             * For some reason google chrome throw DOMException in loadLang,
+             * while other browser is OK, for now we ignore this exception
+             * and hopefully to find the root cause one day.
+             */
+          } else {
+            throw e;
+          }
+        })
         .then(() => {
           const progressUpdate = (progress) => {
             res.progress({ status: 'initializing api', progress });

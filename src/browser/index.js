@@ -9,6 +9,7 @@
  */
 const check = require('check-types');
 const resolveURL = require('resolve-url');
+const axios = require('axios');
 const { defaultOptions } = require('../common/options');
 const { version } = require('../../package.json');
 
@@ -45,8 +46,10 @@ const readFromBlobOrFile = (blob, res) => {
  */
 const loadImage = (image) => {
   if (check.string(image)) {
-    return fetch(resolveURL(image))
-      .then(resp => resp.arrayBuffer());
+    return axios.get(resolveURL(image), {
+      responseType: 'arraybuffer',
+    })
+      .then(resp => resp.data);
   }
   if (check.instance(image, HTMLElement)) {
     if (image.tagName === 'IMG') {
