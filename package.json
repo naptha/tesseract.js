@@ -44,7 +44,8 @@
     "wait-on": "^3.2.0",
     "webpack": "^4.26.0",
     "webpack-cli": "^3.1.2",
-    "webpack-dev-middleware": "^3.4.0"
+    "webpack-dev-middleware": "^3.4.0",
+    "worker-loader": "^2.0.0"
   },
   "dependencies": {
     "axios": "^0.18.0",
