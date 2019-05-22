@@ -12,8 +12,8 @@
     "test:all": "npm-run-all wait test:browser:* test:node",
     "test:node": "nyc mocha --exit --bail --require ./scripts/test-helper.js ./tests/*.test.js",
     "test:browser-tpl": "mocha-headless-chrome -a incognito -a no-sandbox -a disable-setuid-sandbox -t 300000",
-    "test:browser:detect": "npm run test:browser-tpl -- -f ./tests/browser/detect.test.html",
-    "test:browser:recognize": "npm run test:browser-tpl -- -f ./tests/browser/recognize.test.html",
+    "test:browser:detect": "npm run test:browser-tpl -- -f ./tests/detect.test.html",
+    "test:browser:recognize": "npm run test:browser-tpl -- -f ./tests/recognize.test.html",
     "lint": "eslint src"
   },
   "browser": {
