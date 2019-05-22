@@ -8,7 +8,6 @@
  * @author Jerome Wu <jeromewus@gmail.com>
  */
 const { readImage, loadLang } = require('tesseract.js-utils');
-const check = require('check-types');
 const pdfTTF = require('./pdf-ttf');
 const dump = require('./dump');
 const { defaultParams } = require('./options');
@@ -59,7 +58,7 @@ const setImage = (image) => {
  * @name handleParams
  * @function hanlde params from users
  * @access private
- * @param {string} lang - lang string for Init() 
+ * @param {string} lang - lang string for Init()
  * @param {object} customParams - an object of params
  */
 const handleParams = (lang, customParams) => {
@@ -110,14 +109,14 @@ const handleOutput = (customParams) => {
     if (pdf_bin) {
       files = { pdf: data, ...files };
     }
-    
+
     if (pdf_auto_download) {
       adapter.writeFile(`${pdf_name}.pdf`, data, 'application/pdf');
     }
   }
 
   return files;
-}
+};
 
 /**
  * handleInit

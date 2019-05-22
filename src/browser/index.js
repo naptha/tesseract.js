@@ -39,7 +39,7 @@ const readFromBlobOrFile = (blob, res) => {
  *   string: URL string, can be relative path
  *   img HTMLElement: extract image source from src attribute
  *   video HTMLElement: extract image source from poster attribute
- *   canvas HTMLElement: extract image data by converting to Blob 
+ *   canvas HTMLElement: extract image data by converting to Blob
  *   File instance: data from <input type="file" />
  * @returns {array} binary image in array format
  */
@@ -88,7 +88,7 @@ const downloadFile = (path, blob) => {
       document.body.removeChild(link);
     }
   }
-}
+};
 
 /*
  * Default options for browser worker

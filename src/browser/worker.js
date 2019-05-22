@@ -33,7 +33,7 @@ workerUtils.setAdapter({
        */
       if (check.not.undefined(global.TesseractCoreWASM) && typeof WebAssembly === 'object') {
         global.TesseractCore = global.TesseractCoreWASM;
-      } else if (check.not.undefined(global.TesseractCoreASM)){
+      } else if (check.not.undefined(global.TesseractCoreASM)) {
         global.TesseractCore = global.TesseractCoreASM;
       } else {
         throw Error('Failed to load TesseractCore');
@@ -44,7 +44,7 @@ workerUtils.setAdapter({
   },
   b64toU8Array: s => new Uint8Array(atob(s).split('').map(c => c.charCodeAt(0))),
   writeFile: (path, data, type) => {
-    self.postMessage({
+    postMessage({
       jobId: 'Download',
       path,
       data,
