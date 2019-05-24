@@ -52,16 +52,24 @@ const setImage = (image) => {
   return data === null ? pix : data;
 };
 
+const getLangsStr = (langs) => {
+  if (typeof langs === 'string') {
+    return langs;
+  }
+
+  return langs.map(lang => (typeof lang === 'string' ? lang : lang.code)).join('+');
+};
+
 /**
  * handleParams
  *
  * @name handleParams
  * @function hanlde params from users
  * @access private
- * @param {string} lang - lang string for Init()
+ * @param {string} langs - lang string for Init()
  * @param {object} customParams - an object of params
  */
-const handleParams = (lang, customParams) => {
+const handleParams = (langs, customParams) => {
   const {
     tessedit_ocr_engine_mode,
     ...params
@@ -69,7 +77,7 @@ const handleParams = (lang, customParams) => {
     ...defaultParams,
     ...customParams,
   };
-  api.Init(null, lang, tessedit_ocr_engine_mode);
+  api.Init(null, getLangsStr(langs), tessedit_ocr_engine_mode);
   Object.keys(params).forEach((key) => {
     api.SetVariable(key, params[key]);
   });
@@ -158,14 +166,14 @@ const handleInit = ({ corePath }, res) => {
  * @function load language from remote or local cache
  * @access public
  * @param {object} req - job payload
- * @param {string} req.lang - languages to load, ex: eng, eng+chi_tra
+ * @param {string} req.langs - languages to load, ex: eng, eng+chi_tra
  * @param {object} req.options - other options for loadLang function
  * @param {object} res - job instance
  * @returns {Promise} A Promise for callback
  */
-const loadLanguage = ({ lang, options }, res) => {
+const loadLanguage = ({ langs, options }, res) => {
   res.progress({ status: 'loading language traineddata', progress: 0 });
-  return loadLang({ lang, TessModule, ...options }).then((...args) => {
+  return loadLang({ langs, TessModule, ...options }).then((...args) => {
     res.progress({ status: 'loaded language traineddata', progress: 1 });
     return args;
   });
@@ -179,17 +187,17 @@ const loadLanguage = ({ lang, options }, res) => {
  * @access public
  * @param {object} req - job payload
  * @param {array} req.image - binary image in array format
- * @param {string} req.lang - languages to load, ex: eng, eng+chi_tra
+ * @param {string} req.langs - languages to load, ex: eng, eng+chi_tra
  * @param {object} req.options - other options for loadLang function
  * @param {object} req.params - parameters for tesseract
  * @param {object} res - job instance
  */
 const handleRecognize = ({
-  image, lang, options, params,
+  image, langs, options, params,
 }, res) => (
   handleInit(options, res)
     .then(() => (
-      loadLanguage({ lang, options }, res)
+      loadLanguage({ langs, options }, res)
         .catch((e) => {
           if (e instanceof DOMException) {
             /*
@@ -206,7 +214,7 @@ const handleRecognize = ({
             res.progress({ status: 'initializing api', progress });
           };
           progressUpdate(0);
-          handleParams(lang, params);
+          handleParams(langs, params);
           progressUpdate(0.5);
           const ptr = setImage(image);
           progressUpdate(1);
@@ -228,18 +236,18 @@ const handleRecognize = ({
  * @access public
  * @param {object} req - job payload
  * @param {array} req.image - binary image in array format
- * @param {string} req.lang - languages to load, ex: eng, eng+chi_tra
+ * @param {string} req.langs - languages to load, ex: eng, eng+chi_tra
  * @param {object} req.options - other options for loadLang function
  * @param {object} res - job instance
  */
 const handleDetect = ({
-  image, lang, options,
+  image, langs, options,
 }, res) => (
   handleInit(options, res)
     .then(() => (
-      loadLanguage({ lang, options }, res)
+      loadLanguage({ langs, options }, res)
         .then(() => {
-          api.Init(null, lang);
+          api.Init(null, getLangsStr(langs));
           api.SetPageSegMode(TessModule.PSM_OSD_ONLY);
 
           const ptr = setImage(image);

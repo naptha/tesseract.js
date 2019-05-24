@@ -3,9 +3,10 @@ const webpack = require('webpack');
 const common = require('./webpack.config.common');
 
 const genConfig = ({
-  entry, filename, library, libraryTarget,
+  entry, filename, library, libraryTarget, ...config
 }) => ({
   ...common,
+  ...config,
   mode: 'development',
   entry,
   output: {
@@ -29,10 +30,15 @@ module.exports = [
     library: 'Tesseract',
     libraryTarget: 'umd',
   }),
-  /*
-   *genConfig({
-   *  entry: path.resolve(__dirname, '..', 'src', 'browser', 'worker.js'),
-   *  filename: 'worker.dev.js',
-   *}),
-   */
+  genConfig({
+    entry: path.resolve(__dirname, '..', 'src', 'index.js'),
+    filename: 'tesseract.asm.dev.js',
+    library: 'Tesseract',
+    libraryTarget: 'umd',
+    resolve: {
+      alias: {
+        'tesseract.js-core/tesseract-core.wasm.js': 'tesseract.js-core/tesseract-core.asm.js',
+      },
+    },
+  }),
 ];

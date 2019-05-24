@@ -1,6 +1,5 @@
-const { TesseractWorker, utils: { loadLang } } = Tesseract;
+const { TesseractWorker } = Tesseract;
 
-const isBrowser = typeof window !== 'undefined' && typeof window.document !== 'undefined';
 const IMAGE_PATH = 'http://localhost:3000/tests/assets/images';
 const SIMPLE_TEXT = 'Tesseract.js\n';
 const COMSIC_TEXT = 'HellO World\nfrom beyond\nthe Cosmic Void\n';
@@ -16,7 +15,6 @@ const loadLangOptions = {
 const getWorker = options => (
   new TesseractWorker({
     cacheMethod: 'readOnly',
-    ...(isBrowser ? { workerPath: 'http://localhost:3000/dist/worker.dev.js' } : {}),
     ...loadLangOptions,
     ...options,
   })
@@ -133,7 +131,7 @@ describe('recognize()', () => {
       }).timeout(10000)
     ));
   });
-  
+
   (isBrowser ? describe : describe.skip)('should read image from video DOM element (browser only)', () => {
     FORMATS.forEach(format => (
       it(`support ${format} format`, (done) => {
@@ -160,22 +158,23 @@ describe('recognize()', () => {
     let canvasDOM = null;
     let imageDOM = null;
     let idx = 0;
-    beforeEach(function cb(done) {
+    beforeEach((done) => {
       canvasDOM = document.createElement('canvas');
       imageDOM = document.createElement('img');
       imageDOM.setAttribute('crossOrigin', 'Anonymous');
       imageDOM.onload = () => {
         canvasDOM.getContext('2d').drawImage(imageDOM, 0, 0);
         done();
-      }
-      imageDOM.setAttribute('src', `${IMAGE_PATH}/simple.${formats[idx++]}`);
+      };
+      imageDOM.setAttribute('src', `${IMAGE_PATH}/simple.${formats[idx]}`);
+      idx += 1;
     });
 
     afterEach(() => {
       canvasDOM.remove();
       imageDOM.remove();
     });
-    
+
     formats.forEach(format => (
       it(`support ${format} format`, (done) => {
         const worker = getWorker();
@@ -189,5 +188,4 @@ describe('recognize()', () => {
       }).timeout(10000)
     ));
   });
-
 });

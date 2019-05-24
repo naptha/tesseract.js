@@ -4,6 +4,7 @@ module.exports = {
       {
         test: /\.m?js$/,
         // exclude: /(node_modules|bower_components)/,
+        exclude: /(tesseract.js-core)/,
         use: {
           loader: 'babel-loader',
           options: {
