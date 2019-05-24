@@ -22,34 +22,7 @@ const getWorker = options => (
   })
 );
 
-before(function cb(done) {
-  this.timeout(30000);
-  const load = () => (
-    loadLang({
-      lang: 'eng+chi_tra',
-      cacheMethod: 'write',
-      ...loadLangOptions,
-    }).then(() => {
-      done();
-    })
-  );
-  if (typeof startServer !== 'undefined') {
-    startServer(load);
-  } else {
-    load();
-  }
-});
-
-after((done) => {
-  if (typeof stopServer !== 'undefined') {
-    stopServer(done);
-  } else {
-    done();
-  }
-});
-
-describe('recognize()',() => {
-  
+describe('recognize()', () => {
   describe('should recognize different langs', () => {
     [
       { name: 'chinese.png', lang: 'chi_tra', ans: CHINESE_TEXT },
