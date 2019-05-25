@@ -11,8 +11,6 @@
 const check = require('check-types');
 const workerUtils = require('../common/workerUtils');
 
-let TesseractCore = null;
-
 /*
  * register message handler
  */
@@ -28,24 +26,21 @@ workerUtils.setAdapter({
   getCore: (corePath, res) => {
     if (check.undefined(global.TesseractCore)) {
       res.progress({ status: 'loading tesseract core', progress: 0 });
-      // global.importScripts(corePath);
+      global.importScripts(corePath);
       /*
        * Depending on whether the browser supports WebAssembly,
        * the version of the TesseractCore will be different.
        */
-      /*
-       *if (check.not.undefined(global.TesseractCoreWASM) && typeof WebAssembly === 'object') {
-       *  global.TesseractCore = global.TesseractCoreWASM;
-       *} else if (check.not.undefined(global.TesseractCoreASM)) {
-       *  global.TesseractCore = global.TesseractCoreASM;
-       *} else {
-       *  throw Error('Failed to load TesseractCore');
-       *}
-       */
-      TesseractCore = require('tesseract.js-core/tesseract-core.wasm.js');
+      if (check.not.undefined(global.TesseractCoreWASM) && typeof WebAssembly === 'object') {
+        global.TesseractCore = global.TesseractCoreWASM;
+      } else if (check.not.undefined(global.TesseractCoreASM)) {
+        global.TesseractCore = global.TesseractCoreASM;
+      } else {
+        throw Error('Failed to load TesseractCore');
+      }
       res.progress({ status: 'loading tesseract core', progress: 1 });
     }
-    return TesseractCore;
+    return global.TesseractCore;
   },
   b64toU8Array: s => new Uint8Array(atob(s).split('').map(c => c.charCodeAt(0))),
   writeFile: (path, data, type) => {

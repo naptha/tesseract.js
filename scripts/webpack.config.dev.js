@@ -29,10 +29,8 @@ module.exports = [
     library: 'Tesseract',
     libraryTarget: 'umd',
   }),
-  /*
-   *genConfig({
-   *  entry: path.resolve(__dirname, '..', 'src', 'browser', 'worker.js'),
-   *  filename: 'worker.dev.js',
-   *}),
-   */
+  genConfig({
+    entry: path.resolve(__dirname, '..', 'src', 'browser', 'worker.js'),
+    filename: 'worker.dev.js',
+  }),
 ];

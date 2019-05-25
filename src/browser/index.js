@@ -10,8 +10,6 @@
 const check = require('check-types');
 const resolveURL = require('resolve-url');
 const axios = require('axios');
-// eslint-disable-next-line
-const TessWorker = require('worker-loader?inline=true&fallback=false!./worker');
 const { defaultOptions } = require('../common/options');
 const { version } = require('../../package.json');
 
@@ -121,17 +119,15 @@ exports.defaultOptions = {
  * @param {string} options.workerPath - worker script path
  */
 exports.spawnWorker = (instance, { workerPath }) => {
-  const worker = new TessWorker();
-  /*
-   *if (Blob && URL) {
-   *  const blob = new Blob([`importScripts("${workerPath}");`], {
-   *    type: 'application/javascript',
-   *  });
-   *  worker = new Worker(URL.createObjectURL(blob));
-   *} else {
-   *  worker = new Worker(workerPath);
-   *}
-   */
+  let worker;
+  if (Blob && URL) {
+    const blob = new Blob([`importScripts("${workerPath}");`], {
+      type: 'application/javascript',
+    });
+    worker = new Worker(URL.createObjectURL(blob));
+  } else {
+    worker = new Worker(workerPath);
+  }
 
   worker.onmessage = ({ data }) => {
     if (data.jobId.startsWith('Job')) {
