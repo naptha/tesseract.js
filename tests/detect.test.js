@@ -15,6 +15,32 @@ const getWorker = options => (
   })
 );
 
+before(function cb(done) {
+  this.timeout(30000);
+  const load = () => (
+    loadLang({
+      lang: 'osd',
+      cacheMethod: 'write',
+      ...loadLangOptions,
+    }).then(() => {
+      done();
+    })
+  );
+  if (typeof startServer !== 'undefined') {
+    startServer(load);
+  } else {
+    load();
+  }
+});
+
+after((done) => {
+  if (typeof stopServer !== 'undefined') {
+    stopServer(done);
+  } else {
+    done();
+  }
+});
+
 describe('detect()', () => {
   it('should detect OSD', (done) => {
     [
