@@ -177,7 +177,11 @@ module.exports = (TessModule, api) => {
 
   return {
     text: api.GetUTF8Text(),
-    html: deindent(api.GetHOCRText()),
+    hocr: deindent(api.GetHOCRText()),
+    tsv: api.GetTSVText(),
+    box: api.GetBoxText(),
+    unlv: api.GetUNLVText(),
+    osd: api.GetOsdText(),
     confidence: api.MeanTextConf(),
     blocks,
     psm: enumToString(api.GetPageSegMode(), 'PSM'),
