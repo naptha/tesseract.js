@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node scripts/server.js",
-    "build": "webpack --progress --config scripts/webpack.config.prod.js",
+    "build": "webpack --config scripts/webpack.config.prod.js",
     "prepublishOnly": "npm run build",
     "wait": "wait-on http://localhost:3000/package.json",
     "test": "npm-run-all -p -r start test:all",
@@ -54,7 +54,7 @@
     "node-fetch": "^2.3.0",
     "resolve-url": "^0.2.1",
     "tesseract.js-core": "^2.0.0-beta.10",
-    "tesseract.js-utils": "^1.0.0-beta.7"
+    "tesseract.js-utils": "^1.0.0-beta.6"
   },
   "repository": {
     "type": "git",
