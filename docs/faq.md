@@ -24,7 +24,11 @@ const { TesseractWorker } = Tesseract;
 const worker = new TesseractWorker();
 
 worker
-  .recognize('https://tesseract.projectnaptha.com/img/eng_bw.png')
+  .recognize('https://tesseract.projectnaptha.com/img/eng_bw.png', 'eng', {
+    tessedit_create_box: '1',
+    tessedit_create_unlv: '1',
+    tessedit_create_osd: '1',
+  })
   .then((result) => {
     console.log(result.text);
     console.log(result.hocr);
