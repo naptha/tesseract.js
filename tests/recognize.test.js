@@ -1,5 +1,4 @@
 const { TesseractWorker } = Tesseract;
-const isBrowser = typeof window !== 'undefined' && typeof window.document !== 'undefined';
 
 const IMAGE_PATH = 'http://localhost:3000/tests/assets/images';
 const SIMPLE_TEXT = 'Tesseract.js\n';

@@ -7,7 +7,7 @@ const genConfig = ({
   ...common,
   ...config,
   mode: 'production',
-  devtool: 'source-map',
+  // devtool: 'source-map',
   entry,
   output: {
     path: path.resolve(__dirname, '..', 'dist'),
@@ -25,9 +25,6 @@ module.exports = [
     libraryTarget: 'umd',
   }),
   genConfig({
-    optimization: {
-      minimize: false,
-    },
     entry: path.resolve(__dirname, '..', 'src', 'index.js'),
     filename: 'tesseract.asm.min.js',
     library: 'Tesseract',
