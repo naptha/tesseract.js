@@ -12,3 +12,25 @@ Tesseract.js will first check if \*.traineddata already exists. (browser: [Index
 For tesseract.js v2, check [TrainingTesseract 4.00](https://github.com/tesseract-ocr/tesseract/wiki/TrainingTesseract-4.00)
 
 For tesseract.js v1, check [Training Tesseract 3.03–3.05](https://github.com/tesseract-ocr/tesseract/wiki/Training-Tesseract-3.03%E2%80%933.05)
+
+## How can I get HOCR, TSV, Box, UNLV, OSD?
+
+Starting from 2.0.0-alpha.10, you can get all these information in the final result.
+
+```javascript
+import Tesseract from 'tesseract.js';
+
+const { TesseractWorker } = Tesseract;
+const worker = new TesseractWorker();
+
+worker
+  .recognize('https://tesseract.projectnaptha.com/img/eng_bw.png')
+  .then((result) => {
+    console.log(result.text);
+    console.log(result.hocr);
+    console.log(result.tsv);
+    console.log(result.box);
+    console.log(result.unlv);
+    console.log(result.osd);
+  });
+```
