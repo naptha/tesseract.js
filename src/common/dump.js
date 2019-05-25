@@ -42,7 +42,13 @@ const deindent = (html) => {
  * @param {object} api TesseractBaseAPI instance
  * @returns {object} dumpped JSON object
  */
-module.exports = (TessModule, api) => {
+module.exports = (TessModule, api, {
+  tessedit_create_hocr,
+  tessedit_create_tsv,
+  tessedit_create_box,
+  tessedit_create_unlv,
+  tessedit_create_osd,
+}) => {
   const ri = api.GetIterator();
   const blocks = [];
   let block;
@@ -177,11 +183,11 @@ module.exports = (TessModule, api) => {
 
   return {
     text: api.GetUTF8Text(),
-    hocr: deindent(api.GetHOCRText()),
-    tsv: api.GetTSVText(),
-    box: api.GetBoxText(),
-    unlv: api.GetUNLVText(),
-    osd: api.GetOsdText(),
+    hocr: tessedit_create_hocr === '1' ? deindent(api.GetHOCRText()) : null,
+    tsv: tessedit_create_tsv === '1' ? api.GetTSVText() : null,
+    box: tessedit_create_box === '1' ? api.GetBoxText() : null,
+    unlv: tessedit_create_unlv === '1' ? api.GetUNLVText() : null,
+    osd: tessedit_create_osd === '1' ? api.GetOsdText() : null,
     confidence: api.MeanTextConf(),
     blocks,
     psm: enumToString(api.GetPageSegMode(), 'PSM'),

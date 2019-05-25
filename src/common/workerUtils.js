@@ -67,14 +67,11 @@ const getLangsStr = langs => (
  * @param {string} langs - lang string for Init()
  * @param {object} customParams - an object of params
  */
-const handleParams = (langs, customParams) => {
+const handleParams = (langs, iParams) => {
   const {
     tessedit_ocr_engine_mode,
     ...params
-  } = {
-    ...defaultParams,
-    ...customParams,
-  };
+  } = iParams;
   api.Init(null, getLangsStr(langs), tessedit_ocr_engine_mode);
   Object.keys(params).forEach((key) => {
     api.SetVariable(key, params[key]);
@@ -191,7 +188,7 @@ const loadLanguage = ({ langs, options }, res) => {
  * @param {object} res - job instance
  */
 const handleRecognize = ({
-  image, langs, options, params,
+  image, langs, options, params: customParams,
 }, res) => (
   handleInit(options, res)
     .then(() => (
@@ -211,6 +208,10 @@ const handleRecognize = ({
           const progressUpdate = (progress) => {
             res.progress({ status: 'initializing api', progress });
           };
+          const params = {
+            ...defaultParams,
+            ...customParams,
+          };
           progressUpdate(0);
           handleParams(langs, params);
           progressUpdate(0.5);
@@ -218,7 +219,7 @@ const handleRecognize = ({
           progressUpdate(1);
           api.Recognize(null);
           const files = handleOutput(params);
-          const result = dump(TessModule, api);
+          const result = dump(TessModule, api, params);
           api.End();
           TessModule._free(ptr);
           res.resolve({ files, ...result });
