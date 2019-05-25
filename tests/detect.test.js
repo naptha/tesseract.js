@@ -1,4 +1,4 @@
-const { TesseractWorker, utils: { loadLang } } = Tesseract;
+const { TesseractWorker } = Tesseract;
 const isBrowser = typeof window !== 'undefined' && typeof window.document !== 'undefined';
 const IMAGE_PATH = 'http://localhost:3000/tests/assets/images';
 const loadLangOptions = {
@@ -14,32 +14,6 @@ const getWorker = options => (
     ...options,
   })
 );
-
-before(function cb(done) {
-  this.timeout(30000);
-  const load = () => (
-    loadLang({
-      lang: 'osd',
-      cacheMethod: 'write',
-      ...loadLangOptions,
-    }).then(() => {
-      done();
-    })
-  );
-  if (typeof startServer !== 'undefined') {
-    startServer(load);
-  } else {
-    load();
-  }
-});
-
-after((done) => {
-  if (typeof stopServer !== 'undefined') {
-    stopServer(done);
-  } else {
-    done();
-  }
-});
 
 describe('detect()', () => {
   it('should detect OSD', (done) => {

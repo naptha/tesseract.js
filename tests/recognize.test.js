@@ -1,4 +1,4 @@
-const { TesseractWorker, utils: { loadLang } } = Tesseract;
+const { TesseractWorker } = Tesseract;
 
 const isBrowser = typeof window !== 'undefined' && typeof window.document !== 'undefined';
 const IMAGE_PATH = 'http://localhost:3000/tests/assets/images';
@@ -22,34 +22,7 @@ const getWorker = options => (
   })
 );
 
-before(function cb(done) {
-  this.timeout(30000);
-  const load = () => (
-    loadLang({
-      lang: 'eng+chi_tra',
-      cacheMethod: 'write',
-      ...loadLangOptions,
-    }).then(() => {
-      done();
-    })
-  );
-  if (typeof startServer !== 'undefined') {
-    startServer(load);
-  } else {
-    load();
-  }
-});
-
-after((done) => {
-  if (typeof stopServer !== 'undefined') {
-    stopServer(done);
-  } else {
-    done();
-  }
-});
-
-describe('recognize()',() => {
-  
+describe('recognize()', () => {
   describe('should recognize different langs', () => {
     [
       { name: 'chinese.png', lang: 'chi_tra', ans: CHINESE_TEXT },
@@ -187,22 +160,23 @@ describe('recognize()',() => {
     let canvasDOM = null;
     let imageDOM = null;
     let idx = 0;
-    beforeEach(function cb(done) {
+    beforeEach((done) => {
       canvasDOM = document.createElement('canvas');
       imageDOM = document.createElement('img');
       imageDOM.setAttribute('crossOrigin', 'Anonymous');
       imageDOM.onload = () => {
         canvasDOM.getContext('2d').drawImage(imageDOM, 0, 0);
         done();
-      }
-      imageDOM.setAttribute('src', `${IMAGE_PATH}/simple.${formats[idx++]}`);
+      };
+      imageDOM.setAttribute('src', `${IMAGE_PATH}/simple.${formats[idx]}`);
+      idx += 1;
     });
 
     afterEach(() => {
       canvasDOM.remove();
       imageDOM.remove();
     });
-    
+
     formats.forEach(format => (
       it(`support ${format} format`, (done) => {
         const worker = getWorker();
@@ -216,5 +190,4 @@ describe('recognize()',() => {
       }).timeout(10000)
     ));
   });
-
 });

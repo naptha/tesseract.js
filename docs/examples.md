@@ -6,6 +6,7 @@ Example repositories:
 
 - Offline version: https://github.com/jeromewu/tesseract.js-offline
 - With Vue (similar with React/Angular): https://github.com/jeromewu/tesseract-vue-app
+- Chrome Extension: https://github.com/jeromewu/tesseract.js-chrome-extension
 
 ### basic
 
@@ -16,7 +17,7 @@ const { TesseractWorker } = Tesseract;
 const worker = new TesseractWorker();
 
 worker
-  .recognize('http://jeroen.github.io/images/testocr.png')
+  .recognize('https://tesseract.projectnaptha.com/img/eng_bw.png')
   .then((result) => {
     console.log(result);
   });
@@ -31,7 +32,7 @@ const { TesseractWorker } = Tesseract;
 const worker = new TesseractWorker();
 
 worker
-  .recognize('http://jeroen.github.io/images/testocr.png')
+  .recognize('https://tesseract.projectnaptha.com/img/eng_bw.png')
   .progress((p) => {
     console.log('progress', p);
   })
@@ -50,7 +51,7 @@ const worker = new TesseractWorker();
 
 worker
   .recognize(
-    'http://jeroen.github.io/images/testocr.png',
+    'https://tesseract.projectnaptha.com/img/eng_bw.png',
     'eng+chi_tra'
   )
   .progress((p) => {
@@ -73,7 +74,7 @@ const worker = new TesseractWorker();
 
 worker
   .recognize(
-    'http://jeroen.github.io/images/testocr.png',
+    'https://tesseract.projectnaptha.com/img/eng_bw.png',
     'eng',
     {
       'tessedit_ocr_engine_mode': OEM.TESSERACT_ONLY,
@@ -100,7 +101,7 @@ const worker = new TesseractWorker();
 
 worker
   .recognize(
-    'http://jeroen.github.io/images/testocr.png',
+    'https://tesseract.projectnaptha.com/img/eng_bw.png',
     'eng',
     {
       'tessedit_pageseg_mode': PSM.SINGLE_BLOCK,
@@ -126,7 +127,7 @@ const worker = new TesseractWorker();
 
 worker
   .recognize(
-    'http://jeroen.github.io/images/testocr.png',
+    'https://tesseract.projectnaptha.com/img/eng_bw.png',
     'eng',
     {
       'tessedit_create_pdf': '1',
@@ -150,7 +151,7 @@ const worker = new TesseractWorker();
 
 worker
   .recognize(
-    'http://jeroen.github.io/images/testocr.png',
+    'https://tesseract.projectnaptha.com/img/eng_bw.png',
     'eng',
     {
       'tessedit_create_pdf': '1',

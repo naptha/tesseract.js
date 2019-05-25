@@ -67,12 +67,12 @@ class TesseractWorker {
    * @function recognize text in given image
    * @access public
    * @param {Buffer, string} image - image to be recognized
-   * @param {string} [lang=eng] - language to recognize
+   * @param {string, array} [langs=eng] - languages to recognize
    * @param {object} params - tesseract parameters
    *
    */
-  recognize(image, lang = 'eng', params = {}) {
-    return this._sendJob('recognize', image, lang, params);
+  recognize(image, langs = 'eng', params = {}) {
+    return this._sendJob('recognize', image, langs, params);
   }
 
   /**
@@ -152,13 +152,13 @@ class TesseractWorker {
    * @param {string} lang language to recognize
    * @param {object} params tesseract parameters
    */
-  _sendJob(type, image, lang, params) {
+  _sendJob(type, image, langs, params) {
     return this._delay((job) => {
       job.send(
         type,
         {
           image,
-          lang,
+          langs,
           params,
           options: this.options,
         },
