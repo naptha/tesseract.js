@@ -18,8 +18,12 @@ const worker = new TesseractWorker();
 
 worker
   .recognize('https://tesseract.projectnaptha.com/img/eng_bw.png')
-  .then((result) => {
-    console.log(result);
+  .progress((p) => {
+    console.log('progress', p);
+  })
+  .then(({ text }) => {
+    console.log(text);
+    worker.terminate();
   });
 ```
 
@@ -36,8 +40,9 @@ worker
   .progress((p) => {
     console.log('progress', p);
   })
-  .then((result) => {
-    console.log(result);
+  .then(({ text }) => {
+    console.log(text);
+    worker.terminate();
   });
 ```
 
@@ -57,8 +62,9 @@ worker
   .progress((p) => {
     console.log('progress', p);
   })
-  .then((result) => {
-    console.log(result);
+  .then(({ text }) => {
+    console.log(text);
+    worker.terminate();
   });
 ```
 
@@ -84,8 +90,9 @@ worker
   .progress((p) => {
     console.log('progress', p);
   })
-  .then((result) => {
-    console.log(result);
+  .then(({ text }) => {
+    console.log(text);
+    worker.terminate();
   });
 ```
 
@@ -110,8 +117,9 @@ worker
   .progress((p) => {
     console.log('progress', p);
   })
-  .then((result) => {
-    console.log(result);
+  .then(({ text }) => {
+    console.log(text);
+    worker.terminate();
   });
 ```
 
@@ -136,8 +144,9 @@ worker
   .progress((p) => {
     console.log('progress', p);
   })
-  .then((result) => {
-    console.log(result);
+  .then(({ text }) => {
+    console.log(text);
+    worker.terminate();
   });
 ```
 
@@ -162,7 +171,29 @@ worker
   .progress((p) => {
     console.log('progress', p);
   })
-  .then((result) => {
-    console.log(result.files.pdf); // You can access pdf binary array here.
+  .then(({ text }) => {
+    console.log(text);
+    worker.terminate();
   });
+```
+
+### with preload language data
+
+```javascript
+const Tesseract = require('tesseract.js');
+
+const { TesseractWorker, utils: { loadLang } } = Tesseract;
+const worker = new TesseractWorker();
+
+loadLang({ langs: 'eng', langPath: worker.options.langPath })
+  .then(() => {
+    worker
+      .recognize('https://tesseract.projectnaptha.com/img/eng_bw.png')
+      .progress(p => console.log(p))
+      .then(({ text }) => {
+        console.log(text);
+        worker.terminate();
+      });
+  });
+
 ```
