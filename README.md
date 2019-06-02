@@ -1,4 +1,4 @@
-[![Tesseract.js](https://tesseract.projectnaptha.com/img/logowhite.png)](https://tesseract.projectnaptha.com/)
+[![Tesseract.js](https://tesseract.projectnaptha.com/img/logo_small.png)](https://tesseract.projectnaptha.com/)
 
 [![Build Status](https://travis-ci.org/naptha/tesseract.js.svg?branch=master)](https://travis-ci.org/naptha/tesseract.js)
 [![npm version](https://badge.fury.io/js/tesseract.js.svg)](https://badge.fury.io/js/tesseract.js)
