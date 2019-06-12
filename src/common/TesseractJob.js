@@ -48,14 +48,14 @@ class TesseractJob {
    * @param {function} reject - called when the job fails
    */
   then(resolve, reject) {
-    if (this._resolve.push) {
-      this._resolve.push(resolve);
-    } else {
-      resolve(this._resolve);
-    }
-
-    if (reject) this.catch(reject);
-    return this;
+    return new Promise((res, rej) => {
+      if (!this._resolve.push) {
+        res(this._result);
+      } else {
+        this._resolve.push(res);
+      }
+      this.catch(rej);
+    }).then(resolve, reject);
   }
 
   /**
