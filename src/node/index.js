@@ -34,7 +34,8 @@ const loadImage = (image) => {
     })
       .then(resp => resp.data);
   }
-  return readFile(image);
+  if (Buffer.isBuffer( image) ) return new Promise(function(resolve, reject) { resolve(image); });
+  else return readFile(image);
 };
 
 /*
