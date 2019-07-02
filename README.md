@@ -44,6 +44,7 @@ worker.recognize(myImage)
 - Upgrade to tesseract v4
 - Support multiple languages at the same time, eg: eng+chi_tra for English and Traditional Chinese
 - Supported image formats: png, jpg, bmp, pbm
+- Support WebAssembly (fallback to ASM.js when browser doesn't support)
 
 
 ## Installation
