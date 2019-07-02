@@ -171,8 +171,8 @@ worker
   .progress((p) => {
     console.log('progress', p);
   })
-  .then(({ text }) => {
-    console.log(text);
+  .then(({ files: { pdf } }) => {
+    console.log(Object.values(pdf)); // As pdf is an array-like object, you need to do a little convertion first.
     worker.terminate();
   });
 ```
