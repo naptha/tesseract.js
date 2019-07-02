@@ -8,7 +8,7 @@
  * @author Jerome Wu <jeromewus@gmail.com>
  */
 const check = require('check-types');
-const resolveURL = process.browser ? require('resolve-url') : s => s;
+const resolveURL = (typeof window !== 'undefined' && typeof window.document !== 'undefined') ? require('resolve-url') : s => s;
 const adapter = require('../node');
 const circularize = require('./circularize');
 const TesseractJob = require('./TesseractJob');
