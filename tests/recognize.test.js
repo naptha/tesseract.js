@@ -39,7 +39,7 @@ describe('recognize()', () => {
       }).timeout(30000)
     ));
   });
-
+  
   describe('should read bmp, jpg, png and pbm format images', () => {
     FORMATS.forEach(format => (
       it(`support ${format} format`, (done) => {
@@ -116,6 +116,21 @@ describe('recognize()', () => {
     ));
   });
 
+  (isBrowser ? describe.skip : describe)('should recognize image in Buffer (Node.js only)', () => {
+    FORMATS.forEach(format => (
+      it(`support ${format} format`, (done) => {
+        const worker = getWorker();
+        worker
+          .recognize(fs.readFileSync(path.join(__dirname, 'assets', 'images', `simple.${format}`)))
+          .then(({ text }) => {
+            expect(text).to.be(SIMPLE_TEXT);
+            worker.terminate();
+            done();
+          });
+      }).timeout(10000)
+    ));
+  });
+
   (isBrowser ? describe : describe.skip)('should read image from img DOM element (browser only)', () => {
     FORMATS.forEach(format => (
       it(`support ${format} format`, (done) => {
@@ -133,7 +148,7 @@ describe('recognize()', () => {
       }).timeout(10000)
     ));
   });
-  
+ 
   (isBrowser ? describe : describe.skip)('should read image from video DOM element (browser only)', () => {
     FORMATS.forEach(format => (
       it(`support ${format} format`, (done) => {

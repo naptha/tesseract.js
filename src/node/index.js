@@ -25,6 +25,7 @@ const readFile = util.promisify(fs.readFile);
  * @access public
  * @param {string} image - image source, supported formats:
  *   string: URL string or file path
+ *   buffer: image buffer
  * @returns {array} binary image in array format
  */
 const loadImage = (image) => {
@@ -34,8 +35,12 @@ const loadImage = (image) => {
     })
       .then(resp => resp.data);
   }
-  if (Buffer.isBuffer( image) ) return new Promise(function(resolve, reject) { resolve(image); });
-  else return readFile(image);
+
+  if (Buffer.isBuffer(image)) {
+    return Promise.resolve(image);
+  }
+
+  return readFile(image);
 };
 
 /*

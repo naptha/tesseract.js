@@ -1,3 +1,4 @@
 global.expect = require('expect.js');
-global.fetch = require('node-fetch');
+global.fs = require('fs');
+global.path = require('path');
 global.Tesseract = require('../src');

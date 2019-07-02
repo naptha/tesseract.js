@@ -11,3 +11,4 @@ On a browser, an image can be:
 
 In Node.js, an image can be
 - a path to a local image
+- a Buffer storing binary image 
