@@ -25,24 +25,6 @@ const getWorker = options => (
 );
 
 describe('recognize()', () => {
-  describe('should recognize base64 image', () => {
-    [
-      { format: 'png', image: SIMPLE_PNG, ans: SIMPLE_TEXT },
-      { format: 'jpg', image: SIMPLE_JPG, ans: SIMPLE_TEXT },
-    ].forEach(({ format, image, ans }) => (
-      it(`recongize ${format} in base64`, (done) => {
-        const worker = getWorker();
-        worker
-          .recognize(image)
-          .then(({ text }) => {
-            expect(text).to.be(ans);
-            worker.terminate();
-            done();
-          });
-      }).timeout(30000)
-    ));
-  });
-
   describe('should recognize different langs', () => {
     [
       { name: 'chinese.png', lang: 'chi_tra', ans: CHINESE_TEXT },
@@ -133,6 +115,24 @@ describe('recognize()', () => {
             done();
           });
       }).timeout(60000)
+    ));
+  });
+
+  describe('should recognize base64 image', () => {
+    [
+      { format: 'png', image: SIMPLE_PNG, ans: SIMPLE_TEXT },
+      { format: 'jpg', image: SIMPLE_JPG, ans: SIMPLE_TEXT },
+    ].forEach(({ format, image, ans }) => (
+      it(`recongize ${format} in base64`, (done) => {
+        const worker = getWorker();
+        worker
+          .recognize(image)
+          .then(({ text }) => {
+            expect(text).to.be(ans);
+            worker.terminate();
+            done();
+          });
+      }).timeout(30000)
     ));
   });
 
