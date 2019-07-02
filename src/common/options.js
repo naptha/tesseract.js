@@ -13,7 +13,7 @@ module.exports = {
    * default params for recognize()
    */
   defaultParams: {
-    tessedit_ocr_engine_mode: OEM.TESSERACT_LSTM_COMBINED,
+    tessedit_ocr_engine_mode: OEM.LSTM_ONLY,
     tessedit_pageseg_mode: PSM.SINGLE_BLOCK,
     tessedit_char_whiltelist: '',
     tessedit_create_pdf: '0',

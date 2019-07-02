@@ -13,7 +13,7 @@ const worker = new TesseractWorker();
 
 worker
   .recognize(image, 'eng', {
-    tessedit_ocr_engine_mode: OEM.TESSERACT_LSTM_COMBINED,
+    tessedit_ocr_engine_mode: OEM.LSTM_ONLY,
     tessedit_pageseg_mode: PSM.SINGLE_BLOCK,
   })
   .then(result => console.log(result.text));
@@ -21,7 +21,7 @@ worker
 
 | name | type | default value | description |
 | ---- | ---- | ------------- | ----------- |
-| tessedit\_ocr\_engine\_mode | enum | OEM.TESSERACT\_LSTM\_COMBINED | Check [HERE](https://github.com/tesseract-ocr/tesseract/blob/4.0.0/src/ccstruct/publictypes.h#L268) for definition of each mode | 
+| tessedit\_ocr\_engine\_mode | enum | OEM.LSTM\_ONLY | Check [HERE](https://github.com/tesseract-ocr/tesseract/blob/4.0.0/src/ccstruct/publictypes.h#L268) for definition of each mode | 
 | tessedit\_pageseg\_mode | enum | PSM.SINGLE\_BLOCK | Check [HERE](https://github.com/tesseract-ocr/tesseract/blob/4.0.0/src/ccstruct/publictypes.h#L163) for definition of each mode |
 | tessedit\_char\_whitelist | string | '' | setting white list characters makes the result only contains these characters, useful the content in image is limited |
 | tessedit\_create\_pdf | string | '0' | only 2 values, '0' or '1', when the value is '1', tesseract.js generates a pdf output |
