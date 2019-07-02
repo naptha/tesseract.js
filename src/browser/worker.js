@@ -10,6 +10,7 @@
 
 const check = require('check-types');
 const workerUtils = require('../common/workerUtils');
+const b64toU8Array = require('./b64toU8Array');
 
 /*
  * register message handler
@@ -42,7 +43,7 @@ workerUtils.setAdapter({
     }
     return global.TesseractCore;
   },
-  b64toU8Array: s => new Uint8Array(atob(s).split('').map(c => c.charCodeAt(0))),
+  b64toU8Array,
   writeFile: (path, data, type) => {
     postMessage({
       jobId: 'Download',

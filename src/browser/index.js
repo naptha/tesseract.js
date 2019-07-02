@@ -10,6 +10,7 @@
 const check = require('check-types');
 const resolveURL = require('resolve-url');
 const axios = require('axios');
+const b64toU8Array = require('./b64toU8Array');
 const { defaultOptions } = require('../common/options');
 const { version } = require('../../package.json');
 
@@ -38,6 +39,7 @@ const readFromBlobOrFile = (blob, res) => {
  * @access private
  * @param {string, object} image - image source, supported formats:
  *   string: URL string, can be relative path
+ *   string: base64 image
  *   img HTMLElement: extract image source from src attribute
  *   video HTMLElement: extract image source from poster attribute
  *   canvas HTMLElement: extract image data by converting to Blob
@@ -46,6 +48,11 @@ const readFromBlobOrFile = (blob, res) => {
  */
 const loadImage = (image) => {
   if (check.string(image)) {
+    // Base64 Image
+    if (/data:image\/([a-zA-Z]*);base64,([^"]*)/.test(image)) {
+      return Promise.resolve(b64toU8Array(image.split(',')[1]));
+    }
+    // Image URL
     return axios.get(resolveURL(image), {
       responseType: 'arraybuffer',
     })

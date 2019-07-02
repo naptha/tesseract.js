@@ -10,6 +10,7 @@
 
 const check = require('check-types');
 const workerUtils = require('../common/workerUtils');
+const b64toU8Array = require('./b64toU8Array');
 
 let TesseractCore = null;
 
@@ -33,7 +34,7 @@ workerUtils.setAdapter({
     }
     return TesseractCore;
   },
-  b64toU8Array: s => Buffer.from(s, 'base64'),
+  b64toU8Array,
   writeFile: (path, data) => {
     const fs = require('fs');
     fs.writeFile(path, data, (err) => {
