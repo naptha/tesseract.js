@@ -3,6 +3,8 @@
   "version": "2.0.0-alpha.10",
   "description": "Pure Javascript Multilingual OCR",
   "main": "src/index.js",
+  "unpkg": "dist/tesseract.min.js",
+  "jsdelivr": "dist/tesseract.min.js",
   "scripts": {
     "start": "node scripts/server.js",
     "build": "rimraf dist && webpack --config scripts/webpack.config.prod.js",
