@@ -53,7 +53,7 @@ Tesseract.js works with a `<script>` tag via local copy or CDN, with webpack via
 ### CDN
 ```html
 <!-- v2 -->
-<script src='https://unpkg.com/tesseract.js@v2.0.0-alpha.10/dist/tesseract.min.js'></script>
+<script src='https://unpkg.com/tesseract.js@v2.0.0-alpha.11/dist/tesseract.min.js'></script>
 
 <!-- v1 -->
 <script src='https://unpkg.com/tesseract.js@1.0.19/src/index.js'></script>
