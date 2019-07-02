@@ -5,7 +5,8 @@ You can also check [examples](../examples) folder.
 Example repositories:
 
 - Offline version: https://github.com/jeromewu/tesseract.js-offline
-- With Vue (similar with React/Angular): https://github.com/jeromewu/tesseract-vue-app
+- With Vue: https://github.com/jeromewu/tesseract.js-vue-app
+- With Angular: https://github.com/jeromewu/tesseract.js-angular-app
 - Chrome Extension: https://github.com/jeromewu/tesseract.js-chrome-extension
 
 ### basic
