@@ -205,24 +205,28 @@ const handleRecognize = ({
           }
         })
         .then(() => {
-          const progressUpdate = (progress) => {
-            res.progress({ status: 'initializing api', progress });
-          };
-          const params = {
-            ...defaultParams,
-            ...customParams,
-          };
-          progressUpdate(0);
-          handleParams(langs, params);
-          progressUpdate(0.5);
-          const ptr = setImage(image);
-          progressUpdate(1);
-          api.Recognize(null);
-          const files = handleOutput(params);
-          const result = dump(TessModule, api, params);
-          api.End();
-          TessModule._free(ptr);
-          res.resolve({ files, ...result });
+          try {
+            const progressUpdate = (progress) => {
+              res.progress({ status: 'initializing api', progress });
+            };
+            const params = {
+              ...defaultParams,
+              ...customParams,
+            };
+            progressUpdate(0);
+            handleParams(langs, params);
+            progressUpdate(0.5);
+            const ptr = setImage(image);
+            progressUpdate(1);
+            api.Recognize(null);
+            const files = handleOutput(params);
+            const result = dump(TessModule, api, params);
+            api.End();
+            TessModule._free(ptr);
+            res.resolve({ files, ...result });
+          } catch (err) {
+            res.reject({ err: err });
+          }
         })
     ))
 );
