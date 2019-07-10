@@ -225,7 +225,7 @@ const handleRecognize = ({
             TessModule._free(ptr);
             res.resolve({ files, ...result });
           } catch (err) {
-            res.reject({ err: err });
+            res.reject({ err });
           }
         })
     ))
