@@ -20,6 +20,9 @@ const genConfig = ({
       },
     }),
   ],
+  devServer: {
+      allowedHosts: ['localhost', '.gitpod.io'],
+  },
 });
 
 module.exports = [
