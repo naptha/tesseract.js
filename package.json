@@ -16,7 +16,8 @@
     "test:browser-tpl": "mocha-headless-chrome -a incognito -a no-sandbox -a disable-setuid-sandbox -t 300000",
     "test:browser:detect": "npm run test:browser-tpl -- -f ./tests/detect.test.html",
     "test:browser:recognize": "npm run test:browser-tpl -- -f ./tests/recognize.test.html",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "postinstall": "opencollective-postinstall || true"
   },
   "browser": {
     "./src/node/index.js": "./src/browser/index.js"
@@ -54,6 +55,7 @@
     "check-types": "^7.4.0",
     "is-url": "1.2.2",
     "node-fetch": "^2.3.0",
+    "opencollective-postinstall": "^2.0.2",
     "resolve-url": "^0.2.1",
     "tesseract.js-core": "^2.0.0-beta.10",
     "tesseract.js-utils": "^1.0.0-beta.8"
@@ -65,5 +67,9 @@
   "bugs": {
     "url": "https://github.com/naptha/tesseract.js/issues"
   },
-  "homepage": "https://github.com/naptha/tesseract.js"
+  "homepage": "https://github.com/naptha/tesseract.js",
+  "collective": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/tesseractjs"
+  }
 }
