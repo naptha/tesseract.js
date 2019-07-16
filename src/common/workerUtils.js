@@ -32,7 +32,13 @@ let adapter = {};
  * @param {array} image - binary array in array format
  * @returns {number} - an emscripten pointer of the image
  */
-const setImage = (image) => {
+const setImage = (image, params) => {
+  const {
+    tessjs_image_rectangle_left: left,
+    tessjs_image_rectangle_top: top,
+    tessjs_image_rectangle_width: width,
+    tessjs_image_rectangle_height: height,
+  } = params;
   const {
     w, h, bytesPerPixel, data, pix,
   } = readImage(TessModule, Array.from(image));
@@ -48,7 +54,12 @@ const setImage = (image) => {
   } else {
     api.SetImage(data, w, h, bytesPerPixel, w * bytesPerPixel);
   }
-  api.SetRectangle(0, 0, w, h);
+  api.SetRectangle(
+    (left < 0) ? 0 : left,
+    (top < 0) ? 0 : top,
+    (width < 0) ? w : width,
+    (height < 0) ? h : height,
+  );
   return data === null ? pix : data;
 };
 
@@ -74,7 +85,9 @@ const handleParams = (langs, iParams) => {
   } = iParams;
   api.Init(null, getLangsStr(langs), tessedit_ocr_engine_mode);
   Object.keys(params).forEach((key) => {
-    api.SetVariable(key, params[key]);
+    if (!key.startsWith('tessjs')) {
+      api.SetVariable(key, params[key]);
+    }
   });
 };
 
@@ -89,32 +102,32 @@ const handleParams = (langs, iParams) => {
 const handleOutput = (customParams) => {
   let files = {};
   const {
-    tessedit_create_pdf,
-    textonly_pdf,
-    pdf_name,
-    pdf_title,
-    pdf_auto_download,
-    pdf_bin,
+    tessjs_create_pdf,
+    tessjs_textonly_pdf,
+    tessjs_pdf_name,
+    tessjs_pdf_title,
+    tessjs_pdf_auto_download,
+    tessjs_pdf_bin,
   } = {
     ...defaultParams,
     ...customParams,
   };
 
-  if (tessedit_create_pdf === '1') {
-    const pdfRenderer = new TessModule.TessPDFRenderer(pdf_name, '/', textonly_pdf === '1');
-    pdfRenderer.BeginDocument(pdf_title);
+  if (tessjs_create_pdf === '1') {
+    const pdfRenderer = new TessModule.TessPDFRenderer(tessjs_pdf_name, '/', tessjs_textonly_pdf === '1');
+    pdfRenderer.BeginDocument(tessjs_pdf_title);
     pdfRenderer.AddImage(api);
     pdfRenderer.EndDocument();
     TessModule._free(pdfRenderer);
 
-    const data = TessModule.FS.readFile(`/${pdf_name}.pdf`);
+    const data = TessModule.FS.readFile(`/${tessjs_pdf_name}.pdf`);
 
-    if (pdf_bin) {
+    if (tessjs_pdf_bin) {
       files = { pdf: data, ...files };
     }
 
-    if (pdf_auto_download) {
-      adapter.writeFile(`${pdf_name}.pdf`, data, 'application/pdf');
+    if (tessjs_pdf_auto_download) {
+      adapter.writeFile(`${tessjs_pdf_name}.pdf`, data, 'application/pdf');
     }
   }
 
@@ -216,7 +229,7 @@ const handleRecognize = ({
             progressUpdate(0);
             handleParams(langs, params);
             progressUpdate(0.5);
-            const ptr = setImage(image);
+            const ptr = setImage(image, params);
             progressUpdate(1);
             api.Recognize(null);
             const files = handleOutput(params);
@@ -244,7 +257,7 @@ const handleRecognize = ({
  * @param {object} res - job instance
  */
 const handleDetect = ({
-  image, langs, options,
+  image, langs, options, params: customParams,
 }, res) => (
   handleInit(options, res)
     .then(() => (
@@ -252,8 +265,12 @@ const handleDetect = ({
         .then(() => {
           api.Init(null, getLangsStr(langs));
           api.SetPageSegMode(TessModule.PSM_OSD_ONLY);
+          const params = {
+            ...defaultParams,
+            ...customParams,
+          };
 
-          const ptr = setImage(image);
+          const ptr = setImage(image, params);
           const results = new TessModule.OSResults();
 
           if (!api.DetectOS(results)) {

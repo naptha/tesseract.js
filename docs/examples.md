@@ -124,7 +124,7 @@ worker
   });
 ```
 
-### with pdf output (^2.0.0-alpha.7)
+### with pdf output (^2.0.0-alpha.12)
 
 In this example, pdf file will be downloaded in browser and write to file system in Node.js
 
@@ -139,7 +139,7 @@ worker
     'https://tesseract.projectnaptha.com/img/eng_bw.png',
     'eng',
     {
-      'tessedit_create_pdf': '1',
+      'tessjs_create_pdf': '1',
     }
   )
   .progress((p) => {
@@ -164,9 +164,9 @@ worker
     'https://tesseract.projectnaptha.com/img/eng_bw.png',
     'eng',
     {
-      'tessedit_create_pdf': '1',
-      'pdf_auto_download': false, // disable auto download
-      'pdf_bin': true,            // add pdf file bin array in result
+      'tessjs_create_pdf': '1',
+      'tessjs_pdf_auto_download': false, // disable auto download
+      'tessjs_pdf_bin': true,            // add pdf file bin array in result
     }
   )
   .progress((p) => {
@@ -197,4 +197,32 @@ loadLang({ langs: 'eng', langPath: worker.options.langPath })
       });
   });
 
+```
+
+### with only part of the image (^2.0.0-alpha.12)
+
+```javascript
+import Tesseract from 'tesseract.js';
+
+const { TesseractWorker } = Tesseract;
+const worker = new TesseractWorker();
+
+worker
+  .recognize(
+    'https://tesseract.projectnaptha.com/img/eng_bw.png',
+    'eng',
+    {
+      tessjs_image_rectangle_left: 0,
+      tessjs_image_rectangle_top: 0,
+      tessjs_image_rectangle_width: 500,
+      tessjs_image_rectangle_height: 250,
+    }
+  )
+  .progress((p) => {
+    console.log('progress', p);
+  })
+  .then(({ text }) => {
+    console.log(text);
+    worker.terminate();
+  });
 ```

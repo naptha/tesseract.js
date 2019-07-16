@@ -43,11 +43,11 @@ const deindent = (html) => {
  * @returns {object} dumpped JSON object
  */
 module.exports = (TessModule, api, {
-  tessedit_create_hocr,
-  tessedit_create_tsv,
-  tessedit_create_box,
-  tessedit_create_unlv,
-  tessedit_create_osd,
+  tessjs_create_hocr,
+  tessjs_create_tsv,
+  tessjs_create_box,
+  tessjs_create_unlv,
+  tessjs_create_osd,
 }) => {
   const ri = api.GetIterator();
   const blocks = [];
@@ -183,11 +183,11 @@ module.exports = (TessModule, api, {
 
   return {
     text: api.GetUTF8Text(),
-    hocr: tessedit_create_hocr === '1' ? deindent(api.GetHOCRText()) : null,
-    tsv: tessedit_create_tsv === '1' ? api.GetTSVText() : null,
-    box: tessedit_create_box === '1' ? api.GetBoxText() : null,
-    unlv: tessedit_create_unlv === '1' ? api.GetUNLVText() : null,
-    osd: tessedit_create_osd === '1' ? api.GetOsdText() : null,
+    hocr: tessjs_create_hocr === '1' ? deindent(api.GetHOCRText()) : null,
+    tsv: tessjs_create_tsv === '1' ? api.GetTSVText() : null,
+    box: tessjs_create_box === '1' ? api.GetBoxText() : null,
+    unlv: tessjs_create_unlv === '1' ? api.GetUNLVText() : null,
+    osd: tessjs_create_osd === '1' ? api.GetOsdText() : null,
     confidence: api.MeanTextConf(),
     blocks,
     psm: enumToString(api.GetPageSegMode(), 'PSM'),
