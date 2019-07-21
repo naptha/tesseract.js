@@ -73,7 +73,7 @@ const loadImage = (image) => {
       });
     }
   }
-  if (check.instance(image, File)) {
+  if (check.instance(image, File) || check.instance(image, Blob)) {
     return new Promise((res) => {
       readFromBlobOrFile(image, res);
     });
