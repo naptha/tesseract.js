@@ -7,6 +7,7 @@ The main Tesseract.js functions (ex. recognize, detect) take an `image` paramete
 On a browser, an image can be:
 - an `img`, `video`, or `canvas` element
 - a `File` object (from a file `<input>`)
+- a `Blob` object
 - a path or URL to an accessible image
 - a base64 encoded image fits `data:image\/([a-zA-Z]*);base64,([^"]*)` regexp
 
