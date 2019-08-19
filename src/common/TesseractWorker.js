@@ -43,6 +43,7 @@ class TesseractWorker {
    * @param {string} [options.cachePath=.] - @see {@link https://github.com/jeromewu/tesseract.js-utils/blob/master/src/loadLang.js}
    * @param {string} [options.cacheMethod=write] - @see {@link https://github.com/jeromewu/tesseract.js-utils/blob/master/src/loadLang.js}
    * @param {string} [options.dataPath=.] - @see {@link https://github.com/jeromewu/tesseract.js-utils/blob/master/src/loadLang.js}
+   * @param {boolean} [options.preventBlobURL=false] - do not use a blob: URL for the worker script
    *
    */
   constructor(options = {}) {
