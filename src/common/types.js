@@ -12,7 +12,6 @@ module.exports = {
     LSTM_ONLY: 1,
     TESSERACT_LSTM_COMBINED: 2,
     DEFAULT: 3,
-    COUNT: 4,
   },
   /*
    * PSM = Page Segmentation Mode
@@ -31,6 +30,5 @@ module.exports = {
     SPARSE_TEXT: '10',
     SPARSE_TEXT_OSD: '11',
     RAW_LINE: '12',
-    COUNT: '13',
   },
 };

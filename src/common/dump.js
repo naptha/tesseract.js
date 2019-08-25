@@ -78,7 +78,10 @@ module.exports = (TessModule, api, {
         for (let i = 0; i < n; i += 1) {
           polygon.push([px.getValue(i), py.getValue(i)]);
         }
-        TessModule._ptaDestroy(TessModule.getPointer(poly));
+        /*
+         * TODO: find out why _ptaDestroy doesn't work
+         */
+        // TessModule._ptaDestroy(TessModule.getPointer(poly));
       }
 
       block = {

@@ -57,7 +57,7 @@
     "node-fetch": "^2.3.0",
     "opencollective-postinstall": "^2.0.2",
     "resolve-url": "^0.2.1",
-    "tesseract.js-core": "^2.0.0-beta.10",
+    "tesseract.js-core": "^2.0.0-beta.11",
     "tesseract.js-utils": "^1.0.0-beta.8"
   },
   "repository": {

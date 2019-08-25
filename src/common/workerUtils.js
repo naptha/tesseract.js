@@ -11,6 +11,7 @@ const { readImage, loadLang } = require('tesseract.js-utils');
 const pdfTTF = require('./pdf-ttf');
 const dump = require('./dump');
 const { defaultParams } = require('./options');
+const { OEM, PSM } = require('./types');
 
 /*
  * Tesseract Module returned by TesseractCore.
@@ -201,11 +202,33 @@ const loadLanguage = ({ langs, options }, res) => {
  * @param {object} res - job instance
  */
 const handleRecognize = ({
-  image, langs, options, params: customParams,
-}, res) => (
-  handleInit(options, res)
+  image, langs: iLangs, options, params: customParams,
+}, res) => {
+  const params = {
+    ...defaultParams,
+    ...customParams,
+  };
+  const { tessedit_pageseg_mode } = params;
+  let langs = iLangs;
+
+  /*
+   * When PSM === OSD_ONLY or AUTO_OSD or RAW_LINE
+   * osd.traineddata must be included and
+   * OEM must be TESSERACT_ONLY (LSTM doesn't support OSD)
+   */
+  if ([
+    PSM.OSD_ONLY,
+    PSM.AUTO_OSD,
+    PSM.RAW_LINE,
+  ].includes(tessedit_pageseg_mode)) {
+    langs = (typeof iLangs === 'string')
+      ? `${iLangs}+osd`
+      : [...iLangs, 'osd'];
+    params.tessedit_ocr_engine_mode = OEM.TESSERACT_ONLY;
+  }
+  return handleInit(options, res)
     .then(() => (
-      loadLanguage({ langs, options }, res)
+      loadLanguage({ langs, params, options }, res)
         .catch((e) => {
           if (e instanceof DOMException) {
             /*
@@ -222,10 +245,6 @@ const handleRecognize = ({
             const progressUpdate = (progress) => {
               res.progress({ status: 'initializing api', progress });
             };
-            const params = {
-              ...defaultParams,
-              ...customParams,
-            };
             progressUpdate(0);
             handleParams(langs, params);
             progressUpdate(0.5);
@@ -241,8 +260,8 @@ const handleRecognize = ({
             res.reject({ err });
           }
         })
-    ))
-);
+    ));
+};
 
 /**
  * handleDetect
@@ -263,8 +282,8 @@ const handleDetect = ({
     .then(() => (
       loadLanguage({ langs, options }, res)
         .then(() => {
-          api.Init(null, getLangsStr(langs));
-          api.SetPageSegMode(TessModule.PSM_OSD_ONLY);
+          api.Init(null, getLangsStr(langs), OEM.TESSERACT_ONLY);
+          api.SetPageSegMode(PSM.OSD_ONLY);
           const params = {
             ...defaultParams,
             ...customParams,
