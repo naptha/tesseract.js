@@ -8,7 +8,10 @@ module.exports = {
      * of 20 MB.
      */
     langPath: 'https://tessdata.projectnaptha.com/4.0.0',
-    preventBlobURL: false,
+    /*
+     * Use BlobURL for worker script by default
+     */
+    workerBlobURL: true,
   },
   /*
    * default params for recognize()
