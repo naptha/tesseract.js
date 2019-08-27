@@ -32,6 +32,7 @@ class TesseractWorker {
    *     In browser-like environment, it is downloaded from a CDN service.
    *     Please update this option if you self-host the worker script.
    *     In Node.js environment, this option is not used as the worker script is in local.
+   * @param {boolean} [options.workerBlobURL=true] - Use a blob: URL for the worker script
    * @param {string} options.corePath -
    *     A remote path to load tesseract.js-core script.
    *     In browser-like environment, it is downloaded from a CDN service.

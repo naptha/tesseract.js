@@ -124,10 +124,11 @@ exports.defaultOptions = {
  * @param {object} instance - TesseractWorker instance
  * @param {object} options
  * @param {string} options.workerPath - worker script path
+ * @param {boolean} options.workerBlobURL - Use a blob:// URL for the worker script
  */
-exports.spawnWorker = (instance, { workerPath }) => {
+exports.spawnWorker = (instance, { workerPath, workerBlobURL }) => {
   let worker;
-  if (Blob && URL) {
+  if (Blob && URL && workerBlobURL) {
     const blob = new Blob([`importScripts("${workerPath}");`], {
       type: 'application/javascript',
     });
