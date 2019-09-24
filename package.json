@@ -3,6 +3,7 @@
   "version": "2.0.0-alpha.15",
   "description": "Pure Javascript Multilingual OCR",
   "main": "src/index.js",
+  "types": "types/index.d.ts",
   "unpkg": "dist/tesseract.min.js",
   "jsdelivr": "dist/tesseract.min.js",
   "scripts": {
