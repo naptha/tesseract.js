@@ -13,6 +13,8 @@ const dump = require('./dump');
 const { defaultParams } = require('./options');
 const { OEM, PSM } = require('./types');
 
+const isBrowser = typeof window !== 'undefined' && typeof window.document !== 'undefined';
+
 /*
  * Tesseract Module returned by TesseractCore.
  */
@@ -230,7 +232,7 @@ const handleRecognize = ({
     .then(() => (
       loadLanguage({ langs, params, options }, res)
         .catch((e) => {
-          if (e instanceof DOMException) {
+          if (isBrowser && e instanceof DOMException) {
             /*
              * For some reason google chrome throw DOMException in loadLang,
              * while other browser is OK, for now we ignore this exception
