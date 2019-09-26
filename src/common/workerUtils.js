@@ -8,7 +8,12 @@
  * @author Jerome Wu <jeromewus@gmail.com>
  */
 const { readImage, loadLang } = require('tesseract.js-utils');
+const pdfTTF = require('./pdf-ttf');
 const dump = require('./dump');
+const { defaultParams } = require('./options');
+const { OEM, PSM } = require('./types');
+
+const isBrowser = typeof window !== 'undefined' && typeof window.document !== 'undefined';
 
 /*
  * Tesseract Module returned by TesseractCore.
@@ -30,7 +35,13 @@ let adapter = {};
  * @param {array} image - binary array in array format
  * @returns {number} - an emscripten pointer of the image
  */
-const setImage = (image) => {
+const setImage = (image, params) => {
+  const {
+    tessjs_image_rectangle_left: left,
+    tessjs_image_rectangle_top: top,
+    tessjs_image_rectangle_width: width,
+    tessjs_image_rectangle_height: height,
+  } = params;
   const {
     w, h, bytesPerPixel, data, pix,
   } = readImage(TessModule, Array.from(image));
@@ -46,8 +57,84 @@ const setImage = (image) => {
   } else {
     api.SetImage(data, w, h, bytesPerPixel, w * bytesPerPixel);
   }
-  api.SetRectangle(0, 0, w, h);
+  api.SetRectangle(
+    (left < 0) ? 0 : left,
+    (top < 0) ? 0 : top,
+    (width < 0) ? w : width,
+    (height < 0) ? h : height,
+  );
   return data === null ? pix : data;
+};
+
+const getLangsStr = langs => (
+  typeof langs === 'string'
+    ? langs
+    : langs.map(lang => (typeof lang === 'string' ? lang : lang.data)).join('+')
+);
+
+/**
+ * handleParams
+ *
+ * @name handleParams
+ * @function hanlde params from users
+ * @access private
+ * @param {string} langs - lang string for Init()
+ * @param {object} customParams - an object of params
+ */
+const handleParams = (langs, iParams) => {
+  const {
+    tessedit_ocr_engine_mode,
+    ...params
+  } = iParams;
+  api.Init(null, getLangsStr(langs), tessedit_ocr_engine_mode);
+  Object.keys(params).forEach((key) => {
+    if (!key.startsWith('tessjs')) {
+      api.SetVariable(key, params[key]);
+    }
+  });
+};
+
+/**
+ * handleOutput
+ *
+ * @name handleOutput
+ * @function handle file output
+ * @access private
+ * @param {object} customParams - an object of params
+ */
+const handleOutput = (customParams) => {
+  let files = {};
+  const {
+    tessjs_create_pdf,
+    tessjs_textonly_pdf,
+    tessjs_pdf_name,
+    tessjs_pdf_title,
+    tessjs_pdf_auto_download,
+    tessjs_pdf_bin,
+  } = {
+    ...defaultParams,
+    ...customParams,
+  };
+
+  if (tessjs_create_pdf === '1') {
+    const pdfRenderer = new TessModule.TessPDFRenderer(tessjs_pdf_name, '/', tessjs_textonly_pdf === '1');
+    pdfRenderer.BeginDocument(tessjs_pdf_title);
+    pdfRenderer.AddImage(api);
+    pdfRenderer.EndDocument();
+    TessModule._free(pdfRenderer);
+
+    const data = TessModule.FS.readFile(`/${tessjs_pdf_name}.pdf`);
+
+    if (tessjs_pdf_bin) {
+      files = { pdf: data, ...files };
+    }
+
+    if (tessjs_pdf_auto_download) {
+      adapter.writeFile(`${tessjs_pdf_name}.pdf`, data, 'application/pdf');
+    }
+  }
+
+  return files;
 };
 
 /**
@@ -74,6 +161,7 @@ const handleInit = ({ corePath }, res) => {
     })
       .then((tessModule) => {
         TessModule = tessModule;
+        TessModule.FS.writeFile('/pdf.ttf', adapter.b64toU8Array(pdfTTF));
         api = new TessModule.TessBaseAPI();
         res.progress({ status: 'initialized tesseract', progress: 1 });
       });
@@ -89,14 +177,14 @@ const handleInit = ({ corePath }, res) => {
  * @function load language from remote or local cache
  * @access public
  * @param {object} req - job payload
- * @param {string} req.lang - languages to load, ex: eng, eng+chi_tra
+ * @param {string} req.langs - languages to load, ex: eng, eng+chi_tra
  * @param {object} req.options - other options for loadLang function
  * @param {object} res - job instance
  * @returns {Promise} A Promise for callback
  */
-const loadLanguage = ({ lang, options }, res) => {
+const loadLanguage = ({ langs, options }, res) => {
   res.progress({ status: 'loading language traineddata', progress: 0 });
-  return loadLang({ lang, TessModule, ...options }).then((...args) => {
+  return loadLang({ langs, TessModule, ...options }).then((...args) => {
     res.progress({ status: 'loaded language traineddata', progress: 1 });
     return args;
   });
@@ -110,38 +198,72 @@ const loadLanguage = ({ lang, options }, res) => {
  * @access public
  * @param {object} req - job payload
  * @param {array} req.image - binary image in array format
- * @param {string} req.lang - languages to load, ex: eng, eng+chi_tra
+ * @param {string} req.langs - languages to load, ex: eng, eng+chi_tra
  * @param {object} req.options - other options for loadLang function
  * @param {object} req.params - parameters for tesseract
  * @param {object} res - job instance
  */
 const handleRecognize = ({
-  image, lang, options, params,
-}, res) => (
-  handleInit(options, res)
+  image, langs: iLangs, options, params: customParams,
+}, res) => {
+  const params = {
+    ...defaultParams,
+    ...customParams,
+  };
+  const { tessedit_pageseg_mode } = params;
+  let langs = iLangs;
+
+  /*
+   * When PSM === OSD_ONLY or AUTO_OSD or RAW_LINE
+   * osd.traineddata must be included and
+   * OEM must be TESSERACT_ONLY (LSTM doesn't support OSD)
+   */
+  if ([
+    PSM.OSD_ONLY,
+    PSM.AUTO_OSD,
+    PSM.RAW_LINE,
+  ].includes(tessedit_pageseg_mode)) {
+    langs = (typeof iLangs === 'string')
+      ? `${iLangs}+osd`
+      : [...iLangs, 'osd'];
+    params.tessedit_ocr_engine_mode = OEM.TESSERACT_ONLY;
+  }
+  return handleInit(options, res)
     .then(() => (
-      loadLanguage({ lang, options }, res)
-        .then(() => {
-          const progressUpdate = (progress) => {
-            res.progress({ status: 'initializing api', progress });
-          };
-          progressUpdate(0);
-          api.Init(null, lang);
-          progressUpdate(0.3);
-          Object.keys(params).forEach((key) => {
-            api.SetVariable(key, params[key]);
-          });
-          progressUpdate(0.6);
-          const ptr = setImage(image);
-          progressUpdate(1);
-          api.Recognize(null);
-          const result = dump(TessModule, api);
-          api.End();
-          TessModule._free(ptr);
-          res.resolve(result);
+      loadLanguage({ langs, params, options }, res)
+        .catch((e) => {
+          if (isBrowser && e instanceof DOMException) {
+            /*
+             * For some reason google chrome throw DOMException in loadLang,
+             * while other browser is OK, for now we ignore this exception
+             * and hopefully to find the root cause one day.
+             */
+          } else {
+            throw e;
+          }
         })
-    ))
-);
+        .then(() => {
+          try {
+            const progressUpdate = (progress) => {
+              res.progress({ status: 'initializing api', progress });
+            };
+            progressUpdate(0);
+            handleParams(langs, params);
+            progressUpdate(0.5);
+            const ptr = setImage(image, params);
+            progressUpdate(1);
+            api.Recognize(null);
+            const files = handleOutput(params);
+            const result = dump(TessModule, api, params);
+            api.End();
+            TessModule._free(ptr);
+            res.resolve({ files, ...result });
+          } catch (err) {
+            res.reject({ err });
+          }
+        })
+    ));
+};
 
 /**
  * handleDetect
@@ -151,21 +273,25 @@ const handleRecognize = ({
  * @access public
  * @param {object} req - job payload
  * @param {array} req.image - binary image in array format
- * @param {string} req.lang - languages to load, ex: eng, eng+chi_tra
+ * @param {string} req.langs - languages to load, ex: eng, eng+chi_tra
  * @param {object} req.options - other options for loadLang function
  * @param {object} res - job instance
  */
 const handleDetect = ({
-  image, lang, options,
+  image, langs, options, params: customParams,
 }, res) => (
   handleInit(options, res)
     .then(() => (
-      loadLanguage({ lang, options }, res)
+      loadLanguage({ langs, options }, res)
         .then(() => {
-          api.Init(null, lang);
-          api.SetPageSegMode(TessModule.PSM_OSD_ONLY);
+          api.Init(null, getLangsStr(langs), OEM.TESSERACT_ONLY);
+          api.SetPageSegMode(PSM.OSD_ONLY);
+          const params = {
+            ...defaultParams,
+            ...customParams,
+          };
 
-          const ptr = setImage(image);
+          const ptr = setImage(image, params);
           const results = new TessModule.OSResults();
 
           if (!api.DetectOS(results)) {

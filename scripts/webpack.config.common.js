@@ -12,12 +12,12 @@ module.exports = {
                 '@babel/preset-env',
                 {
                   targets: 'last 2 versions',
-                }
-              ]
+                },
+              ],
             ],
-          }
-        }
-      }
-    ]
+          },
+        },
+      },
+    ],
   },
 };

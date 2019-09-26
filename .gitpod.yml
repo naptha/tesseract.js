@@ -1,0 +1,7 @@
+tasks:
+  - command: gp await-port 3000 && sleep 3 && gp preview $(gp url 3000)/examples/browser/demo.html
+  - init: npm install
+    command: npm start
+ports:
+  - port: 3000
+    onOpen: ignore

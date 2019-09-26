@@ -42,7 +42,13 @@ const deindent = (html) => {
  * @param {object} api TesseractBaseAPI instance
  * @returns {object} dumpped JSON object
  */
-module.exports = (TessModule, api) => {
+module.exports = (TessModule, api, {
+  tessjs_create_hocr,
+  tessjs_create_tsv,
+  tessjs_create_box,
+  tessjs_create_unlv,
+  tessjs_create_osd,
+}) => {
   const ri = api.GetIterator();
   const blocks = [];
   let block;
@@ -72,7 +78,10 @@ module.exports = (TessModule, api) => {
         for (let i = 0; i < n; i += 1) {
           polygon.push([px.getValue(i), py.getValue(i)]);
         }
-        TessModule._ptaDestroy(TessModule.getPointer(poly));
+        /*
+         * TODO: find out why _ptaDestroy doesn't work
+         */
+        // TessModule._ptaDestroy(TessModule.getPointer(poly));
       }
 
       block = {
@@ -177,7 +186,11 @@ module.exports = (TessModule, api) => {
 
   return {
     text: api.GetUTF8Text(),
-    html: deindent(api.GetHOCRText()),
+    hocr: tessjs_create_hocr === '1' ? deindent(api.GetHOCRText()) : null,
+    tsv: tessjs_create_tsv === '1' ? api.GetTSVText() : null,
+    box: tessjs_create_box === '1' ? api.GetBoxText() : null,
+    unlv: tessjs_create_unlv === '1' ? api.GetUNLVText() : null,
+    osd: tessjs_create_osd === '1' ? api.GetOsdText() : null,
     confidence: api.MeanTextConf(),
     blocks,
     psm: enumToString(api.GetPageSegMode(), 'PSM'),

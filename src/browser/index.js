@@ -9,6 +9,8 @@
  */
 const check = require('check-types');
 const resolveURL = require('resolve-url');
+const axios = require('axios');
+const b64toU8Array = require('./b64toU8Array');
 const { defaultOptions } = require('../common/options');
 const { version } = require('../../package.json');
 
@@ -37,16 +39,24 @@ const readFromBlobOrFile = (blob, res) => {
  * @access private
  * @param {string, object} image - image source, supported formats:
  *   string: URL string, can be relative path
+ *   string: base64 image
  *   img HTMLElement: extract image source from src attribute
  *   video HTMLElement: extract image source from poster attribute
- *   canvas HTMLElement: extract image data by converting to Blob 
+ *   canvas HTMLElement: extract image data by converting to Blob
  *   File instance: data from <input type="file" />
  * @returns {array} binary image in array format
  */
 const loadImage = (image) => {
   if (check.string(image)) {
-    return fetch(resolveURL(image))
-      .then(resp => resp.arrayBuffer());
+    // Base64 Image
+    if (/data:image\/([a-zA-Z]*);base64,([^"]*)/.test(image)) {
+      return Promise.resolve(b64toU8Array(image.split(',')[1]));
+    }
+    // Image URL
+    return axios.get(resolveURL(image), {
+      responseType: 'arraybuffer',
+    })
+      .then(resp => resp.data);
   }
   if (check.instance(image, HTMLElement)) {
     if (image.tagName === 'IMG') {
@@ -63,7 +73,7 @@ const loadImage = (image) => {
       });
     }
   }
-  if (check.instance(image, File)) {
+  if (check.instance(image, File) || check.instance(image, Blob)) {
     return new Promise((res) => {
       readFromBlobOrFile(image, res);
     });
@@ -71,19 +81,38 @@ const loadImage = (image) => {
   return Promise.reject();
 };
 
+const downloadFile = (path, blob) => {
+  if (navigator.msSaveBlob) {
+    // IE 10+
+    navigator.msSaveBlob(blob, path);
+  } else {
+    const link = document.createElement('a');
+    // Browsers that support HTML5 download attribute
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', path);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  }
+};
+
 /*
  * Default options for browser worker
  */
 exports.defaultOptions = {
   ...defaultOptions,
-  workerPath: process.env.TESS_ENV === 'development'
+  workerPath: (typeof process !== 'undefined' && process.env.TESS_ENV === 'development')
     ? resolveURL(`/dist/worker.dev.js?nocache=${Math.random().toString(36).slice(3)}`)
     : `https://unpkg.com/tesseract.js@v${version}/dist/worker.min.js`,
   /*
    * If browser doesn't support WebAssembly,
    * load ASM version instead
    */
-  corePath: `https://unpkg.com/tesseract.js-core@v2.0.0-beta.5/tesseract-core${typeof WebAssembly === 'object' ? '' : '.asm'}.js`,
+  corePath: `https://unpkg.com/tesseract.js-core@v2.0.0-beta.10/tesseract-core.${typeof WebAssembly === 'object' ? 'wasm' : 'asm'}.js`,
 };
 
 /**
@@ -95,18 +124,27 @@ exports.defaultOptions = {
  * @param {object} instance - TesseractWorker instance
  * @param {object} options
  * @param {string} options.workerPath - worker script path
+ * @param {boolean} options.workerBlobURL - Use a blob:// URL for the worker script
  */
-exports.spawnWorker = (instance, { workerPath }) => {
+exports.spawnWorker = (instance, { workerPath, workerBlobURL }) => {
   let worker;
-  if (window.Blob && window.URL) {
-    const blob = new Blob([`importScripts("${workerPath}");`]);
-    worker = new Worker(window.URL.createObjectURL(blob));
+  if (Blob && URL && workerBlobURL) {
+    const blob = new Blob([`importScripts("${workerPath}");`], {
+      type: 'application/javascript',
+    });
+    worker = new Worker(URL.createObjectURL(blob));
   } else {
     worker = new Worker(workerPath);
   }
 
   worker.onmessage = ({ data }) => {
-    instance.recv(data);
+    if (data.jobId.startsWith('Job')) {
+      instance.recv(data);
+    } else if (data.jobId.startsWith('Download')) {
+      const { path, data: d, type } = data;
+      const blob = new Blob([d], { type });
+      downloadFile(path, blob);
+    }
   };
 
   return worker;

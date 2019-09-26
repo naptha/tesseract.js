@@ -10,6 +10,7 @@
 
 const check = require('check-types');
 const workerUtils = require('../common/workerUtils');
+const b64toU8Array = require('./b64toU8Array');
 
 let TesseractCore = null;
 
@@ -32,5 +33,12 @@ workerUtils.setAdapter({
       res.progress({ status: 'loaded tesseract core', progress: 1 });
     }
     return TesseractCore;
+  },
+  b64toU8Array,
+  writeFile: (path, data) => {
+    const fs = require('fs');
+    fs.writeFile(path, data, (err) => {
+      if (err) throw err;
+    });
   },
 });

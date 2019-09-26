@@ -8,7 +8,7 @@
  * @author Jerome Wu <jeromewus@gmail.com>
  */
 const check = require('check-types');
-const resolveURL = process.browser ? require('resolve-url') : s => s;
+const resolveURL = (typeof window !== 'undefined' && typeof window.document !== 'undefined') ? require('resolve-url') : s => s;
 const adapter = require('../node');
 const circularize = require('./circularize');
 const TesseractJob = require('./TesseractJob');
@@ -32,6 +32,7 @@ class TesseractWorker {
    *     In browser-like environment, it is downloaded from a CDN service.
    *     Please update this option if you self-host the worker script.
    *     In Node.js environment, this option is not used as the worker script is in local.
+   * @param {boolean} [options.workerBlobURL=true] - Use a blob: URL for the worker script
    * @param {string} options.corePath -
    *     A remote path to load tesseract.js-core script.
    *     In browser-like environment, it is downloaded from a CDN service.
@@ -67,12 +68,12 @@ class TesseractWorker {
    * @function recognize text in given image
    * @access public
    * @param {Buffer, string} image - image to be recognized
-   * @param {string} [lang=eng] - language to recognize
+   * @param {string, array} [langs=eng] - languages to recognize
    * @param {object} params - tesseract parameters
    *
    */
-  recognize(image, lang = 'eng', params = {}) {
-    return this._sendJob('recognize', image, lang, params);
+  recognize(image, langs = 'eng', params = {}) {
+    return this._sendJob('recognize', image, langs, params);
   }
 
   /**
@@ -152,13 +153,13 @@ class TesseractWorker {
    * @param {string} lang language to recognize
    * @param {object} params tesseract parameters
    */
-  _sendJob(type, image, lang, params) {
+  _sendJob(type, image, langs, params) {
     return this._delay((job) => {
       job.send(
         type,
         {
           image,
-          lang,
+          langs,
           params,
           options: this.options,
         },

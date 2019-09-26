@@ -2,71 +2,107 @@
 
 The `lang` property of the options object passed to `Tesseract.recognize` can have one of the following values (the default is `'eng'`.):
 
-| `lang`    | Language              | 
-|-----------|-----------------------| 
-| 'afr'     | Afrikaans             | 
-| 'ara'     | Arabic                | 
-| 'aze'     | Azerbaijani           | 
-| 'bel'     | Belarusian            | 
-| 'ben'     | Bengali               | 
-| 'bul'     | Bulgarian             | 
-| 'cat'     | Catalan               | 
-| 'ces'     | Czech                 | 
-| 'chi_sim' | Chinese               | 
-| 'chi_tra' | Traditional Chinese   | 
-| 'chr'     | Cherokee              | 
-| 'dan'     | Danish                | 
-| 'deu'     | German                | 
-| 'ell'     | Greek                 | 
-| 'eng'     | English                | 
-| 'enm'     | English (Old)         | 
-| 'epo'     | Esperanto             | 
-| 'epo_alt' | Esperanto alternative | 
-| 'equ'     | Math                  | 
-| 'est'     | Estonian              | 
-| 'eus'     | Basque                | 
-| 'fas'     |Persian (Farsi)        |
-| 'fin'     | Finnish               | 
-| 'fra'     | French                | 
-| 'frk'     | Frankish              | 
-| 'frm'     | French (Old)          | 
-| 'glg'     | Galician              | 
-| 'grc'     | Ancient Greek         | 
-| 'heb'     | Hebrew                | 
-| 'hin'     | Hindi                 | 
-| 'hrv'     | Croatian              | 
-| 'hun'     | Hungarian             | 
-| 'ind'     | Indonesian            | 
-| 'isl'     | Icelandic             | 
-| 'ita'     | Italian               | 
-| 'ita_old' | Italian (Old)         | 
-| 'jpn'     | Japanese              | 
-| 'kan'     | Kannada               | 
-| 'kor'     | Korean                | 
-| 'lav'     | Latvian               | 
-| 'lit'     | Lithuanian            | 
-| 'mal'     | Malayalam             | 
-| 'mkd'     | Macedonian            | 
-| 'mlt'     | Maltese               | 
-| 'msa'     | Malay                 | 
-| 'nld'     | Dutch                 | 
-| 'nor'     | Norwegian             | 
-| 'pol'     | Polish                | 
-| 'por'     | Portuguese            | 
-| 'ron'     | Romanian              | 
-| 'rus'     | Russian               | 
-| 'slk'     | Slovakian             | 
-| 'slv'     | Slovenian             | 
-| 'spa'     | Spanish               | 
-| 'spa_old' | Old Spanish           | 
-| 'sqi'     | Albanian              | 
-| 'srp'     | Serbian (Latin)       | 
-| 'swa'     | Swahili               | 
-| 'swe'     | Swedish               | 
-| 'tam'     | Tamil                 | 
-| 'tel'     | Telugu                | 
-| 'tgl'     | Tagalog               | 
-| 'tha'     | Thai                  | 
-| 'tur'     | Turkish               | 
-| 'ukr'     | Ukrainian             | 
-| 'vie'     | Vietnamese            | 
+Lang Code | Language | 4.0 traineddata
+:---------| :------- | :---------------
+afr | Afrikaans | [afr.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/afr.traineddata.gz)
+amh | Amharic | [amh.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/amh.traineddata.gz)
+ara | Arabic | [ara.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/ara.traineddata.gz)
+asm | Assamese | [asm.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/asm.traineddata.gz)
+aze | Azerbaijani | [aze.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/aze.traineddata.gz)
+aze_cyrl | Azerbaijani - Cyrillic | [aze_cyrl.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/aze_cyrl.traineddata.gz)
+bel | Belarusian | [bel.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/bel.traineddata.gz)
+ben | Bengali | [ben.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/ben.traineddata.gz)
+bod | Tibetan | [bod.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/bod.traineddata.gz)
+bos | Bosnian | [bos.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/bos.traineddata.gz)
+bul | Bulgarian | [bul.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/bul.traineddata.gz)
+cat | Catalan; Valencian | [cat.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/cat.traineddata.gz)
+ceb | Cebuano | [ceb.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/ceb.traineddata.gz)
+ces | Czech | [ces.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/ces.traineddata.gz)
+chi_sim | Chinese - Simplified | [chi_sim.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/chi_sim.traineddata.gz)
+chi_tra | Chinese - Traditional | [chi_tra.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/chi_tra.traineddata.gz)
+chr | Cherokee | [chr.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/chr.traineddata.gz)
+cym | Welsh | [cym.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/cym.traineddata.gz)
+dan | Danish | [dan.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/dan.traineddata.gz)
+deu | German | [deu.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/deu.traineddata.gz)
+dzo | Dzongkha | [dzo.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/dzo.traineddata.gz)
+ell | Greek, Modern (1453-) | [ell.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/ell.traineddata.gz)
+eng | English | [eng.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/eng.traineddata.gz)
+enm | English, Middle (1100-1500) | [enm.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/enm.traineddata.gz)
+epo | Esperanto | [epo.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/epo.traineddata.gz)
+est | Estonian | [est.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/est.traineddata.gz)
+eus | Basque | [eus.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/eus.traineddata.gz)
+fas | Persian | [fas.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/fas.traineddata.gz)
+fin | Finnish | [fin.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/fin.traineddata.gz)
+fra | French | [fra.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/fra.traineddata.gz)
+frk | Frankish | [frk.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/frk.traineddata.gz)
+frm | French, Middle (ca. 1400-1600) | [frm.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/frm.traineddata.gz)
+gle | Irish | [gle.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/gle.traineddata.gz)
+glg | Galician | [glg.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/glg.traineddata.gz)
+grc | Greek, Ancient (-1453) | [grc.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/grc.traineddata.gz)
+guj | Gujarati | [guj.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/guj.traineddata.gz)
+hat | Haitian; Haitian Creole | [hat.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/hat.traineddata.gz)
+heb | Hebrew | [heb.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/heb.traineddata.gz)
+hin | Hindi | [hin.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/hin.traineddata.gz)
+hrv | Croatian | [hrv.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/hrv.traineddata.gz)
+hun | Hungarian | [hun.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/hun.traineddata.gz)
+iku | Inuktitut | [iku.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/iku.traineddata.gz)
+ind | Indonesian | [ind.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/ind.traineddata.gz)
+isl | Icelandic | [isl.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/isl.traineddata.gz)
+ita | Italian | [ita.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/ita.traineddata.gz)
+ita_old | Italian - Old | [ita_old.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/ita_old.traineddata.gz)
+jav | Javanese | [jav.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/jav.traineddata.gz)
+jpn | Japanese | [jpn.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/jpn.traineddata.gz)
+kan | Kannada | [kan.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/kan.traineddata.gz)
+kat | Georgian | [kat.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/kat.traineddata.gz)
+kat_old | Georgian - Old | [kat_old.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/kat_old.traineddata.gz)
+kaz | Kazakh | [kaz.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/kaz.traineddata.gz)
+khm | Central Khmer | [khm.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/khm.traineddata.gz)
+kir | Kirghiz; Kyrgyz | [kir.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/kir.traineddata.gz)
+kor | Korean | [kor.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/kor.traineddata.gz)
+kur | Kurdish | [kur.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/kur.traineddata.gz)
+lao | Lao | [lao.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/lao.traineddata.gz)
+lat | Latin | [lat.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/lat.traineddata.gz)
+lav | Latvian | [lav.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/lav.traineddata.gz)
+lit | Lithuanian | [lit.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/lit.traineddata.gz)
+mal | Malayalam | [mal.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/mal.traineddata.gz)
+mar | Marathi | [mar.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/mar.traineddata.gz)
+mkd | Macedonian | [mkd.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/mkd.traineddata.gz)
+mlt | Maltese | [mlt.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/mlt.traineddata.gz)
+msa | Malay | [msa.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/msa.traineddata.gz)
+mya | Burmese | [mya.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/mya.traineddata.gz)
+nep | Nepali | [nep.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/nep.traineddata.gz)
+nld | Dutch; Flemish | [nld.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/nld.traineddata.gz)
+nor | Norwegian | [nor.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/nor.traineddata.gz)
+ori | Oriya | [ori.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/ori.traineddata.gz)
+pan | Panjabi; Punjabi | [pan.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/pan.traineddata.gz)
+pol | Polish | [pol.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/pol.traineddata.gz)
+por | Portuguese | [por.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/por.traineddata.gz)
+pus | Pushto; Pashto | [pus.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/pus.traineddata.gz)
+ron | Romanian; Moldavian; Moldovan | [ron.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/ron.traineddata.gz)
+rus | Russian | [rus.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/rus.traineddata.gz)
+san | Sanskrit | [san.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/san.traineddata.gz)
+sin | Sinhala; Sinhalese | [sin.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/sin.traineddata.gz)
+slk | Slovak | [slk.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/slk.traineddata.gz)
+slv | Slovenian | [slv.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/slv.traineddata.gz)
+spa | Spanish; Castilian | [spa.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/spa.traineddata.gz)
+spa_old | Spanish; Castilian - Old | [spa_old.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/spa_old.traineddata.gz)
+sqi | Albanian | [sqi.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/sqi.traineddata.gz)
+srp | Serbian | [srp.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/srp.traineddata.gz)
+srp_latn | Serbian - Latin | [srp_latn.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/srp_latn.traineddata.gz)
+swa | Swahili | [swa.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/swa.traineddata.gz)
+swe | Swedish | [swe.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/swe.traineddata.gz)
+syr | Syriac | [syr.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/syr.traineddata.gz)
+tam | Tamil | [tam.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/tam.traineddata.gz)
+tel | Telugu | [tel.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/tel.traineddata.gz)
+tgk | Tajik | [tgk.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/tgk.traineddata.gz)
+tgl | Tagalog | [tgl.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/tgl.traineddata.gz)
+tha | Thai | [tha.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/tha.traineddata.gz)
+tir | Tigrinya | [tir.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/tir.traineddata.gz)
+tur | Turkish | [tur.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/tur.traineddata.gz)
+uig | Uighur; Uyghur | [uig.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/uig.traineddata.gz)
+ukr | Ukrainian | [ukr.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/ukr.traineddata.gz)
+urd | Urdu | [urd.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/urd.traineddata.gz)
+uzb | Uzbek | [uzb.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/uzb.traineddata.gz)
+uzb_cyrl | Uzbek - Cyrillic | [uzb_cyrl.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/uzb_cyrl.traineddata.gz)
+vie | Vietnamese | [vie.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/vie.traineddata.gz)
+yid | Yiddish | [yid.traineddata.gz](https://tessdata.projectnaptha.com/4.0.0/yid.traineddata.gz)

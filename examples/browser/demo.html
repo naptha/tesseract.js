@@ -39,10 +39,15 @@ function progressUpdate(packet){
 
 function recognizeFile(file){
 	document.querySelector("#log").innerHTML = ''
+  const corePath = window.navigator.userAgent.indexOf("Edge") > -1
+    ? '../../node_modules/tesseract.js-core/tesseract-core.asm.js'
+    : '../../node_modules/tesseract.js-core/tesseract-core.wasm.js';
 
   const { TesseractWorker } = Tesseract;
 
-  const worker = new TesseractWorker();
+  const worker = new TesseractWorker({
+    corePath,
+  });
 
 	worker.recognize(file,
 		document.querySelector('#langsel').value

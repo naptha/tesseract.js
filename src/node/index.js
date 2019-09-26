@@ -9,10 +9,11 @@
  */
 const util = require('util');
 const fs = require('fs');
-const fetch = require('node-fetch');
+const axios = require('axios');
 const isURL = require('is-url');
 const { fork } = require('child_process');
 const path = require('path');
+const b64toU8Array = require('./b64toU8Array');
 const { defaultOptions } = require('../common/options');
 
 const readFile = util.promisify(fs.readFile);
@@ -25,13 +26,26 @@ const readFile = util.promisify(fs.readFile);
  * @access public
  * @param {string} image - image source, supported formats:
  *   string: URL string or file path
+ *   string: base64 image
+ *   buffer: image buffer
  * @returns {array} binary image in array format
  */
 const loadImage = (image) => {
   if (isURL(image)) {
-    return fetch(image)
-      .then(resp => resp.arrayBuffer());
+    return axios.get(image, {
+      responseType: 'arraybuffer',
+    })
+      .then(resp => resp.data);
   }
+
+  if (/data:image\/([a-zA-Z]*);base64,([^"]*)/.test(image)) {
+    return Promise.resolve(b64toU8Array(image.split(',')[1]));
+  }
+
+  if (Buffer.isBuffer(image)) {
+    return Promise.resolve(image);
+  }
+
   return readFile(image);
 };
 

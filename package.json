@@ -1,15 +1,24 @@
 {
   "name": "tesseract.js",
-  "version": "2.0.0-alpha.3",
+  "version": "2.0.0-alpha.16",
   "description": "Pure Javascript Multilingual OCR",
   "main": "src/index.js",
+  "types": "types/index.d.ts",
+  "unpkg": "dist/tesseract.min.js",
+  "jsdelivr": "dist/tesseract.min.js",
   "scripts": {
     "start": "node scripts/server.js",
-    "build": "webpack --config scripts/webpack.config.prod.js",
+    "build": "rimraf dist && webpack --config scripts/webpack.config.prod.js",
     "prepublishOnly": "npm run build",
-    "test": "npm run test:node",
+    "wait": "wait-on http://localhost:3000/package.json",
+    "test": "npm-run-all -p -r start test:all",
+    "test:all": "npm-run-all wait test:browser:* test:node",
     "test:node": "nyc mocha --exit --bail --require ./scripts/test-helper.js ./tests/*.test.js",
-    "lint": "eslint src"
+    "test:browser-tpl": "mocha-headless-chrome -a incognito -a no-sandbox -a disable-setuid-sandbox -t 300000",
+    "test:browser:detect": "npm run test:browser-tpl -- -f ./tests/detect.test.html",
+    "test:browser:recognize": "npm run test:browser-tpl -- -f ./tests/recognize.test.html",
+    "lint": "eslint src",
+    "postinstall": "opencollective-postinstall || true"
   },
   "browser": {
     "./src/node/index.js": "./src/browser/index.js"
@@ -20,9 +29,11 @@
   ],
   "license": "Apache-2.0",
   "devDependencies": {
-    "@babel/core": "^7.4.4",
-    "@babel/preset-env": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "acorn": "^6.1.1",
     "babel-loader": "^8.0.6",
+    "cors": "^2.8.5",
     "eslint": "^5.9.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.14.0",
@@ -31,18 +42,23 @@
     "expect.js": "^0.3.1",
     "express": "^4.16.4",
     "mocha": "^5.2.0",
+    "mocha-headless-chrome": "^2.0.2",
+    "npm-run-all": "^4.1.5",
     "nyc": "^13.1.0",
+    "rimraf": "^2.6.3",
+    "wait-on": "^3.2.0",
     "webpack": "^4.26.0",
     "webpack-cli": "^3.1.2",
     "webpack-dev-middleware": "^3.4.0"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "check-types": "^7.4.0",
     "is-url": "1.2.2",
-    "node-fetch": "^2.3.0",
+    "opencollective-postinstall": "^2.0.2",
     "resolve-url": "^0.2.1",
-    "tesseract.js-core": "^2.0.0-beta.5",
-    "tesseract.js-utils": "^1.0.0-beta.5"
+    "tesseract.js-core": "^2.0.0-beta.12",
+    "tesseract.js-utils": "^1.0.0-beta.8"
   },
   "repository": {
     "type": "git",
@@ -51,5 +67,9 @@
   "bugs": {
     "url": "https://github.com/naptha/tesseract.js/issues"
   },
-  "homepage": "https://github.com/naptha/tesseract.js"
+  "homepage": "https://github.com/naptha/tesseract.js",
+  "collective": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/tesseractjs"
+  }
 }
