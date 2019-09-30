@@ -12,6 +12,7 @@ module.exports = {
      * Use BlobURL for worker script by default
      */
     workerBlobURL: true,
+    logger: () => {},
   },
   /*
    * default params for recognize()

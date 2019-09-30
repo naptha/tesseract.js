@@ -1,23 +1,22 @@
 #!/usr/bin/env node
 const path = require('path');
-const { TesseractWorker } = require('../../');
+const { createScheduler, createWorker, createJob, OEM } = require('../../');
 
 const [,, imagePath] = process.argv;
 const image = path.resolve(__dirname, (imagePath || '../../tests/assets/images/cosmic.png'));
-const tessWorker = new TesseractWorker();
 
 console.log(`Recognizing ${image}`);
 
-tessWorker.recognize(image)
-  .progress((info) => {
-    console.log(info);
-  })
-  .then((data) => {
-    console.log(data.text);
-  })
-  .catch((err) => {
-    console.log('Error\n', err);
-  })
-  .finally(() => {
-    process.exit();
+(async () => {
+  const scheduler = createScheduler();
+  const worker = createWorker();
+  await worker.load();
+  await worker.loadLanguage('osd');
+  await worker.initialize('osd', {
+    tessedit_ocr_engine_mode: OEM.OSD_ONLY,
   });
+  scheduler.addWorker(worker);
+  const data = await scheduler.addJob(createJob('detect', { image }));
+  console.log(data);
+  scheduler.terminate();
+})();

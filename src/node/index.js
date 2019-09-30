@@ -67,12 +67,12 @@ exports.defaultOptions = {
  * @param {object} options
  * @param {string} options.workerPath - worker script path
  */
-exports.spawnWorker = (instance, { workerPath }) => {
-  const cp = fork(workerPath);
-  cp.on('message', (packet) => {
-    instance.recv(packet);
-  });
-  return cp;
+exports.spawnWorker = ({ workerPath }) => (
+  fork(workerPath)
+);
+
+exports.setOnMessage = (worker, handler) => {
+  worker.on('message', handler);
 };
 
 /**
@@ -83,8 +83,8 @@ exports.spawnWorker = (instance, { workerPath }) => {
  * @access public
  * @param {object} instance TesseractWorker instance
  */
-exports.terminateWorker = (instance) => {
-  instance.worker.kill();
+exports.terminateWorker = ({ worker }) => {
+  worker.kill();
 };
 
 /**
@@ -96,12 +96,16 @@ exports.terminateWorker = (instance) => {
  * @param {object} instance TesseractWorker instance
  * @param {object} iPacket data for worker
  */
-exports.sendPacket = (instance, iPacket) => {
-  const packet = { ...iPacket };
-  loadImage(packet.payload.image)
-    .then(buf => new Uint8Array(buf))
-    .then((img) => {
-      packet.payload.image = Array.from(img);
-      instance.worker.send(packet);
-    });
+exports.sendPacket = ({ worker }, packet) => {
+  const p = { ...packet };
+  if (['recognize', 'detect'].includes(p.action)) {
+    loadImage(p.payload.image)
+      .then(buf => new Uint8Array(buf))
+      .then((img) => {
+        p.payload.image = Array.from(img);
+        worker.send(p);
+      });
+  } else {
+    worker.send(p);
+  }
 };

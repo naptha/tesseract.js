@@ -9,6 +9,9 @@
  */
 const utils = require('tesseract.js-utils');
 const TesseractWorker = require('./common/TesseractWorker');
+const createScheduler = require('./common/createScheduler');
+const createWorker = require('./common/createWorker');
+const createJob = require('./common/createJob');
 const types = require('./common/types');
 
 module.exports = {
@@ -18,4 +21,7 @@ module.exports = {
   utils,
   /** Check ./common/types for more details */
   ...types,
+  createScheduler,
+  createWorker,
+  createJob,
 };
