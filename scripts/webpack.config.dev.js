@@ -21,7 +21,7 @@ const genConfig = ({
     }),
   ],
   devServer: {
-      allowedHosts: ['localhost', '.gitpod.io'],
+    allowedHosts: ['localhost', '.gitpod.io'],
   },
 });
 

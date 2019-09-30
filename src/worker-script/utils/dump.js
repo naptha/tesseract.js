@@ -50,6 +50,13 @@ module.exports = (TessModule, api, {
   tessjs_create_osd,
 }) => {
   const ri = api.GetIterator();
+  const {
+    RIL_BLOCK,
+    RIL_PARA,
+    RIL_TEXTLINE,
+    RIL_WORD,
+    RIL_SYMBOL,
+  } = TessModule;
   const blocks = [];
   let block;
   let para;
@@ -59,14 +66,13 @@ module.exports = (TessModule, api, {
 
   const enumToString = (value, prefix) => (
     Object.keys(TessModule)
-      .filter(e => (e.substr(0, prefix.length + 1) === `${prefix}_`))
-      .filter(e => TessModule[e] === value)
+      .filter(e => (e.startsWith(`${prefix}_`) && TessModule[e] === value))
       .map(e => e.slice(prefix.length + 1))[0]
   );
 
   ri.Begin();
   do {
-    if (ri.IsAtBeginningOf(TessModule.RIL_BLOCK)) {
+    if (ri.IsAtBeginningOf(RIL_BLOCK)) {
       const poly = ri.BlockPolygon();
       let polygon = null;
       // BlockPolygon() returns null when automatic page segmentation is off
@@ -86,47 +92,47 @@ module.exports = (TessModule, api, {
 
       block = {
         paragraphs: [],
-        text: ri.GetUTF8Text(TessModule.RIL_BLOCK),
-        confidence: ri.Confidence(TessModule.RIL_BLOCK),
-        baseline: ri.getBaseline(TessModule.RIL_BLOCK),
-        bbox: ri.getBoundingBox(TessModule.RIL_BLOCK),
+        text: ri.GetUTF8Text(RIL_BLOCK),
+        confidence: ri.Confidence(RIL_BLOCK),
+        baseline: ri.getBaseline(RIL_BLOCK),
+        bbox: ri.getBoundingBox(RIL_BLOCK),
         blocktype: enumToString(ri.BlockType(), 'PT'),
         polygon,
       };
       blocks.push(block);
     }
-    if (ri.IsAtBeginningOf(TessModule.RIL_PARA)) {
+    if (ri.IsAtBeginningOf(RIL_PARA)) {
       para = {
         lines: [],
-        text: ri.GetUTF8Text(TessModule.RIL_PARA),
-        confidence: ri.Confidence(TessModule.RIL_PARA),
-        baseline: ri.getBaseline(TessModule.RIL_PARA),
-        bbox: ri.getBoundingBox(TessModule.RIL_PARA),
+        text: ri.GetUTF8Text(RIL_PARA),
+        confidence: ri.Confidence(RIL_PARA),
+        baseline: ri.getBaseline(RIL_PARA),
+        bbox: ri.getBoundingBox(RIL_PARA),
         is_ltr: !!ri.ParagraphIsLtr(),
       };
       block.paragraphs.push(para);
     }
-    if (ri.IsAtBeginningOf(TessModule.RIL_TEXTLINE)) {
+    if (ri.IsAtBeginningOf(RIL_TEXTLINE)) {
       textline = {
         words: [],
-        text: ri.GetUTF8Text(TessModule.RIL_TEXTLINE),
-        confidence: ri.Confidence(TessModule.RIL_TEXTLINE),
-        baseline: ri.getBaseline(TessModule.RIL_TEXTLINE),
-        bbox: ri.getBoundingBox(TessModule.RIL_TEXTLINE),
+        text: ri.GetUTF8Text(RIL_TEXTLINE),
+        confidence: ri.Confidence(RIL_TEXTLINE),
+        baseline: ri.getBaseline(RIL_TEXTLINE),
+        bbox: ri.getBoundingBox(RIL_TEXTLINE),
       };
       para.lines.push(textline);
     }
-    if (ri.IsAtBeginningOf(TessModule.RIL_WORD)) {
+    if (ri.IsAtBeginningOf(RIL_WORD)) {
       const fontInfo = ri.getWordFontAttributes();
       const wordDir = ri.WordDirection();
       word = {
         symbols: [],
         choices: [],
 
-        text: ri.GetUTF8Text(TessModule.RIL_WORD),
-        confidence: ri.Confidence(TessModule.RIL_WORD),
-        baseline: ri.getBaseline(TessModule.RIL_WORD),
-        bbox: ri.getBoundingBox(TessModule.RIL_WORD),
+        text: ri.GetUTF8Text(RIL_WORD),
+        confidence: ri.Confidence(RIL_WORD),
+        baseline: ri.getBaseline(RIL_WORD),
+        bbox: ri.getBoundingBox(RIL_WORD),
 
         is_numeric: !!ri.WordIsNumeric(),
         in_dictionary: !!ri.WordIsFromDictionary(),
@@ -159,14 +165,14 @@ module.exports = (TessModule, api, {
     // var image = pix2array(pix);
     // // for some reason it seems that things stop working if you destroy pics
     // TessModule._pixDestroy(TessModule.getPointer(pix));
-    if (ri.IsAtBeginningOf(TessModule.RIL_SYMBOL)) {
+    if (ri.IsAtBeginningOf(RIL_SYMBOL)) {
       symbol = {
         choices: [],
         image: null,
-        text: ri.GetUTF8Text(TessModule.RIL_SYMBOL),
-        confidence: ri.Confidence(TessModule.RIL_SYMBOL),
-        baseline: ri.getBaseline(TessModule.RIL_SYMBOL),
-        bbox: ri.getBoundingBox(TessModule.RIL_SYMBOL),
+        text: ri.GetUTF8Text(RIL_SYMBOL),
+        confidence: ri.Confidence(RIL_SYMBOL),
+        baseline: ri.getBaseline(RIL_SYMBOL),
+        bbox: ri.getBoundingBox(RIL_SYMBOL),
         is_superscript: !!ri.SymbolIsSuperscript(),
         is_subscript: !!ri.SymbolIsSubscript(),
         is_dropcap: !!ri.SymbolIsDropcap(),
@@ -181,7 +187,7 @@ module.exports = (TessModule, api, {
       } while (ci.Next());
       // TessModule.destroy(i);
     }
-  } while (ri.Next(TessModule.RIL_SYMBOL));
+  } while (ri.Next(RIL_SYMBOL));
   TessModule.destroy(ri);
 
   return {

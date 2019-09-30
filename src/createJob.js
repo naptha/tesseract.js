@@ -1,4 +1,4 @@
-const { sendPacket } = require('../node');
+const { send } = require('./worker/node');
 
 let jobCounter = 0;
 
@@ -11,7 +11,7 @@ module.exports = (
 
   const start = (worker) => {
     console.log(`[${worker.id}]: Start ${id}, action=${action}`);
-    sendPacket(worker, {
+    send(worker, {
       workerId: worker.id,
       jobId: id,
       action,

@@ -7,20 +7,15 @@
  * @author Guillermo Webster <gui@mit.edu>
  * @author Jerome Wu <jeromewus@gmail.com>
  */
-const utils = require('tesseract.js-utils');
-const TesseractWorker = require('./common/TesseractWorker');
-const createScheduler = require('./common/createScheduler');
-const createWorker = require('./common/createWorker');
-const createJob = require('./common/createJob');
-const types = require('./common/types');
+const createScheduler = require('./createScheduler');
+const createWorker = require('./createWorker');
+const createJob = require('./createJob');
+const OEM = require('./constants/OEM');
+const PSM = require('./constants/PSM');
 
 module.exports = {
-  /** Worker for OCR, @see common/TesseractWorker.js */
-  TesseractWorker,
-  /** Utilities for tesseract.js, @see {@link https://www.npmjs.com/package/tesseract.js-utils} */
-  utils,
-  /** Check ./common/types for more details */
-  ...types,
+  OEM,
+  PSM,
   createScheduler,
   createWorker,
   createJob,

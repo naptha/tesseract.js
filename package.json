@@ -57,7 +57,7 @@
     "is-url": "1.2.2",
     "opencollective-postinstall": "^2.0.2",
     "resolve-url": "^0.2.1",
-    "tesseract.js-core": "^2.0.0-beta.12",
+    "tesseract.js-core": "^2.0.0-beta.13",
     "tesseract.js-utils": "^1.0.0-beta.8"
   },
   "repository": {

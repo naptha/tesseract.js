@@ -1,18 +1,18 @@
 /**
  *
- * Worker utilities for browser and node
+ * Worker script for browser and node
  *
- * @fileoverview Worker utilities for browser and node
+ * @fileoverview Worker script for browser and node
  * @author Kevin Kwok <antimatter15@gmail.com>
  * @author Guillermo Webster <gui@mit.edu>
  * @author Jerome Wu <jeromewus@gmail.com>
  */
 const { loadLang } = require('tesseract.js-utils');
-const pdfTTF = require('./pdf-ttf');
-const dump = require('./dump');
-const { OEM, PSM } = require('./types');
-const { isBrowser } = require('./env');
-const { setImage, getLangsStr, getFiles } = require('./utils');
+const dump = require('./utils/dump');
+const isBrowser = require('../utils/getEnvironment')('type') === 'browser';
+const setImage = require('./utils/setImage');
+const getFiles = require('./utils/getFiles');
+const defaultParams = require('./constants/defaultParams');
 
 /*
  * Tesseract Module returned by TesseractCore.
@@ -24,7 +24,7 @@ let TessModule;
 let api;
 let latestJob;
 let adapter = {};
-let curParams = {};
+let params = defaultParams;
 
 
 /**
@@ -38,7 +38,7 @@ let curParams = {};
  * @param {object} res - job instance
  * @returns {Promise} A Promise for callback
  */
-const load = ({ workerId, jobId, payload: { corePath } }, res) => {
+const load = ({ workerId, jobId, payload: { options: { corePath } } }, res) => {
   if (!TessModule) {
     const Core = adapter.getCore(corePath, res);
 
@@ -56,8 +56,6 @@ const load = ({ workerId, jobId, payload: { corePath } }, res) => {
     })
       .then((tessModule) => {
         TessModule = tessModule;
-        TessModule.FS.writeFile('/pdf.ttf', adapter.b64toU8Array(pdfTTF));
-        api = new TessModule.TessBaseAPI();
         res.progress({ workerId, status: 'initialized tesseract', progress: 1 });
         res.resolve({ loaded: true });
       });
@@ -83,52 +81,55 @@ const loadLanguage = ({ workerId, payload: { langs, options } }, res) => {
   loadLang({ langs, TessModule, ...options }).then(() => {
     res.progress({ workerId, status: 'loaded language traineddata', progress: 1 });
     res.resolve(langs);
-  }).catch((e) => {
-    if (isBrowser && e instanceof DOMException) {
+  }).catch((err) => {
+    if (isBrowser && err instanceof DOMException) {
       /*
        * For some reason google chrome throw DOMException in loadLang,
        * while other browser is OK, for now we ignore this exception
        * and hopefully to find the root cause one day.
        */
     } else {
-      res.reject(e.toString());
+      res.reject(err.toString());
     }
   });
+};
+
+const setParameters = ({ payload: { params: _params } }, res) => {
+  Object.keys(_params)
+    .filter(k => !k.startsWith('tessjs_'))
+    .forEach((key) => {
+      api.SetVariable(key, _params[key]);
+    });
+  params = { ...params, ..._params };
+
+  if (typeof res !== 'undefined') {
+    res.resolve(params);
+  }
 };
 
 const initialize = ({
   workerId,
   jobId,
-  payload: { langs, params },
+  payload: { langs: _langs, oem },
 }, res) => {
-  let { tessedit_ocr_engine_mode: oem } = params;
-  let l = langs;
+  const langs = (typeof _langs === 'string')
+    ? _langs
+    : _langs.map(l => ((typeof l === 'string') ? l : l.data)).join('+');
 
-  res.progress({
-    workerId, jobId, status: 'initializing api', progress: 0,
-  });
-  if ([
-    PSM.OSD_ONLY,
-    PSM.AUTO_OSD,
-    PSM.RAW_LINE,
-  ].includes(params.tessedit_pageseg_mode)) {
-    l = (typeof l === 'string') ? `${l}+osd` : [...l, 'osd'];
-    // oem = OEM.TESSERACT_ONLY;
+  try {
+    res.progress({
+      workerId, jobId, status: 'initializing api', progress: 0,
+    });
+    api = new TessModule.TessBaseAPI();
+    api.Init(null, langs, oem);
+    setParameters({ payload: { params } });
+    res.progress({
+      workerId, jobId, status: 'initialized api', progress: 1,
+    });
+    res.resolve();
+  } catch (err) {
+    res.reject(err.toString());
   }
-  api.Init(null, getLangsStr(l), oem);
-  Object.keys(params).forEach((key) => {
-    if (!key.startsWith('tessjs')) {
-      api.SetVariable(key, params[key]);
-    }
-  });
-  curParams = {
-    tessedit_ocr_engine_mode: oem,
-    ...params,
-  };
-  res.progress({
-    workerId, jobId, status: 'initialized api', progress: 1,
-  });
-  res.resolve();
 };
 
 /**
@@ -146,11 +147,11 @@ const initialize = ({
  */
 const recognize = ({ payload: { image } }, res) => {
   try {
-    const ptr = setImage(TessModule, api, image, curParams);
+    const ptr = setImage(TessModule, api, image, params);
     api.Recognize(null);
     res.resolve({
-      files: getFiles(TessModule, api, adapter, curParams),
-      ...dump(TessModule, api, curParams),
+      files: getFiles(TessModule, api, adapter, params),
+      ...dump(TessModule, api, params),
     });
     TessModule._free(ptr);
   } catch (err) {
@@ -172,7 +173,7 @@ const recognize = ({ payload: { image } }, res) => {
  */
 const detect = ({ payload: { image } }, res) => {
   try {
-    const ptr = setImage(TessModule, api, image, curParams);
+    const ptr = setImage(TessModule, api, image, params);
     const results = new TessModule.OSResults();
 
     if (!api.DetectOS(results)) {
@@ -194,6 +195,15 @@ const detect = ({ payload: { image } }, res) => {
         orientation_confidence: best.oconfidence,
       });
     }
+  } catch (err) {
+    res.reject(err.toString());
+  }
+};
+
+const terminate = (_, res) => {
+  try {
+    api.End();
+    res.resolve({ terminated: true });
   } catch (err) {
     res.reject(err.toString());
   }
@@ -233,10 +243,14 @@ exports.dispatchHandlers = (packet, send) => {
       loadLanguage(packet, res);
     } else if (action === 'initialize') {
       initialize(packet, res);
+    } else if (action === 'set-parameters') {
+      setParameters(packet, res);
     } else if (action === 'recognize') {
       recognize(packet, res);
     } else if (action === 'detect') {
       detect(packet, res);
+    } else if (action === 'terminate') {
+      terminate(packet, res);
     }
   } catch (err) {
     /** Prepare exception to travel through postMessage */
@@ -250,8 +264,8 @@ exports.dispatchHandlers = (packet, send) => {
  * @name setAdapter
  * @function
  * @access public
- * @param {object} impl - implementation of the worker, different in browser and node environment
+ * @param {object} adapter - implementation of the worker, different in browser and node environment
  */
-exports.setAdapter = (impl) => {
-  adapter = impl;
+exports.setAdapter = (_adapter) => {
+  adapter = _adapter;
 };
