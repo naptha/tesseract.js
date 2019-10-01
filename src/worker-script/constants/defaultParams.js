@@ -6,6 +6,7 @@ const PSM = require('../../constants/PSM');
 module.exports = {
   tessedit_pageseg_mode: PSM.SINGLE_BLOCK,
   tessedit_char_whiltelist: '',
+  user_defined_dpi: '300',
   tessjs_create_pdf: '0',
   tessjs_create_hocr: '1',
   tessjs_create_tsv: '1',
@@ -17,8 +18,4 @@ module.exports = {
   tessjs_pdf_title: 'Tesseract.js OCR Result',
   tessjs_pdf_auto_download: true,
   tessjs_pdf_bin: false,
-  tessjs_image_rectangle_left: 0,
-  tessjs_image_rectangle_top: 0,
-  tessjs_image_rectangle_width: -1,
-  tessjs_image_rectangle_height: -1,
 };

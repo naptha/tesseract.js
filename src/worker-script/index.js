@@ -7,11 +7,12 @@
  * @author Guillermo Webster <gui@mit.edu>
  * @author Jerome Wu <jeromewus@gmail.com>
  */
-const { loadLang } = require('tesseract.js-utils');
+const fileType = require('file-type');
+const axios = require('axios');
+const isURL = require('is-url');
 const dump = require('./utils/dump');
 const isBrowser = require('../utils/getEnvironment')('type') === 'browser';
 const setImage = require('./utils/setImage');
-const getFiles = require('./utils/getFiles');
 const defaultParams = require('./constants/defaultParams');
 
 /*
@@ -26,18 +27,6 @@ let latestJob;
 let adapter = {};
 let params = defaultParams;
 
-
-/**
- * handleInit
- *
- * @name handleInit
- * @function handle initialization of TessModule
- * @access public
- * @param {object} req - job payload
- * @param {string} req.corePath - path to the tesseract-core.js
- * @param {object} res - job instance
- * @returns {Promise} A Promise for callback
- */
 const load = ({ workerId, jobId, payload: { options: { corePath } } }, res) => {
   if (!TessModule) {
     const Core = adapter.getCore(corePath, res);
@@ -53,35 +42,99 @@ const load = ({ workerId, jobId, payload: { options: { corePath } } }, res) => {
           progress: Math.max(0, (percent - 30) / 70),
         });
       },
-    })
-      .then((tessModule) => {
-        TessModule = tessModule;
-        res.progress({ workerId, status: 'initialized tesseract', progress: 1 });
-        res.resolve({ loaded: true });
-      });
+    }).then((tessModule) => {
+      TessModule = tessModule;
+      res.progress({ workerId, status: 'initialized tesseract', progress: 1 });
+      res.resolve({ loaded: true });
+    });
   } else {
     res.resolve({ loaded: true });
   }
 };
 
-/**
- * loadLanguage
- *
- * @name loadLanguage
- * @function load language from remote or local cache
- * @access public
- * @param {object} req - job payload
- * @param {string} req.langs - languages to load, ex: eng, eng+chi_tra
- * @param {object} req.options - other options for loadLang function
- * @param {object} res - job instance
- * @returns {Promise} A Promise for callback
- */
-const loadLanguage = ({ workerId, payload: { langs, options } }, res) => {
+const loadLanguage = async ({
+  workerId,
+  payload: {
+    langs,
+    options: {
+      langPath,
+      dataPath,
+      cachePath,
+      cacheMethod,
+      gzip = true,
+    },
+  },
+},
+  res) => {
+  const loadAndGunzipFile = async (_lang) => {
+    const lang = typeof _lang === 'string' ? _lang : _lang.code;
+    const readCache = ['refresh', 'none'].includes(cacheMethod)
+      ? () => Promise.resolve()
+      : adapter.readCache;
+    let data = null;
+
+    try {
+      const _data = await readCache(`${cachePath || '.'}/${lang}.traineddata`);
+      if (typeof _data !== 'undefined') {
+        data = _data;
+      } else {
+        throw Error('Not found in cache');
+      }
+    } catch (e) {
+      if (typeof _lang === 'string') {
+        let path = null;
+
+        if (isURL(langPath)) { /** When langPath is an URL */
+          path = langPath;
+        } else if (process.browser) { /** When langPath is not an URL in browser */
+          path = adapter.resolveURL(langPath);
+        }
+
+        if (path !== null) {
+          const { data: _data } = await axios.get(
+            `${path}/${lang}.traineddata${gzip ? '.gz' : ''}`,
+            { responseType: 'arraybuffer' },
+          );
+          data = _data;
+        } else {
+          data = await adapter.readCache(`${langPath}/${lang}.traineddata${gzip ? '.gz' : ''}`);
+        }
+      } else {
+        data = _lang.data; // eslint-disable-line
+      }
+    }
+
+    data = new Uint8Array(data);
+
+    const type = fileType(data);
+    if (typeof type !== 'undefined' && type.mime === 'application/gzip') {
+      data = adapter.gunzip(data);
+    }
+
+    if (TessModule) {
+      if (dataPath) {
+        try {
+          TessModule.FS.mkdir(dataPath);
+        } catch (err) {
+          res.reject(err.toString());
+        }
+      }
+      TessModule.FS.writeFile(`${dataPath || '.'}/${lang}.traineddata`, data);
+    }
+
+    if (['write', 'refresh', undefined].includes(cacheMethod)) {
+      await adapter.writeCache(`${cachePath || '.'}/${lang}.traineddata`, data);
+    }
+
+    return Promise.resolve(data);
+  };
+
   res.progress({ workerId, status: 'loading language traineddata', progress: 0 });
-  loadLang({ langs, TessModule, ...options }).then(() => {
+  try {
+    await Promise.all((typeof langs === 'string' ? langs.split('+') : langs).map(loadAndGunzipFile));
     res.progress({ workerId, status: 'loaded language traineddata', progress: 1 });
     res.resolve(langs);
-  }).catch((err) => {
+  } catch (err) {
     if (isBrowser && err instanceof DOMException) {
       /*
        * For some reason google chrome throw DOMException in loadLang,
@@ -91,7 +144,7 @@ const loadLanguage = ({ workerId, payload: { langs, options } }, res) => {
     } else {
       res.reject(err.toString());
     }
-  });
+  }
 };
 
 const setParameters = ({ payload: { params: _params } }, res) => {
@@ -109,7 +162,6 @@ const setParameters = ({ payload: { params: _params } }, res) => {
 
 const initialize = ({
   workerId,
-  jobId,
   payload: { langs: _langs, oem },
 }, res) => {
   const langs = (typeof _langs === 'string')
@@ -118,13 +170,13 @@ const initialize = ({
 
   try {
     res.progress({
-      workerId, jobId, status: 'initializing api', progress: 0,
+      workerId, status: 'initializing api', progress: 0,
     });
     api = new TessModule.TessBaseAPI();
     api.Init(null, langs, oem);
     setParameters({ payload: { params } });
     res.progress({
-      workerId, jobId, status: 'initialized api', progress: 1,
+      workerId, status: 'initialized api', progress: 1,
     });
     res.resolve();
   } catch (err) {
@@ -132,48 +184,35 @@ const initialize = ({
   }
 };
 
-/**
- * handleRecognize
- *
- * @name handleRecognize
- * @function handle recognition job
- * @access public
- * @param {object} req - job payload
- * @param {array} req.image - binary image in array format
- * @param {string} req.langs - languages to load, ex: eng, eng+chi_tra
- * @param {object} req.options - other options for loadLang function
- * @param {object} req.params - parameters for tesseract
- * @param {object} res - job instance
- */
-const recognize = ({ payload: { image } }, res) => {
+const recognize = ({ payload: { image, options: { rectangles = [] } } }, res) => {
   try {
-    const ptr = setImage(TessModule, api, image, params);
-    api.Recognize(null);
-    res.resolve({
-      files: getFiles(TessModule, api, adapter, params),
-      ...dump(TessModule, api, params),
+    const ptr = setImage(TessModule, api, image);
+    rectangles.forEach(({
+      left, top, width, height,
+    }) => {
+      api.SetRectangle(left, top, width, height);
     });
+    api.Recognize(null);
+    res.resolve(dump(TessModule, api, params));
     TessModule._free(ptr);
   } catch (err) {
     res.reject(err.toString());
   }
 };
 
-/**
- * handleDetect
- *
- * @name handleDetect
- * @function handle detect (Orientation and Script Detection / OSD) job
- * @access public
- * @param {object} req - job payload
- * @param {array} req.image - binary image in array format
- * @param {string} req.langs - languages to load, ex: eng, eng+chi_tra
- * @param {object} req.options - other options for loadLang function
- * @param {object} res - job instance
- */
+const getPDF = ({ payload: { title, textonly } }, res) => {
+  const pdfRenderer = new TessModule.TessPDFRenderer('tesseract-ocr', '/', textonly);
+  pdfRenderer.BeginDocument(title);
+  pdfRenderer.AddImage(api);
+  pdfRenderer.EndDocument();
+  TessModule._free(pdfRenderer);
+
+  res.resolve(TessModule.FS.readFile('/tesseract-ocr.pdf'));
+};
+
 const detect = ({ payload: { image } }, res) => {
   try {
-    const ptr = setImage(TessModule, api, image, params);
+    const ptr = setImage(TessModule, api, image);
     const results = new TessModule.OSResults();
 
     if (!api.DetectOS(results)) {
@@ -236,22 +275,16 @@ exports.dispatchHandlers = (packet, send) => {
   latestJob = res;
 
   try {
-    const { action } = packet;
-    if (action === 'load') {
-      load(packet, res);
-    } else if (action === 'load-language') {
-      loadLanguage(packet, res);
-    } else if (action === 'initialize') {
-      initialize(packet, res);
-    } else if (action === 'set-parameters') {
-      setParameters(packet, res);
-    } else if (action === 'recognize') {
-      recognize(packet, res);
-    } else if (action === 'detect') {
-      detect(packet, res);
-    } else if (action === 'terminate') {
-      terminate(packet, res);
-    }
+    ({
+      load,
+      loadLanguage,
+      initialize,
+      setParameters,
+      recognize,
+      getPDF,
+      detect,
+      terminate,
+    })[packet.action](packet, res);
   } catch (err) {
     /** Prepare exception to travel through postMessage */
     res.reject(err.toString());

@@ -9,9 +9,10 @@
  */
 
 const worker = require('../');
-const exportFile = require('./exportFile');
-
-let TesseractCore = null;
+const getCore = require('./getCore');
+const resolveURL = require('./resolveURL');
+const gunzip = require('./gunzip');
+const cache = require('./cache');
 
 /*
  * register message handler
@@ -20,20 +21,9 @@ process.on('message', (packet) => {
   worker.dispatchHandlers(packet, obj => process.send(obj));
 });
 
-/*
- * getCore is a sync function to load and return
- * TesseractCore.
- */
-const getCore = (_, res) => {
-  if (TesseractCore === null) {
-    res.progress({ status: 'loading tesseract core', progress: 0 });
-    TesseractCore = require('tesseract.js-core');
-    res.progress({ status: 'loaded tesseract core', progress: 1 });
-  }
-  return TesseractCore;
-};
-
 worker.setAdapter({
   getCore,
-  exportFile,
+  gunzip,
+  resolveURL,
+  ...cache,
 });

@@ -1,13 +1,13 @@
 module.exports = () => {
   const workers = {};
-  const runningJobs = {};
+  const runningWorkers = {};
   let jobQueue = [];
 
   const dequeue = () => {
     if (jobQueue.length !== 0) {
       const wIds = Object.keys(workers);
       for (let i = 0; i < wIds.length; i += 1) {
-        if (typeof runningJobs[wIds[i]] === 'undefined') {
+        if (typeof runningWorkers[wIds[i]] === 'undefined') {
           jobQueue[0](workers[wIds[i]]);
           break;
         }
@@ -15,19 +15,19 @@ module.exports = () => {
     }
   };
 
-  const queue = job => (
+  const queue = (action, payload) => (
     new Promise((resolve, reject) => {
-      jobQueue.push((w) => {
-        const { action } = job;
+      jobQueue.push(async (w) => {
         jobQueue.shift();
-        w.setResolve(action, (data) => {
-          delete runningJobs[w.id];
+        runningWorkers[w.id] = true;
+        try {
+          resolve(await w[action].apply(this, payload));
+        } catch (err) {
+          reject(err);
+        } finally {
+          delete runningWorkers[w.id];
           dequeue();
-          resolve(data);
-        });
-        w.setReject(action, reject);
-        runningJobs[w.id] = job;
-        job.start(w);
+        }
       });
       dequeue();
     })
@@ -38,13 +38,13 @@ module.exports = () => {
     return w.id;
   };
 
-  const addJob = job => (
-    queue(job)
+  const addJob = (action, ...payload) => (
+    queue(action, payload)
   );
 
-  const terminate = () => {
-    Object.keys(workers).forEach((id) => {
-      workers[id].terminate();
+  const terminate = async () => {
+    Object.keys(workers).forEach(async (id) => {
+      await workers[id].terminate();
     });
     jobQueue = [];
   };

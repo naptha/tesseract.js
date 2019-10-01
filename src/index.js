@@ -10,6 +10,7 @@
 const createScheduler = require('./createScheduler');
 const createWorker = require('./createWorker');
 const createJob = require('./createJob');
+const Tesseract = require('./Tesseract');
 const OEM = require('./constants/OEM');
 const PSM = require('./constants/PSM');
 
@@ -19,4 +20,5 @@ module.exports = {
   createScheduler,
   createWorker,
   createJob,
+  Tesseract,
 };

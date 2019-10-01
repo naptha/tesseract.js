@@ -44,7 +44,7 @@ module.exports = (_options = {}) => {
   );
 
   const loadLanguage = (langs = 'eng') => (
-    doJob('load-language', { langs, options })
+    doJob('loadLanguage', { langs, options })
   );
 
   const initialize = (langs = 'eng', oem = defaultOEM) => (
@@ -52,32 +52,39 @@ module.exports = (_options = {}) => {
   );
 
   const setParameters = (params = {}) => (
-    doJob('set-parameters', { params })
+    doJob('setParameters', { params })
   );
 
-  const terminate = () => {
+  const recognize = (image, opts = {}) => (
+    doJob('recognize', { image, options: opts })
+  );
+
+  const getPDF = (title = 'Tesseract OCR Result', textonly = false) => (
+    doJob('getPDF', { title, textonly })
+  );
+
+  const detect = image => (
+    doJob('detect', { image })
+  );
+
+  const terminate = async () => {
     if (worker !== null) {
+      await doJob('terminate');
       terminateWorker(worker);
       worker = null;
     }
+    return Promise.resolve();
   };
 
-  onMessage(worker, (packet) => {
-    const { status, action, data } = packet;
+  onMessage(worker, ({ status, action, data }) => {
     if (status === 'resolve') {
-      if (action === 'load') {
-        resolves.load(data);
-      } else if (action === 'initialize') {
-        resolves.initialize({ id });
-      } else if (action === 'set-parameters') {
-        resolves['set-parameters'](data);
-      } else if (action === 'load-language') {
-        resolves['load-language'](data);
-      } else if (action === 'recognize') {
-        resolves.recognize(circularize(data));
-      } else if (action === 'detect') {
-        resolves.detect(data);
+      let d = data;
+      if (action === 'recognize') {
+        d = circularize(data);
+      } else if (action === 'getPDF') {
+        d = Array.from({ ...data, length: Object.keys(data).length });
       }
+      resolves[action](d);
     } else if (status === 'reject') {
       rejects[action](data);
       throw Error(data);
@@ -95,6 +102,9 @@ module.exports = (_options = {}) => {
     loadLanguage,
     initialize,
     setParameters,
+    recognize,
+    getPDF,
+    detect,
     terminate,
   };
 };

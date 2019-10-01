@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 const path = require('path');
+const fs = require('fs');
 const {
-  createScheduler, createWorker, createJob, PSM,
+  Tesseract, createScheduler, createWorker,
 } = require('../../');
 
 const [,, imagePath] = process.argv;
@@ -15,16 +16,19 @@ console.log(`Recognizing ${image}`);
   await worker.load();
   await worker.loadLanguage('eng');
   await worker.initialize('eng');
-  await worker.setParameters({
-    tessedit_char_whitelist: 'ABCDEFGH',
-  });
   scheduler.addWorker(worker);
-  const { text: t1 } = await scheduler.addJob(createJob('recognize', { image }));
-  console.log(t1);
-  await worker.setParameters({
-    tessedit_char_whitelist: 'abcdefg',
-  });
-  const { text: t2 } = await scheduler.addJob(createJob('recognize', { image }));
-  console.log(t2);
-  scheduler.terminate();
+  console.log((await scheduler.addJob('recognize', image)).text);
+  const data = await worker.getPDF('ocr', 'Tesseract OCR');
+  fs.writeFileSync('test.pdf', Buffer.from(data));
+  await scheduler.terminate();
 })();
+
+//Tesseract.recognize(image, 'eng', { logger: m => console.log(m) })
+//  .then(({ text }) => {
+//    console.log(text);
+//  });
+
+//Tesseract.detect(image, { logger: m => console.log(m) })
+//  .then((data) => {
+//    console.log(data);
+//  });

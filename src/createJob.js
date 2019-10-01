@@ -9,10 +9,10 @@ module.exports = (
   jobCounter += 1;
   const id = `Job-${jobCounter}-${Math.random().toString(16).slice(3, 8)}`;
 
-  const start = (worker) => {
-    console.log(`[${worker.id}]: Start ${id}, action=${action}`);
-    send(worker, {
-      workerId: worker.id,
+  const start = (w) => {
+    console.log(`[${w.id}]: Start ${id}, action=${action}`);
+    send(w.worker, {
+      workerId: w.id,
       jobId: id,
       action,
       payload,

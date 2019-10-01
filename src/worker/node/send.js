@@ -46,7 +46,7 @@ const loadImage = (image) => {
  * @param {object} instance TesseractWorker instance
  * @param {object} iPacket data for worker
  */
-module.exports = ({ worker }, packet) => {
+module.exports = (worker, packet) => {
   const p = { ...packet };
   if (['recognize', 'detect'].includes(p.action)) {
     loadImage(p.payload.image)
