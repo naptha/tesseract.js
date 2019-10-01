@@ -7,6 +7,7 @@
  * @author Guillermo Webster <gui@mit.edu>
  * @author Jerome Wu <jeromewus@gmail.com>
  */
+require('regenerator-runtime/runtime');
 const createScheduler = require('./createScheduler');
 const createWorker = require('./createWorker');
 const createJob = require('./createJob');
@@ -20,5 +21,5 @@ module.exports = {
   createScheduler,
   createWorker,
   createJob,
-  Tesseract,
+  ...Tesseract,
 };

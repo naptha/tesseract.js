@@ -21,7 +21,7 @@
     "postinstall": "opencollective-postinstall || true"
   },
   "browser": {
-    "./src/node/index.js": "./src/browser/index.js"
+    "./src/worker/node/index.js": "./src/worker/browser/index.js"
   },
   "author": "",
   "contributors": [
@@ -54,14 +54,13 @@
   "dependencies": {
     "axios": "^0.18.0",
     "bmp-js": "^0.1.0",
-    "check-types": "^7.4.0",
     "file-type": "^12.3.0",
     "idb-keyval": "^3.2.0",
     "is-url": "1.2.2",
     "opencollective-postinstall": "^2.0.2",
+    "regenerator-runtime": "^0.13.3",
     "resolve-url": "^0.2.1",
     "tesseract.js-core": "^2.0.0-beta.13",
-    "tesseract.js-utils": "^1.0.0-beta.8",
     "zlibjs": "^0.3.1"
   },
   "repository": {

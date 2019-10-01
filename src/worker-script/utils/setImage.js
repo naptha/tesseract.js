@@ -11,7 +11,7 @@ const fileType = require('file-type');
  * @returns {number} - an emscripten pointer of the image
  */
 module.exports = (TessModule, api, image) => {
-  const buf = Buffer.from(Array.from(image));
+  const buf = Buffer.from(Array.from({ ...image, length: Object.keys(image).length }));
   const type = fileType(buf);
   let bytesPerPixel = 0;
   let data = null;

@@ -17,23 +17,26 @@ const readFile = util.promisify(fs.readFile);
  *   buffer: image buffer
  * @returns {array} binary image in array format
  */
-const loadImage = (image) => {
-  if (isURL(image)) {
-    return axios.get(image, {
-      responseType: 'arraybuffer',
-    })
-      .then(resp => resp.data);
+const loadImage = async (image) => {
+  let data = image;
+  if (typeof image === 'undefined') {
+    return image;
   }
 
-  if (/data:image\/([a-zA-Z]*);base64,([^"]*)/.test(image)) {
-    return Promise.resolve(Buffer.from(image.split(',')[1], 'base64'));
+  if (typeof image === 'string') {
+    if (isURL(image) || image.startsWith('chrome-extension://') || image.startsWith('file://')) {
+      const { data: _data } = await axios.get(image, { responseType: 'arraybuffer' });
+      data = _data;
+    } else if (/data:image\/([a-zA-Z]*);base64,([^"]*)/.test(image)) {
+      data = Buffer.from(image.split(',')[1], 'base64');
+    } else {
+      data = await readFile(image);
+    }
+  } else if (Buffer.isBuffer(image)) {
+    data = image;
   }
 
-  if (Buffer.isBuffer(image)) {
-    return Promise.resolve(image);
-  }
-
-  return readFile(image);
+  return new Uint8Array(data);
 };
 
 
@@ -46,16 +49,8 @@ const loadImage = (image) => {
  * @param {object} instance TesseractWorker instance
  * @param {object} iPacket data for worker
  */
-module.exports = (worker, packet) => {
-  const p = { ...packet };
-  if (['recognize', 'detect'].includes(p.action)) {
-    loadImage(p.payload.image)
-      .then(buf => new Uint8Array(buf))
-      .then((img) => {
-        p.payload.image = Array.from(img);
-        worker.send(p);
-      });
-  } else {
-    worker.send(p);
-  }
+module.exports = async (worker, _packet) => {
+  const packet = { ..._packet };
+  packet.payload.image = await loadImage(packet.payload.image);
+  worker.send(packet);
 };

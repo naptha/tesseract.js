@@ -1,4 +1,5 @@
 const { send } = require('./worker/node');
+const log = require('./utils/log');
 
 let jobCounter = 0;
 
@@ -10,7 +11,7 @@ module.exports = (
   const id = `Job-${jobCounter}-${Math.random().toString(16).slice(3, 8)}`;
 
   const start = (w) => {
-    console.log(`[${w.id}]: Start ${id}, action=${action}`);
+    log(`[${w.id}]: Start ${id}, action=${action}`);
     send(w.worker, {
       workerId: w.id,
       jobId: id,

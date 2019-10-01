@@ -14,11 +14,13 @@ let workerCounter = 0;
 module.exports = (_options = {}) => {
   workerCounter += 1;
   const id = `Worker-${workerCounter}-${Math.random().toString(16).slice(3, 8)}`;
-  const options = resolvePaths({
+  const {
+    logger,
+    ...options
+  } = resolvePaths({
     ...defaultOptions,
     ..._options,
   });
-  const { logger } = options;
   const resolves = {};
   const rejects = {};
   let worker = spawnWorker(options);
@@ -31,7 +33,7 @@ module.exports = (_options = {}) => {
     rejects[action] = rej;
   };
 
-  const doJob = (action, payload) => (
+  const doJob = (action, payload = {}) => (
     new Promise((resolve, reject) => {
       setResolve(action, resolve);
       setReject(action, reject);

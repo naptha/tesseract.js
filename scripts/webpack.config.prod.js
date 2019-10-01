@@ -24,7 +24,7 @@ module.exports = [
     libraryTarget: 'umd',
   }),
   genConfig({
-    entry: path.resolve(__dirname, '..', 'src', 'browser', 'worker.js'),
+    entry: path.resolve(__dirname, '..', 'src', 'worker-script', 'browser', 'index.js'),
     filename: 'worker.min.js',
   }),
 ];

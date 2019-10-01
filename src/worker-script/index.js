@@ -7,6 +7,7 @@
  * @author Guillermo Webster <gui@mit.edu>
  * @author Jerome Wu <jeromewus@gmail.com>
  */
+require('regenerator-runtime/runtime');
 const fileType = require('file-type');
 const axios = require('axios');
 const isURL = require('is-url');
@@ -84,7 +85,7 @@ const loadLanguage = async ({
       if (typeof _lang === 'string') {
         let path = null;
 
-        if (isURL(langPath)) { /** When langPath is an URL */
+        if (isURL(langPath) || langPath.startsWith('chrome-extension://') || langPath.startsWith('file://')) { /** When langPath is an URL */
           path = langPath;
         } else if (process.browser) { /** When langPath is not an URL in browser */
           path = adapter.resolveURL(langPath);

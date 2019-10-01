@@ -1,2 +1,19 @@
-<script src="/dist/tesseract.dev.js"></script>
-<input type="file" onchange="const worker = new Tesseract.TesseractWorker({ corePath: '../../node_modules/tesseract.js-core/tesseract-core.wasm.js' });worker.recognize(this.files[0]).progress(function(data){console.log(data)}).then(function(data){console.log(data)})">
+<html>
+  <head>
+    <script src="/dist/tesseract.dev.js"></script>
+  </head>
+  <body>
+    <input type="file" id="uploader">
+    <script>
+      const recognize = async ({ target: { files }  }) => {
+        const { text } = await Tesseract.recognize(files[0], 'eng', {
+          corePath: '../../node_modules/tesseract.js-core/tesseract-core.wasm.js',
+          logger: m => console.log(m),
+        });
+        console.log(text);
+      }
+      const elm = document.getElementById('uploader');
+      elm.addEventListener('change', recognize);
+    </script>
+  </body>
+</html>
