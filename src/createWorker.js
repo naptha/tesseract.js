@@ -7,6 +7,7 @@ const {
   spawnWorker,
   terminateWorker,
   onMessage,
+  loadImage,
 } = require('./worker/node');
 
 let workerCounter = 0;
@@ -57,17 +58,19 @@ module.exports = (_options = {}) => {
     doJob('setParameters', { params })
   );
 
-  const recognize = (image, opts = {}) => (
-    doJob('recognize', { image, options: opts })
-  );
+  const recognize = async (_image, opts = {}) => {
+    const image = await loadImage(_image);
+    return doJob('recognize', { image, options: opts });
+  };
 
   const getPDF = (title = 'Tesseract OCR Result', textonly = false) => (
     doJob('getPDF', { title, textonly })
   );
 
-  const detect = image => (
-    doJob('detect', { image })
-  );
+  const detect = async (_image) => {
+    const image = await loadImage(_image);
+    return doJob('detect', { image });
+  };
 
   const terminate = async () => {
     if (worker !== null) {

@@ -12,6 +12,7 @@ const spawnWorker = require('./spawnWorker');
 const terminateWorker = require('./terminateWorker');
 const onMessage = require('./onMessage');
 const send = require('./send');
+const loadImage = require('./loadImage');
 
 module.exports = {
   defaultOptions,
@@ -19,4 +20,5 @@ module.exports = {
   terminateWorker,
   onMessage,
   send,
+  loadImage,
 };

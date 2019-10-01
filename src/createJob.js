@@ -1,4 +1,6 @@
-const { send } = require('./worker/node');
+const {
+  send,
+} = require('./worker/node');
 const log = require('./utils/log');
 
 let jobCounter = 0;
@@ -10,7 +12,7 @@ module.exports = (
   jobCounter += 1;
   const id = `Job-${jobCounter}-${Math.random().toString(16).slice(3, 8)}`;
 
-  const start = (w) => {
+  const start = async (w) => {
     log(`[${w.id}]: Start ${id}, action=${action}`);
     send(w.worker, {
       workerId: w.id,
