@@ -15,6 +15,7 @@ const dump = require('./utils/dump');
 const isBrowser = require('../utils/getEnvironment')('type') === 'browser';
 const setImage = require('./utils/setImage');
 const defaultParams = require('./constants/defaultParams');
+const log = require('../utils/log');
 
 /*
  * Tesseract Module returned by TesseractCore.
@@ -23,7 +24,7 @@ let TessModule;
 /*
  * TessearctBaseAPI instance
  */
-let api;
+let api = null;
 let latestJob;
 let adapter = {};
 let params = defaultParams;
@@ -77,11 +78,13 @@ const loadLanguage = async ({
     try {
       const _data = await readCache(`${cachePath || '.'}/${lang}.traineddata`);
       if (typeof _data !== 'undefined') {
+        log(`[${workerId}]: Load ${lang}.traineddata from cache`);
         data = _data;
       } else {
         throw Error('Not found in cache');
       }
     } catch (e) {
+      log(`[${workerId}]: Load ${lang}.traineddata from ${langPath}`);
       if (typeof _lang === 'string') {
         let path = null;
 
@@ -173,8 +176,12 @@ const initialize = ({
     res.progress({
       workerId, status: 'initializing api', progress: 0,
     });
+    if (api !== null) {
+      api.End();
+    }
     api = new TessModule.TessBaseAPI();
     api.Init(null, langs, oem);
+    params = defaultParams;
     setParameters({ payload: { params } });
     res.progress({
       workerId, status: 'initialized api', progress: 1,
@@ -242,7 +249,9 @@ const detect = ({ payload: { image } }, res) => {
 
 const terminate = (_, res) => {
   try {
-    api.End();
+    if (api !== null) {
+      api.End();
+    }
     res.resolve({ terminated: true });
   } catch (err) {
     res.reject(err.toString());

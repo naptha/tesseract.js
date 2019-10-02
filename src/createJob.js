@@ -1,11 +1,17 @@
-let jobCounter = 1;
+const getId = require('./utils/getId');
 
-module.exports = (
+let jobCounter = 0;
+
+module.exports = ({
+  id: _id,
   action,
-  payload,
-) => {
-  const id = `Job-${jobCounter}-${Math.random().toString(16).slice(3, 8)}`;
-  jobCounter += 1;
+  payload = {},
+}) => {
+  let id = _id;
+  if (typeof id === 'undefined') {
+    id = getId('Job', jobCounter);
+    jobCounter += 1;
+  }
 
   return {
     id,

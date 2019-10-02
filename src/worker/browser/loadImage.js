@@ -56,10 +56,10 @@ const loadImage = async (image) => {
     }
   } else if (image instanceof HTMLElement) {
     if (image.tagName === 'IMG') {
-      data = loadImage(image.src);
+      data = await loadImage(image.src);
     }
     if (image.tagName === 'VIDEO') {
-      data = loadImage(image.poster);
+      data = await loadImage(image.poster);
     }
     if (image.tagName === 'CANVAS') {
       await new Promise((resolve) => {

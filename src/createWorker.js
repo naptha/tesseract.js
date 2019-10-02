@@ -2,6 +2,7 @@ const resolvePaths = require('./utils/resolvePaths');
 const circularize = require('./utils/circularize');
 const createJob = require('./createJob');
 const log = require('./utils/log');
+const getId = require('./utils/getId');
 const { defaultOEM } = require('./constants/config');
 const {
   defaultOptions,
@@ -12,11 +13,10 @@ const {
   send,
 } = require('./worker/node');
 
-let workerCounter = 1;
+let workerCounter = 0;
 
 module.exports = (_options = {}) => {
-  const id = `Worker-${workerCounter}-${Math.random().toString(16).slice(3, 8)}`;
-  workerCounter += 1;
+  const id = getId('Worker', workerCounter);
   const {
     logger,
     ...options
@@ -28,6 +28,8 @@ module.exports = (_options = {}) => {
   const rejects = {};
   let worker = spawnWorker(options);
 
+  workerCounter += 1;
+
   const setResolve = (action, res) => {
     resolves[action] = res;
   };
@@ -36,10 +38,9 @@ module.exports = (_options = {}) => {
     rejects[action] = rej;
   };
 
-  const startJob = (action, payload = {}) => (
+  const startJob = ({ id: jobId, action, payload }) => (
     new Promise((resolve, reject) => {
-      const { id: jobId } = createJob(action, payload);
-      log(`[${id}]: Start ${jobId}, action=${action}`);
+      log(`[${id}]: Start ${jobId}, action=${action}, payload=`, payload);
       setResolve(action, resolve);
       setReject(action, reject);
       send(worker, {
@@ -51,32 +52,58 @@ module.exports = (_options = {}) => {
     })
   );
 
-  const load = () => (
-    startJob('load', { options })
+  const load = jobId => (
+    startJob(createJob({
+      id: jobId, action: 'load', payload: { options },
+    }))
   );
 
-  const loadLanguage = (langs = 'eng') => (
-    startJob('loadLanguage', { langs, options })
+  const loadLanguage = (langs = 'eng', jobId) => (
+    startJob(createJob({
+      id: jobId,
+      action: 'loadLanguage',
+      payload: { langs, options },
+    }))
   );
 
-  const initialize = (langs = 'eng', oem = defaultOEM) => (
-    startJob('initialize', { langs, oem })
+  const initialize = (langs = 'eng', oem = defaultOEM, jobId) => (
+    startJob(createJob({
+      id: jobId,
+      action: 'initialize',
+      payload: { langs, oem },
+    }))
   );
 
-  const setParameters = (params = {}) => (
-    startJob('setParameters', { params })
+  const setParameters = (params = {}, jobId) => (
+    startJob(createJob({
+      id: jobId,
+      action: 'setParameters',
+      payload: { params },
+    }))
   );
 
-  const recognize = async (image, opts = {}) => (
-    startJob('recognize', { image: await loadImage(image), options: opts })
+  const recognize = async (image, opts = {}, jobId) => (
+    startJob(createJob({
+      id: jobId,
+      action: 'recognize',
+      payload: { image: await loadImage(image), options: opts },
+    }))
   );
 
-  const getPDF = (title = 'Tesseract OCR Result', textonly = false) => (
-    startJob('getPDF', { title, textonly })
+  const getPDF = (title = 'Tesseract OCR Result', textonly = false, jobId) => (
+    startJob(createJob({
+      id: jobId,
+      action: 'getPDF',
+      payload: { title, textonly },
+    }))
   );
 
-  const detect = async image => (
-    startJob('detect', { image: await loadImage(image) })
+  const detect = async (image, jobId) => (
+    startJob(createJob({
+      id: jobId,
+      action: 'detect',
+      payload: { image: await loadImage(image) },
+    }))
   );
 
   const terminate = async () => {
@@ -88,15 +115,18 @@ module.exports = (_options = {}) => {
     return Promise.resolve();
   };
 
-  onMessage(worker, ({ status, action, data }) => {
+  onMessage(worker, ({
+    workerId, jobId, status, action, data,
+  }) => {
     if (status === 'resolve') {
+      log(`[${workerId}]: Complete ${jobId}, data=`, data);
       let d = data;
       if (action === 'recognize') {
         d = circularize(data);
       } else if (action === 'getPDF') {
         d = Array.from({ ...data, length: Object.keys(data).length });
       }
-      resolves[action](d);
+      resolves[action]({ jobId, data: d });
     } else if (status === 'reject') {
       rejects[action](data);
       throw Error(data);
