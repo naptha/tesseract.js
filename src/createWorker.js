@@ -1,6 +1,7 @@
 const resolvePaths = require('./utils/resolvePaths');
 const circularize = require('./utils/circularize');
 const createJob = require('./createJob');
+const log = require('./utils/log');
 const { defaultOEM } = require('./constants/config');
 const {
   defaultOptions,
@@ -8,13 +9,14 @@ const {
   terminateWorker,
   onMessage,
   loadImage,
+  send,
 } = require('./worker/node');
 
-let workerCounter = 0;
+let workerCounter = 1;
 
 module.exports = (_options = {}) => {
-  workerCounter += 1;
   const id = `Worker-${workerCounter}-${Math.random().toString(16).slice(3, 8)}`;
+  workerCounter += 1;
   const {
     logger,
     ...options
@@ -34,47 +36,52 @@ module.exports = (_options = {}) => {
     rejects[action] = rej;
   };
 
-  const doJob = (action, payload = {}) => (
+  const startJob = (action, payload = {}) => (
     new Promise((resolve, reject) => {
+      const { id: jobId } = createJob(action, payload);
+      log(`[${id}]: Start ${jobId}, action=${action}`);
       setResolve(action, resolve);
       setReject(action, reject);
-      createJob(action, payload).start({ worker, id });
+      send(worker, {
+        workerId: id,
+        jobId,
+        action,
+        payload,
+      });
     })
   );
 
   const load = () => (
-    doJob('load', { options })
+    startJob('load', { options })
   );
 
   const loadLanguage = (langs = 'eng') => (
-    doJob('loadLanguage', { langs, options })
+    startJob('loadLanguage', { langs, options })
   );
 
   const initialize = (langs = 'eng', oem = defaultOEM) => (
-    doJob('initialize', { langs, oem })
+    startJob('initialize', { langs, oem })
   );
 
   const setParameters = (params = {}) => (
-    doJob('setParameters', { params })
+    startJob('setParameters', { params })
   );
 
-  const recognize = async (_image, opts = {}) => {
-    const image = await loadImage(_image);
-    return doJob('recognize', { image, options: opts });
-  };
+  const recognize = async (image, opts = {}) => (
+    startJob('recognize', { image: await loadImage(image), options: opts })
+  );
 
   const getPDF = (title = 'Tesseract OCR Result', textonly = false) => (
-    doJob('getPDF', { title, textonly })
+    startJob('getPDF', { title, textonly })
   );
 
-  const detect = async (_image) => {
-    const image = await loadImage(_image);
-    return doJob('detect', { image });
-  };
+  const detect = async image => (
+    startJob('detect', { image: await loadImage(image) })
+  );
 
   const terminate = async () => {
     if (worker !== null) {
-      await doJob('terminate');
+      await startJob('terminate');
       terminateWorker(worker);
       worker = null;
     }
