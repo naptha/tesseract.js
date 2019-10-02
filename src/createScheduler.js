@@ -42,7 +42,7 @@ module.exports = () => {
           dequeue();
         }
       });
-      log(`[${id}]: add ${job.id} to JobQueue`);
+      log(`[${id}]: Add ${job.id} to JobQueue`);
       log(`[${id}]: JobQueue length=${jobQueue.length}`);
       dequeue();
     })
@@ -50,8 +50,8 @@ module.exports = () => {
 
   const addWorker = (w) => {
     workers[w.id] = w;
-    log(`[${id}]: add ${w.id}`);
-    log(`[${id}]: number of workers=${getNumWorkers()}`);
+    log(`[${id}]: Add ${w.id}`);
+    log(`[${id}]: Number of workers=${getNumWorkers()}`);
     dequeue();
     return w.id;
   };

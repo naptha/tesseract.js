@@ -40,7 +40,7 @@ module.exports = (_options = {}) => {
 
   const startJob = ({ id: jobId, action, payload }) => (
     new Promise((resolve, reject) => {
-      log(`[${id}]: Start ${jobId}, action=${action}, payload=`, payload);
+      log(`[${id}]: Start ${jobId}, action=${action}`);
       setResolve(action, resolve);
       setReject(action, reject);
       send(worker, {
@@ -119,7 +119,7 @@ module.exports = (_options = {}) => {
     workerId, jobId, status, action, data,
   }) => {
     if (status === 'resolve') {
-      log(`[${workerId}]: Complete ${jobId}, data=`, data);
+      log(`[${workerId}]: Complete ${jobId}`);
       let d = data;
       if (action === 'recognize') {
         d = circularize(data);

@@ -2,9 +2,10 @@ const TIMEOUT = 10000;
 const IMAGE_PATH = 'http://localhost:3000/tests/assets/images';
 const IS_BROWSER = typeof window !== 'undefined' && typeof window.document !== 'undefined';
 const OPTIONS = {
+  cacheMethod: 'readOnly',
   langPath: 'http://localhost:3000/tests/assets/traineddata',
   cachePath: './tests/assets/traineddata',
-  ...(IS_BROWSER ? { workerPath: '/dist/worker.dev.js' } : {}),
+  ...(IS_BROWSER ? { workerPath: '../dist/worker.dev.js' } : {}),
 };
 const SIMPLE_TEXT = 'Tesseract.js\n';
 const SIMPLE_TEXT_HALF = 'Tesse\n';

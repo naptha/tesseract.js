@@ -4,7 +4,7 @@ let workers = [];
 
 before(async function cb() {
   this.timeout(0);
-  const NUM_WORKERS = 10;
+  const NUM_WORKERS = 5;
   console.log(`Initializing ${NUM_WORKERS} workers`);
   workers = await Promise.all(Array(NUM_WORKERS).fill(0).map(async () => {
     const w = createWorker(OPTIONS);
@@ -17,12 +17,12 @@ before(async function cb() {
 });
 
 describe('scheduler', () => {
-  describe('should speed up with more workers (running 20 jobs)', () => {
-    Array(10).fill(0).forEach((_, num) => (
-      it(`support using ${num + 1} workers`, async () => {
-        const NUM_JOBS = 30;
+  describe('should speed up with more workers (running 10 jobs)', () => {
+    [1, 3, 5].forEach(num => (
+      it(`support using ${num} workers`, async () => {
+        const NUM_JOBS = 10;
         const scheduler = createScheduler();
-        workers.slice(0, num + 1).forEach((w) => {
+        workers.slice(0, num).forEach((w) => {
           scheduler.addWorker(w);
         });
         const rets = await Promise.all(Array(NUM_JOBS).fill(0).map((_, idx) => (
