@@ -90,6 +90,15 @@ describe('recognize()', () => {
       const { data: { text } } = await worker.recognize(`${IMAGE_PATH}/bill.png`);
       expect(text).to.be(BILL_SPACED_TEXT);
     }).timeout(TIMEOUT);
+
+    it('support tessedit_char_whitelist', async () => {
+      await worker.initialize('eng');
+      await worker.setParameters({
+        tessedit_char_whitelist: 'Tess',
+      });
+      const { data: { text } } = await worker.recognize(`${IMAGE_PATH}/simple.png`);
+      expect(text).to.be(SIMPLE_WHITELIST_TEXT);
+    }).timeout(TIMEOUT);
   });
 
   describe('should support all page seg modes', () => {

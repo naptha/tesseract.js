@@ -6,7 +6,6 @@ const PSM = require('../../constants/PSM');
 module.exports = {
   tessedit_pageseg_mode: PSM.SINGLE_BLOCK,
   tessedit_char_whiltelist: '',
-  user_defined_dpi: '300',
   tessjs_create_hocr: '1',
   tessjs_create_tsv: '1',
   tessjs_create_box: '0',
