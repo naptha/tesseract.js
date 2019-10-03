@@ -7,3 +7,4 @@ worker.dev.js
 /examples/**/*.traineddata
 .nyc_output
 dist/
+*.swp
