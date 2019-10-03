@@ -145,7 +145,7 @@ Worker.setParameters() set parameters for Tesseract API (using SetVariable()), i
 
 | name | type | default value | description |
 | ---- | ---- | ------------- | ----------- |
-| tessedit\_ocr\_engine\_mode | enum | OEM.LSTM\_ONLY | Check [HERE](https://github.com/tesseract-ocr/tesseract/blob/4.0.0/src/ccstruct/publictypes.h#L268) for definition of each mode | 
+| tessedit\_ocr\_engine\_mode | enum | OEM.DEFAULT | Check [HERE](https://github.com/tesseract-ocr/tesseract/blob/4.0.0/src/ccstruct/publictypes.h#L268) for definition of each mode | 
 | tessedit\_pageseg\_mode | enum | PSM.SINGLE\_BLOCK | Check [HERE](https://github.com/tesseract-ocr/tesseract/blob/4.0.0/src/ccstruct/publictypes.h#L163) for definition of each mode |
 | tessedit\_char\_whitelist | string | '' | setting white list characters makes the result only contains these characters, useful the content in image is limited |
 | preserve\_interword\_spaces | string | '0' | '0' or '1', keeps the space between words |
