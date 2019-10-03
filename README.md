@@ -11,7 +11,7 @@
 [![Downloads Month](https://img.shields.io/npm/dm/tesseract.js.svg)](https://www.npmjs.com/package/tesseract.js)
 
 <h3 align="center">
-  Version 2 is now available and under development in the master branch<br>
+  Version 2 beta is now available and under development in the master branch<br>
   Check the <a href="https://github.com/naptha/tesseract.js/tree/support/1.x">support/1.x</a> branch for version 1
 </h3>
 
@@ -26,25 +26,45 @@ It works in the browser using [webpack](https://webpack.js.org/) or plain script
 After you [install it](#installation), using it is as simple as:
 
 ```javascript
-import { TesseractWorker } from 'tesseract.js';
-const worker = new TesseractWorker();
+import Tesseract from 'tesseract.js';
 
-worker.recognize(myImage)
-  .progress(progress => {
-    console.log('progress', progress);
-  }).then(result => {
-    console.log('result', result);
-  });
+Tesseract.recognize(
+  'https://tesseract.projectnaptha.com/img/eng_bw.png',
+  'eng',
+  { logger: m => console.log(m) }
+).then(({ data: { text } }) => {
+  console.log(text);
+})
+```
+
+Or more imperative
+
+```javascript
+import { createWorker } from 'tesseract.js';
+
+const worker = createWorker({
+  logger: m => console.log(m)
+});
+
+(async () => {
+  await worker.load();
+  await worker.loadLanguage('eng');
+  await worker.initialize('eng');
+  const { data: { text } } = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png');
+  console.log(text);
+  await woker.terminate();
+})();
 ```
 
 [Check out the docs](#docs) for a full explanation of the API.
 
 
-## Major changes in v2
-- Upgrade to tesseract v4
+## Major changes in v2 beta
+- Upgrade to tesseract v4.1 (using emscripten 1.38.45)
 - Support multiple languages at the same time, eg: eng+chi_tra for English and Traditional Chinese
 - Supported image formats: png, jpg, bmp, pbm
 - Support WebAssembly (fallback to ASM.js when browser doesn't support)
+- Support Typescript
 
 
 ## Installation
@@ -54,7 +74,7 @@ Tesseract.js works with a `<script>` tag via local copy or CDN, with webpack via
 ### CDN
 ```html
 <!-- v2 -->
-<script src='https://unpkg.com/tesseract.js@v2.0.0-alpha.16/dist/tesseract.min.js'></script>
+<script src='https://unpkg.com/tesseract.js@v2.0.0-beta.1/dist/tesseract.min.js'></script>
 
 <!-- v1 -->
 <script src='https://unpkg.com/tesseract.js@1.0.19/src/index.js'></script>
@@ -103,7 +123,7 @@ npm start
 ```
 
 The development server will be available at http://localhost:3000/examples/browser/demo.html in your favorite browser.
-It will automatically rebuild `tesseract.dev.js` and `worker.min.js` when you change files in the src folder.
+It will automatically rebuild `tesseract.dev.js` and `worker.dev.js` when you change files in the **src** folder.
 
 You can also run the development server in Gitpod ( a free online IDE and dev environment for GitHub that will automate your dev setup ) with a single click.
 

@@ -12,217 +12,147 @@ Example repositories:
 ### basic
 
 ```javascript
-import Tesseract from 'tesseract.js';
+import { createWorker } from 'tesseract.js';
 
-const { TesseractWorker } = Tesseract;
-const worker = new TesseractWorker();
+const worker = createWorker();
 
-worker
-  .recognize('https://tesseract.projectnaptha.com/img/eng_bw.png')
-  .progress((p) => {
-    console.log('progress', p);
-  })
-  .then(({ text }) => {
-    console.log(text);
-    worker.terminate();
-  });
+(async () => {
+  await worker.load();
+  await worker.loadLanguage('eng');
+  await worker.initialize('eng');
+  const { data: { text } } = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png');
+  console.log(text);
+  await worker.terminate();
+})();
 ```
 
 ### with detailed progress 
 
 ```javascript
-import Tesseract from 'tesseract.js';
+import { createWorker } from 'tesseract.js';
 
-const { TesseractWorker } = Tesseract;
-const worker = new TesseractWorker();
+const worker = createWorker({
+  logger: m => console.log(m), // Add logger here
+});
 
-worker
-  .recognize('https://tesseract.projectnaptha.com/img/eng_bw.png')
-  .progress((p) => {
-    console.log('progress', p);
-  })
-  .then(({ text }) => {
-    console.log(text);
-    worker.terminate();
-  });
+(async () => {
+  await worker.load();
+  await worker.loadLanguage('eng');
+  await worker.initialize('eng');
+  const { data: { text } } = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png');
+  console.log(text);
+  await worker.terminate();
+})();
 ```
 
 ### with multiple languages, separate by '+'
 
 ```javascript
-import Tesseract from 'tesseract.js';
+import { createWorker } from 'tesseract.js';
 
-const { TesseractWorker } = Tesseract;
-const worker = new TesseractWorker();
+const worker = createWorker();
 
-worker
-  .recognize(
-    'https://tesseract.projectnaptha.com/img/eng_bw.png',
-    'eng+chi_tra'
-  )
-  .progress((p) => {
-    console.log('progress', p);
-  })
-  .then(({ text }) => {
-    console.log(text);
-    worker.terminate();
-  });
+(async () => {
+  await worker.load();
+  await worker.loadLanguage('eng+chi_tra');
+  await worker.initialize('eng+chi_tra');
+  const { data: { text } } = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png');
+  console.log(text);
+  await worker.terminate();
+})();
 ```
-
-### with whitelist char (^2.0.0-alpha.5)
-
-Sadly, whitelist chars is not supported in tesseract.js v4, so in tesseract.js we need to switch to tesseract v3 mode to make it work.
+### with whitelist char (^2.0.0-beta.1)
 
 ```javascript
-import Tesseract from 'tesseract.js';
+import { createWorker } from 'tesseract.js';
 
-const { TesseractWorker, OEM } = Tesseract;
-const worker = new TesseractWorker();
+const worker = createWorker();
 
-worker
-  .recognize(
-    'https://tesseract.projectnaptha.com/img/eng_bw.png',
-    'eng',
-    {
-      'tessedit_ocr_engine_mode': OEM.TESSERACT_ONLY,
-      'tessedit_char_whitelist': '0123456789-.',
-    }
-  )
-  .progress((p) => {
-    console.log('progress', p);
-  })
-  .then(({ text }) => {
-    console.log(text);
-    worker.terminate();
+(async () => {
+  await worker.load();
+  await worker.loadLanguage('eng');
+  await worker.initialize('eng');
+  await worker.setParameters({
+    tessedit_char_whitelist: '0123456789',
   });
+  const { data: { text } } = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png');
+  console.log(text);
+  await worker.terminate();
+})();
 ```
 
-### with different pageseg mode (^2.0.0-alpha.5)
+### with different pageseg mode (^2.0.0-beta.1)
 
 Check here for more details of pageseg mode: https://github.com/tesseract-ocr/tesseract/blob/4.0.0/src/ccstruct/publictypes.h#L163
 
 ```javascript
-import Tesseract from 'tesseract.js';
+import { createWorker, PSM } from 'tesseract.js';
 
-const { TesseractWorker, PSM } = Tesseract;
-const worker = new TesseractWorker();
+const worker = createWorker();
 
-worker
-  .recognize(
-    'https://tesseract.projectnaptha.com/img/eng_bw.png',
-    'eng',
-    {
-      'tessedit_pageseg_mode': PSM.SINGLE_BLOCK,
-    }
-  )
-  .progress((p) => {
-    console.log('progress', p);
-  })
-  .then(({ text }) => {
-    console.log(text);
-    worker.terminate();
+(async () => {
+  await worker.load();
+  await worker.loadLanguage('eng');
+  await worker.initialize('eng');
+  await worker.setParameters({
+    tessedit_pageseg_mode: PSM.SINGLE_BLOCK,
   });
+  const { data: { text } } = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png');
+  console.log(text);
+  await worker.terminate();
+})();
 ```
 
-### with pdf output (^2.0.0-alpha.12)
+### with pdf output (^2.0.0-beta.1)
 
-In this example, pdf file will be downloaded in browser and write to file system in Node.js
+Please check **examples** folder for details.
+
+Browser: [download-pdf.html](../examples/browser/download-pdf.html)
+Node: [download-pdf.js](../examples/node/download-pdf.js)
+
+### with only part of the image (^2.0.0-beta.1)
 
 ```javascript
-import Tesseract from 'tesseract.js';
+import { createWorker } from 'tesseract.js';
 
-const { TesseractWorker } = Tesseract;
-const worker = new TesseractWorker();
+const worker = createWorker();
+const rectangles = [
+  { left: 0, top: 0, width: 500, height: 250 },
+];
 
-worker
-  .recognize(
-    'https://tesseract.projectnaptha.com/img/eng_bw.png',
-    'eng',
-    {
-      'tessjs_create_pdf': '1',
-    }
-  )
-  .progress((p) => {
-    console.log('progress', p);
-  })
-  .then(({ text }) => {
-    console.log(text);
-    worker.terminate();
-  });
+(async () => {
+  await worker.load();
+  await worker.loadLanguage('eng');
+  await worker.initialize('eng');
+  const { data: { text } } = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png', 'eng', { rectangles });
+  console.log(text);
+  await worker.terminate();
+})();
 ```
 
-If you want to handle pdf file by yourself
+### with multiple workers to speed up (^2.0.0-beta.1)
 
 ```javascript
-import Tesseract from 'tesseract.js';
+import { createWorker, createScheduler } from 'tesseract.js';
 
-const { TesseractWorker } = Tesseract;
-const worker = new TesseractWorker();
+const scheduler = createScheduler();
+const worker1 = createWorker();
+const worker2 = createWorker();
 
-worker
-  .recognize(
-    'https://tesseract.projectnaptha.com/img/eng_bw.png',
-    'eng',
-    {
-      'tessjs_create_pdf': '1',
-      'tessjs_pdf_auto_download': false, // disable auto download
-      'tessjs_pdf_bin': true,            // add pdf file bin array in result
-    }
-  )
-  .progress((p) => {
-    console.log('progress', p);
-  })
-  .then(({ files: { pdf } }) => {
-    console.log(Object.values(pdf)); // As pdf is an array-like object, you need to do a little convertion first.
-    worker.terminate();
-  });
-```
-
-### with preload language data
-
-```javascript
-const Tesseract = require('tesseract.js');
-
-const { TesseractWorker, utils: { loadLang } } = Tesseract;
-const worker = new TesseractWorker();
-
-loadLang({ langs: 'eng', langPath: worker.options.langPath })
-  .then(() => {
-    worker
-      .recognize('https://tesseract.projectnaptha.com/img/eng_bw.png')
-      .progress(p => console.log(p))
-      .then(({ text }) => {
-        console.log(text);
-        worker.terminate();
-      });
-  });
-
-```
-
-### with only part of the image (^2.0.0-alpha.12)
-
-```javascript
-import Tesseract from 'tesseract.js';
-
-const { TesseractWorker } = Tesseract;
-const worker = new TesseractWorker();
-
-worker
-  .recognize(
-    'https://tesseract.projectnaptha.com/img/eng_bw.png',
-    'eng',
-    {
-      tessjs_image_rectangle_left: 0,
-      tessjs_image_rectangle_top: 0,
-      tessjs_image_rectangle_width: 500,
-      tessjs_image_rectangle_height: 250,
-    }
-  )
-  .progress((p) => {
-    console.log('progress', p);
-  })
-  .then(({ text }) => {
-    console.log(text);
-    worker.terminate();
-  });
+(async () => {
+  await worker1.load();
+  await worker2.load();
+  await worker1.loadLanguage('eng');
+  await worker2.loadLanguage('eng');
+  await worker1.initialize('eng');
+  await worker2.initialize('eng');
+  scheduler.addWorker(worker1);
+  scheduler.addWorker(worker2);
+  /** Add 10 recognition jobs */
+  const results = await Promise.all(Array(10).fill(0).map(() => (
+    await scheduler.addJob('recognize', 'https://tesseract.projectnaptha.com/img/eng_bw.png')
+  )))
+  console.log(results);
+  await scheduler.terminate(); // It also terminates all workers.
+})();
 ```
