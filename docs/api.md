@@ -184,7 +184,7 @@ Figures out what words are in `image`, where the words are in `image`, etc.
 
 **Examples:**
 
-```
+```javascript
 const { createWorker } = Tesseract;
 (async () => {
   const worker = createWorker();
@@ -198,7 +198,7 @@ const { createWorker } = Tesseract;
 
 With rectangles
 
-```
+```javascript
 const { createWorker } = Tesseract;
 (async () => {
   const worker = createWorker();
@@ -226,7 +226,7 @@ Worker.detect() does OSD (Orientation and Script Detection) to the image instead
 
 **Examples:**
 
-```
+```javascript
 const { createWorker } = Tesseract;
 (async () => {
   const worker = createWorker();
@@ -260,7 +260,7 @@ createScheduler() is a factory function to create a scheduler, a scheduler manag
 
 **Examples:**
 
-```
+```javascript
 const { createScheduler } = Tesseract;
 const scheduler = createScheduler();
 ```
