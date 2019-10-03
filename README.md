@@ -52,7 +52,7 @@ const worker = createWorker({
   await worker.initialize('eng');
   const { data: { text } } = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png');
   console.log(text);
-  await woker.terminate();
+  await worker.terminate();
 })();
 ```
 
