@@ -8,6 +8,6 @@ const image = path.resolve(__dirname, (imagePath || '../../tests/assets/images/c
 console.log(`Recognizing ${image}`);
 
 Tesseract.detect(image, { logger: m => console.log(m) })
-  .then((data) => {
+  .then(({ data }) => {
     console.log(data);
   });

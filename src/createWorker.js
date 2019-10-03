@@ -1,7 +1,7 @@
 const resolvePaths = require('./utils/resolvePaths');
 const circularize = require('./utils/circularize');
 const createJob = require('./createJob');
-const log = require('./utils/log');
+const { log } = require('./utils/log');
 const getId = require('./utils/getId');
 const { defaultOEM } = require('./constants/config');
 const {
@@ -106,9 +106,12 @@ module.exports = (_options = {}) => {
     }))
   );
 
-  const terminate = async () => {
+  const terminate = async (jobId) => {
     if (worker !== null) {
-      await startJob('terminate');
+      await startJob(createJob({
+        id: jobId,
+        action: 'terminate',
+      }));
       terminateWorker(worker);
       worker = null;
     }

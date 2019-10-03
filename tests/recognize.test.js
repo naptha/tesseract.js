@@ -1,7 +1,5 @@
-const { createScheduler, createWorker, PSM } = Tesseract;
-const scheduler = createScheduler();
+const { createWorker, PSM } = Tesseract;
 const worker = createWorker(OPTIONS);
-scheduler.addWorker(worker);
 before(async function cb() {
   this.timeout(0);
   await worker.load();
@@ -13,7 +11,7 @@ describe('recognize()', () => {
     FORMATS.forEach(format => (
       it(`support ${format} format`, async () => {
         await worker.initialize('eng');
-        const { data: { text } } = await scheduler.addJob('recognize', `${IMAGE_PATH}/simple.${format}`);
+        const { data: { text } } = await worker.recognize(`${IMAGE_PATH}/simple.${format}`);
         expect(text).to.be(SIMPLE_TEXT);
       }).timeout(TIMEOUT)
     ));
@@ -26,7 +24,7 @@ describe('recognize()', () => {
     ].forEach(({ format, image, ans }) => (
       it(`recongize ${format} in base64`, async () => {
         await worker.initialize('eng');
-        const { data: { text } } = await scheduler.addJob('recognize', image);
+        const { data: { text } } = await worker.recognize(image);
         expect(text).to.be(ans);
       }).timeout(TIMEOUT)
     ));
@@ -38,7 +36,7 @@ describe('recognize()', () => {
     ].forEach(({ name, lang, ans }) => (
       it(`recongize ${lang}`, async () => {
         await worker.initialize(lang);
-        const { data: { text } } = await scheduler.addJob('recognize', `${IMAGE_PATH}/${name}`);
+        const { data: { text } } = await worker.recognize(`${IMAGE_PATH}/${name}`);
         expect(text).to.be(ans);
       }).timeout(TIMEOUT)
     ));
@@ -52,7 +50,7 @@ describe('recognize()', () => {
     ].forEach(({ name, desc, ans }) => (
       it(`recongize ${desc} image`, async () => {
         await worker.initialize('eng');
-        const { data: { text } } = await scheduler.addJob('recognize', `${IMAGE_PATH}/${name}`);
+        const { data: { text } } = await worker.recognize(`${IMAGE_PATH}/${name}`);
         expect(text).to.be(ans);
       }).timeout(TIMEOUT)
     ));
@@ -68,8 +66,7 @@ describe('recognize()', () => {
     }) => (
       it(`recongize half ${name}`, async () => {
         await worker.initialize('eng');
-        const { data: { text } } = await scheduler.addJob(
-          'recognize',
+        const { data: { text } } = await worker.recognize(
           `${IMAGE_PATH}/${name}`,
           {
             rectangles: [
@@ -94,7 +91,7 @@ describe('recognize()', () => {
           await worker.setParameters({
             tessedit_pageseg_mode: mode,
           });
-          const { data } = await scheduler.addJob('recognize', `${IMAGE_PATH}/simple.png`);
+          const { data } = await worker.recognize(`${IMAGE_PATH}/simple.png`);
           expect(Object.keys(data).length).not.to.be(0);
         }).timeout(TIMEOUT)
       ));
@@ -105,7 +102,7 @@ describe('recognize()', () => {
       it(`support ${format} format`, async () => {
         const buf = fs.readFileSync(path.join(__dirname, 'assets', 'images', `simple.${format}`));
         await worker.initialize('eng');
-        const { data: { text } } = await scheduler.addJob('recognize', buf);
+        const { data: { text } } = await worker.recognize(buf);
         expect(text).to.be(SIMPLE_TEXT);
       }).timeout(TIMEOUT)
     ));
@@ -117,7 +114,7 @@ describe('recognize()', () => {
         const imageDOM = document.createElement('img');
         imageDOM.setAttribute('src', `${IMAGE_PATH}/simple.${format}`);
         await worker.initialize('eng');
-        const { data: { text } } = await scheduler.addJob('recognize', imageDOM);
+        const { data: { text } } = await worker.recognize(imageDOM);
         expect(text).to.be(SIMPLE_TEXT);
       }).timeout(TIMEOUT)
     ));
@@ -129,7 +126,7 @@ describe('recognize()', () => {
         const videoDOM = document.createElement('video');
         videoDOM.setAttribute('poster', `${IMAGE_PATH}/simple.${format}`);
         await worker.initialize('eng');
-        const { data: { text } } = await scheduler.addJob('recognize', videoDOM);
+        const { data: { text } } = await worker.recognize(videoDOM);
         expect(text).to.be(SIMPLE_TEXT);
       }).timeout(TIMEOUT)
     ));
@@ -161,7 +158,7 @@ describe('recognize()', () => {
     formats.forEach(format => (
       it(`support ${format} format`, async () => {
         await worker.initialize('eng');
-        const { data: { text } } = await scheduler.addJob('recognize', canvasDOM);
+        const { data: { text } } = await worker.recognize(canvasDOM);
         expect(text).to.be(SIMPLE_TEXT);
       }).timeout(TIMEOUT)
     ));

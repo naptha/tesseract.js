@@ -1,0 +1,52 @@
+<html>
+  <head>
+    <script src="/dist/tesseract.dev.js"></script>
+  </head>
+  <body>
+    <div>
+      <input type="file" id="uploader">
+      <button id="download-pdf" disabled="true">Download PDF</button>
+    </div>
+    <textarea id="board" readonly rows="8" cols="80">Upload an image file</textarea>
+    <script>
+      const { createWorker } = Tesseract;
+      const worker = createWorker({
+        corePath: '/node_modules/tesseract.js-core/tesseract-core.wasm.js',
+        logger: m => console.log(m),
+      });
+      const uploader = document.getElementById('uploader');
+      const dlBtn = document.getElementById('download-pdf');
+      const recognize = async ({ target: { files }  }) => {
+        await worker.load();
+        await worker.loadLanguage('eng');
+        await worker.initialize('eng');
+        const { data: { text } } = await worker.recognize(files[0]);
+        const board = document.getElementById('board');
+        board.value = text;
+        dlBtn.disabled = false;
+      };
+      const downloadPDF = async () => {
+        const filename = 'tesseract-ocr-result.pdf';
+        const { data } = await worker.getPDF('Tesseract OCR Result');
+        const blob = new Blob([new Uint8Array(data)], { type: 'application/pdf' });
+        if (navigator.msSaveBlob) {
+          // IE 10+
+          navigator.msSaveBlob(blob, filename);
+        } else {
+          const link = document.createElement('a');
+          if (link.download !== undefined) {
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          }
+        }
+      };
+      uploader.addEventListener('change', recognize);
+      dlBtn.addEventListener('click', downloadPDF);
+    </script>
+  </body>
+</html>

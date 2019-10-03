@@ -15,7 +15,7 @@ const dump = require('./utils/dump');
 const isBrowser = require('../utils/getEnvironment')('type') === 'browser';
 const setImage = require('./utils/setImage');
 const defaultParams = require('./constants/defaultParams');
-const log = require('../utils/log');
+const { log, setLogging } = require('../utils/log');
 
 /*
  * Tesseract Module returned by TesseractCore.
@@ -29,7 +29,8 @@ let latestJob;
 let adapter = {};
 let params = defaultParams;
 
-const load = ({ workerId, jobId, payload: { options: { corePath } } }, res) => {
+const load = ({ workerId, jobId, payload: { options: { corePath, logging } } }, res) => {
+  setLogging(logging);
   if (!TessModule) {
     const Core = adapter.getCore(corePath, res);
 
