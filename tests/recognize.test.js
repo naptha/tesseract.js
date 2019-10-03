@@ -81,6 +81,17 @@ describe('recognize()', () => {
     ));
   });
 
+  describe('should work with selected parameters', () => {
+    it('support preserve_interword_spaces', async () => {
+      await worker.initialize('eng');
+      await worker.setParameters({
+        preserve_interword_spaces: '1',
+      });
+      const { data: { text } } = await worker.recognize(`${IMAGE_PATH}/bill.png`);
+      expect(text).to.be(BILL_SPACED_TEXT);
+    }).timeout(TIMEOUT);
+  });
+
   describe('should support all page seg modes', () => {
     Object
       .keys(PSM)
