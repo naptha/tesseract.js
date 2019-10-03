@@ -2,8 +2,8 @@ declare namespace Tesseract {
   function createScheduler(): Scheduler
   function createWorker(options?: Partial<WorkerOptions>): Worker
   function setLogging(logging: boolean): void
-  function recognize(image: ImageLike, langs: string, options?: Partial<WorkerOptions>): Promise<RecognizeResult>
-  function detect(image: ImageLike, langs: string, options?: Partial<WorkerOptions>)
+  function recognize(image: ImageLike, langs?: string, options?: Partial<WorkerOptions>): Promise<RecognizeResult>
+  function detect(image: ImageLike, langs?: string, options?: Partial<WorkerOptions>)
 
   interface Scheduler {
     addWorker(worker: Worker): void
@@ -15,8 +15,8 @@ declare namespace Tesseract {
 
   interface Worker {
     load(jobId?: string): Promise<ConfigResult>
-    loadLanguage(langs: string, jobId?: string): Promise<ConfigResult>
-    initialize(langs: string, params?: Partial<WorkerParams>, jobId?: string): Promise<ConfigResult>
+    loadLanguage(langs?: string, jobId?: string): Promise<ConfigResult>
+    initialize(langs?: string, params?: Partial<WorkerParams>, jobId?: string): Promise<ConfigResult>
     recognize(image: ImageLike, options?: Partial<RecognizeOptions>, jobId?: string): Promise<RecognizeResult>
     detect(image: ImageLike, jobId?: string): Promise<DetectResult>
     terminate(jobId?: string): Promise<ConfigResult>
