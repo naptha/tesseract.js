@@ -1,9 +1,39 @@
 declare namespace Tesseract {
-  class TesseractWorker {
-    recognize(image: ImageLike, lang: string, options?: Partial<RecognizeOptions>): TesseractJob;
-    detect(image: ImageLike): TesseractJob;
+  function createScheduler(): Scheduler
+  function createWorker(options?: Partial<WorkerOptions>): Worker
+  function setLogging(logging: boolean): void
+  function recognize(image: ImageLike, langs: string, options?: Partial<WorkerOptions>): Promise<RecognizeResult>
+  function detect(image: ImageLike, langs: string, options?: Partial<WorkerOptions>)
+
+  interface Scheduler {
+    addWorker(worker: Worker): void
+    addJob(action: string, ...args: any[]): Promise<ConfigResult | RecognizeResult | DetectResult>
+    terminate(): Promise<any>
+    getQueueLen(): number
+    getNumWorkers(): number
   }
-  interface RecognizeOptions {
+
+  interface Worker {
+    load(jobId?: string): Promise<ConfigResult>
+    loadLanguage(langs: string, jobId?: string): Promise<ConfigResult>
+    initialize(langs: string, params?: Partial<WorkerParams>, jobId?: string): Promise<ConfigResult>
+    recognize(image: ImageLike, options?: Partial<RecognizeOptions>, jobId?: string): Promise<RecognizeResult>
+    detect(image: ImageLike, jobId?: string): Promise<DetectResult>
+    terminate(jobId?: string): Promise<ConfigResult>
+  }
+
+  interface WorkerOptions {
+    corePath: string
+    langPath: string
+    cachePath: string
+    dataPath: string
+    workerPath: string
+    cacheMethod: string
+    workerBlobURL: boolean
+    gzip: boolean
+    logger: (any) => void
+  }
+  interface WorkerParams {
     tessedit_ocr_engine_mode: OEM
     tessedit_pageseg_mode: PSM
     tessedit_char_whiltelist: string
@@ -13,15 +43,34 @@ declare namespace Tesseract {
     tessjs_create_box: string
     tessjs_create_unlv: string
     tessjs_create_osd: string
-    tessjs_textonly_pdf: string
-    tessjs_pdf_name: string
-    tessjs_pdf_title: string
-    tessjs_pdf_auto_download: boolean
-    tessjs_pdf_bin: boolean
-    tessjs_image_rectangle_left: number
-    tessjs_image_rectangle_top: number
-    tessjs_image_rectangle_width: number
-    tessjs_image_rectangle_height: number
+  }
+  interface RecognizeOptions {
+    rectangles: Rectangle[]
+  }
+  interface ConfigResult {
+    jobId: string
+    data: any
+  }
+  interface RecognizeResult {
+    jobId: string
+    data: Page
+  }
+  interface DetectResult {
+    jobId: string
+    data: DetectData
+  }
+  interface DetectData {
+    tesseract_script_id: number
+    script: string
+    script_confidence: number
+    orientation_degrees: number
+    orientation_confidence: number
+  }
+  interface Rectangle {
+    left: number
+    top: number
+    width: number
+    height: number
   }
   const enum OEM {
     TESSERACT_ONLY,
@@ -46,11 +95,6 @@ declare namespace Tesseract {
   }
   type ImageLike = string | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement
     | CanvasRenderingContext2D | File | Blob | ImageData | Buffer;
-  interface Progress {
-    status: string;
-    progress: number;
-    loaded?: number;
-  }
   interface Block {
     paragraphs: Paragraph;
     text: string;
@@ -148,7 +192,6 @@ declare namespace Tesseract {
   interface Page {
     blocks: Block[];
     confidence: number;
-    html: string;
     lines: Line[];
     oem: string;
     paragraphs: Paragraph[];
@@ -157,12 +200,11 @@ declare namespace Tesseract {
     text: string;
     version: string;
     words: Word[];
-  }
-  interface TesseractJob {
-    then: (callback: (result: Page) => void) => TesseractJob;
-    progress: (callback: (progress: Progress) => void) => TesseractJob;
-    catch: (callback: (error: Error) => void) => TesseractJob;
-    finally: (callback: (resultOrError: Error | Page) => void) => TesseractJob;
+    hocr: string | null;
+    tsv: string | null;
+    box: string | null;
+    unlv: string | null;
+    sd: string | null;
   }
 }
 
