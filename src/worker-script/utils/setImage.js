@@ -7,8 +7,6 @@ const fileType = require('file-type');
  * @name setImage
  * @function set image in tesseract for recognition
  * @access public
- * @param {array} image - binary array in array format
- * @returns {number} - an emscripten pointer of the image
  */
 module.exports = (TessModule, api, image) => {
   const buf = Buffer.from(Array.from({ ...image, length: Object.keys(image).length }));

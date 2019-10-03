@@ -9,9 +9,6 @@
  * a (circular) DOM-like interface for walking
  * through the data.
  *
- * A (circular) DOM-like interface here means that
- * each child element
- *
  * @fileoverview DOM-like interface for walking through data
  * @author Kevin Kwok <antimatter15@gmail.com>
  * @author Guillermo Webster <gui@mit.edu>

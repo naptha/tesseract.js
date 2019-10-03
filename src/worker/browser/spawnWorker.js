@@ -4,9 +4,6 @@
  * @name spawnWorker
  * @function create a new Worker in browser
  * @access public
- * @param {object} options
- * @param {string} options.workerPath - worker script path
- * @param {boolean} options.workerBlobURL - Use a blob:// URL for the worker script
  */
 module.exports = ({ workerPath, workerBlobURL }) => {
   let worker;

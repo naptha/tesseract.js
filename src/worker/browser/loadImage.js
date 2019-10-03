@@ -7,8 +7,6 @@ const resolveURL = require('resolve-url');
  * @name readFromBlobOrFile
  * @function
  * @access private
- * @param {object} blob A blob or file objec to read
- * @param {function} res callback function after reading completes
  */
 const readFromBlobOrFile = blob => (
   new Promise((resolve, reject) => {
@@ -29,14 +27,6 @@ const readFromBlobOrFile = blob => (
  * @name loadImage
  * @function load image from different source
  * @access private
- * @param {string, object} image - image source, supported formats:
- *   string: URL string, can be relative path
- *   string: base64 image
- *   img HTMLElement: extract image source from src attribute
- *   video HTMLElement: extract image source from poster attribute
- *   canvas HTMLElement: extract image data by converting to Blob
- *   File instance: data from <input type="file" />
- * @returns {array} binary image in array format
  */
 const loadImage = async (image) => {
   let data = image;

@@ -3,10 +3,10 @@ declare namespace Tesseract {
   function createWorker(options?: Partial<WorkerOptions>): Worker
   function setLogging(logging: boolean): void
   function recognize(image: ImageLike, langs?: string, options?: Partial<WorkerOptions>): Promise<RecognizeResult>
-  function detect(image: ImageLike, langs?: string, options?: Partial<WorkerOptions>)
+  function detect(image: ImageLike, options?: Partial<WorkerOptions>)
 
   interface Scheduler {
-    addWorker(worker: Worker): void
+    addWorker(worker: Worker): string
     addJob(action: string, ...args: any[]): Promise<ConfigResult | RecognizeResult | DetectResult>
     terminate(): Promise<any>
     getQueueLen(): number
@@ -16,7 +16,8 @@ declare namespace Tesseract {
   interface Worker {
     load(jobId?: string): Promise<ConfigResult>
     loadLanguage(langs?: string, jobId?: string): Promise<ConfigResult>
-    initialize(langs?: string, params?: Partial<WorkerParams>, jobId?: string): Promise<ConfigResult>
+    initialize(langs?: string, oem?: OEM, jobId?: string): Promise<ConfigResult>
+    setParameters(params: Partial<WorkerParams>, jobId?: string): Promise<ConfigResult>
     recognize(image: ImageLike, options?: Partial<RecognizeOptions>, jobId?: string): Promise<RecognizeResult>
     detect(image: ImageLike, jobId?: string): Promise<DetectResult>
     terminate(jobId?: string): Promise<ConfigResult>
@@ -37,7 +38,6 @@ declare namespace Tesseract {
     tessedit_ocr_engine_mode: OEM
     tessedit_pageseg_mode: PSM
     tessedit_char_whiltelist: string
-    tessjs_create_pdf: string
     tessjs_create_hocr: string
     tessjs_create_tsv: string
     tessjs_create_box: string
@@ -88,10 +88,10 @@ declare namespace Tesseract {
     SINGLE_BLOCK = '6',
     SINGLE_LINE = '7',
     SINGLE_WORD = '8',
-    SINGLE_CHAR = '9',
-    SPARSE_TEXT = '10',
-    SPARSE_TEXT_OSD = '11',
-    RAW_LINE = '12'
+    CIRCLE_WORD = '9',
+    SINGLE_CHAR = '10',
+    SPARSE_TEXT = '11',
+    SPARSE_TEXT_OSD = '12',
   }
   type ImageLike = string | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement
     | CanvasRenderingContext2D | File | Blob | ImageData | Buffer;

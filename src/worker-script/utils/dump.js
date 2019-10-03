@@ -17,8 +17,6 @@
  * @name deindent
  * @function deindent string
  * @access public
- * @param {string} html HOCR in html format
- * @returns {string} deindent html string
  */
 const deindent = (html) => {
   const lines = html.split('\n');
@@ -38,9 +36,6 @@ const deindent = (html) => {
  * @name dump
  * @function dump recognition result to a JSON object
  * @access public
- * @param {object} TessModule TessModule from TesseractCore
- * @param {object} api TesseractBaseAPI instance
- * @returns {object} dumpped JSON object
  */
 module.exports = (TessModule, api, {
   tessjs_create_hocr,

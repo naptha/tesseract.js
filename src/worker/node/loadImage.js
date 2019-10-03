@@ -11,11 +11,6 @@ const readFile = util.promisify(fs.readFile);
  * @name loadImage
  * @function load image from different source
  * @access public
- * @param {string} image - image source, supported formats:
- *   string: URL string or file path
- *   string: base64 image
- *   buffer: image buffer
- * @returns {array} binary image in array format
  */
 module.exports = async (image) => {
   let data = image;
