@@ -25,7 +25,9 @@ var lang_drop_instructions = {
 	rus: 'a Russian'
 }
 
-var tessWorker = new Tesseract.TesseractWorker();
+var worker = new Tesseract.createWorker({
+  logger: progressUpdate,
+});
 
 function setUp(){
 	input_overlay.width = input.naturalWidth
@@ -49,10 +51,12 @@ function startDemoIfVisible(argument) {
 function startDemo(){
 	demoStarted = true
 
-	function start(){
-		tessWorker.recognize(input)
-		.progress(progressUpdate)
-		.then(result)
+	async function start(){
+    await worker.load();
+    await worker.loadLanguage('eng');
+    await worker.initialize('eng');
+    const { data } = await worker.recognize(input);
+    result(data);
 
 		input.removeEventListener('load', start)
 	}
@@ -167,16 +171,18 @@ function clearOverLayAndOutput(){
 // }
 
 
-function play(){
+async function play(){
 
 	demo_instructions.style.display = 'none'
 	output_text.style.display = 'block'
 	output_text.innerHTML = ''
 	// output_overlay.innerHTML = ''
 
-	tessWorker.recognize(input, language)
-	.progress( progressUpdate )
-	.then( result )
+  await worker.load();
+  await worker.loadLanguage(language);
+  await worker.initialize(language);
+  const { data } = await worker.recognize(input);
+  result(data);
 }
 
 options.forEach(function(option){
@@ -201,15 +207,17 @@ options.forEach(function(option){
 })
 
 
-document.body.addEventListener('drop', function(e){
+document.body.addEventListener('drop', async function(e){
 	e.stopPropagation();
     e.preventDefault();
     var file = e.dataTransfer.files[0]
 	var reader = new FileReader();
+  await worker.load();
+  await worker.loadLanguage(language);
+  await worker.initialize(language);
+  const { data } = await worker.recognize(file);
+  result(data);
 
-	tessWorker.recognize(file, language)
-	.progress( progressUpdate )
-	.then( result )
 
 	reader.onload = function(e){
 		input.src = e.target.result;
