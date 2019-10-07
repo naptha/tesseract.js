@@ -61,7 +61,7 @@ const worker = createWorker({
 
 ## Major changes in v2 beta
 - Upgrade to tesseract v4.1 (using emscripten 1.38.45)
-- Support multiple languages at the same time, eg: eng+chi_tra for English and Traditional Chinese
+- Support multiple languages at the same time, eg: eng+chi\_tra for English and Traditional Chinese
 - Supported image formats: png, jpg, bmp, pbm
 - Support WebAssembly (fallback to ASM.js when browser doesn't support)
 - Support Typescript
@@ -105,6 +105,14 @@ yarn add tesseract.js
 * [Local Installation](./docs/local-installation.md)
 * [FAQ](./docs/faq.md)
 
+## Use tesseract.js the way you like!
+
+- Offline version: https://github.com/jeromewu/tesseract.js-offline
+- Chrome Extension: https://github.com/jeromewu/tesseract.js-chrome-extension
+- With Vue: https://github.com/jeromewu/tesseract.js-vue-app
+- With Angular: https://github.com/jeromewu/tesseract.js-angular-app
+- With React: https://github.com/jeromewu/tesseract.js-react-app
+- Typescript: https://github.com/jeromewu/tesseract.js-typescript
 
 ## Contributing
 
