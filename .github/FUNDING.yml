@@ -6,4 +6,4 @@ open_collective: tesseractjs
 ko_fi: # Replace with a single Ko-fi username
 tidelift: # Replace with a single Tidelift platform-name/package-name e.g., npm/babel
 community_bridge: # Replace with a single Community Bridge project-name e.g., cloud-foundry
-custom: # Replace with a single custom sponsorship URL
+custom: ["https://etherscan.io/address/0x74ace8c74535d6dac03ebdc708ca2fba54796ef2"]
