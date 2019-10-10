@@ -26,7 +26,7 @@ Image Recognition
 Video Real-time Recognition
 
 <p align="center">
-[![video demo gif](./docs/images/video-demo.gif)](https://github.com/jeromewu/tesseract.js-video)
+  <a href="https://github.com/jeromewu/tesseract.js-video"><img alt="Tesseract.js Video" src="./docs/images/video-demo.gif"></a>
 </p>
 
 
