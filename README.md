@@ -114,6 +114,7 @@ yarn add tesseract.js
 - With Angular: https://github.com/jeromewu/tesseract.js-angular-app
 - With React: https://github.com/jeromewu/tesseract.js-react-app
 - Typescript: https://github.com/jeromewu/tesseract.js-typescript
+- Video Real-time Recognition: https://github.com/jeromewu/tesseract.js-video
 
 ## Contributing
 
