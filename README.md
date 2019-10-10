@@ -107,7 +107,8 @@ yarn add tesseract.js
 
 ## Use tesseract.js the way you like!
 
-- Offline version: https://github.com/jeromewu/tesseract.js-offline
+- Offline Version: https://github.com/jeromewu/tesseract.js-offline
+- Custom Traineddata: https://github.com/jeromewu/tesseract.js-custom-traineddata
 - Chrome Extension: https://github.com/jeromewu/tesseract.js-chrome-extension
 - With Vue: https://github.com/jeromewu/tesseract.js-vue-app
 - With Angular: https://github.com/jeromewu/tesseract.js-angular-app
