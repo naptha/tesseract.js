@@ -91,8 +91,6 @@ const loadLanguage = async ({
 
         if (isURL(langPath) || langPath.startsWith('chrome-extension://') || langPath.startsWith('file://')) { /** When langPath is an URL */
           path = langPath;
-        } else if (process.browser) { /** When langPath is not an URL in browser */
-          path = adapter.resolveURL(langPath);
         }
 
         if (path !== null) {

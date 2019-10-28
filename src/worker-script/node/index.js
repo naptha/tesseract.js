@@ -10,7 +10,6 @@
 
 const worker = require('../');
 const getCore = require('./getCore');
-const resolveURL = require('./resolveURL');
 const gunzip = require('./gunzip');
 const cache = require('./cache');
 
@@ -24,6 +23,5 @@ process.on('message', (packet) => {
 worker.setAdapter({
   getCore,
   gunzip,
-  resolveURL,
   ...cache,
 });

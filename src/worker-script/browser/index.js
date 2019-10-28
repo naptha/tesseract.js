@@ -11,7 +11,6 @@
 const worker = require('../');
 const getCore = require('./getCore');
 const gunzip = require('./gunzip');
-const resolveURL = require('./resolveURL');
 const cache = require('./cache');
 
 /*
@@ -28,6 +27,5 @@ global.addEventListener('message', ({ data }) => {
 worker.setAdapter({
   getCore,
   gunzip,
-  resolveURL,
   ...cache,
 });
