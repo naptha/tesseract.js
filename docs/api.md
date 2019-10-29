@@ -354,7 +354,7 @@ See [Tesseract.js](../src/Tesseract.js)
 <a name="detect"></a>
 ## detect(image, options): Promise
 
-Same background as recongize(), but it does detect instead.
+Same background as recognize(), but it does detect instead.
 
 See [Tesseract.js](../src/Tesseract.js)
 
