@@ -3,7 +3,7 @@ declare namespace Tesseract {
   function createWorker(options?: Partial<WorkerOptions>): Worker
   function setLogging(logging: boolean): void
   function recognize(image: ImageLike, langs?: string, options?: Partial<WorkerOptions>): Promise<RecognizeResult>
-  function detect(image: ImageLike, options?: Partial<WorkerOptions>)
+  function detect(image: ImageLike, options?: Partial<WorkerOptions>): any
 
   interface Scheduler {
     addWorker(worker: Worker): string
@@ -32,7 +32,7 @@ declare namespace Tesseract {
     cacheMethod: string
     workerBlobURL: boolean
     gzip: boolean
-    logger: (any) => void
+    logger: (arg: any) => void
   }
   interface WorkerParams {
     tessedit_ocr_engine_mode: OEM
