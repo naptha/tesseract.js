@@ -37,7 +37,7 @@ declare namespace Tesseract {
   interface WorkerParams {
     tessedit_ocr_engine_mode: OEM
     tessedit_pageseg_mode: PSM
-    tessedit_char_whiltelist: string
+    tessedit_char_whitelist: string
     tessjs_create_hocr: string
     tessjs_create_tsv: string
     tessjs_create_box: string
