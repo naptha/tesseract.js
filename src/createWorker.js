@@ -132,7 +132,6 @@ module.exports = (_options = {}) => {
       resolves[action]({ jobId, data: d });
     } else if (status === 'reject') {
       rejects[action](data);
-      throw Error(data);
     } else if (status === 'progress') {
       logger(data);
     }
