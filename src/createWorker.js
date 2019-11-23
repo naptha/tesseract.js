@@ -19,6 +19,7 @@ module.exports = (_options = {}) => {
   const id = getId('Worker', workerCounter);
   const {
     logger,
+    errorHandler,
     ...options
   } = resolvePaths({
     ...defaultOptions,
@@ -132,6 +133,11 @@ module.exports = (_options = {}) => {
       resolves[action]({ jobId, data: d });
     } else if (status === 'reject') {
       rejects[action](data);
+      if (errorHandler) {
+        errorHandler(data);
+      } else {
+        throw Error(data);
+      }
     } else if (status === 'progress') {
       logger(data);
     }
