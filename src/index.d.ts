@@ -32,7 +32,8 @@ declare namespace Tesseract {
     cacheMethod: string
     workerBlobURL: boolean
     gzip: boolean
-    logger: (arg: any) => void
+    logger: (arg: any) => void,
+    errorHandler: (arg: any) => void
   }
   interface WorkerParams {
     tessedit_ocr_engine_mode: OEM
