@@ -19,7 +19,7 @@ module.exports = async (image) => {
   }
 
   if (typeof image === 'string') {
-    if (isURL(image) || image.startsWith('chrome-extension://') || image.startsWith('file://')) {
+    if (isURL(image) || image.startsWith('moz-extension://') || image.startsWith('chrome-extension://') || image.startsWith('file://')) {
       const { data: _data } = await axios.get(image, { responseType: 'arraybuffer' });
       data = _data;
     } else if (/data:image\/([a-zA-Z]*);base64,([^"]*)/.test(image)) {
