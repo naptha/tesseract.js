@@ -89,7 +89,7 @@ const loadLanguage = async ({
       if (typeof _lang === 'string') {
         let path = null;
 
-        if (isURL(langPath) || langPath.startsWith('chrome-extension://') || langPath.startsWith('file://')) { /** When langPath is an URL */
+        if (isURL(langPath) || langPath.startsWith('moz-extension://') || langPath.startsWith('chrome-extension://') || langPath.startsWith('file://')) { /** When langPath is an URL */
           path = langPath;
         }
 
