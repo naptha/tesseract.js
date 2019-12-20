@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <script src="/dist/tesseract.dev.js"></script>
+  </head>
+  <body>
+    <input type="file" id="uploader">
+    <script>
+      const recognize = function(evt){
+        const files = evt.target.files;
+        const worker = Tesseract.createWorker({
+          /*
+           * As Edge don't support webassembly,
+           * here we force to use asm.js version.
+           */
+          corePath: '../../node_modules/tesseract.js-core/tesseract-core.asm.js',
+          logger: function(m){console.log(m);},
+          /*
+           * As there is no indexedDB in earlier version
+           * of Edge, here we disable cache.
+           */
+          cacheMethod: 'none',
+        });
+        Promise.resolve()
+          .then(() => worker.load())
+          .then(() => worker.loadLanguage('eng'))
+          .then(() => worker.initialize('eng'))
+          .then(() => worker.recognize(files[0]))
+          .then((ret) => {
+            console.log(ret.data.text);
+          });
+      }
+      const elm = document.getElementById('uploader');
+      elm.addEventListener('change', recognize);
+    </script>
+  </body>
+</html>
