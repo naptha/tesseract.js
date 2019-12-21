@@ -8,6 +8,7 @@
  * @author Jerome Wu <jeromewus@gmail.com>
  */
 
+const fetch = require('node-fetch');
 const worker = require('../');
 const getCore = require('./getCore');
 const gunzip = require('./gunzip');
@@ -23,5 +24,6 @@ process.on('message', (packet) => {
 worker.setAdapter({
   getCore,
   gunzip,
+  fetch,
   ...cache,
 });

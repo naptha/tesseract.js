@@ -1,6 +1,6 @@
 const util = require('util');
 const fs = require('fs');
-const axios = require('axios');
+const fetch = require('node-fetch');
 const isURL = require('is-url');
 
 const readFile = util.promisify(fs.readFile);
@@ -20,8 +20,8 @@ module.exports = async (image) => {
 
   if (typeof image === 'string') {
     if (isURL(image) || image.startsWith('moz-extension://') || image.startsWith('chrome-extension://') || image.startsWith('file://')) {
-      const { data: _data } = await axios.get(image, { responseType: 'arraybuffer' });
-      data = _data;
+      const resp = await fetch(image);
+      data = await resp.arrayBuffer();
     } else if (/data:image\/([a-zA-Z]*);base64,([^"]*)/.test(image)) {
       data = Buffer.from(image.split(',')[1], 'base64');
     } else {

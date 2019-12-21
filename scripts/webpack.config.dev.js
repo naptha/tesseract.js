@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const common = require('./webpack.config.common');
 
 const genConfig = ({
@@ -18,6 +19,11 @@ const genConfig = ({
       'process.env': {
         TESS_ENV: JSON.stringify('development'),
       },
+    }),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'disable',
+      statsFilename: `${filename.split('.')[0]}-stats.json`,
+      generateStatsFile: true
     }),
   ],
   devServer: {

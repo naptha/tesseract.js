@@ -9,10 +9,9 @@
  */
 require('regenerator-runtime/runtime');
 const fileType = require('file-type');
-const axios = require('axios');
 const isURL = require('is-url');
 const dump = require('./utils/dump');
-const isBrowser = require('../utils/getEnvironment')('type') === 'browser';
+const isWebWorker = require('../utils/getEnvironment')('type') === 'webworker';
 const setImage = require('./utils/setImage');
 const defaultParams = require('./constants/defaultParams');
 const { log, setLogging } = require('../utils/log');
@@ -94,11 +93,8 @@ const loadLanguage = async ({
         }
 
         if (path !== null) {
-          const { data: _data } = await axios.get(
-            `${path}/${lang}.traineddata${gzip ? '.gz' : ''}`,
-            { responseType: 'arraybuffer' },
-          );
-          data = _data;
+          const resp = await (isWebWorker ? fetch : adapter.fetch)(`${path}/${lang}.traineddata${gzip ? '.gz' : ''}`);
+          data = await resp.arrayBuffer();
         } else {
           data = await adapter.readCache(`${langPath}/${lang}.traineddata${gzip ? '.gz' : ''}`);
         }

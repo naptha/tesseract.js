@@ -27,5 +27,6 @@ global.addEventListener('message', ({ data }) => {
 worker.setAdapter({
   getCore,
   gunzip,
+  fetch: () => {},
   ...cache,
 });

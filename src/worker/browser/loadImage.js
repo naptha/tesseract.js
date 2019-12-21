@@ -1,4 +1,3 @@
-const axios = require('axios');
 const resolveURL = require('resolve-url');
 
 /**
@@ -41,8 +40,8 @@ const loadImage = async (image) => {
         .split('')
         .map(c => c.charCodeAt(0));
     } else {
-      const { data: _data } = await axios.get(resolveURL(image), { responseType: 'arraybuffer' });
-      data = _data;
+      const resp = await fetch(resolveURL(image));
+      data = await resp.arrayBuffer();
     }
   } else if (image instanceof HTMLElement) {
     if (image.tagName === 'IMG') {

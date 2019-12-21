@@ -9,6 +9,8 @@
   "scripts": {
     "start": "node scripts/server.js",
     "build": "rimraf dist && webpack --config scripts/webpack.config.prod.js",
+    "profile:tesseract": "webpack-bundle-analyzer dist/tesseract-stats.json",
+    "profile:worker": "webpack-bundle-analyzer dist/worker-stats.json",
     "prepublishOnly": "npm run build",
     "wait": "rimraf dist && wait-on http://localhost:3000/dist/tesseract.dev.js",
     "test": "npm-run-all -p -r start test:all",
@@ -50,15 +52,16 @@
     "rimraf": "^2.7.1",
     "wait-on": "^3.3.0",
     "webpack": "^4.41.4",
+    "webpack-bundle-analyzer": "^3.6.0",
     "webpack-cli": "^3.3.10",
     "webpack-dev-middleware": "^3.7.2"
   },
   "dependencies": {
-    "axios": "^0.18.0",
     "bmp-js": "^0.1.0",
     "file-type": "^12.4.1",
     "idb-keyval": "^3.2.0",
     "is-url": "1.2.2",
+    "node-fetch": "^2.6.0",
     "opencollective-postinstall": "^2.0.2",
     "regenerator-runtime": "^0.13.3",
     "resolve-url": "^0.2.1",
