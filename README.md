@@ -1,5 +1,5 @@
 <p align="center">
-<a href="https://tesseract.projectnaptha.com/"><img alt="Tesseract.js" src="./docs/images/tesseract.png"></a>
+<a href="https://tesseract.projectnaptha.com/"><img width="256px" height="256px" alt="Tesseract.js" src="./docs/images/tesseract.png"></a>
 </p>
 
 [![Build Status](https://travis-ci.org/naptha/tesseract.js.svg?branch=master)](https://travis-ci.org/naptha/tesseract.js)
