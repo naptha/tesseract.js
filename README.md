@@ -11,7 +11,7 @@
 [![Downloads Month](https://img.shields.io/npm/dm/tesseract.js.svg)](https://www.npmjs.com/package/tesseract.js)
 
 <h3 align="center">
-  Version 2 beta is now available and under development in the master branch, read a story about v2 beta: <a href="https://medium.com/@jeromewus/why-i-refactor-tesseract-js-v2-50f750a9cfe2">Why I refactor tesseract.js v2?</a><br>
+  Version 2 is now available and under development in the master branch, read a story about v2: <a href="https://medium.com/@jeromewus/why-i-refactor-tesseract-js-v2-50f750a9cfe2">Why I refactor tesseract.js v2?</a><br>
   Check the <a href="https://github.com/naptha/tesseract.js/tree/support/1.x">support/1.x</a> branch for version 1
 </h3>
 
@@ -68,7 +68,7 @@ const worker = createWorker({
 [Check out the docs](#docs) for a full explanation of the API.
 
 
-## Major changes in v2 beta
+## Major changes in v2
 - Upgrade to tesseract v4.1 (using emscripten 1.38.45)
 - Support multiple languages at the same time, eg: eng+chi\_tra for English and Traditional Chinese
 - Supported image formats: png, jpg, bmp, pbm
@@ -83,7 +83,7 @@ Tesseract.js works with a `<script>` tag via local copy or CDN, with webpack via
 ### CDN
 ```html
 <!-- v2 -->
-<script src='https://unpkg.com/tesseract.js@v2.0.0-beta.1/dist/tesseract.min.js'></script>
+<script src='https://unpkg.com/tesseract.js@v2.0.0/dist/tesseract.min.js'></script>
 
 <!-- v1 -->
 <script src='https://unpkg.com/tesseract.js@1.0.19/src/index.js'></script>
@@ -97,12 +97,12 @@ After including the script the `Tesseract` variable will be globally available.
 
 ```shell
 # For v2
-npm install tesseract.js@next
-yarn add tesseract.js@next
-
-# For v1
 npm install tesseract.js
 yarn add tesseract.js
+
+# For v1
+npm install tesseract.js@1
+yarn add tesseract.js@1
 ```
 
 
