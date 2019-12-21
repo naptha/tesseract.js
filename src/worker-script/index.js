@@ -134,7 +134,7 @@ const loadLanguage = async ({
     res.progress({ workerId, status: 'loaded language traineddata', progress: 1 });
     res.resolve(langs);
   } catch (err) {
-    if (isBrowser && err instanceof DOMException) {
+    if (isWebWorker && err instanceof DOMException) {
       /*
        * For some reason google chrome throw DOMException in loadLang,
        * while other browser is OK, for now we ignore this exception
