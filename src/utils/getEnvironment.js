@@ -1,7 +1,11 @@
+const isElectron = require('is-electron');
+
 module.exports = (key) => {
   const env = {};
 
-  if (typeof window === 'object') {
+  if (isElectron()) {
+    env.type = 'electron';
+  } else if (typeof window === 'object') {
     env.type = 'browser';
   } else if (typeof importScripts === 'function') {
     env.type = 'webworker';
