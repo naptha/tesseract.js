@@ -179,7 +179,7 @@ Figures out what words are in `image`, where the words are in `image`, etc.
 
 - `image` see [Image Format](./image-format.md) for more details.
 - `options` a object of customized optons
-  - `rectangles` an array of objects to specify the region you want to recognized in the image, the object should contain top, left, width and height, see example below.
+  - `rectangle` an object to specify the region you want to recognized in the image, the object should contain top, left, width and height, see example below.
 - `jobId` Please see details above
 
 **Output:**
@@ -198,7 +198,7 @@ const { createWorker } = Tesseract;
 })();
 ```
 
-With rectangles
+With rectangle
 
 ```javascript
 const { createWorker } = Tesseract;
@@ -208,9 +208,7 @@ const { createWorker } = Tesseract;
   await worker.loadLanguage('eng');
   await worker.initialize('eng');
   const { data: { text } } = await worker.recognize(image, {
-    rectangles: [
-      { top: 0, left: 0, width: 100, height: 100 },
-    ],
+    rectangle: { top: 0, left: 0, width: 100, height: 100 },
   });
   console.log(text);
 })();

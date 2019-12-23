@@ -69,11 +69,9 @@ describe('recognize()', () => {
         const { data: { text } } = await worker.recognize(
           `${IMAGE_PATH}/${name}`,
           {
-            rectangles: [
-              {
-                top, left, width, height,
-              },
-            ],
+            rectangle: {
+              top, left, width, height,
+            },
           },
         );
         expect(text).to.be(ans);

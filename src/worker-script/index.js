@@ -187,14 +187,12 @@ const initialize = ({
   }
 };
 
-const recognize = ({ payload: { image, options: { rectangles = [] } } }, res) => {
+const recognize = ({ payload: { image, options: { rectangle: rec } } }, res) => {
   try {
     const ptr = setImage(TessModule, api, image);
-    rectangles.forEach(({
-      left, top, width, height,
-    }) => {
-      api.SetRectangle(left, top, width, height);
-    });
+    if (typeof rec === 'object') {
+      api.SetRectangle(rec.left, rec.top, rec.width, rec.height);
+    }
     api.Recognize(null);
     res.resolve(dump(TessModule, api, params));
     TessModule._free(ptr);
