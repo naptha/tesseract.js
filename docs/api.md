@@ -360,9 +360,9 @@ See [Tesseract.js](../src/Tesseract.js)
 <a name="psm"></a>
 ## PSM
 
-See [PSM.js](../src/constatns/PSM.js)
+See [PSM.js](../src/constants/PSM.js)
 
 <a name="oem"></a>
 ## OEM
 
-See [OEM.js](../src/constatns/OEM.js)
+See [OEM.js](../src/constants/OEM.js)
