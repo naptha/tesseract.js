@@ -109,10 +109,12 @@ module.exports = (_options = {}) => {
 
   const terminate = async (jobId) => {
     if (worker !== null) {
+      /*
       await startJob(createJob({
         id: jobId,
         action: 'terminate',
       }));
+      */
       terminateWorker(worker);
       worker = null;
     }
