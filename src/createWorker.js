@@ -107,7 +107,7 @@ module.exports = (_options = {}) => {
     }))
   );
 
-  const terminate = async (jobId) => {
+  const terminate = async () => {
     if (worker !== null) {
       /*
       await startJob(createJob({
