@@ -3,6 +3,7 @@
 </p>
 
 [![Build Status](https://travis-ci.org/naptha/tesseract.js.svg?branch=master)](https://travis-ci.org/naptha/tesseract.js)
+[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://github.com/naptha/tesseract.js) 
 [![Financial Contributors on Open Collective](https://opencollective.com/tesseractjs/all/badge.svg?label=financial+contributors)](https://opencollective.com/tesseractjs) [![npm version](https://badge.fury.io/js/tesseract.js.svg)](https://badge.fury.io/js/tesseract.js)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/naptha/tesseract.js/graphs/commit-activity)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
@@ -145,7 +146,9 @@ npm start
 The development server will be available at http://localhost:3000/examples/browser/demo.html in your favorite browser.
 It will automatically rebuild `tesseract.dev.js` and `worker.dev.js` when you change files in the **src** folder.
 
-You can also run the development server in Gitpod ( a free online IDE and dev environment for GitHub that will automate your dev setup ) with a single click.
+### Online Setup with a single Click
+
+You can use Gitpod(A free online VS Code like IDE) for contributing. With a single click it will launch a ready to code workspace with the build & start scripts already in process and within a few seconeds it will spin up the dev server so that you can start contributing straight away without wasting any time. 
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/naptha/tesseract.js/blob/master/examples/browser/demo.html)
 
