@@ -212,13 +212,6 @@ document.body.addEventListener('drop', async function(e){
     e.preventDefault();
     var file = e.dataTransfer.files[0]
 	var reader = new FileReader();
-  await worker.load();
-  await worker.loadLanguage(language);
-  await worker.initialize(language);
-  const { data } = await worker.recognize(file);
-  result(data);
-
-
 	reader.onload = function(e){
 		input.src = e.target.result;
 		input.onload = function(){
@@ -226,6 +219,11 @@ document.body.addEventListener('drop', async function(e){
 			setUp();
 
 		}
-	}
+	};
 	reader.readAsDataURL(file);
+  await worker.load();
+  await worker.loadLanguage(language);
+  await worker.initialize(language);
+  const { data } = await worker.recognize(file);
+  result(data);
 })
