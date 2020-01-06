@@ -27,7 +27,7 @@ function progressUpdate(packet){
 
 		if(packet.status == 'done'){
 			var pre = document.createElement('pre')
-			pre.appendChild(document.createTextNode(packet.data.text))
+			pre.appendChild(document.createTextNode(packet.data.data.text))
 			line.innerHTML = ''
 			line.appendChild(pre)
 
