@@ -46,7 +46,7 @@ declare namespace Tesseract {
     tessjs_create_osd: string
   }
   interface RecognizeOptions {
-    rectangles: Rectangle[]
+    rectangle: Rectangle
   }
   interface ConfigResult {
     jobId: string
