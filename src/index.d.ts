@@ -195,6 +195,7 @@ declare namespace Tesseract {
     confidence: number;
     lines: Line[];
     oem: string;
+    osd: string;
     paragraphs: Paragraph[];
     psm: string;
     symbols: Symbol[];
