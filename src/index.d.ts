@@ -39,6 +39,8 @@ declare namespace Tesseract {
     tessedit_ocr_engine_mode: OEM
     tessedit_pageseg_mode: PSM
     tessedit_char_whitelist: string
+    preserve_interword_spaces: string
+    user_defined_dpi: string
     tessjs_create_hocr: string
     tessjs_create_tsv: string
     tessjs_create_box: string
