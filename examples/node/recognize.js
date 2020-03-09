@@ -14,9 +14,6 @@ const worker = createWorker({
   await worker.load();
   await worker.loadLanguage('eng');
   await worker.initialize('eng');
-  await worker.setParameters({
-    user_defined_dpi: '300',
-  });
   const { data: { text } } = await worker.recognize(image);
   console.log(text);
   await worker.terminate();
