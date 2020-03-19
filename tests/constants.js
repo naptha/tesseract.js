@@ -5,6 +5,7 @@ const OPTIONS = {
   cacheMethod: 'readOnly',
   langPath: 'http://localhost:3000/tests/assets/traineddata',
   cachePath: './tests/assets/traineddata',
+  corePath: '../node_modules/tesseract.js-core/tesseract-core.wasm.js',
   ...(IS_BROWSER ? { workerPath: '../dist/worker.dev.js' } : {}),
 };
 const SIMPLE_TEXT = 'Tesseract.js\n';
