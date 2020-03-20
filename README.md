@@ -70,7 +70,7 @@ const worker = createWorker({
 
 
 ## Major changes in v2
-- Upgrade to tesseract v4.1 (using emscripten 1.38.45)
+- Upgrade to tesseract v4.1.1 (using emscripten 1.39.10 upstream)
 - Support multiple languages at the same time, eg: eng+chi\_tra for English and Traditional Chinese
 - Supported image formats: png, jpg, bmp, pbm
 - Support WebAssembly (fallback to ASM.js when browser doesn't support)
