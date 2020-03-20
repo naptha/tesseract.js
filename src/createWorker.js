@@ -59,6 +59,38 @@ module.exports = (_options = {}) => {
     }))
   );
 
+  const writeText = (path, text, jobId) => (
+    startJob(createJob({
+      id: jobId,
+      action: 'FS',
+      payload: { method: 'writeFile', args: [path, text] },
+    }))
+  );
+
+  const readText = (path, jobId) => (
+    startJob(createJob({
+      id: jobId,
+      action: 'FS',
+      payload: { method: 'readFile', args: [path, { encoding: 'utf8' }] },
+    }))
+  );
+
+  const removeText = (path, jobId) => (
+    startJob(createJob({
+      id: jobId,
+      action: 'FS',
+      payload: { method: 'unlink', args: [path] },
+    }))
+  );
+
+  const FS = (method, args, jobId) => (
+    startJob(createJob({
+      id: jobId,
+      action: 'FS',
+      payload: { method, args },
+    }))
+  );
+
   const loadLanguage = (langs = 'eng', jobId) => (
     startJob(createJob({
       id: jobId,
@@ -151,6 +183,10 @@ module.exports = (_options = {}) => {
     setResolve,
     setReject,
     load,
+    writeText,
+    readText,
+    removeText,
+    FS,
     loadLanguage,
     initialize,
     setParameters,

@@ -15,6 +15,10 @@ declare namespace Tesseract {
 
   interface Worker {
     load(jobId?: string): Promise<ConfigResult>
+    writeText(path: string, text: string, jobId?: string): Promise<ConfigResult>
+    readText(path: string, jobId?: string): Promise<ConfigResult>
+    removeText(path: string, jobId?: string): Promise<ConfigResult>
+    FS(method: string, args: any[], jobId?: string): Promise<ConfigResult>
     loadLanguage(langs?: string, jobId?: string): Promise<ConfigResult>
     initialize(langs?: string, oem?: OEM, jobId?: string): Promise<ConfigResult>
     setParameters(params: Partial<WorkerParams>, jobId?: string): Promise<ConfigResult>

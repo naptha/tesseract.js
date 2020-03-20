@@ -54,6 +54,11 @@ const load = ({ workerId, jobId, payload: { options: { corePath, logging } } }, 
   }
 };
 
+const FS = ({ workerId, payload: { method, args } }, res) => {
+  log(`[${workerId}]: FS.${method} with args ${args}`);
+  res.resolve(TessModule.FS[method](...args));
+};
+
 const loadLanguage = async ({
   workerId,
   payload: {
@@ -280,6 +285,7 @@ exports.dispatchHandlers = (packet, send) => {
   try {
     ({
       load,
+      FS,
       loadLanguage,
       initialize,
       setParameters,
