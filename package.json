@@ -21,6 +21,7 @@
     "test:browser:detect": "npm run test:browser-tpl -- -f ./tests/detect.test.html",
     "test:browser:recognize": "npm run test:browser-tpl -- -f ./tests/recognize.test.html",
     "test:browser:scheduler": "npm run test:browser-tpl -- -f ./tests/scheduler.test.html",
+    "test:browser:FS": "npm run test:browser-tpl -- -f ./tests/FS.test.html",
     "lint": "eslint src",
     "postinstall": "opencollective-postinstall || true"
   },
