@@ -1,4 +1,5 @@
 const { createWorker } = Tesseract;
+const FS_WAIT = 500;
 const worker = createWorker(OPTIONS);
 before(function cb() {
   this.timeout(0);
@@ -16,7 +17,7 @@ describe('FS', async () => {
         const { data } = await worker.FS('readFile', [path]);
         await worker.FS('unlink', [path]);
         expect(data).to.be(SIMPLE_TEXT);
-      }, 200);
+      }, FS_WAIT);
     });
   }).timeout(TIMEOUT);
 
@@ -30,7 +31,7 @@ describe('FS', async () => {
         const { data } = await worker.readText(path);
         await worker.removeFile(path);
         expect(data).to.be(SIMPLE_TEXT);
-      }, 200);
+      }, FS_WAIT);
     });
   }).timeout(TIMEOUT);
 });
