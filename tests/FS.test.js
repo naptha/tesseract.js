@@ -28,7 +28,7 @@ describe('FS', async () => {
       await worker.writeText(path, SIMPLE_TEXT);
       setTimeout(async () => {
         const { data } = await worker.readText(path);
-        await worker.removeText(path);
+        await worker.removeFile(path);
         expect(data).to.be(SIMPLE_TEXT);
       }, 200);
     });

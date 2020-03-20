@@ -75,7 +75,7 @@ module.exports = (_options = {}) => {
     }))
   );
 
-  const removeText = (path, jobId) => (
+  const removeFile = (path, jobId) => (
     startJob(createJob({
       id: jobId,
       action: 'FS',
@@ -185,7 +185,7 @@ module.exports = (_options = {}) => {
     load,
     writeText,
     readText,
-    removeText,
+    removeFile,
     FS,
     loadLanguage,
     initialize,
