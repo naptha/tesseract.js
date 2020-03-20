@@ -2,6 +2,10 @@
 
 - [createWorker()](#create-worker)
   - [Worker.load](#worker-load)
+  - [Worker.writeText](#worker-writeText)
+  - [Worker.readText](#worker-readText)
+  - [Worker.removeFile](#worker-removeFile)
+  - [Worker.FS](#worker-FS)
   - [Worker.loadLanguage](#worker-load-language)
   - [Worker.initialize](#worker-initialize)
   - [Worker.setParameters](#worker-set-parameters)
@@ -60,6 +64,7 @@ const worker = createWorker({
 A Worker helps you to do the OCR related tasks, it takes few steps to setup Worker before it is fully functional. The full flow is:
 
 - load
+- FS functions // optional
 - loadLanguauge
 - initialize
 - setParameters // optional
@@ -91,6 +96,84 @@ Worker.load() loads tesseract.js-core scripts (download from remote if not prese
 ```javascript
 (async () => {
   await worker.load();
+})();
+```
+
+<a name="worker-writeText"></a>
+### Worker.writeText(path, text, jobId): Promise
+
+Worker.writeText() writes a text file to the path specified in MEMFS, it is useful when you want to use some features that requires tesseract.js
+to read file from file system.
+
+**Arguments:**
+
+- `path` text file path
+- `text` content of the text file
+- `jobId` Please see details above
+
+**Examples:**
+
+```javascript
+(async () => {
+  await worker.writeText('tmp.txt', 'Hi\nTesseract.js\n');
+})();
+```
+
+<a name="worker-readText"></a>
+### Worker.readText(path, jobId): Promise
+
+Worker.readText() reads a text file to the path specified in MEMFS, it is useful when you want to check the content.
+
+**Arguments:**
+
+- `path` text file path
+- `jobId` Please see details above
+
+**Examples:**
+
+```javascript
+(async () => {
+  const { data } = await worker.readText('tmp.txt');
+  console.log(data);
+})();
+```
+
+<a name="worker-removeFile"></a>
+### Worker.removeFile(path, jobId): Promise
+
+Worker.readFile() remove a file in MEMFS, it is useful when you want to free the memory.
+
+**Arguments:**
+
+- `path` file path
+- `jobId` Please see details above
+
+**Examples:**
+
+```javascript
+(async () => {
+  await worker.removeFile('tmp.txt');
+})();
+```
+
+<a name="worker-FS"></a>
+### Worker.FS(method, args, jobId): Promise
+
+Worker.FS() is a generic FS function to do anything you want, you can check [HERE](ihttps://emscripten.org/docs/api_reference/Filesystem-API.html) for all functions.
+
+**Arguments:**
+
+- `method` method name
+- `args` array of arguments to pass  
+- `jobId` Please see details above
+
+**Examples:**
+
+```javascript
+(async () => {
+  await worker.FS('writeFile', ['tmp.txt', 'Hi\nTesseract.js\n']);
+  // equal to:
+  // await worker.readText('tmp.txt', 'Hi\nTesseract.js\n');
 })();
 ```
 
