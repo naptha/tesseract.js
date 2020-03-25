@@ -84,6 +84,7 @@ const loadLanguage = async ({
       const _data = await readCache(`${cachePath || '.'}/${lang}.traineddata`);
       if (typeof _data !== 'undefined') {
         log(`[${workerId}]: Load ${lang}.traineddata from cache`);
+        res.progress({ workerId, status: 'loading language traineddata (from cache)', progress: 0.5 });
         data = _data;
       } else {
         throw Error('Not found in cache');
