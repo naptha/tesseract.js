@@ -149,7 +149,7 @@ It will automatically rebuild `tesseract.dev.js` and `worker.dev.js` when you ch
 
 ### Online Setup with a single Click
 
-You can use Gitpod(A free online VS Code like IDE) for contributing. With a single click it will launch a ready to code workspace with the build & start scripts already in process and within a few seconeds it will spin up the dev server so that you can start contributing straight away without wasting any time. 
+You can use Gitpod(A free online VS Code like IDE) for contributing. With a single click it will launch a ready to code workspace with the build & start scripts already in process and within a few seconds it will spin up the dev server so that you can start contributing straight away without wasting any time. 
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/naptha/tesseract.js/blob/master/examples/browser/demo.html)
 
