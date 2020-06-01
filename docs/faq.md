@@ -9,9 +9,9 @@ During the downloading of language model, Tesseract.js will first check if \*.tr
 
 ## How can I train my own \*.traineddata?
 
-For tesseract.js v2, check [TrainingTesseract 4.00](https://github.com/tesseract-ocr/tesseract/wiki/TrainingTesseract-4.00)
+For tesseract.js v2, check [TrainingTesseract 4.00](https://tesseract-ocr.github.io/tessdoc/TrainingTesseract-4.00)
 
-For tesseract.js v1, check [Training Tesseract 3.03–3.05](https://github.com/tesseract-ocr/tesseract/wiki/Training-Tesseract-3.03%E2%80%933.05)
+For tesseract.js v1, check [Training Tesseract 3.03–3.05](https://tesseract-ocr.github.io/tessdoc/Training-Tesseract-3.03%E2%80%933.05)
 
 ## How can I get HOCR, TSV, Box, UNLV, OSD?
 
