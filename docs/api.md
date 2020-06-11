@@ -325,11 +325,7 @@ const { createWorker } = Tesseract;
 <a name="worker-terminate"></a>
 ### Worker.terminate(jobId): Promise
 
-Worker.terminate() terminates the worker and clean up
-
-**Arguments:**
-
-- `jobId` Please see details above
+Worker.terminate() terminates the worker and cleans up
 
 ```javascript
 (async () => {
@@ -340,7 +336,7 @@ Worker.terminate() terminates the worker and clean up
 <a name="create-scheduler"></a>
 ## createScheduler(): Scheduler
 
-createScheduler() is a factory function to create a scheduler, a scheduler manage a job queue and workers to enable multiple workers to work together, it is useful when you want to speed up your performance.
+createScheduler() is a factory function to create a scheduler, a scheduler manages a job queue and workers to enable multiple workers to work together, it is useful when you want to speed up your performance.
 
 **Examples:**
 
@@ -354,7 +350,7 @@ const scheduler = createScheduler();
 <a name="scheduler-add-worker"></a>
 ### Scheduler.addWorker(worker): string
 
-Scheduler.addWorker() adds a worker into the worker pool inside scheduler, it is suggested to add one worker to only one sheduler.
+Scheduler.addWorker() adds a worker into the worker pool inside scheduler, it is suggested to add one worker to only one scheduler.
 
 **Arguments:**
 
