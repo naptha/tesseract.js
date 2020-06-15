@@ -122,6 +122,7 @@ yarn add tesseract.js@1
 - Custom Traineddata: https://github.com/jeromewu/tesseract.js-custom-traineddata
 - Chrome Extension #1: https://github.com/jeromewu/tesseract.js-chrome-extension
 - Chrome Extension #2: https://github.com/fxnoob/image-to-text
+- Firefox Extension: https://github.com/gnonio/korporize
 - With Vue: https://github.com/jeromewu/tesseract.js-vue-app
 - With Angular: https://github.com/jeromewu/tesseract.js-angular-app
 - With React: https://github.com/jeromewu/tesseract.js-react-app
