@@ -58,11 +58,13 @@
     "webpack-dev-middleware": "^3.7.2"
   },
   "dependencies": {
+    "blueimp-load-image": "^3.0.0",
     "bmp-js": "^0.1.0",
     "file-type": "^12.4.1",
     "idb-keyval": "^3.2.0",
     "is-electron": "^2.2.0",
     "is-url": "^1.2.4",
+    "jpeg-autorotate": "^5.0.3",
     "node-fetch": "^2.6.0",
     "opencollective-postinstall": "^2.0.2",
     "regenerator-runtime": "^0.13.3",
