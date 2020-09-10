@@ -2,6 +2,7 @@ const util = require('util');
 const fs = require('fs');
 const fetch = require('node-fetch');
 const isURL = require('is-url');
+const jo = require('jpeg-autorotate');
 
 const readFile = util.promisify(fs.readFile);
 
@@ -29,6 +30,11 @@ module.exports = async (image) => {
     }
   } else if (Buffer.isBuffer(image)) {
     data = image;
+  }
+
+  try {
+    data = (await jo.rotate(data, {quality: 100})).buffer
+  } catch (_) {
   }
 
   return new Uint8Array(data);

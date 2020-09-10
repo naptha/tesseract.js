@@ -1,4 +1,5 @@
 const resolveURL = require('resolve-url');
+const blueimp = require('blueimp-load-image');
 
 /**
  * readFromBlobOrFile
@@ -20,6 +21,12 @@ const readFromBlobOrFile = blob => (
   })
 );
 
+const fixOrientationFromUrlOrBlobOrFile = blob => (
+  new Promise((resolve) => {
+    blueimp(blob, (img) => img.toBlob(resolve, 'image/jpeg'), {orientation: true})
+  })
+)
+
 /**
  * loadImage
  *
@@ -40,8 +47,8 @@ const loadImage = async (image) => {
         .split('')
         .map(c => c.charCodeAt(0));
     } else {
-      const resp = await fetch(resolveURL(image));
-      data = await resp.arrayBuffer();
+      image = await fixOrientationFromUrlOrBlobOrFile(resolveURL(image));
+      data = await readFromBlobOrFile(image);
     }
   } else if (image instanceof HTMLElement) {
     if (image.tagName === 'IMG') {
@@ -59,6 +66,7 @@ const loadImage = async (image) => {
       });
     }
   } else if (image instanceof File || image instanceof Blob) {
+    image = await fixOrientationFromUrlOrBlobOrFile(image);
     data = await readFromBlobOrFile(image);
   }
 
