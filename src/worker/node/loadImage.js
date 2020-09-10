@@ -33,9 +33,8 @@ module.exports = async (image) => {
   }
 
   try {
-    data = (await jo.rotate(data, {quality: 100})).buffer
-  } catch (_) {
-  }
+    data = (await jo.rotate(data, { quality: 100 })).buffer;
+  } catch (_) {} /* eslint-disable-line */
 
   return new Uint8Array(data);
 };
