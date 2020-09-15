@@ -48,17 +48,17 @@ const loadImage = async (image) => {
   }
 
   if (typeof image === 'string') {
-    // Base64 Image
-    if (/data:image\/([a-zA-Z]*);base64,([^"]*)/.test(image)) {
-      data = atob(image.split(',')[1])
-        .split('')
-        .map(c => c.charCodeAt(0));
-    } else if (image.endsWith('.pbm')) {
+    if (image.endsWith('.pbm')) {
       const resp = await fetch(resolveURL(image));
       data = await resp.arrayBuffer();
     } else {
+      let img = image;
+      // If not Base64 Image
+      if (!/data:image\/([a-zA-Z]*);base64,([^"]*)/.test(image)) {
+        img = resolveURL(image);
+      }
       data = await readFromBlobOrFile(
-        await fixOrientationFromUrlOrBlobOrFile(resolveURL(image)),
+        await fixOrientationFromUrlOrBlobOrFile(img),
       );
     }
   } else if (image instanceof HTMLElement) {
