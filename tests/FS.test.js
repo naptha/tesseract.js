@@ -16,7 +16,7 @@ describe('FS', async () => {
       setTimeout(async () => {
         const { data } = await worker.FS('readFile', [path]);
         await worker.FS('unlink', [path]);
-        expect(data).to.be(SIMPLE_TEXT);
+        expect(data.toString()).to.be(text);
       }, FS_WAIT);
     });
   }).timeout(TIMEOUT);
@@ -30,7 +30,7 @@ describe('FS', async () => {
       setTimeout(async () => {
         const { data } = await worker.readText(path);
         await worker.removeFile(path);
-        expect(data).to.be(SIMPLE_TEXT);
+        expect(data.toString()).to.be(text);
       }, FS_WAIT);
     });
   }).timeout(TIMEOUT);
