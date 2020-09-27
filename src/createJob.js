@@ -7,7 +7,7 @@ module.exports = ({
   action,
   payload = {},
 }) => {
-  let id = _id;
+  let id = id;
   if (typeof id === 'undefined') {
     id = getId('Job', jobCounter);
     jobCounter += 1;
