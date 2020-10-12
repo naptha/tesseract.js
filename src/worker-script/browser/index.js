@@ -29,4 +29,5 @@ worker.setAdapter({
   gunzip,
   fetch: () => {},
   ...cache,
+  isWebWorker: typeof window === 'undefined' && typeof importScripts === 'function',
 });
