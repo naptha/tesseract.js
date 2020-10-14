@@ -8,7 +8,7 @@ const blueimpLoadImage = require('blueimp-load-image');
  * @function
  * @access private
  */
-const readFromBlobOrFile = blob => (
+const readFromBlobOrFile = (blob) => (
   new Promise((resolve, reject) => {
     const fileReader = new FileReader();
     fileReader.onload = () => {
@@ -21,11 +21,11 @@ const readFromBlobOrFile = blob => (
   })
 );
 
-const fixOrientationFromUrlOrBlobOrFile = blob => (
+const fixOrientationFromUrlOrBlobOrFile = (blob) => (
   new Promise((resolve) => {
     blueimpLoadImage(
       blob,
-      img => img.toBlob(resolve),
+      (img) => img.toBlob(resolve),
       {
         orientation: true,
         canvas: true,

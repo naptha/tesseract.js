@@ -61,8 +61,8 @@ module.exports = (TessModule, api, {
 
   const enumToString = (value, prefix) => (
     Object.keys(TessModule)
-      .filter(e => (e.startsWith(`${prefix}_`) && TessModule[e] === value))
-      .map(e => e.slice(prefix.length + 1))[0]
+      .filter((e) => (e.startsWith(`${prefix}_`) && TessModule[e] === value))
+      .map((e) => e.slice(prefix.length + 1))[0]
   );
 
   ri.Begin();

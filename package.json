@@ -23,6 +23,7 @@
     "test:browser:scheduler": "npm run test:browser-tpl -- -f ./tests/scheduler.test.html",
     "test:browser:FS": "npm run test:browser-tpl -- -f ./tests/FS.test.html",
     "lint": "eslint src",
+    "lint:fix": "eslint --fix src",
     "postinstall": "opencollective-postinstall || true"
   },
   "browser": {
@@ -39,11 +40,9 @@
     "acorn": "^6.4.0",
     "babel-loader": "^8.1.0",
     "cors": "^2.8.5",
-    "eslint": "^5.16.0",
-    "eslint-config-airbnb": "^17.1.1",
-    "eslint-plugin-import": "^2.19.1",
-    "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-react": "^7.17.0",
+    "eslint": "^7.2.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.1",
     "expect.js": "^0.3.1",
     "express": "^4.17.1",
     "mocha": "^5.2.0",
