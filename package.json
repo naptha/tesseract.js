@@ -52,7 +52,7 @@
     "nyc": "^15.0.0",
     "rimraf": "^2.7.1",
     "wait-on": "^3.3.0",
-    "webpack": "^4.41.4",
+    "webpack": "^4.44.2",
     "webpack-bundle-analyzer": "^3.6.0",
     "webpack-cli": "^3.3.10",
     "webpack-dev-middleware": "^3.7.2"
