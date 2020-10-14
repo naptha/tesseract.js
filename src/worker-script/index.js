@@ -99,7 +99,7 @@ const loadLanguage = async ({
         }
 
         if (path !== null) {
-          const resp = await (isWebWorker || adapter.isWebWorker ? fetch : adapter.fetch)(`${path}/${lang}.traineddata${gzip ? '.gz' : ''}`);
+          const resp = await (isWebWorker ? fetch : adapter.fetch)(`${path}/${lang}.traineddata${gzip ? '.gz' : ''}`);
           data = await resp.arrayBuffer();
         } else {
           data = await adapter.readCache(`${langPath}/${lang}.traineddata${gzip ? '.gz' : ''}`);
