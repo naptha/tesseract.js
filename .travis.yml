@@ -1,7 +1,0 @@
-language: node_js
-node_js:
-  - "lts/*" # Use LTS version
-
-script:
-  - npm run lint
-  - npm test
