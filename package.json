@@ -64,7 +64,7 @@
     "idb-keyval": "^3.2.0",
     "is-electron": "^2.2.0",
     "is-url": "^1.2.4",
-    "jpeg-autorotate": "^5.0.3",
+    "jpeg-autorotate": "^7.1.1",
     "node-fetch": "^2.6.0",
     "opencollective-postinstall": "^2.0.2",
     "regenerator-runtime": "^0.13.3",
