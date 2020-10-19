@@ -154,7 +154,7 @@ const loadLanguage = async ({
 
 const setParameters = ({ payload: { params: _params } }, res) => {
   Object.keys(_params)
-    .filter(k => !k.startsWith('tessjs_'))
+    .filter((k) => !k.startsWith('tessjs_'))
     .forEach((key) => {
       api.SetVariable(key, _params[key]);
     });
@@ -171,7 +171,7 @@ const initialize = ({
 }, res) => {
   const langs = (typeof _langs === 'string')
     ? _langs
-    : _langs.map(l => ((typeof l === 'string') ? l : l.data)).join('+');
+    : _langs.map((l) => ((typeof l === 'string') ? l : l.data)).join('+');
 
   try {
     res.progress({

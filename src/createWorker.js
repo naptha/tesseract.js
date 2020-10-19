@@ -53,7 +53,7 @@ module.exports = (_options = {}) => {
     })
   );
 
-  const load = jobId => (
+  const load = (jobId) => (
     startJob(createJob({
       id: jobId, action: 'load', payload: { options },
     }))

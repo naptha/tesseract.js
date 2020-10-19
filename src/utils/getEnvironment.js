@@ -3,12 +3,12 @@ const isElectron = require('is-electron');
 module.exports = (key) => {
   const env = {};
 
-  if (isElectron()) {
-    env.type = 'electron';
+  if (typeof WorkerGlobalScope !== 'undefined') {
+    env.type = 'webworker';
   } else if (typeof window === 'object') {
     env.type = 'browser';
-  } else if (typeof importScripts === 'function') {
-    env.type = 'webworker';
+  } else if (isElectron()) {
+    env.type = 'electron';
   } else if (typeof process === 'object' && typeof require === 'function') {
     env.type = 'node';
   }

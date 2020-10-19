@@ -8,7 +8,7 @@
  * @author Jerome Wu <jeromewus@gmail.com>
  */
 
-const worker = require('../');
+const worker = require('..');
 const getCore = require('./getCore');
 const gunzip = require('./gunzip');
 const cache = require('./cache');
@@ -17,7 +17,7 @@ const cache = require('./cache');
  * register message handler
  */
 global.addEventListener('message', ({ data }) => {
-  worker.dispatchHandlers(data, obj => postMessage(obj));
+  worker.dispatchHandlers(data, (obj) => postMessage(obj));
 });
 
 /*

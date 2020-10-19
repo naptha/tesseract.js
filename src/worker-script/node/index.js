@@ -9,7 +9,7 @@
  */
 
 const fetch = require('node-fetch');
-const worker = require('../');
+const worker = require('..');
 const getCore = require('./getCore');
 const gunzip = require('./gunzip');
 const cache = require('./cache');
@@ -18,7 +18,7 @@ const cache = require('./cache');
  * register message handler
  */
 process.on('message', (packet) => {
-  worker.dispatchHandlers(packet, obj => process.send(obj));
+  worker.dispatchHandlers(packet, (obj) => process.send(obj));
 });
 
 worker.setAdapter({

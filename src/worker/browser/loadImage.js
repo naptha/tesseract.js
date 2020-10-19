@@ -1,4 +1,5 @@
 const resolveURL = require('resolve-url');
+const blueimpLoadImage = require('blueimp-load-image');
 
 /**
  * readFromBlobOrFile
@@ -7,7 +8,7 @@ const resolveURL = require('resolve-url');
  * @function
  * @access private
  */
-const readFromBlobOrFile = blob => (
+const readFromBlobOrFile = (blob) => (
   new Promise((resolve, reject) => {
     const fileReader = new FileReader();
     fileReader.onload = () => {
@@ -17,6 +18,19 @@ const readFromBlobOrFile = blob => (
       reject(Error(`File could not be read! Code=${code}`));
     };
     fileReader.readAsArrayBuffer(blob);
+  })
+);
+
+const fixOrientationFromUrlOrBlobOrFile = (blob) => (
+  new Promise((resolve) => {
+    blueimpLoadImage(
+      blob,
+      (img) => img.toBlob(resolve),
+      {
+        orientation: true,
+        canvas: true,
+      },
+    );
   })
 );
 
@@ -34,14 +48,18 @@ const loadImage = async (image) => {
   }
 
   if (typeof image === 'string') {
-    // Base64 Image
-    if (/data:image\/([a-zA-Z]*);base64,([^"]*)/.test(image)) {
-      data = atob(image.split(',')[1])
-        .split('')
-        .map(c => c.charCodeAt(0));
-    } else {
+    if (image.endsWith('.pbm')) {
       const resp = await fetch(resolveURL(image));
       data = await resp.arrayBuffer();
+    } else {
+      let img = image;
+      // If not Base64 Image
+      if (!/data:image\/([a-zA-Z]*);base64,([^"]*)/.test(image)) {
+        img = resolveURL(image);
+      }
+      data = await readFromBlobOrFile(
+        await fixOrientationFromUrlOrBlobOrFile(img),
+      );
     }
   } else if (image instanceof HTMLElement) {
     if (image.tagName === 'IMG') {
@@ -59,7 +77,11 @@ const loadImage = async (image) => {
       });
     }
   } else if (image instanceof File || image instanceof Blob) {
-    data = await readFromBlobOrFile(image);
+    let img = image;
+    if (!image.name.endsWith('.pbm')) {
+      img = await fixOrientationFromUrlOrBlobOrFile(img);
+    }
+    data = await readFromBlobOrFile(img);
   }
 
   return new Uint8Array(data);
