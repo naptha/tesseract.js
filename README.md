@@ -67,7 +67,7 @@ const worker = createWorker({
 })();
 ```
 
-[Check out the docs](#docs) for a full explanation of the API.
+[Check out the docs](#documentation) for a full explanation of the API.
 
 
 ## Major changes in v2
