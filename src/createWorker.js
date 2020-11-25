@@ -173,7 +173,7 @@ module.exports = (_options = {}) => {
         throw Error(data);
       }
     } else if (status === 'progress') {
-      logger({...data, 'userJobId': jobId});
+      logger({ ...data, userJobId: jobId });
     }
   });
 
