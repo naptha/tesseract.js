@@ -5,10 +5,10 @@ module.exports = (key) => {
 
   if (typeof WorkerGlobalScope !== 'undefined') {
     env.type = 'webworker';
-  } else if (typeof window === 'object') {
-    env.type = 'browser';
   } else if (isElectron()) {
     env.type = 'electron';
+  } else if (typeof window === 'object') {
+    env.type = 'browser';
   } else if (typeof process === 'object' && typeof require === 'function') {
     env.type = 'node';
   }
