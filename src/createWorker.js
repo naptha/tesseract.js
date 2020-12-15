@@ -31,8 +31,9 @@ module.exports = (_options = {}) => {
 
   worker.onerror = (evt) => {
     const error = new Error(evt.message);
-    for (const reject of Object.values(rejects)) {
-      reject(error);
+    const rejectArray = Object.values(rejects);
+    for (let i = 0; i < rejectArray.length; i += 1) {
+      rejectArray[i](error);
     }
   };
 
