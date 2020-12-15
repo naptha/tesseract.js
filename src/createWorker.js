@@ -29,6 +29,13 @@ module.exports = (_options = {}) => {
   const rejects = {};
   let worker = spawnWorker(options);
 
+  worker.onerror = (evt) => {
+	  var error = new Error(evt.message);
+	  for (const [key, value] of Object.entries(rejects)) {
+		  value(error);
+	  }
+  };
+
   workerCounter += 1;
 
   const setResolve = (action, res) => {
