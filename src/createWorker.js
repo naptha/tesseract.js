@@ -30,10 +30,12 @@ module.exports = (_options = {}) => {
   let worker = spawnWorker(options);
 
   worker.onerror = (evt) => {
-	  var error = new Error(evt.message);
-	  for (const [key, value] of Object.entries(rejects)) {
-		  value(error);
-	  }
+      let error = new Error(evt.message);
+      for (let action in rejects) {
+          if (rejects.hasOwnProperty(action)) {
+              rejects[action](error);
+          }
+      }
   };
 
   workerCounter += 1;
