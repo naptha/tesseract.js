@@ -11,11 +11,13 @@ require('regenerator-runtime/runtime');
 const createScheduler = require('./createScheduler');
 const createWorker = require('./createWorker');
 const Tesseract = require('./Tesseract');
+const languages = require('./constants/languages');
 const OEM = require('./constants/OEM');
 const PSM = require('./constants/PSM');
 const { setLogging } = require('./utils/log');
 
 module.exports = {
+  languages,
   OEM,
   PSM,
   createScheduler,
