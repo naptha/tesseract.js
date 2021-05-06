@@ -29,6 +29,7 @@ const fixOrientationFromUrlOrBlobOrFile = (blob) => (
       {
         orientation: true,
         canvas: true,
+        crossOrigin: 'anonymous',
       },
     );
   })
