@@ -3,6 +3,8 @@ const fs = require('fs');
 const fetch = require('node-fetch');
 const isURL = require('is-url');
 const jo = require('jpeg-autorotate');
+const controller = new AbortController()
+const signal = controller.signal
 
 const readFile = util.promisify(fs.readFile);
 
@@ -21,8 +23,11 @@ module.exports = async (image) => {
 
   if (typeof image === 'string') {
     if (isURL(image) || image.startsWith('moz-extension://') || image.startsWith('chrome-extension://') || image.startsWith('file://')) {
-      const resp = await fetch(image);
+      const resp = await fetch(image, { signal });
       data = await resp.arrayBuffer();
+
+      //Abort
+      controller.abort()
     } else if (/data:image\/([a-zA-Z]*);base64,([^"]*)/.test(image)) {
       data = Buffer.from(image.split(',')[1], 'base64');
     } else {
