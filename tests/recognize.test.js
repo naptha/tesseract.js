@@ -181,4 +181,16 @@ describe('recognize()', () => {
       }).timeout(TIMEOUT)
     ));
   });
+
+  (IS_BROWSER ? describe : describe.skip)('should read image from Blob (browser only)', () => {
+    FORMATS.forEach((format) => (
+      it(`support ${format} format Blob`, async () => {
+        const url = `${IMAGE_PATH}/simple.${format}`;
+        const blob = await fetch(url).then((res) => res.blob());
+        await worker.initialize('eng');
+        const { data: { text } } = await worker.recognize(blob);
+        expect(text).to.be(SIMPLE_TEXT);
+      }).timeout(TIMEOUT)
+    ));
+  });
 });

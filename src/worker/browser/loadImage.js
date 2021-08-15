@@ -78,7 +78,18 @@ const loadImage = async (image) => {
     }
   } else if (image instanceof File || image instanceof Blob) {
     let img = image;
-    if (!image.name.endsWith('.pbm')) {
+    let shouldFixOrientation;
+    if (image.name) {
+      // If name exist, check file extension isn't .pbm
+      shouldFixOrientation = !image.name.endsWith('.pbm');
+    } else if (image.type) {
+      // If empty name but type exist, check type isn't pbm
+      shouldFixOrientation = image.type !== 'image/x-portable-bitmap';
+    } else {
+      // Empty name and type
+      shouldFixOrientation = true;
+    }
+    if (shouldFixOrientation) {
       img = await fixOrientationFromUrlOrBlobOrFile(img);
     }
     data = await readFromBlobOrFile(img);
