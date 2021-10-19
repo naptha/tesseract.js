@@ -78,7 +78,7 @@ const loadImage = async (image) => {
     }
   } else if (image instanceof File || image instanceof Blob) {
     let img = image;
-    if (!image.name.endsWith('.pbm')) {
+    if (image instance File && !image.name.endsWith('.pbm')) {
       img = await fixOrientationFromUrlOrBlobOrFile(img);
     }
     data = await readFromBlobOrFile(img);
