@@ -25,6 +25,7 @@ declare namespace Tesseract {
     recognize(image: ImageLike, options?: Partial<RecognizeOptions>, jobId?: string): Promise<RecognizeResult>
     detect(image: ImageLike, jobId?: string): Promise<DetectResult>
     terminate(jobId?: string): Promise<ConfigResult>
+    getPDF(title:string):Promise<any>
   }
 
   interface WorkerOptions {
