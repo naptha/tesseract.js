@@ -29,7 +29,7 @@ const fixOrientationFromUrlOrBlobOrFile = (blob) => (
       {
         orientation: true,
         canvas: true,
-      },
+      }
     );
   })
 );
@@ -58,7 +58,7 @@ const loadImage = async (image) => {
         img = resolveURL(image);
       }
       data = await readFromBlobOrFile(
-        await fixOrientationFromUrlOrBlobOrFile(img),
+        await fixOrientationFromUrlOrBlobOrFile(img)
       );
     }
   } else if (image instanceof HTMLElement) {
