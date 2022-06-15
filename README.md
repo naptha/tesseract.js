@@ -1,5 +1,10 @@
 <p align="center">
-<a href="https://tesseract.projectnaptha.com/"><img width="256px" height="256px" alt="Tesseract.js" src="./docs/images/tesseract.png"></a>
+  <a href="https://tesseract.projectnaptha.com/">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="./docs/images/tesseract_dark.png">
+      <img width="256px" height="256px" alt="Tesseract.js" src="./docs/images/tesseract.png">
+    </picture>
+  </a>
 </p>
 
 ![Lint & Test](https://github.com/naptha/tesseract.js/workflows/Node.js%20CI/badge.svg)
