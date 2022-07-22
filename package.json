@@ -59,7 +59,7 @@
   "dependencies": {
     "blueimp-load-image": "^3.0.0",
     "bmp-js": "^0.1.0",
-    "file-type": "^12.4.1",
+    "file-type": "^16.5.4",
     "idb-keyval": "^3.2.0",
     "is-electron": "^2.2.0",
     "is-url": "^1.2.4",
