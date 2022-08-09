@@ -11,5 +11,5 @@ let debugPort = 9229;
  */
 module.exports = ({ workerPath }) => {
   debugPort += 1;
-  return fork(workerPath, { execArgv: [`--debug-port=${debugPort}`] });
+  return fork(workerPath, [], { execArgv: [`--debug-port=${debugPort}`] });
 };
