@@ -102,7 +102,7 @@ const loadLanguage = async ({
           const fetchUrl = `${path}/${lang}.traineddata${gzip ? '.gz' : ''}`;
           const resp = await (isWebWorker ? fetch : adapter.fetch)(fetchUrl);
           if (!resp.ok) {
-            throw Error(`Network error while fetching ${fetchUrl}. Response code: ${resp.status}`)
+            throw Error(`Network error while fetching ${fetchUrl}. Response code: ${resp.status}`);
           }
           data = await resp.arrayBuffer();
         } else {
