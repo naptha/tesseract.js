@@ -2,9 +2,7 @@
 const path = require('path');
 const { createWorker } = require('../../');
 
-const worker = createWorker({
-  // logger: m => console.log(m) 
-});
+const worker = createWorker();
 
 (async () => {
   await worker.load();
