@@ -21,7 +21,6 @@ const worker = createWorker();
 
       console.log(file + " [x10] runtime: " + timeDif + "s");
     }
-
 console.log("Total runtime: " + timeTotal + "s");
 
 await worker.terminate();
