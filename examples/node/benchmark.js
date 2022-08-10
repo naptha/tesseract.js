@@ -2,9 +2,7 @@
 const path = require('path');
 const { createWorker } = require('../../');
 
-const worker = createWorker({
-  // logger: m => console.log(m) 
-});
+const worker = createWorker();
 
 (async () => {
   await worker.load();
@@ -23,7 +21,6 @@ const worker = createWorker({
 
       console.log(file + " [x10] runtime: " + timeDif + "s");
     }
-
 console.log("Total runtime: " + timeTotal + "s");
 
 await worker.terminate();

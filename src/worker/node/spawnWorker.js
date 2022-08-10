@@ -1,6 +1,4 @@
-const { fork } = require('child_process');
-
-let debugPort = 9229;
+const { Worker } = require('worker_threads');
 
 /**
  * spawnWorker
@@ -9,7 +7,4 @@ let debugPort = 9229;
  * @function fork a new process in node
  * @access public
  */
-module.exports = ({ workerPath }) => {
-  debugPort += 1;
-  return fork(workerPath, [], { execArgv: [`--debug-port=${debugPort}`] });
-};
+module.exports = ({ workerPath }) => new Worker(workerPath);

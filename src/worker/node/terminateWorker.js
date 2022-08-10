@@ -6,5 +6,5 @@
  * @access public
  */
 module.exports = (worker) => {
-  worker.kill();
+  worker.terminate();
 };
