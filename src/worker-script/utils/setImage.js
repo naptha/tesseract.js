@@ -9,37 +9,27 @@ const fileType = require('file-type');
  * @access public
  */
 module.exports = (TessModule, api, image) => {
-  const buf = (image instanceof Uint8Array) ? Buffer.from(image) : null;
-  const type = buf ? fileType(buf) : null;
+  const buf = Buffer.from(Array.from({ ...image, length: Object.keys(image).length }));
+  const type = fileType(buf);
   let bytesPerPixel = 0;
   let data = null;
   let pix = null;
   let w = 0;
   let h = 0;
 
-
-  if (image instanceof ImageData) {
-    // The pixel format of ImageData is RGBA and technically
-    // Tesseract is expecting ABGR, but it does not seem to matter
-    // in practice, so to save effort the bytes are not rearranged.
-    data = TessModule._malloc(image.data.byteLength);
-    TessModule.HEAPU8.set(image.data, data);
-    w = image.width;
-    h = image.height;
-    bytesPerPixel = 4;
-  } else if (buf && type && type.mime === 'image/bmp') {
-    /*
-    * Although leptonica should support reading bmp, there is a bug of "compressed BMP files".
-    * As there is no solution, we need to use bmp-js for now.
-    * @see https://groups.google.com/forum/#!topic/tesseract-ocr/4mPD9zTxdxE
-    */
+  /*
+   * Although leptonica should support reading bmp, there is a bug of "compressed BMP files".
+   * As there is no solution, we need to use bmp-js for now.
+   * @see https://groups.google.com/forum/#!topic/tesseract-ocr/4mPD9zTxdxE
+   */
+  if (type && type.mime === 'image/bmp') {
     const bmpBuf = bmp.decode(buf);
     data = TessModule._malloc(bmpBuf.data.length * Uint8Array.BYTES_PER_ELEMENT);
     TessModule.HEAPU8.set(bmpBuf.data, data);
     w = bmpBuf.width;
     h = bmpBuf.height;
     bytesPerPixel = 4;
-  } else if (buf) {
+  } else {
     const ptr = TessModule._malloc(buf.length * Uint8Array.BYTES_PER_ELEMENT);
     TessModule.HEAPU8.set(buf, ptr);
     pix = TessModule._pixReadMem(ptr, buf.length);
@@ -54,8 +44,6 @@ module.exports = (TessModule, api, image) => {
       .map((v, idx) => (
         TessModule.getValue(pix + (idx * 4), 'i32')
       ));
-  } else {
-    throw Error('Unsupported image data container');
   }
 
   /*

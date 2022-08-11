@@ -82,10 +82,6 @@ const loadImage = async (image) => {
       img = await fixOrientationFromUrlOrBlobOrFile(img);
     }
     data = await readFromBlobOrFile(img);
-  } else if (image instanceof ImageData) {
-    // Support a canvas' ImageData by passing it directly,
-    // where it is handled by setImage() without conversion.
-    return image;
   }
 
   return new Uint8Array(data);
