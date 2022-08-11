@@ -17,6 +17,7 @@ module.exports = (TessModule, api, image) => {
   let w = 0;
   let h = 0;
 
+
   if (image instanceof ImageData) {
     // The pixel format of ImageData is RGBA and technically
     // Tesseract is expecting ABGR, but it does not seem to matter
