@@ -1,5 +1,6 @@
 {
   "extends": "airbnb-base",
+  "parser": "babel-eslint",
   "env": {
     "browser": true,
     "node": true,
@@ -10,6 +11,7 @@
     "no-underscore-dangle": 0,
     "no-console": 0,
     "global-require": 0,
-    "camelcase": 0
+    "camelcase": 0,
+    "no-control-regex": 0
   }
 }

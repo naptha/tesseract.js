@@ -17,7 +17,7 @@ module.exports = (TessModule, api, image) => {
   let w = 0;
   let h = 0;
 
-  const exif = buf.slice(0,500).toString().match(/\x01\x12\x00\x03\x00\x00\x00\x01\x00(.)/)?.[1]?.charCodeAt(0) || 1;
+  const exif = buf.slice(0, 500).toString().match(/\x01\x12\x00\x03\x00\x00\x00\x01\x00(.)/)?.[1]?.charCodeAt(0) || 1;
 
   /*
    * Although leptonica should support reading bmp, there is a bug of "compressed BMP files".
