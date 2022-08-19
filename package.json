@@ -35,10 +35,10 @@
   ],
   "license": "Apache-2.0",
   "devDependencies": {
-    "@babel/core": "^7.7.7",
-    "@babel/preset-env": "^7.7.7",
+    "@babel/core": "^7.18.7",
+    "@babel/preset-env": "^7.18.7",
     "acorn": "^6.4.0",
-    "babel-loader": "^8.1.0",
+    "babel-loader": "^8.2.0",
     "cors": "^2.8.5",
     "eslint": "^7.2.0",
     "eslint-config-airbnb-base": "^14.2.0",
@@ -57,18 +57,17 @@
     "webpack-dev-middleware": "^3.7.2"
   },
   "dependencies": {
-    "blueimp-load-image": "^3.0.0",
+    "babel-eslint": "^10.1.0",
     "bmp-js": "^0.1.0",
     "file-type": "^12.4.1",
     "idb-keyval": "^3.2.0",
     "is-electron": "^2.2.0",
     "is-url": "^1.2.4",
-    "jpeg-autorotate": "^7.1.1",
     "node-fetch": "^2.6.0",
     "opencollective-postinstall": "^2.0.2",
     "regenerator-runtime": "^0.13.3",
     "resolve-url": "^0.2.1",
-    "tesseract.js-core": "^2.2.0",
+    "tesseract.js-core": "^3.0.1",
     "zlibjs": "^0.3.1"
   },
   "repository": {

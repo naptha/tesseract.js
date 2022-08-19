@@ -72,7 +72,7 @@ const loadLanguage = async ({
     },
   },
 },
-  res) => {
+res) => {
   const loadAndGunzipFile = async (_lang) => {
     const lang = typeof _lang === 'string' ? _lang : _lang.code;
     const readCache = ['refresh', 'none'].includes(cacheMethod)
