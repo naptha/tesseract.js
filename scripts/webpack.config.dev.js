@@ -15,6 +15,9 @@ const genConfig = ({
     libraryTarget,
   },
   plugins: [
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
+    }),
     new webpack.DefinePlugin({
       'process.env': {
         TESS_ENV: JSON.stringify('development'),
