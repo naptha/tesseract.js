@@ -69,6 +69,7 @@
     "regenerator-runtime": "^0.13.3",
     "resolve-url": "^0.2.1",
     "tesseract.js-core": "^3.0.1",
+    "wasm-feature-detect": "^1.2.11",
     "zlibjs": "^0.3.1"
   },
   "repository": {
