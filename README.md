@@ -12,13 +12,6 @@
 [![Downloads Total](https://img.shields.io/npm/dt/tesseract.js.svg)](https://www.npmjs.com/package/tesseract.js)
 [![Downloads Month](https://img.shields.io/npm/dm/tesseract.js.svg)](https://www.npmjs.com/package/tesseract.js)
 
-<h3 align="center">
-  Version 2 is now available and under development in the master branch, read a story about v2: <a href="https://jeromewu.github.io/why-i-refactor-tesseract.js-v2/">Why I refactor tesseract.js v2?</a><br>
-  Check the <a href="https://github.com/naptha/tesseract.js/tree/support/1.x">support/1.x</a> branch for version 1
-</h3>
-
-<br>
-
 Tesseract.js is a javascript library that gets words in [almost any language](./docs/tesseract_lang_list.md) out of images. ([Demo](http://tesseract.projectnaptha.com/))
 
 Image Recognition
@@ -69,6 +62,16 @@ const worker = createWorker({
 
 [Check out the docs](#documentation) for a full explanation of the API.
 
+## Major changes in v3
+- Significantly faster performance
+   - Runtime reduction of 84% for Browser and 96% for Node.js when recognizing the [example images](./examples/data)
+- Upgrade to Tesseract v5.1.0 (using emscripten 3.1.18)
+- Added SIMD-enabled build for supported devices
+- Added support:
+   - Node.js version 18
+- Removed support:
+   - ASM.js version, any other old versions of Tesseract.js-core (<3.0.0) 
+   - Node.js versions 10 and 12
 
 ## Major changes in v2
 - Upgrade to tesseract v4.1.1 (using emscripten 1.39.10 upstream)
@@ -77,7 +80,8 @@ const worker = createWorker({
 - Support WebAssembly (fallback to ASM.js when browser doesn't support)
 - Support Typescript
 
-
+Read a story about v2: <a href="https://jeromewu.github.io/why-i-refactor-tesseract.js-v2/">Why I refactor tesseract.js v2?</a><br>
+  Check the <a href="https://github.com/naptha/tesseract.js/tree/support/1.x">support/1.x</a> branch for version 1
 ## Installation
 Tesseract.js works with a `<script>` tag via local copy or CDN, with webpack via `npm` and on Node.js with `npm/yarn`.
 
