@@ -1,5 +1,5 @@
 const resolveURL = require('resolve-url');
-const { version, dependencies } = require('../../../package.json');
+const { version } = require('../../../package.json');
 const defaultOptions = require('../../constants/defaultOptions');
 
 /*
@@ -14,5 +14,5 @@ module.exports = {
    * If browser doesn't support WebAssembly,
    * load ASM version instead
    */
-  corePath: `https://unpkg.com/tesseract.js-core@v${dependencies['tesseract.js-core'].substring(1)}/tesseract-core.${typeof WebAssembly === 'object' ? 'wasm' : 'asm'}.js`,
+  corePath: null,
 };

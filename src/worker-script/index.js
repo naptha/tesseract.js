@@ -28,10 +28,10 @@ let latestJob;
 let adapter = {};
 let params = defaultParams;
 
-const load = ({ workerId, jobId, payload: { options: { corePath, logging } } }, res) => {
+const load = async ({ workerId, jobId, payload: { options: { corePath, logging } } }, res) => {
   setLogging(logging);
   if (!TessModule) {
-    const Core = adapter.getCore(corePath, res);
+    const Core = await adapter.getCore(corePath, res);
 
     res.progress({ workerId, status: 'initializing tesseract', progress: 0 });
 

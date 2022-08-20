@@ -20,9 +20,9 @@ module.exports = (TessModule, api, image) => {
   const exif = buf.slice(0, 500).toString().match(/\x01\x12\x00\x03\x00\x00\x00\x01\x00(.)/)?.[1]?.charCodeAt(0) || 1;
 
   /*
-   * Although leptonica should support reading bmp, there is a bug of "compressed BMP files".
-   * As there is no solution, we need to use bmp-js for now.
-   * @see https://groups.google.com/forum/#!topic/tesseract-ocr/4mPD9zTxdxE
+   * Leptonica supports uncompressed but not compressed bmp files
+   * @see https://github.com/DanBloomberg/leptonica/issues/607#issuecomment-1068802516
+   * We therefore use bmp-js to process all bmp files
    */
   if (type && type.mime === 'image/bmp') {
     const bmpBuf = bmp.decode(buf);
