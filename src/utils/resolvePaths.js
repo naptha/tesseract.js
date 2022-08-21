@@ -4,7 +4,7 @@ const resolveURL = isBrowser ? require('resolve-url') : s => s; // eslint-disabl
 module.exports = (options) => {
   const opts = { ...options };
   ['corePath', 'workerPath', 'langPath'].forEach((key) => {
-    if (typeof options[key] !== 'undefined') {
+    if (options[key]) {
       opts[key] = resolveURL(opts[key]);
     }
   });
