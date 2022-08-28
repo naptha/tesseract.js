@@ -102,7 +102,7 @@ After including the script the `Tesseract` variable will be globally available.
 **Tesseract.js currently requires Node.js v6.8.0 or higher**
 
 ```shell
-# For v2
+# For v3
 npm install tesseract.js
 yarn add tesseract.js
 
