@@ -6,6 +6,7 @@ const genConfig = ({
   entry, filename, library, libraryTarget,
 }) => ({
   ...common,
+  target: 'web',
   mode: 'production',
   devtool: 'source-map',
   entry,

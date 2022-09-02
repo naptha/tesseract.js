@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>21538c44-77f0-4b22-8d77-b9299b8b4b66</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>TesseractJS</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)dist\tesseract-stats.json" />
+    <Content Include="$(MSBuildThisFileDirectory)dist\worker-stats.json" />
+    <Content Include="$(MSBuildThisFileDirectory)package-lock.json" />
+    <Content Include="$(MSBuildThisFileDirectory)package.json" />
+    <Content Include="src\createJob.js" />
+    <Content Include="src\createScheduler.js" />
+    <Content Include="src\createWorker.js" />
+    <Content Include="src\index.js" />
+    <Content Include="src\Tesseract.js" />
+    <Content Include="src\constants\config.js" />
+    <Content Include="src\constants\defaultOptions.js" />
+    <Content Include="src\constants\languages.js" />
+    <Content Include="src\constants\OEM.js" />
+    <Content Include="src\constants\PSM.js" />
+    <Content Include="src\utils\circularize.js" />
+    <Content Include="src\utils\getEnvironment.js" />
+    <Content Include="src\utils\getId.js" />
+    <Content Include="src\utils\log.js" />
+    <Content Include="src\utils\resolvePaths.js" />
+    <Content Include="src\worker-script\index.js" />
+    <Content Include="src\worker\browser\defaultOptions.js" />
+    <Content Include="src\worker\browser\index.js" />
+    <Content Include="src\worker\browser\loadImage.js" />
+    <Content Include="src\worker\browser\onMessage.js" />
+    <Content Include="src\worker\browser\send.js" />
+    <Content Include="src\worker\browser\spawnWorker.js" />
+    <Content Include="src\worker\browser\terminateWorker.js" />
+    <Content Include="src\worker\node\defaultOptions.js" />
+    <Content Include="src\worker\node\index.js" />
+    <Content Include="src\worker\node\loadImage.js" />
+    <Content Include="src\worker\node\onMessage.js" />
+    <Content Include="src\worker\node\send.js" />
+    <Content Include="src\worker\node\spawnWorker.js" />
+    <Content Include="src\worker\node\terminateWorker.js" />
+    <Content Include="src\worker-script\browser\cache.js" />
+    <Content Include="src\worker-script\browser\getCore.js" />
+    <Content Include="src\worker-script\browser\gunzip.js" />
+    <Content Include="src\worker-script\browser\index.js" />
+    <Content Include="src\worker-script\constants\defaultParams.js" />
+    <Content Include="src\worker-script\node\cache.js" />
+    <Content Include="src\worker-script\node\getCore.js" />
+    <Content Include="src\worker-script\node\gunzip.js" />
+    <Content Include="src\worker-script\node\index.js" />
+    <Content Include="src\worker-script\utils\dump.js" />
+    <Content Include="src\worker-script\utils\setImage.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)src\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory).eslintrc" />
+    <None Include="$(MSBuildThisFileDirectory)dist\tesseract.dev.js" />
+    <None Include="$(MSBuildThisFileDirectory)dist\worker.dev.js" />
+    <None Include="$(MSBuildThisFileDirectory)LICENSE.md" />
+    <None Include="$(MSBuildThisFileDirectory)README.md" />
+    <None Include="$(MSBuildThisFileDirectory)scripts\.eslintrc" />
+    <None Include="$(MSBuildThisFileDirectory)scripts\server.js" />
+    <None Include="$(MSBuildThisFileDirectory)scripts\test-helper.js" />
+    <None Include="$(MSBuildThisFileDirectory)scripts\webpack.config.common.js" />
+    <None Include="$(MSBuildThisFileDirectory)scripts\webpack.config.dev.js" />
+    <None Include="$(MSBuildThisFileDirectory)scripts\webpack.config.prod.js" />
+  </ItemGroup>
+</Project>

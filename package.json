@@ -74,14 +74,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/naptha/tesseract.js.git"
+    "url": "https://github.com/musicnotes-com/tesseract.js.git"
   },
   "bugs": {
-    "url": "https://github.com/naptha/tesseract.js/issues"
+    "url": "https://github.com/musicnotes-com/tesseract.js/issues"
   },
-  "homepage": "https://github.com/naptha/tesseract.js",
-  "collective": {
-    "type": "opencollective",
-    "url": "https://opencollective.com/tesseractjs"
-  }
+  "homepage": "https://github.com/musicnotes-com/tesseract.js"
 }
