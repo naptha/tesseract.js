@@ -6,3 +6,5 @@ yarn.lock
 .nyc_output
 *.swp
 *-stats.json
+*.user
+*/bin
