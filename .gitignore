@@ -1,10 +1,8 @@
 .DS_Store
 node_modules/*
 yarn.lock
-tesseract.dev.js
-worker.dev.js
 /*.traineddata
 /examples/**/*.traineddata
 .nyc_output
-dist/
 *.swp
+*-stats.json
