@@ -184,8 +184,6 @@ const initialize = ({
     if (api !== null) {
       api.End();
       }
-      someData = options.dataPath;
-      someOtherData = dataPath;
     api = new TessModule.TessBaseAPI();
     api.Init(null, langs, oem);
     params = defaultParams;

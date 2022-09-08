@@ -103,7 +103,7 @@ module.exports = (_options = {}) => {
     startJob(createJob({
       id: jobId,
       action: 'initialize',
-      payload: { langs, oem },
+      payload: { langs, oem, options },
     }))
   );
 
