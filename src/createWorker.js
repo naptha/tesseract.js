@@ -123,6 +123,14 @@ module.exports = (_options = {}) => {
     }))
   );
 
+  const threshold = async (image, opts = {}, jobId) => (
+    startJob(createJob({
+      id: jobId,
+      action: 'threshold',
+      payload: { image: await loadImage(image), options: opts },
+    }))
+  );
+
   const getPDF = (title = 'Tesseract OCR Result', textonly = false, jobId) => (
     startJob(createJob({
       id: jobId,
@@ -191,6 +199,7 @@ module.exports = (_options = {}) => {
     initialize,
     setParameters,
     recognize,
+    threshold,
     getPDF,
     detect,
     terminate,

@@ -15,6 +15,9 @@ const isWebWorker = require('../utils/getEnvironment')('type') === 'webworker';
 const setImage = require('./utils/setImage');
 const defaultParams = require('./constants/defaultParams');
 const { log, setLogging } = require('../utils/log');
+const arrayBufferToBase64 = require('./utils/arrayBufferToBase64');
+const imageType = require('../constants/imageType');
+const PSM = require('../constants/PSM');
 
 /*
  * Tesseract Module returned by TesseractCore.
@@ -197,14 +200,140 @@ const initialize = ({
   }
 };
 
-const recognize = ({ payload: { image, options: { rectangle: rec } } }, res) => {
+const getImage = (type) => {
+  api.WriteImage(type, '/image.png');
+  const pngBuffer = TessModule.FS.readFile('/image.png');
+  const pngStr = `data:image/png;base64,${arrayBufferToBase64(pngBuffer.buffer)}`;
+  TessModule.FS.unlink('/image.png');
+  return pngStr;
+};
+
+const recognize = ({
+  payload: {
+    image, options: {
+      rectangle: rec, saveImageOriginal, saveImageGrey, saveImageBinary, rotateAuto, rotateRadians,
+    },
+  },
+}, res) => {
   try {
-    const ptr = setImage(TessModule, api, image);
+    // When the auto-rotate option is True, setImage is called with no angle,
+    // then the angle is calculated by Tesseract and then setImage is re-called.
+    // Otherwise, setImage is called once using the user-provided rotateRadiansFinal value.
+    let ptr;
+    let rotateRadiansFinal;
+    if (rotateAuto) {
+      // The angle is only detected if auto page segmentation is used
+      // Therefore, if this is not the mode specified by the user, it is enabled temporarily here
+      const psmInit = api.GetPageSegMode();
+      let psmEdit = false;
+      if (![PSM.AUTO, PSM.AUTO_ONLY, PSM.OSD].includes(psmInit)) {
+        psmEdit = true;
+        api.SetVariable('tessedit_pageseg_mode', String(PSM.AUTO));
+      }
+
+      ptr = setImage(TessModule, api, image);
+      api.FindLines();
+      const rotateRadiansCalc = api.GetAngle();
+
+      // Restore user-provided PSM setting
+      if (psmEdit) {
+        api.SetVariable('tessedit_pageseg_mode', String(psmInit));
+      }
+
+      // Small angles (<0.005 radians/~0.3 degrees) are ignored to save on runtime
+      if (Math.abs(rotateRadiansCalc) >= 0.005) {
+        rotateRadiansFinal = rotateRadiansCalc;
+        ptr = setImage(TessModule, api, image, rotateRadiansFinal);
+      } else {
+        // Image needs to be reset if run with different PSM setting earlier
+        if (psmEdit) {
+          ptr = setImage(TessModule, api, image);
+        }
+        rotateRadiansFinal = 0;
+      }
+    } else {
+      rotateRadiansFinal = rotateRadians || 0;
+      ptr = setImage(TessModule, api, image, rotateRadiansFinal);
+    }
+
     if (typeof rec === 'object') {
       api.SetRectangle(rec.left, rec.top, rec.width, rec.height);
     }
     api.Recognize(null);
-    res.resolve(dump(TessModule, api, params));
+    const result = dump(TessModule, api, params);
+    if (saveImageOriginal) {
+      result.imageOriginal = getImage(imageType.ORIGINAL);
+    }
+    if (saveImageGrey) {
+      result.imageGrey = getImage(imageType.GREY);
+    }
+    if (saveImageBinary) {
+      result.imageBinary = getImage(imageType.BINARY);
+    }
+    result.rotateRadians = rotateRadiansFinal;
+    res.resolve(result);
+    TessModule._free(ptr);
+  } catch (err) {
+    res.reject(err.toString());
+  }
+};
+
+// `threshold` is similar to `recognize` except it skips the recognition step
+// Useful for getting rotated/binarized images without running recognition
+const threshold = ({
+  payload: {
+    image, options: {
+      rectangle: rec, saveImageOriginal, saveImageGrey, saveImageBinary, rotateAuto, rotateRadians,
+    },
+  },
+}, res) => {
+  try {
+    let ptr;
+    let rotateRadiansFinal;
+    if (rotateAuto) {
+      const psmInit = api.GetPageSegMode();
+      let psmEdit = false;
+      if (![PSM.AUTO, PSM.AUTO_ONLY, PSM.OSD].includes(psmInit)) {
+        psmEdit = true;
+        api.SetVariable('tessedit_pageseg_mode', String(PSM.AUTO));
+      }
+
+      ptr = setImage(TessModule, api, image);
+      api.FindLines();
+      const rotateRadiansCalc = api.GetAngle();
+
+      // Restore user-provided PSM setting
+      if (psmEdit) {
+        api.SetVariable('tessedit_pageseg_mode', String(psmInit));
+      }
+
+      // Small angles (<0.005 radians/~0.3 degrees) are ignored to save on runtime
+      if (Math.abs(rotateRadiansCalc) >= 0.005) {
+        rotateRadiansFinal = rotateRadiansCalc;
+        ptr = setImage(TessModule, api, image, rotateRadiansFinal);
+      } else {
+        rotateRadiansFinal = 0;
+      }
+    } else {
+      rotateRadiansFinal = rotateRadians || 0;
+      ptr = setImage(TessModule, api, image, rotateRadiansFinal);
+    }
+
+    if (typeof rec === 'object') {
+      api.SetRectangle(rec.left, rec.top, rec.width, rec.height);
+    }
+    const result = {};
+    if (saveImageOriginal) {
+      result.imageOriginal = getImage(imageType.ORIGINAL);
+    }
+    if (saveImageGrey) {
+      result.imageGrey = getImage(imageType.GREY);
+    }
+    if (saveImageBinary) {
+      result.imageBinary = getImage(imageType.BINARY);
+    }
+    result.rotateRadians = rotateRadiansFinal;
+    res.resolve(result);
     TessModule._free(ptr);
   } catch (err) {
     res.reject(err.toString());
@@ -295,6 +424,7 @@ exports.dispatchHandlers = (packet, send) => {
       initialize,
       setParameters,
       recognize,
+      threshold,
       getPDF,
       detect,
       terminate,

@@ -8,7 +8,7 @@ const fileType = require('file-type');
  * @function set image in tesseract for recognition
  * @access public
  */
-module.exports = (TessModule, api, image) => {
+module.exports = (TessModule, api, image, angle = 0) => {
   const buf = Buffer.from(Array.from({ ...image, length: Object.keys(image).length }));
   const type = fileType(buf);
   let bytesPerPixel = 0;
@@ -55,9 +55,9 @@ module.exports = (TessModule, api, image) => {
    *
    */
   if (data === null) {
-    api.SetImage(pix, undefined, undefined, undefined, undefined, exif);
+    api.SetImage(pix, undefined, undefined, undefined, undefined, exif, angle);
   } else {
-    api.SetImage(data, w, h, bytesPerPixel, w * bytesPerPixel, exif);
+    api.SetImage(data, w, h, bytesPerPixel, w * bytesPerPixel, exif, angle);
   }
   return data === null ? pix : data;
 };

@@ -22,7 +22,9 @@ declare namespace Tesseract {
     loadLanguage(langs?: string, jobId?: string): Promise<ConfigResult>
     initialize(langs?: string, oem?: OEM, jobId?: string): Promise<ConfigResult>
     setParameters(params: Partial<WorkerParams>, jobId?: string): Promise<ConfigResult>
+    getImage(type: imageType): string
     recognize(image: ImageLike, options?: Partial<RecognizeOptions>, jobId?: string): Promise<RecognizeResult>
+    threshold(image: ImageLike, options?: Partial<RecognizeOptions>, jobId?: string): Promise<RecognizeResult>
     detect(image: ImageLike, jobId?: string): Promise<DetectResult>
     terminate(jobId?: string): Promise<ConfigResult>
   }
@@ -53,6 +55,11 @@ declare namespace Tesseract {
   }
   interface RecognizeOptions {
     rectangle: Rectangle
+    saveImageOriginal: boolean
+    saveImageGrey: boolean
+    saveImageBinary: boolean
+    rotateAuto: boolean
+    rotateRadians: float
   }
   interface ConfigResult {
     jobId: string
@@ -99,6 +106,11 @@ declare namespace Tesseract {
     SINGLE_CHAR = '10',
     SPARSE_TEXT = '11',
     SPARSE_TEXT_OSD = '12',
+  }
+  const enum imageType {
+    ORIGINAL = 0,
+    GREY = 1,
+    BINARY = 2
   }
   type ImageLike = string | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement
     | CanvasRenderingContext2D | File | Blob | ImageData | Buffer;
@@ -213,6 +225,10 @@ declare namespace Tesseract {
     box: string | null;
     unlv: string | null;
     sd: string | null;
+    imageOriginal: string;
+    imageGrey: string;
+    imageBinary: string;
+    rotateRadians: number;
   }
 }
 
