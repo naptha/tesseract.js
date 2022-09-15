@@ -1,7 +1,8 @@
 const { createWorker, PSM } = Tesseract;
-const worker = createWorker(OPTIONS);
+let worker;
 before(async function cb() {
   this.timeout(0);
+  worker = await createWorker(OPTIONS);
   await worker.load();
   await worker.loadLanguage('eng+chi_tra+osd');
 });

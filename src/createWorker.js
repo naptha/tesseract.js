@@ -15,7 +15,7 @@ const {
 
 let workerCounter = 0;
 
-module.exports = (_options = {}) => {
+module.exports = async (_options = {}) => {
   const id = getId('Worker', workerCounter);
   const {
     logger,
@@ -27,7 +27,18 @@ module.exports = (_options = {}) => {
   });
   const resolves = {};
   const rejects = {};
+
+  let resReject;
+  let resResolve; 
+  const res = new Promise((resolve, reject) => {
+    resResolve = resolve;
+    resReject = reject;
+  });
+  let workerError = (event) => {resReject(event.message)};
+  
   let worker = spawnWorker(options);
+  // worker.addEventListener("error", workerError);
+  worker.onerror = workerError;
 
   workerCounter += 1;
 
@@ -185,7 +196,7 @@ module.exports = (_options = {}) => {
     }
   });
 
-  return {
+  const resolveObj = {
     id,
     worker,
     setResolve,
@@ -204,4 +215,14 @@ module.exports = (_options = {}) => {
     detect,
     terminate,
   };
+
+  startJob(createJob({
+    id: undefined, action: 'checkWorker',
+  })).then(() => {
+    console.log("Created worker");
+    // worker.removeEventListener("error", workerError);
+    resResolve(resolveObj)});
+
+  return res;
+
 };

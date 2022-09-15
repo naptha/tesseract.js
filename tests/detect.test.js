@@ -1,7 +1,8 @@
 const { createWorker } = Tesseract;
-const worker = createWorker(OPTIONS);
-before(function cb() {
+let worker;
+before(async function cb() {
   this.timeout(0);
+  worker = await createWorker(OPTIONS);
   return worker.load();
 });
 

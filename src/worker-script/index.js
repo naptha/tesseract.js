@@ -57,7 +57,7 @@ const load = async ({ workerId, jobId, payload: { options: { corePath, logging }
   }
 };
 
-const FS = ({ workerId, payload: { method, args } }, res) => {
+const FS = async ({ workerId, payload: { method, args } }, res) => {
   log(`[${workerId}]: FS.${method} with args ${args}`);
   res.resolve(TessModule.FS[method](...args));
 };
@@ -159,7 +159,7 @@ res) => {
   }
 };
 
-const setParameters = ({ payload: { params: _params } }, res) => {
+const setParameters = async ({ payload: { params: _params } }, res) => {
   Object.keys(_params)
     .filter((k) => !k.startsWith('tessjs_'))
     .forEach((key) => {
@@ -172,7 +172,7 @@ const setParameters = ({ payload: { params: _params } }, res) => {
   }
 };
 
-const initialize = ({
+const initialize = async ({
   workerId,
   payload: { langs: _langs, oem },
 }, res) => {
@@ -208,7 +208,7 @@ const getImage = (type) => {
   return pngStr;
 };
 
-const recognize = ({
+const recognize = async ({
   payload: {
     image, options: {
       rectangle: rec, saveImageOriginal, saveImageGrey, saveImageBinary, rotateAuto, rotateRadians,
@@ -280,7 +280,7 @@ const recognize = ({
 
 // `threshold` is similar to `recognize` except it skips the recognition step
 // Useful for getting rotated/binarized images without running recognition
-const threshold = ({
+const threshold = async ({
   payload: {
     image, options: {
       rectangle: rec, saveImageOriginal, saveImageGrey, saveImageBinary, rotateAuto, rotateRadians,
@@ -340,7 +340,7 @@ const threshold = ({
   }
 };
 
-const getPDF = ({ payload: { title, textonly } }, res) => {
+const getPDF = async ({ payload: { title, textonly } }, res) => {
   const pdfRenderer = new TessModule.TessPDFRenderer('tesseract-ocr', '/', textonly);
   pdfRenderer.BeginDocument(title);
   pdfRenderer.AddImage(api);
@@ -350,7 +350,7 @@ const getPDF = ({ payload: { title, textonly } }, res) => {
   res.resolve(TessModule.FS.readFile('/tesseract-ocr.pdf'));
 };
 
-const detect = ({ payload: { image } }, res) => {
+const detect = async ({ payload: { image } }, res) => {
   try {
     const ptr = setImage(TessModule, api, image);
     const results = new TessModule.OSResults();
@@ -379,7 +379,7 @@ const detect = ({ payload: { image } }, res) => {
   }
 };
 
-const terminate = (_, res) => {
+const terminate = async (_, res) => {
   try {
     if (api !== null) {
       api.End();
@@ -389,6 +389,13 @@ const terminate = (_, res) => {
     res.reject(err.toString());
   }
 };
+
+// Function that always resolves
+// Used to confirm that worker was successfully created
+const checkWorker = async (_, res) => {
+  res.resolve();
+};
+
 
 /**
  * dispatchHandlers
@@ -416,7 +423,6 @@ exports.dispatchHandlers = (packet, send) => {
 
   latestJob = res;
 
-  try {
     ({
       load,
       FS,
@@ -428,11 +434,9 @@ exports.dispatchHandlers = (packet, send) => {
       getPDF,
       detect,
       terminate,
-    })[packet.action](packet, res);
-  } catch (err) {
-    /** Prepare exception to travel through postMessage */
-    res.reject(err.toString());
-  }
+      checkWorker
+    })[packet.action](packet, res)
+    .catch((err) => res.reject(err.toString()));
 };
 
 /**

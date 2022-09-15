@@ -7,7 +7,7 @@ before(async function cb() {
   const NUM_WORKERS = 5;
   console.log(`Initializing ${NUM_WORKERS} workers`);
   workers = await Promise.all(Array(NUM_WORKERS).fill(0).map(async () => {
-    const w = createWorker(OPTIONS);
+    const w = await createWorker(OPTIONS);
     await w.load();
     await w.loadLanguage('eng');
     await w.initialize('eng');
