@@ -390,13 +390,6 @@ const terminate = async (_, res) => {
   }
 };
 
-// Function that always resolves
-// Used to confirm that worker was successfully created
-const checkWorker = async (_, res) => {
-  res.resolve();
-};
-
-
 /**
  * dispatchHandlers
  *
@@ -434,7 +427,6 @@ exports.dispatchHandlers = (packet, send) => {
       getPDF,
       detect,
       terminate,
-      checkWorker
     })[packet.action](packet, res)
     .catch((err) => res.reject(err.toString()));
 };

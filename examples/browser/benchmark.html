@@ -7,9 +7,8 @@
 
     <script>
       const { createWorker } = Tesseract;
-      const worker = createWorker();
+      const worker = await createWorker();
       (async () => {
-        await worker.load();
         await worker.loadLanguage('eng');
         await worker.initialize('eng');
         

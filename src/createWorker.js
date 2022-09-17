@@ -37,7 +37,6 @@ module.exports = async (_options = {}) => {
   let workerError = (event) => {resReject(event.message)};
   
   let worker = spawnWorker(options);
-  // worker.addEventListener("error", workerError);
   worker.onerror = workerError;
 
   workerCounter += 1;
@@ -65,6 +64,10 @@ module.exports = async (_options = {}) => {
   );
 
   const load = (jobId) => (
+    console.warn("`load` is depreciated and should be removed from code (workers now come pre-loaded)")
+  );
+
+  const loadInternal = (jobId) => (
     startJob(createJob({
       id: jobId, action: 'load', payload: { options },
     }))
@@ -186,6 +189,7 @@ module.exports = async (_options = {}) => {
       resolves[action]({ jobId, data: d });
     } else if (status === 'reject') {
       rejects[action](data);
+      if (action === "load") resReject(data);
       if (errorHandler) {
         errorHandler(data);
       } else {
@@ -216,12 +220,7 @@ module.exports = async (_options = {}) => {
     terminate,
   };
 
-  startJob(createJob({
-    id: undefined, action: 'checkWorker',
-  })).then(() => {
-    console.log("Created worker");
-    // worker.removeEventListener("error", workerError);
-    resResolve(resolveObj)});
+  loadInternal().then(() => resResolve(resolveObj)).catch(() => {});
 
   return res;
 

@@ -3,7 +3,6 @@ let worker;
 before(async function cb() {
   this.timeout(0);
   worker = await createWorker(OPTIONS);
-  await worker.load();
   await worker.loadLanguage('eng+chi_tra+osd');
 });
 
@@ -30,6 +29,19 @@ describe('recognize()', () => {
       }).timeout(TIMEOUT)
     ));
   });
+
+  describe('should recognize base64 image (simplified interface)', () => {
+    [
+      { format: 'png', image: SIMPLE_PNG_BASE64, ans: SIMPLE_TEXT },
+      { format: 'jpg', image: SIMPLE_JPG_BASE64, ans: SIMPLE_TEXT },
+    ].forEach(({ format, image, ans }) => (
+      it(`recongize ${format} in base64`, async () => {
+        const { data: { text } } = await Tesseract.recognize(image);
+        expect(text).to.be(ans);
+      }).timeout(TIMEOUT)
+    ));
+  });
+
 
   describe('should recognize different langs', () => {
     [

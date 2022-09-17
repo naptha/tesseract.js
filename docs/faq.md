@@ -19,12 +19,11 @@ Starting from 2.0.0-beta.1, you can get all these information in the final resul
 
 ```javascript
 import { createWorker } from 'tesseract.js';
-const worker = createWorker({
+const worker = await createWorker({
   logger: m => console.log(m)
 });
 
 (async () => {
-  await worker.load();
   await worker.loadLanguage('eng');
   await worker.initialize('eng');
   await worker.setParameters({

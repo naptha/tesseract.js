@@ -37,11 +37,10 @@
   <script>
     const recognize = async ({ target: { files } }) => {
       document.getElementById("imgInput").src = URL.createObjectURL(files[0]);
-      const worker = Tesseract.createWorker({
-        corePath: '/tesseract-core-simd.wasm.js',
+      const worker = await Tesseract.createWorker({
+        // corePath: '/tesseract-core-simd.wasm.js',
         workerPath: "/dist/worker.dev.js"
       });
-      await worker.load();
       await worker.loadLanguage('eng');
       await worker.initialize('eng');
 
