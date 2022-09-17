@@ -9,8 +9,7 @@ const image = path.resolve(__dirname, (imagePath || '../../tests/assets/images/c
 console.log(`Recognizing ${image}`);
 
 (async () => {
-  const worker = createWorker();
-  await worker.load();
+  const worker = await createWorker();
   await worker.loadLanguage('eng');
   await worker.initialize('eng');
   const { data: { text } } = await worker.recognize(image);
