@@ -25,6 +25,7 @@ declare namespace Tesseract {
     recognize(image: ImageLike, options?: Partial<RecognizeOptions>, jobId?: string): Promise<RecognizeResult>
     detect(image: ImageLike, jobId?: string): Promise<DetectResult>
     terminate(jobId?: string): Promise<ConfigResult>
+    getPDF(title?: string, textonly?: boolean, jobId?: string):Promise<GetPDFResult>
   }
 
   interface WorkerOptions {
@@ -61,6 +62,10 @@ declare namespace Tesseract {
   interface RecognizeResult {
     jobId: string
     data: Page
+  }
+  interface GetPDFResult {
+    jobId: string
+    data: number[]
   }
   interface DetectResult {
     jobId: string
@@ -99,6 +104,7 @@ declare namespace Tesseract {
     SINGLE_CHAR = '10',
     SPARSE_TEXT = '11',
     SPARSE_TEXT_OSD = '12',
+    RAW_LINE = '13'
   }
   type ImageLike = string | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement
     | CanvasRenderingContext2D | File | Blob | ImageData | Buffer;
