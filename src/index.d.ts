@@ -74,11 +74,11 @@ declare namespace Tesseract {
     data: DetectData
   }
   interface DetectData {
-    tesseract_script_id: number
-    script: string
-    script_confidence: number
-    orientation_degrees: number
-    orientation_confidence: number
+    tesseract_script_id: number | null
+    script: string | null
+    script_confidence: number | null
+    orientation_degrees: number | null
+    orientation_confidence: number | null
   }
   interface Rectangle {
     left: number

@@ -356,9 +356,15 @@ const detect = async ({ payload: { image } }, res) => {
     const results = new TessModule.OSResults();
 
     if (!api.DetectOS(results)) {
-      api.End();
       TessModule._free(ptr);
-      res.reject('Failed to detect OS');
+      
+      res.resolve({
+        tesseract_script_id: null,
+        script: null,
+        script_confidence: null,
+        orientation_degrees: null,
+        orientation_confidence: null,
+      });
     } else {
       const best = results.best_result;
       const oid = best.orientation_id;
