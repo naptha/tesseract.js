@@ -28,14 +28,14 @@ module.exports = async (_options = {}) => {
   const resolves = {};
   const rejects = {};
 
-  let resReject;
-  let resResolve; 
-  const res = new Promise((resolve, reject) => {
-    resResolve = resolve;
-    resReject = reject;
+  let workerResReject;
+  let workerResResolve;
+  const workerRes = new Promise((resolve, reject) => {
+    workerResResolve = resolve;
+    workerResReject = reject;
   });
-  let workerError = (event) => {resReject(event.message)};
-  
+  const workerError = (event) => { workerResReject(event.message); };
+
   let worker = spawnWorker(options);
   worker.onerror = workerError;
 
@@ -63,8 +63,8 @@ module.exports = async (_options = {}) => {
     })
   );
 
-  const load = (jobId) => (
-    console.warn("`load` is depreciated and should be removed from code (workers now come pre-loaded)")
+  const load = () => (
+    console.warn('`load` is depreciated and should be removed from code (workers now come pre-loaded)')
   );
 
   const loadInternal = (jobId) => (
@@ -145,13 +145,14 @@ module.exports = async (_options = {}) => {
     }))
   );
 
-  const getPDF = (title = 'Tesseract OCR Result', textonly = false, jobId) => (
-    startJob(createJob({
+  const getPDF = (title = 'Tesseract OCR Result', textonly = false, jobId) => {
+    console.log('`getPDF` function is depreciated. `recognize` option `savePDF` should be used instead.');
+    return startJob(createJob({
       id: jobId,
       action: 'getPDF',
       payload: { title, textonly },
-    }))
-  );
+    }));
+  };
 
   const detect = async (image, jobId) => (
     startJob(createJob({
@@ -189,7 +190,7 @@ module.exports = async (_options = {}) => {
       resolves[action]({ jobId, data: d });
     } else if (status === 'reject') {
       rejects[action](data);
-      if (action === "load") resReject(data);
+      if (action === 'load') workerResReject(data);
       if (errorHandler) {
         errorHandler(data);
       } else {
@@ -220,8 +221,7 @@ module.exports = async (_options = {}) => {
     terminate,
   };
 
-  loadInternal().then(() => resResolve(resolveObj)).catch(() => {});
+  loadInternal().then(() => workerResResolve(resolveObj)).catch(() => {});
 
-  return res;
-
+  return workerRes;
 };

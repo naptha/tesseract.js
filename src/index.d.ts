@@ -59,6 +59,9 @@ declare namespace Tesseract {
     saveImageOriginal: boolean
     saveImageGrey: boolean
     saveImageBinary: boolean
+    savePDF: boolean
+    pdfTitle: string
+    pdfTextOnly: boolean
     rotateAuto: boolean
     rotateRadians: float
   }
@@ -231,10 +234,11 @@ declare namespace Tesseract {
     box: string | null;
     unlv: string | null;
     sd: string | null;
-    imageOriginal: string;
-    imageGrey: string;
-    imageBinary: string;
-    rotateRadians: number;
+    imageOriginal: string | null;
+    imageGrey: string | null;
+    imageBinary: string | null;
+    rotateRadians: number | null;
+    pdf: number[] | null;
   }
 }
 

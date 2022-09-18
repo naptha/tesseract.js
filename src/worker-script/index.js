@@ -200,6 +200,20 @@ const initialize = async ({
   }
 };
 
+const getPDFInternal = (title, textonly) => {
+  const pdfRenderer = new TessModule.TessPDFRenderer('tesseract-ocr', '/', textonly);
+  pdfRenderer.BeginDocument(title);
+  pdfRenderer.AddImage(api);
+  pdfRenderer.EndDocument();
+  TessModule._free(pdfRenderer);
+
+  return TessModule.FS.readFile('/tesseract-ocr.pdf');
+};
+
+const getPDF = async ({ payload: { title, textonly } }, res) => {
+  res.resolve(getPDFInternal(title, textonly));
+};
+
 const getImage = (type) => {
   api.WriteImage(type, '/image.png');
   const pngBuffer = TessModule.FS.readFile('/image.png');
@@ -211,7 +225,8 @@ const getImage = (type) => {
 const recognize = async ({
   payload: {
     image, options: {
-      rectangle: rec, saveImageOriginal, saveImageGrey, saveImageBinary, rotateAuto, rotateRadians,
+      rectangle: rec, saveImageOriginal, saveImageGrey, saveImageBinary, savePDF, pdfTitle,
+      pdfTextOnly, rotateAuto, rotateRadians,
     },
   },
 }, res) => {
@@ -263,12 +278,23 @@ const recognize = async ({
     const result = dump(TessModule, api, params);
     if (saveImageOriginal) {
       result.imageOriginal = getImage(imageType.ORIGINAL);
+    } else {
+      result.imageOriginal = null;
     }
     if (saveImageGrey) {
       result.imageGrey = getImage(imageType.GREY);
+    } else {
+      result.imageGrey = null;
     }
     if (saveImageBinary) {
       result.imageBinary = getImage(imageType.BINARY);
+    } else {
+      result.imageBinary = null;
+    }
+    if (savePDF) {
+      result.pdf = getPDFInternal(pdfTitle ?? 'Tesseract OCR Result', pdfTextOnly ?? false);
+    } else {
+      result.pdf = null;
     }
     result.rotateRadians = rotateRadiansFinal;
     res.resolve(result);
@@ -325,12 +351,18 @@ const threshold = async ({
     const result = {};
     if (saveImageOriginal) {
       result.imageOriginal = getImage(imageType.ORIGINAL);
+    } else {
+      result.imageOriginal = null;
     }
     if (saveImageGrey) {
       result.imageGrey = getImage(imageType.GREY);
+    } else {
+      result.imageGrey = null;
     }
     if (saveImageBinary) {
       result.imageBinary = getImage(imageType.BINARY);
+    } else {
+      result.imageBinary = null;
     }
     result.rotateRadians = rotateRadiansFinal;
     res.resolve(result);
@@ -340,16 +372,6 @@ const threshold = async ({
   }
 };
 
-const getPDF = async ({ payload: { title, textonly } }, res) => {
-  const pdfRenderer = new TessModule.TessPDFRenderer('tesseract-ocr', '/', textonly);
-  pdfRenderer.BeginDocument(title);
-  pdfRenderer.AddImage(api);
-  pdfRenderer.EndDocument();
-  TessModule._free(pdfRenderer);
-
-  res.resolve(TessModule.FS.readFile('/tesseract-ocr.pdf'));
-};
-
 const detect = async ({ payload: { image } }, res) => {
   try {
     const ptr = setImage(TessModule, api, image);
@@ -357,7 +379,7 @@ const detect = async ({ payload: { image } }, res) => {
 
     if (!api.DetectOS(results)) {
       TessModule._free(ptr);
-      
+
       res.resolve({
         tesseract_script_id: null,
         script: null,
@@ -422,18 +444,18 @@ exports.dispatchHandlers = (packet, send) => {
 
   latestJob = res;
 
-    ({
-      load,
-      FS,
-      loadLanguage,
-      initialize,
-      setParameters,
-      recognize,
-      threshold,
-      getPDF,
-      detect,
-      terminate,
-    })[packet.action](packet, res)
+  ({
+    load,
+    FS,
+    loadLanguage,
+    initialize,
+    setParameters,
+    recognize,
+    threshold,
+    getPDF,
+    detect,
+    terminate,
+  })[packet.action](packet, res)
     .catch((err) => res.reject(err.toString()));
 };
 
