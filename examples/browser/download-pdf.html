@@ -21,7 +21,7 @@
       const recognize = async ({ target: { files }  }) => {
         await worker.loadLanguage('eng');
         await worker.initialize('eng');
-        const res = await worker.recognize(files[0], {savePDF: true});
+        const res = await worker.recognize(files[0],{pdfTitle: "Example PDF"},{pdf: true});
         pdf = res.data.pdf;
         const text = res.data.text;
         const board = document.getElementById('board');

@@ -23,8 +23,7 @@ declare namespace Tesseract {
     initialize(langs?: string, oem?: OEM, jobId?: string): Promise<ConfigResult>
     setParameters(params: Partial<WorkerParams>, jobId?: string): Promise<ConfigResult>
     getImage(type: imageType): string
-    recognize(image: ImageLike, options?: Partial<RecognizeOptions>, jobId?: string): Promise<RecognizeResult>
-    threshold(image: ImageLike, options?: Partial<RecognizeOptions>, jobId?: string): Promise<RecognizeResult>
+    recognize(image: ImageLike, options?: Partial<RecognizeOptions>, output?: Partial<OutputFormats>, jobId?: string): Promise<RecognizeResult>
     detect(image: ImageLike, jobId?: string): Promise<DetectResult>
     terminate(jobId?: string): Promise<ConfigResult>
     getPDF(title?: string, textonly?: boolean, jobId?: string):Promise<GetPDFResult>
@@ -54,16 +53,25 @@ declare namespace Tesseract {
     tessjs_create_unlv: string
     tessjs_create_osd: string
   }
+  interface OutputFormats {
+    text: boolean;
+    blocks: boolean;
+    hocr: boolean;
+    tsv: boolean;
+    box: boolean;
+    unlv: boolean;
+    osd: boolean;
+    pdf: boolean;
+    imageColor: boolean;
+    imageGrey: boolean;
+    imageBinary: boolean;
+  }
   interface RecognizeOptions {
     rectangle: Rectangle
-    saveImageOriginal: boolean
-    saveImageGrey: boolean
-    saveImageBinary: boolean
-    savePDF: boolean
     pdfTitle: string
     pdfTextOnly: boolean
     rotateAuto: boolean
-    rotateRadians: float
+    rotateRadians: number
   }
   interface ConfigResult {
     jobId: string
@@ -117,7 +125,7 @@ declare namespace Tesseract {
     RAW_LINE = '13'
   }
   const enum imageType {
-    ORIGINAL = 0,
+    COLOR = 0,
     GREY = 1,
     BINARY = 2
   }
@@ -218,7 +226,7 @@ declare namespace Tesseract {
     page: Page;
   }
   interface Page {
-    blocks: Block[];
+    blocks: Block[] | null;
     confidence: number;
     lines: Line[];
     oem: string;
@@ -234,7 +242,7 @@ declare namespace Tesseract {
     box: string | null;
     unlv: string | null;
     sd: string | null;
-    imageOriginal: string | null;
+    imageColor: string | null;
     imageGrey: string | null;
     imageBinary: string | null;
     rotateRadians: number | null;

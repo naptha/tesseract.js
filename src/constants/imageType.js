@@ -1,5 +1,5 @@
 module.exports = {
-  ORIGINAL: 0,
+  COLOR: 0,
   GREY: 1,
   BINARY: 2,
 };

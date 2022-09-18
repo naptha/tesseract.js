@@ -14,8 +14,8 @@ const dump = require('./utils/dump');
 const isWebWorker = require('../utils/getEnvironment')('type') === 'webworker';
 const setImage = require('./utils/setImage');
 const defaultParams = require('./constants/defaultParams');
+const defaultOutput = require('./constants/defaultOutput');
 const { log, setLogging } = require('../utils/log');
-const arrayBufferToBase64 = require('./utils/arrayBufferToBase64');
 const imageType = require('../constants/imageType');
 const PSM = require('../constants/PSM');
 
@@ -214,23 +214,44 @@ const getPDF = async ({ payload: { title, textonly } }, res) => {
   res.resolve(getPDFInternal(title, textonly));
 };
 
-const getImage = (type) => {
-  api.WriteImage(type, '/image.png');
-  const pngBuffer = TessModule.FS.readFile('/image.png');
-  const pngStr = `data:image/png;base64,${arrayBufferToBase64(pngBuffer.buffer)}`;
-  TessModule.FS.unlink('/image.png');
-  return pngStr;
-};
+// Combines default output with user-specified options and
+// counts (1) total output formats requested and (2) outputs that require OCR
+const processOutput = (output) => {
+  const workingOutput = JSON.parse(JSON.stringify(defaultOutput));
+  // Output formats were set using `setParameters` in previous versions
+  // These settings are copied over for compatability
+  if (params.tessjs_create_box === "1") workingOutput.box = true;
+  if (params.tessjs_create_hocr === "1") workingOutput.hocr = true;
+  if (params.tessjs_create_osd === "1") workingOutput.osd = true;
+  if (params.tessjs_create_tsv === "1") workingOutput.tsv = true;
+  if (params.tessjs_create_unlv === "1") workingOutput.unlv = true;
+
+  const nonRecOutputs = ["imageColor", "imageGrey", "imageBinary"];
+  let recOutputCount = 0;
+  for (const prop in output) {
+    workingOutput[prop] = output[prop];
+  }
+  for (const prop in workingOutput) {
+    if (workingOutput[prop]) {
+      if (!nonRecOutputs.includes(prop)) {
+        recOutputCount++;
+      }
+    }
+  }
+  return {workingOutput, recOutputCount}
+}
 
 const recognize = async ({
   payload: {
     image, options: {
-      rectangle: rec, saveImageOriginal, saveImageGrey, saveImageBinary, savePDF, pdfTitle,
+      rectangle: rec, pdfTitle,
       pdfTextOnly, rotateAuto, rotateRadians,
-    },
+    }, output
   },
 }, res) => {
   try {
+    const {workingOutput, recOutputCount} = processOutput(output);
+
     // When the auto-rotate option is True, setImage is called with no angle,
     // then the angle is calculated by Tesseract and then setImage is re-called.
     // Otherwise, setImage is called once using the user-provided rotateRadiansFinal value.
@@ -274,28 +295,14 @@ const recognize = async ({
     if (typeof rec === 'object') {
       api.SetRectangle(rec.left, rec.top, rec.width, rec.height);
     }
-    api.Recognize(null);
-    const result = dump(TessModule, api, params);
-    if (saveImageOriginal) {
-      result.imageOriginal = getImage(imageType.ORIGINAL);
+
+    if (recOutputCount > 0) {
+      api.Recognize(null);
     } else {
-      result.imageOriginal = null;
+      log(`Skipping recognition: all output options requiring recognition are disabled.`);
     }
-    if (saveImageGrey) {
-      result.imageGrey = getImage(imageType.GREY);
-    } else {
-      result.imageGrey = null;
-    }
-    if (saveImageBinary) {
-      result.imageBinary = getImage(imageType.BINARY);
-    } else {
-      result.imageBinary = null;
-    }
-    if (savePDF) {
-      result.pdf = getPDFInternal(pdfTitle ?? 'Tesseract OCR Result', pdfTextOnly ?? false);
-    } else {
-      result.pdf = null;
-    }
+    
+    const result = dump(TessModule, api, workingOutput, {pdfTitle, pdfTextOnly});
     result.rotateRadians = rotateRadiansFinal;
     res.resolve(result);
     TessModule._free(ptr);
@@ -304,73 +311,6 @@ const recognize = async ({
   }
 };
 
-// `threshold` is similar to `recognize` except it skips the recognition step
-// Useful for getting rotated/binarized images without running recognition
-const threshold = async ({
-  payload: {
-    image, options: {
-      rectangle: rec, saveImageOriginal, saveImageGrey, saveImageBinary, rotateAuto, rotateRadians,
-    },
-  },
-}, res) => {
-  try {
-    let ptr;
-    let rotateRadiansFinal;
-    if (rotateAuto) {
-      const psmInit = api.GetPageSegMode();
-      let psmEdit = false;
-      if (![PSM.AUTO, PSM.AUTO_ONLY, PSM.OSD].includes(psmInit)) {
-        psmEdit = true;
-        api.SetVariable('tessedit_pageseg_mode', String(PSM.AUTO));
-      }
-
-      ptr = setImage(TessModule, api, image);
-      api.FindLines();
-      const rotateRadiansCalc = api.GetAngle();
-
-      // Restore user-provided PSM setting
-      if (psmEdit) {
-        api.SetVariable('tessedit_pageseg_mode', String(psmInit));
-      }
-
-      // Small angles (<0.005 radians/~0.3 degrees) are ignored to save on runtime
-      if (Math.abs(rotateRadiansCalc) >= 0.005) {
-        rotateRadiansFinal = rotateRadiansCalc;
-        ptr = setImage(TessModule, api, image, rotateRadiansFinal);
-      } else {
-        rotateRadiansFinal = 0;
-      }
-    } else {
-      rotateRadiansFinal = rotateRadians || 0;
-      ptr = setImage(TessModule, api, image, rotateRadiansFinal);
-    }
-
-    if (typeof rec === 'object') {
-      api.SetRectangle(rec.left, rec.top, rec.width, rec.height);
-    }
-    const result = {};
-    if (saveImageOriginal) {
-      result.imageOriginal = getImage(imageType.ORIGINAL);
-    } else {
-      result.imageOriginal = null;
-    }
-    if (saveImageGrey) {
-      result.imageGrey = getImage(imageType.GREY);
-    } else {
-      result.imageGrey = null;
-    }
-    if (saveImageBinary) {
-      result.imageBinary = getImage(imageType.BINARY);
-    } else {
-      result.imageBinary = null;
-    }
-    result.rotateRadians = rotateRadiansFinal;
-    res.resolve(result);
-    TessModule._free(ptr);
-  } catch (err) {
-    res.reject(err.toString());
-  }
-};
 
 const detect = async ({ payload: { image } }, res) => {
   try {
@@ -451,7 +391,6 @@ exports.dispatchHandlers = (packet, send) => {
     initialize,
     setParameters,
     recognize,
-    threshold,
     getPDF,
     detect,
     terminate,

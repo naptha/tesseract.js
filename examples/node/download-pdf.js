@@ -12,7 +12,7 @@ console.log(`Recognizing ${image}`);
   const worker = await createWorker();
   await worker.loadLanguage('eng');
   await worker.initialize('eng');
-  const { data: { text, pdf } } = await worker.recognize(image, {savePDF: true});
+  const { data: { text, pdf } } = await worker.recognize(image, {pdfTitle: "Example PDF"}, {pdf: true});
   console.log(text);
   fs.writeFileSync('tesseract-ocr-result.pdf', Buffer.from(pdf));
   console.log('Generate PDF: tesseract-ocr-result.pdf');

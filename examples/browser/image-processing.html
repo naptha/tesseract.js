@@ -45,8 +45,8 @@
       await worker.initialize('eng');
 
       await worker.initialize();
-      const ret = await worker.recognize(files[0], { saveImageOriginal: true, saveImageGrey: true, saveImageBinary: true, rotateAuto: true })
-      document.getElementById("imgOriginal").src = ret.data.imageOriginal;
+      const ret = await worker.recognize(files[0], {rotateAuto: true}, {imageColor: true, imageGrey: true, imageBinary: true});
+      document.getElementById("imgOriginal").src = ret.data.imageColor;
       document.getElementById("imgGrey").src = ret.data.imageGrey;
       document.getElementById("imgBinary").src = ret.data.imageBinary;
 

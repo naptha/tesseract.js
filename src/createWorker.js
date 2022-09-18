@@ -129,19 +129,11 @@ module.exports = async (_options = {}) => {
     }))
   );
 
-  const recognize = async (image, opts = {}, jobId) => (
+  const recognize = async (image, opts = {}, output = {blocks: true, text: true, hocr: true, tsv: true}, jobId) => (
     startJob(createJob({
       id: jobId,
       action: 'recognize',
-      payload: { image: await loadImage(image), options: opts },
-    }))
-  );
-
-  const threshold = async (image, opts = {}, jobId) => (
-    startJob(createJob({
-      id: jobId,
-      action: 'threshold',
-      payload: { image: await loadImage(image), options: opts },
+      payload: { image: await loadImage(image), options: opts, output },
     }))
   );
 
@@ -215,7 +207,6 @@ module.exports = async (_options = {}) => {
     initialize,
     setParameters,
     recognize,
-    threshold,
     getPDF,
     detect,
     terminate,
