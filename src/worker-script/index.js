@@ -190,7 +190,7 @@ const initialize = async ({
     api = new TessModule.TessBaseAPI();
     api.Init(null, langs, oem);
     params = defaultParams;
-    setParameters({ payload: { params } });
+    await setParameters({ payload: { params } });
     res.progress({
       workerId, status: 'initialized api', progress: 1,
     });
@@ -241,15 +241,33 @@ const processOutput = (output) => {
   return {workingOutput, recOutputCount}
 }
 
+// List of options for Tesseract.js (rather than passed through to Tesseract),
+// not including those with prefix "tessjs_"
+const tessjsOptions = ["rectangle", "pdfTitle", "pdfTextOnly", "rotateAuto", "rotateRadians"];
+
 const recognize = async ({
   payload: {
-    image, options: {
-      rectangle: rec, pdfTitle,
-      pdfTextOnly, rotateAuto, rotateRadians,
-    }, output
+    image, options, output
   },
 }, res) => {
   try {
+    const optionsTess = {};
+    if (typeof options === "object" && Object.keys(options).length > 0) {
+      // The options provided by users contain a mix of options for Tesseract.js
+      // and parameters passed through to Tesseract. 
+      for (const param in options) {
+        if (!param.startsWith('tessjs_') && !tessjsOptions.includes(param)) {
+          optionsTess[param] = options[param];
+        }
+      }
+      if (Object.keys(optionsTess).length > 0) {
+        api.SaveParameters();
+        for (const prop in optionsTess) {
+          api.SetVariable(prop, optionsTess[prop]);
+        }
+      }
+    }
+
     const {workingOutput, recOutputCount} = processOutput(output);
 
     // When the auto-rotate option is True, setImage is called with no angle,
@@ -257,7 +275,7 @@ const recognize = async ({
     // Otherwise, setImage is called once using the user-provided rotateRadiansFinal value.
     let ptr;
     let rotateRadiansFinal;
-    if (rotateAuto) {
+    if (options.rotateAuto) {
       // The angle is only detected if auto page segmentation is used
       // Therefore, if this is not the mode specified by the user, it is enabled temporarily here
       const psmInit = api.GetPageSegMode();
@@ -288,10 +306,11 @@ const recognize = async ({
         rotateRadiansFinal = 0;
       }
     } else {
-      rotateRadiansFinal = rotateRadians || 0;
+      rotateRadiansFinal = options.rotateRadians || 0;
       ptr = setImage(TessModule, api, image, rotateRadiansFinal);
     }
 
+    const rec = options.rectangle;
     if (typeof rec === 'object') {
       api.SetRectangle(rec.left, rec.top, rec.width, rec.height);
     }
@@ -301,9 +320,15 @@ const recognize = async ({
     } else {
       log(`Skipping recognition: all output options requiring recognition are disabled.`);
     }
-    
+    const pdfTitle = options.pdfTitle;
+    const pdfTextOnly = options.pdfTextOnly;
     const result = dump(TessModule, api, workingOutput, {pdfTitle, pdfTextOnly});
     result.rotateRadians = rotateRadiansFinal;
+
+    if (Object.keys(optionsTess).length > 0) {
+      api.RestoreParameters();
+    }
+
     res.resolve(result);
     TessModule._free(ptr);
   } catch (err) {
