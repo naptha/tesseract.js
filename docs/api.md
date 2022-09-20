@@ -206,7 +206,7 @@ Worker.setParameters() set parameters for Tesseract API (using SetVariable()), i
 - `params` an object with key and value of the parameters
 - `jobId` Please see details above
 
-**Supported Paramters:**
+**Useful Paramters:**
 
 | name                        | type   | default value     | description                                                                                                                     |
 | --------------------------- | ------ | ----------------- | ------------------------------------------------------------------------------------------------------------------------------- |
@@ -215,11 +215,8 @@ Worker.setParameters() set parameters for Tesseract API (using SetVariable()), i
 | tessedit\_char\_whitelist   | string | ''                | setting white list characters makes the result only contains these characters, useful the content in image is limited           |
 | preserve\_interword\_spaces | string | '0'               | '0' or '1', keeps the space between words                                                                                       |
 | user\_defined\_dpi          | string | ''                | Define custom dpi, use to fix **Warning: Invalid resolution 0 dpi. Using 70 instead.**                                          |
-| tessjs\_create\_hocr        | string | '1'               | only 2 values, '0' or '1', when the value is '1', tesseract.js includes hocr in the result                                      |
-| tessjs\_create\_tsv         | string | '1'               | only 2 values, '0' or '1', when the value is '1', tesseract.js includes tsv in the result                                       |
-| tessjs\_create\_box         | string | '0'               | only 2 values, '0' or '1', when the value is '1', tesseract.js includes box in the result                                       |
-| tessjs\_create\_unlv        | string | '0'               | only 2 values, '0' or '1', when the value is '1', tesseract.js includes unlv in the result                                      |
-| tessjs\_create\_osd         | string | '0'               | only 2 values, '0' or '1', when the value is '1', tesseract.js includes osd in the result                                       |
+
+This list is incomplete.  As Tesseract.js passes parameters to the Tesseract engine, all parameters supported by the underlying version of Tesseract should also be supported by Tesseract.js.  (Note that parameters marked as “init only” in Tesseract documentation cannot be set by `setParameters` or `recognize`.) 
 
 **Examples:**
 
@@ -243,8 +240,9 @@ Figures out what words are in `image`, where the words are in `image`, etc.
 **Arguments:**
 
 - `image` see [Image Format](./image-format.md) for more details.
-- `options` a object of customized options
+- `options` an object of customized options
   - `rectangle` an object to specify the regions you want to recognized in the image, should contain top, left, width and height, see example below.
+- `output` an object specifying which output formats to return (by default `text`, `blocks`, `hocr`, and `tsv` are returned)
 - `jobId` Please see details above
 
 **Output:**

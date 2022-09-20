@@ -51,7 +51,7 @@ const worker = await createWorker();
   await worker.terminate();
 })();
 ```
-### with whitelist char (^2.0.0-beta.1)
+### with whitelist char
 
 ```javascript
 const { createWorker } = require('tesseract.js');
@@ -70,7 +70,7 @@ const worker = await createWorker();
 })();
 ```
 
-### with different pageseg mode (^2.0.0-beta.1)
+### with different pageseg mode
 
 Check here for more details of pageseg mode: https://github.com/tesseract-ocr/tesseract/blob/4.0.0/src/ccstruct/publictypes.h#L163
 
@@ -91,7 +91,7 @@ const worker = await createWorker();
 })();
 ```
 
-### with pdf output (^2.0.0-beta.1)
+### with pdf output
 
 Please check **examples** folder for details.
 
@@ -189,7 +189,7 @@ const rectangles = [
 })();
 ```
 
-### with multiple workers to speed up (^2.0.0-beta.1)
+### with multiple workers to speed up
 
 ```javascript
 const { createWorker, createScheduler } = require('tesseract.js');
