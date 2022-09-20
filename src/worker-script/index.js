@@ -185,7 +185,10 @@ const initialize = ({
       api.End();
     }
     api = new TessModule.TessBaseAPI();
-    api.Init(null, langs, oem);
+    const status = api.Init(null, langs, oem);
+    if (status === -1) {
+      res.reject('initialization failed');
+    }
     params = defaultParams;
     setParameters({ payload: { params } });
     res.progress({
