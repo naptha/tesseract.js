@@ -82,6 +82,7 @@ res) => {
       ? () => Promise.resolve()
       : adapter.readCache;
     let data = null;
+    let newData = false;
 
     try {
       const _data = await readCache(`${cachePath || '.'}/${lang}.traineddata`);
@@ -93,6 +94,7 @@ res) => {
         throw Error('Not found in cache');
       }
     } catch (e) {
+      newData = true;
       log(`[${workerId}]: Load ${lang}.traineddata from ${langPath}`);
       if (typeof _lang === 'string') {
         let path = null;
@@ -134,7 +136,7 @@ res) => {
       TessModule.FS.writeFile(`${dataPath || '.'}/${lang}.traineddata`, data);
     }
 
-    if (['write', 'refresh', undefined].includes(cacheMethod)) {
+    if (newData && ['write', 'refresh', undefined].includes(cacheMethod)) {
       await adapter.writeCache(`${cachePath || '.'}/${lang}.traineddata`, data);
     }
 
