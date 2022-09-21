@@ -144,15 +144,7 @@ res) => {
     res.progress({ workerId, status: 'loaded language traineddata', progress: 1 });
     res.resolve(langs);
   } catch (err) {
-    if (isWebWorker && err instanceof DOMException) {
-      /*
-       * For some reason google chrome throw DOMException in loadLang,
-       * while other browser is OK, for now we ignore this exception
-       * and hopefully to find the root cause one day.
-       */
-    } else {
-      res.reject(err.toString());
-    }
+    res.reject(err.toString());
   }
 };
 
