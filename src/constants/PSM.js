@@ -15,4 +15,5 @@ module.exports = {
   SINGLE_CHAR: '10',
   SPARSE_TEXT: '11',
   SPARSE_TEXT_OSD: '12',
+  RAW_LINE: '13',
 };
