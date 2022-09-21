@@ -1,17 +1,18 @@
 # Image Format
 
-Support Format: **bmp, jpg, png, pbm**
+The main Tesseract.js functions (ex. recognize, detect) take an `image` parameter.  The image formats and data types supported are listed below. 
 
-The main Tesseract.js functions (ex. recognize, detect) take an `image` parameter, which should be something that is like an image. What's considered "image-like" differs depending on whether it is being run from the browser or through NodeJS.
+Support Image Formats: **bmp, jpg, png, pbm, webp**
 
-On a browser, an image can be:
-- an `img` or `canvas` element
-- a `File` object (from a file `<input>`)
-- a `Blob` object
-- a path or URL to an accessible image
-- a base64 encoded image fits `data:image\/([a-zA-Z]*);base64,([^"]*)` regexp
+For browser and Node, supported data types are:
+ - string with base64 encoded image (fits `data:image\/([a-zA-Z]*);base64,([^"]*)` regexp)
+ - buffer
 
-In Node.js, an image can be
-- a path to a local image
-- a Buffer storing binary image 
-- a base64 encoded image fits `data:image\/([a-zA-Z]*);base64,([^"]*)` regexp
+For browser only, supported data types are:
+ - `File` or `Blob` object
+ - `img` or `canvas` element
+
+For Node only, supported data types are:
+ - string containing a path to local image
+
+Note: images must be a supported image format **and** a supported data type.  For example, a buffer containing a png image is supported.  A buffer containing raw pixel data is not supported. 
