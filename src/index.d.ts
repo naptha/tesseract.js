@@ -84,13 +84,13 @@ declare namespace Tesseract {
     width: number
     height: number
   }
-  const enum OEM {
+  enum OEM {
     TESSERACT_ONLY,
     LSTM_ONLY,
     TESSERACT_LSTM_COMBINED,
     DEFAULT,
   }
-  const enum PSM {
+  enum PSM {
     OSD_ONLY = '0',
     AUTO_OSD = '1',
     AUTO_ONLY = '2',
