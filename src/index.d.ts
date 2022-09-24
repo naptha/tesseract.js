@@ -20,7 +20,7 @@ declare namespace Tesseract {
     removeText(path: string, jobId?: string): Promise<ConfigResult>
     FS(method: string, args: any[], jobId?: string): Promise<ConfigResult>
     loadLanguage(langs?: string, jobId?: string): Promise<ConfigResult>
-    initialize(langs?: string, oem?: OEM, jobId?: string): Promise<ConfigResult>
+    initialize(langs?: string, oem?: OEM, config?: string | Partial<InitOptions>, jobId?: string): Promise<ConfigResult>
     setParameters(params: Partial<WorkerParams>, jobId?: string): Promise<ConfigResult>
     getImage(type: imageType): string
     recognize(image: ImageLike, options?: Partial<RecognizeOptions>, output?: Partial<OutputFormats>, jobId?: string): Promise<RecognizeResult>
@@ -29,6 +29,14 @@ declare namespace Tesseract {
     getPDF(title?: string, textonly?: boolean, jobId?: string):Promise<GetPDFResult>
   }
 
+  interface InitOptions {
+    load_system_dawg: string
+    load_freq_dawg: string
+    load_unambig_dawg: string
+    load_punc_dawg: string
+    load_number_dawg: string
+    load_bigram_dawg: string
+  }
   interface WorkerOptions {
     corePath: string
     langPath: string

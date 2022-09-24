@@ -113,11 +113,11 @@ module.exports = async (_options = {}) => {
     }))
   );
 
-  const initialize = (langs = 'eng', oem = defaultOEM, jobId) => (
+  const initialize = (langs = 'eng', oem = defaultOEM, config, jobId) => (
     startJob(createJob({
       id: jobId,
       action: 'initialize',
-      payload: { langs, oem },
+      payload: { langs, oem, config },
     }))
   );
 

@@ -176,7 +176,7 @@ const setParameters = async ({ payload: { params: _params } }, res) => {
 
 const initialize = async ({
   workerId,
-  payload: { langs: _langs, oem },
+  payload: { langs: _langs, oem, config},
 }, res) => {
   const langs = (typeof _langs === 'string')
     ? _langs
@@ -189,8 +189,22 @@ const initialize = async ({
     if (api !== null) {
       api.End();
     }
+    let configFile = undefined;
+    let configStr = undefined;
+    // config argument may either be config file text, or object with key/value pairs
+    // In the latter case we convert to config file text here
+    if (typeof config === "object") {
+      configStr = JSON.stringify(config).replace(/,/g, "\n").replace(/:/g, " ").replace(/["'{}]/g, "");
+    } else {
+      configStr = config;
+    }
+    if (typeof configStr === "string") {
+      configFile = "/config";
+      TessModule.FS.writeFile(configFile, configStr);
+    }
+
     api = new TessModule.TessBaseAPI();
-    api.Init(null, langs, oem);
+    api.Init(null, langs, oem, configFile);
     params = defaultParams;
     await setParameters({ payload: { params } });
     res.progress({
