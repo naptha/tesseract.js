@@ -19,13 +19,18 @@ declare namespace Tesseract {
     readText(path: string, jobId?: string): Promise<ConfigResult>
     removeText(path: string, jobId?: string): Promise<ConfigResult>
     FS(method: string, args: any[], jobId?: string): Promise<ConfigResult>
-    loadLanguage(langs?: string, jobId?: string): Promise<ConfigResult>
-    initialize(langs?: string, oem?: OEM, jobId?: string): Promise<ConfigResult>
+    loadLanguage(langs?: string | Lang[], jobId?: string): Promise<ConfigResult>
+    initialize(langs?: string | Lang[], oem?: OEM, jobId?: string): Promise<ConfigResult>
     setParameters(params: Partial<WorkerParams>, jobId?: string): Promise<ConfigResult>
     recognize(image: ImageLike, options?: Partial<RecognizeOptions>, jobId?: string): Promise<RecognizeResult>
     detect(image: ImageLike, jobId?: string): Promise<DetectResult>
     terminate(jobId?: string): Promise<ConfigResult>
     getPDF(title?: string, textonly?: boolean, jobId?: string):Promise<GetPDFResult>
+  }
+
+  interface Lang {
+    code: string;
+    data: unknown;
   }
 
   interface WorkerOptions {
