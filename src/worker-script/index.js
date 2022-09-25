@@ -137,7 +137,12 @@ res) => {
     }
 
     if (newData && ['write', 'refresh', undefined].includes(cacheMethod)) {
-      await adapter.writeCache(`${cachePath || '.'}/${lang}.traineddata`, data);
+      try {
+        await adapter.writeCache(`${cachePath || '.'}/${lang}.traineddata`, data);
+      } catch (err) {
+        log(`[${workerId}]: Failed to write ${lang}.traineddata to cache due to error:`);
+        log(err.toString());
+      }
     }
 
     return Promise.resolve(data);
