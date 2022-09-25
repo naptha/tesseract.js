@@ -24,7 +24,7 @@ describe('detect()', async () => {
     [
       { name: 'cosmic.png', ans: { script: 'Latin' } },
     ].forEach(async ({ name, ans: { script } }) => {
-      const { data: { script: s } } = await Tesseract.detect(`${IMAGE_PATH}/${name}`);
+      const { data: { script: s } } = await Tesseract.detect(`${IMAGE_PATH}/${name}`, undefined, OPTIONS);
       expect(s).to.be(script);
     });
   }).timeout(TIMEOUT);

@@ -36,7 +36,7 @@ describe('recognize()', () => {
       { format: 'jpg', image: SIMPLE_JPG_BASE64, ans: SIMPLE_TEXT },
     ].forEach(({ format, image, ans }) => (
       it(`recongize ${format} in base64`, async () => {
-        const { data: { text } } = await Tesseract.recognize(image);
+        const { data: { text } } = await Tesseract.recognize(image, undefined, OPTIONS);
         expect(text).to.be(ans);
       }).timeout(TIMEOUT)
     ));
