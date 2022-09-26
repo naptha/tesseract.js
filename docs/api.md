@@ -225,7 +225,7 @@ Worker.setParameters() set parameters for Tesseract API (using SetVariable()), i
 - `params` an object with key and value of the parameters
 - `jobId` Please see details above
 
-**Supported Paramters:**
+**Supported Parameters:**
 
 | name                        | type   | default value     | description                                                                                                                     |
 | --------------------------- | ------ | ----------------- | ------------------------------------------------------------------------------------------------------------------------------- |
