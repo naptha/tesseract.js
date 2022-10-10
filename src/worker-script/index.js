@@ -294,7 +294,6 @@ const recognize = async ({
     // When the auto-rotate option is True, setImage is called with no angle,
     // then the angle is calculated by Tesseract and then setImage is re-called.
     // Otherwise, setImage is called once using the user-provided rotateRadiansFinal value.
-    let ptr;
     let rotateRadiansFinal;
     if (options.rotateAuto) {
       // The angle is only detected if auto page segmentation is used
@@ -306,7 +305,7 @@ const recognize = async ({
         api.SetVariable('tessedit_pageseg_mode', String(PSM.AUTO));
       }
 
-      ptr = setImage(TessModule, api, image);
+      setImage(TessModule, api, image);
       api.FindLines();
       const rotateRadiansCalc = api.GetAngle();
 
@@ -318,17 +317,17 @@ const recognize = async ({
       // Small angles (<0.005 radians/~0.3 degrees) are ignored to save on runtime
       if (Math.abs(rotateRadiansCalc) >= 0.005) {
         rotateRadiansFinal = rotateRadiansCalc;
-        ptr = setImage(TessModule, api, image, rotateRadiansFinal);
+        setImage(TessModule, api, image, rotateRadiansFinal);
       } else {
         // Image needs to be reset if run with different PSM setting earlier
         if (psmEdit) {
-          ptr = setImage(TessModule, api, image);
+          setImage(TessModule, api, image);
         }
         rotateRadiansFinal = 0;
       }
     } else {
       rotateRadiansFinal = options.rotateRadians || 0;
-      ptr = setImage(TessModule, api, image, rotateRadiansFinal);
+      setImage(TessModule, api, image, rotateRadiansFinal);
     }
 
     const rec = options.rectangle;
@@ -351,7 +350,6 @@ const recognize = async ({
     }
 
     res.resolve(result);
-    TessModule._free(ptr);
   } catch (err) {
     res.reject(err.toString());
   }
@@ -360,11 +358,10 @@ const recognize = async ({
 
 const detect = async ({ payload: { image } }, res) => {
   try {
-    const ptr = setImage(TessModule, api, image);
+    setImage(TessModule, api, image);
     const results = new TessModule.OSResults();
 
     if (!api.DetectOS(results)) {
-      TessModule._free(ptr);
 
       res.resolve({
         tesseract_script_id: null,
@@ -377,8 +374,6 @@ const detect = async ({ payload: { image } }, res) => {
       const best = results.best_result;
       const oid = best.orientation_id;
       const sid = best.script_id;
-
-      TessModule._free(ptr);
 
       res.resolve({
         tesseract_script_id: sid,
