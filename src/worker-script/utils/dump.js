@@ -219,5 +219,6 @@ module.exports = (TessModule, api, output, options) => {
     psm: enumToString(api.GetPageSegMode(), 'PSM'),
     oem: enumToString(api.oem(), 'OEM'),
     version: api.Version(),
+    debug: output.debug ? TessModule.FS.readFile('/debugInternal.txt', { encoding: 'utf8', flags:"a+" }) : null
   };
 };

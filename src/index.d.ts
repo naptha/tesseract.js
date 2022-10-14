@@ -73,6 +73,7 @@ declare namespace Tesseract {
     imageColor: boolean;
     imageGrey: boolean;
     imageBinary: boolean;
+    debug: boolean;
   }
   interface RecognizeOptions {
     rectangle: Rectangle

@@ -281,11 +281,16 @@ const recognize = async ({
           optionsTess[param] = options[param];
         }
       }
-      if (Object.keys(optionsTess).length > 0) {
-        api.SaveParameters();
-        for (const prop in optionsTess) {
-          api.SetVariable(prop, optionsTess[prop]);
-        }
+    }
+    if (output.debug) {
+      optionsTess["debug_file"] = "/debugInternal.txt";
+      TessModule.FS.writeFile("/debugInternal.txt", "");
+    }
+    // If any parameters are changed here they are changed back at the end
+    if (Object.keys(optionsTess).length > 0) {
+      api.SaveParameters();
+      for (const prop in optionsTess) {
+        api.SetVariable(prop, optionsTess[prop]);
       }
     }
 
@@ -344,6 +349,8 @@ const recognize = async ({
     const pdfTextOnly = options.pdfTextOnly;
     const result = dump(TessModule, api, workingOutput, {pdfTitle, pdfTextOnly});
     result.rotateRadians = rotateRadiansFinal;
+
+    if (output.debug) TessModule.FS.unlink("/debugInternal.txt");
 
     if (Object.keys(optionsTess).length > 0) {
       api.RestoreParameters();
