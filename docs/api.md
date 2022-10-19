@@ -231,7 +231,7 @@ Worker.setParameters() set parameters for Tesseract API (using SetVariable()), i
 | --------------------------- | ------ | ----------------- | ------------------------------------------------------------------------------------------------------------------------------- |
 | tessedit\_ocr\_engine\_mode | enum   | OEM.DEFAULT       | Check [HERE](https://github.com/tesseract-ocr/tesseract/blob/4.0.0/src/ccstruct/publictypes.h#L268) for definition of each mode |
 | tessedit\_pageseg\_mode     | enum   | PSM.SINGLE\_BLOCK | Check [HERE](https://github.com/tesseract-ocr/tesseract/blob/4.0.0/src/ccstruct/publictypes.h#L163) for definition of each mode |
-| tessedit\_char\_whitelist   | string | ''                | setting white list characters makes the result only contains these characters, useful the content in image is limited           |
+| tessedit\_char\_whitelist   | string | ''                | setting white list characters makes the result only contains these characters, useful if content in image is limited           |
 | preserve\_interword\_spaces | string | '0'               | '0' or '1', keeps the space between words                                                                                       |
 | user\_defined\_dpi          | string | ''                | Define custom dpi, use to fix **Warning: Invalid resolution 0 dpi. Using 70 instead.**                                          |
 | tessjs\_create\_hocr        | string | '1'               | only 2 values, '0' or '1', when the value is '1', tesseract.js includes hocr in the result                                      |
