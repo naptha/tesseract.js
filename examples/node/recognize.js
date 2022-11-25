@@ -6,12 +6,11 @@ const [,, imagePath] = process.argv;
 const image = path.resolve(__dirname, (imagePath || '../../tests/assets/images/cosmic.png'));
 
 console.log(`Recognizing ${image}`);
-const worker = createWorker({
-  logger: m => console.log(m),
-});
 
 (async () => {
-  await worker.load();
+  const worker = await createWorker({
+    logger: m => console.log(m),
+  });  
   await worker.loadLanguage('eng');
   await worker.initialize('eng');
   const { data: { text } } = await worker.recognize(image);

@@ -1,9 +1,9 @@
 const { createWorker } = Tesseract;
 const FS_WAIT = 500;
-const worker = createWorker(OPTIONS);
-before(function cb() {
+let worker;
+before(async function cb() {
   this.timeout(0);
-  return worker.load();
+  worker = await createWorker(OPTIONS);
 });
 
 describe('FS', async () => {

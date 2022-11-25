@@ -1,6 +1,6 @@
 declare namespace Tesseract {
   function createScheduler(): Scheduler
-  function createWorker(options?: Partial<WorkerOptions>): Worker
+  function createWorker(options?: Partial<WorkerOptions>): Promise<Worker>
   function setLogging(logging: boolean): void
   function recognize(image: ImageLike, langs?: string, options?: Partial<WorkerOptions>): Promise<RecognizeResult>
   function detect(image: ImageLike, options?: Partial<WorkerOptions>): any
@@ -20,9 +20,10 @@ declare namespace Tesseract {
     removeText(path: string, jobId?: string): Promise<ConfigResult>
     FS(method: string, args: any[], jobId?: string): Promise<ConfigResult>
     loadLanguage(langs?: string | Lang[], jobId?: string): Promise<ConfigResult>
-    initialize(langs?: string | Lang[], oem?: OEM, jobId?: string): Promise<ConfigResult>
+    initialize(langs?: string | Lang[], oem?: OEM, config?: string | Partial<InitOptions>, jobId?: string): Promise<ConfigResult>
     setParameters(params: Partial<WorkerParams>, jobId?: string): Promise<ConfigResult>
-    recognize(image: ImageLike, options?: Partial<RecognizeOptions>, jobId?: string): Promise<RecognizeResult>
+    getImage(type: imageType): string
+    recognize(image: ImageLike, options?: Partial<RecognizeOptions>, output?: Partial<OutputFormats>, jobId?: string): Promise<RecognizeResult>
     detect(image: ImageLike, jobId?: string): Promise<DetectResult>
     terminate(jobId?: string): Promise<ConfigResult>
     getPDF(title?: string, textonly?: boolean, jobId?: string):Promise<GetPDFResult>
@@ -33,6 +34,14 @@ declare namespace Tesseract {
     data: unknown;
   }
 
+  interface InitOptions {
+    load_system_dawg: string
+    load_freq_dawg: string
+    load_unambig_dawg: string
+    load_punc_dawg: string
+    load_number_dawg: string
+    load_bigram_dawg: string
+  }
   interface WorkerOptions {
     corePath: string
     langPath: string
@@ -57,8 +66,26 @@ declare namespace Tesseract {
     tessjs_create_unlv: string
     tessjs_create_osd: string
   }
+  interface OutputFormats {
+    text: boolean;
+    blocks: boolean;
+    hocr: boolean;
+    tsv: boolean;
+    box: boolean;
+    unlv: boolean;
+    osd: boolean;
+    pdf: boolean;
+    imageColor: boolean;
+    imageGrey: boolean;
+    imageBinary: boolean;
+    debug: boolean;
+  }
   interface RecognizeOptions {
     rectangle: Rectangle
+    pdfTitle: string
+    pdfTextOnly: boolean
+    rotateAuto: boolean
+    rotateRadians: number
   }
   interface ConfigResult {
     jobId: string
@@ -77,11 +104,11 @@ declare namespace Tesseract {
     data: DetectData
   }
   interface DetectData {
-    tesseract_script_id: number
-    script: string
-    script_confidence: number
-    orientation_degrees: number
-    orientation_confidence: number
+    tesseract_script_id: number | null
+    script: string | null
+    script_confidence: number | null
+    orientation_degrees: number | null
+    orientation_confidence: number | null
   }
   interface Rectangle {
     left: number
@@ -110,6 +137,11 @@ declare namespace Tesseract {
     SPARSE_TEXT = '11',
     SPARSE_TEXT_OSD = '12',
     RAW_LINE = '13'
+  }
+  const enum imageType {
+    COLOR = 0,
+    GREY = 1,
+    BINARY = 2
   }
   type ImageLike = string | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement
     | CanvasRenderingContext2D | File | Blob | ImageData | Buffer;
@@ -208,7 +240,7 @@ declare namespace Tesseract {
     page: Page;
   }
   interface Page {
-    blocks: Block[];
+    blocks: Block[] | null;
     confidence: number;
     lines: Line[];
     oem: string;
@@ -224,6 +256,11 @@ declare namespace Tesseract {
     box: string | null;
     unlv: string | null;
     sd: string | null;
+    imageColor: string | null;
+    imageGrey: string | null;
+    imageBinary: string | null;
+    rotateRadians: number | null;
+    pdf: number[] | null;
   }
 }
 

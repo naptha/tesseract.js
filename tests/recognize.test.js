@@ -1,8 +1,8 @@
 const { createWorker, PSM } = Tesseract;
-const worker = createWorker(OPTIONS);
+let worker;
 before(async function cb() {
   this.timeout(0);
-  await worker.load();
+  worker = await createWorker(OPTIONS);
   await worker.loadLanguage('eng+chi_tra+osd');
 });
 
@@ -29,6 +29,19 @@ describe('recognize()', () => {
       }).timeout(TIMEOUT)
     ));
   });
+
+  describe('should recognize base64 image (simplified interface)', () => {
+    [
+      { format: 'png', image: SIMPLE_PNG_BASE64, ans: SIMPLE_TEXT },
+      { format: 'jpg', image: SIMPLE_JPG_BASE64, ans: SIMPLE_TEXT },
+    ].forEach(({ format, image, ans }) => (
+      it(`recongize ${format} in base64`, async () => {
+        const { data: { text } } = await Tesseract.recognize(image, undefined, OPTIONS);
+        expect(text).to.be(ans);
+      }).timeout(TIMEOUT)
+    ));
+  });
+
 
   describe('should recognize different langs', () => {
     [

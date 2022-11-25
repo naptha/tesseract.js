@@ -46,12 +46,11 @@ Or more imperative
 ```javascript
 import { createWorker } from 'tesseract.js';
 
-const worker = createWorker({
+const worker = await createWorker({
   logger: m => console.log(m)
 });
 
 (async () => {
-  await worker.load();
   await worker.loadLanguage('eng');
   await worker.initialize('eng');
   const { data: { text } } = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png');
@@ -61,6 +60,16 @@ const worker = createWorker({
 ```
 
 [Check out the docs](#documentation) for a full explanation of the API.
+
+## Major changes in v4
+Version 4 includes many new features and bug fixes--see [this issue](https://github.com/naptha/tesseract.js/issues/662) for a full list.  Several highlights are below. 
+
+- Added rotation preprocessing options (including auto-rotate) for significantly better accuracy
+- Processed images (rotated, grayscale, binary) can now be retrieved
+- Improved support for parallel processing (schedulers)
+- Breaking changes:
+  - `createWorker` is now async
+  - `getPDF` function replaced by `pdf` recognize option
 
 ## Major changes in v3
 - Significantly faster performance

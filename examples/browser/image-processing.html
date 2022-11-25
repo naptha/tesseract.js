@@ -1,0 +1,59 @@
+<html>
+
+<head>
+  <script src="/dist/tesseract.dev.js"></script>
+  <style>
+    .column {
+  float: left;
+  width: 20%;
+  padding: 5px;
+}
+
+  </style>
+</head>
+
+<body>
+  <input type="file" id="uploader">
+
+  <div class="row">
+    <div class="column">
+      <p>Input Image</p>
+      <img id="imgInput" style="max-width:500px;">
+    </div>
+    <div class="column">
+      <p>Rotated, Original Color</p>
+      <img id="imgOriginal" style="max-width:500px;">
+    </div>
+    <div class="column">
+      <p>Rotated, Grey</p>
+      <img id="imgGrey" style="max-width:500px;">
+    </div>
+    <div class="column">
+      <p>Rotated, Binary</p>
+      <img id="imgBinary" style="max-width:500px;">
+    </div>
+  </div>
+
+  <script>
+    const recognize = async ({ target: { files } }) => {
+      document.getElementById("imgInput").src = URL.createObjectURL(files[0]);
+      const worker = await Tesseract.createWorker({
+        // corePath: '/tesseract-core-simd.wasm.js',
+        workerPath: "/dist/worker.dev.js"
+      });
+      await worker.loadLanguage('eng');
+      await worker.initialize('eng');
+
+      await worker.initialize();
+      const ret = await worker.recognize(files[0], {rotateAuto: true}, {imageColor: true, imageGrey: true, imageBinary: true});
+      document.getElementById("imgOriginal").src = ret.data.imageColor;
+      document.getElementById("imgGrey").src = ret.data.imageGrey;
+      document.getElementById("imgBinary").src = ret.data.imageBinary;
+
+    }
+    const elm = document.getElementById('uploader');
+    elm.addEventListener('change', recognize);
+  </script>
+</body>
+
+</html>

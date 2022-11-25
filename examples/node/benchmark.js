@@ -2,10 +2,8 @@
 const path = require('path');
 const { createWorker } = require('../../');
 
-const worker = createWorker();
-
 (async () => {
-  await worker.load();
+  const worker = await createWorker();
   await worker.loadLanguage('eng');
   await worker.initialize('eng');
   const fileArr = ["../data/meditations.jpg", "../data/tyger.jpg", "../data/testocr.png"];

@@ -1,6 +1,13 @@
 FAQ
 ===
 
+# Project
+## What is the scope of this project? 
+Tesseract.js is the JavaScript/Webassembly port of the Tesseract OCR engine.  We do not edit the underlying Tesseract recognition engine in any way.  Therefore, if you encounter bugs caused by the Tesseract engine you may open an issue here for the purposes of raising awareness to other users, but fixing is outside the scope of this repository. 
+
+If you encounter a Tesseract bug you would like to see fixed you should confirm the behavior is the same in the [main (CLI) version](https://github.com/tesseract-ocr/tesseract) of Tesseract and then open a Git Issue in that repository.    
+
+# Trained Data
 ## How does tesseract.js download and keep \*.traineddata?
 
 The language model is downloaded by `worker.loadLanguage()` and you need to pass the langs to `worker.initialize()`.
@@ -9,34 +16,5 @@ During the downloading of language model, Tesseract.js will first check if \*.tr
 
 ## How can I train my own \*.traineddata?
 
-For tesseract.js v2, check [TrainingTesseract 4.00](https://tesseract-ocr.github.io/tessdoc/TrainingTesseract-4.00)
+See the documentation from the main [Tesseract project](https://tesseract-ocr.github.io/tessdoc/) for training instructions. 
 
-For tesseract.js v1, check [Training Tesseract 3.03–3.05](https://tesseract-ocr.github.io/tessdoc/Training-Tesseract-3.03%E2%80%933.05)
-
-## How can I get HOCR, TSV, Box, UNLV, OSD?
-
-Starting from 2.0.0-beta.1, you can get all these information in the final result.
-
-```javascript
-import { createWorker } from 'tesseract.js';
-const worker = createWorker({
-  logger: m => console.log(m)
-});
-
-(async () => {
-  await worker.load();
-  await worker.loadLanguage('eng');
-  await worker.initialize('eng');
-  await worker.setParameters({
-    tessedit_create_box: '1',
-    tessedit_create_unlv: '1',
-    tessedit_create_osd: '1',
-  });
-  const { data: { text, hocr, tsv, box, unlv } } = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png');
-  console.log(text);
-  console.log(hocr);
-  console.log(tsv);
-  console.log(box);
-  console.log(unlv);
-})();
-```
