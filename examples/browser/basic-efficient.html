@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <script src="/dist/tesseract.dev.js"></script>
+  </head>
+  <body>
+    <input type="file" id="uploader">
+    <script type="module">
+
+      // This is a basic example more efficient than "basic.html".
+      // In this example we create a worker once, and this worker is re-used
+      // every time the user uploads a new file.  
+
+      const worker = await Tesseract.createWorker({
+          corePath: '../../node_modules/tesseract.js-core/tesseract-core.wasm.js',
+          workerPath: "/dist/worker.dev.js",
+          logger: function(m){console.log(m);}
+        });
+
+      await worker.loadLanguage('eng');
+      await worker.initialize('eng');
+
+      const recognize = async function(evt){
+        const files = evt.target.files;
+
+        const ret = await worker.recognize(files[0]);
+        console.log(ret.data.text);
+
+      }
+      const elm = document.getElementById('uploader');
+      elm.addEventListener('change', recognize);
+    </script>
+  </body>
+</html>
