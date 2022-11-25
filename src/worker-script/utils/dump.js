@@ -80,7 +80,6 @@ module.exports = (TessModule, api, output, options) => {
   };
 
   if (output.blocks) {
-
     ri.Begin();
     do {
       if (ri.IsAtBeginningOf(RIL_BLOCK)) {
@@ -200,7 +199,6 @@ module.exports = (TessModule, api, output, options) => {
       }
     } while (ri.Next(RIL_SYMBOL));
     TessModule.destroy(ri);
-
   }
 
   return {
@@ -219,6 +217,6 @@ module.exports = (TessModule, api, output, options) => {
     psm: enumToString(api.GetPageSegMode(), 'PSM'),
     oem: enumToString(api.oem(), 'OEM'),
     version: api.Version(),
-    debug: output.debug ? TessModule.FS.readFile('/debugInternal.txt', { encoding: 'utf8', flags:"a+" }) : null
+    debug: output.debug ? TessModule.FS.readFile('/debugInternal.txt', { encoding: 'utf8', flags: 'a+' }) : null,
   };
 };

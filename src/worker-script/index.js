@@ -16,7 +16,6 @@ const setImage = require('./utils/setImage');
 const defaultParams = require('./constants/defaultParams');
 const defaultOutput = require('./constants/defaultOutput');
 const { log, setLogging } = require('../utils/log');
-const imageType = require('../constants/imageType');
 const PSM = require('../constants/PSM');
 
 /*
@@ -154,15 +153,7 @@ res) => {
     res.progress({ workerId, status: 'loaded language traineddata', progress: 1 });
     res.resolve(langs);
   } catch (err) {
-    if (isWebWorker && err instanceof DOMException) {
-      /*
-       * For some reason google chrome throw DOMException in loadLang,
-       * while other browser is OK, for now we ignore this exception
-       * and hopefully to find the root cause one day.
-       */
-    } else {
-      res.reject(err.toString());
-    }
+    res.reject(err.toString());
   }
 };
 
@@ -181,7 +172,7 @@ const setParameters = async ({ payload: { params: _params } }, res) => {
 
 const initialize = async ({
   workerId,
-  payload: { langs: _langs, oem, config},
+  payload: { langs: _langs, oem, config },
 }, res) => {
   const langs = (typeof _langs === 'string')
     ? _langs
@@ -194,22 +185,25 @@ const initialize = async ({
     if (api !== null) {
       api.End();
     }
-    let configFile = undefined;
-    let configStr = undefined;
+    let configFile;
+    let configStr;
     // config argument may either be config file text, or object with key/value pairs
     // In the latter case we convert to config file text here
-    if (typeof config === "object") {
-      configStr = JSON.stringify(config).replace(/,/g, "\n").replace(/:/g, " ").replace(/["'{}]/g, "");
+    if (typeof config === 'object') {
+      configStr = JSON.stringify(config).replace(/,/g, '\n').replace(/:/g, ' ').replace(/["'{}]/g, '');
     } else {
       configStr = config;
     }
-    if (typeof configStr === "string") {
-      configFile = "/config";
+    if (typeof configStr === 'string') {
+      configFile = '/config';
       TessModule.FS.writeFile(configFile, configStr);
     }
 
     api = new TessModule.TessBaseAPI();
-    api.Init(null, langs, oem, configFile);
+    const status = api.Init(null, langs, oem);
+    if (status === -1) {
+      res.reject('initialization failed');
+    }
     params = defaultParams;
     await setParameters({ payload: { params } });
     res.progress({
@@ -241,60 +235,60 @@ const processOutput = (output) => {
   const workingOutput = JSON.parse(JSON.stringify(defaultOutput));
   // Output formats were set using `setParameters` in previous versions
   // These settings are copied over for compatability
-  if (params.tessjs_create_box === "1") workingOutput.box = true;
-  if (params.tessjs_create_hocr === "1") workingOutput.hocr = true;
-  if (params.tessjs_create_osd === "1") workingOutput.osd = true;
-  if (params.tessjs_create_tsv === "1") workingOutput.tsv = true;
-  if (params.tessjs_create_unlv === "1") workingOutput.unlv = true;
+  if (params.tessjs_create_box === '1') workingOutput.box = true;
+  if (params.tessjs_create_hocr === '1') workingOutput.hocr = true;
+  if (params.tessjs_create_osd === '1') workingOutput.osd = true;
+  if (params.tessjs_create_tsv === '1') workingOutput.tsv = true;
+  if (params.tessjs_create_unlv === '1') workingOutput.unlv = true;
 
-  const nonRecOutputs = ["imageColor", "imageGrey", "imageBinary"];
+  const nonRecOutputs = ['imageColor', 'imageGrey', 'imageBinary'];
   let recOutputCount = 0;
-  for (const prop in output) {
+  for (const prop of Object.keys(output)) {
     workingOutput[prop] = output[prop];
   }
-  for (const prop in workingOutput) {
+  for (const prop of Object.keys(workingOutput)) {
     if (workingOutput[prop]) {
       if (!nonRecOutputs.includes(prop)) {
-        recOutputCount++;
+        recOutputCount += 1;
       }
     }
   }
-  return {workingOutput, recOutputCount}
-}
+  return { workingOutput, recOutputCount };
+};
 
 // List of options for Tesseract.js (rather than passed through to Tesseract),
 // not including those with prefix "tessjs_"
-const tessjsOptions = ["rectangle", "pdfTitle", "pdfTextOnly", "rotateAuto", "rotateRadians"];
+const tessjsOptions = ['rectangle', 'pdfTitle', 'pdfTextOnly', 'rotateAuto', 'rotateRadians'];
 
 const recognize = async ({
   payload: {
-    image, options, output
+    image, options, output,
   },
 }, res) => {
   try {
     const optionsTess = {};
-    if (typeof options === "object" && Object.keys(options).length > 0) {
+    if (typeof options === 'object' && Object.keys(options).length > 0) {
       // The options provided by users contain a mix of options for Tesseract.js
-      // and parameters passed through to Tesseract. 
-      for (const param in options) {
+      // and parameters passed through to Tesseract.
+      for (const param of Object.keys(options)) {
         if (!param.startsWith('tessjs_') && !tessjsOptions.includes(param)) {
           optionsTess[param] = options[param];
         }
       }
     }
     if (output.debug) {
-      optionsTess["debug_file"] = "/debugInternal.txt";
-      TessModule.FS.writeFile("/debugInternal.txt", "");
+      optionsTess.debug_file = '/debugInternal.txt';
+      TessModule.FS.writeFile('/debugInternal.txt', '');
     }
     // If any parameters are changed here they are changed back at the end
     if (Object.keys(optionsTess).length > 0) {
       api.SaveParameters();
-      for (const prop in optionsTess) {
+      for (const prop of Object.keys(optionsTess)) {
         api.SetVariable(prop, optionsTess[prop]);
       }
     }
 
-    const {workingOutput, recOutputCount} = processOutput(output);
+    const { workingOutput, recOutputCount } = processOutput(output);
 
     // When the auto-rotate option is True, setImage is called with no angle,
     // then the angle is calculated by Tesseract and then setImage is re-called.
@@ -343,14 +337,14 @@ const recognize = async ({
     if (recOutputCount > 0) {
       api.Recognize(null);
     } else {
-      log(`Skipping recognition: all output options requiring recognition are disabled.`);
+      log('Skipping recognition: all output options requiring recognition are disabled.');
     }
-    const pdfTitle = options.pdfTitle;
-    const pdfTextOnly = options.pdfTextOnly;
-    const result = dump(TessModule, api, workingOutput, {pdfTitle, pdfTextOnly});
+    const { pdfTitle } = options;
+    const { pdfTextOnly } = options;
+    const result = dump(TessModule, api, workingOutput, { pdfTitle, pdfTextOnly });
     result.rotateRadians = rotateRadiansFinal;
 
-    if (output.debug) TessModule.FS.unlink("/debugInternal.txt");
+    if (output.debug) TessModule.FS.unlink('/debugInternal.txt');
 
     if (Object.keys(optionsTess).length > 0) {
       api.RestoreParameters();
@@ -362,14 +356,12 @@ const recognize = async ({
   }
 };
 
-
 const detect = async ({ payload: { image } }, res) => {
   try {
     setImage(TessModule, api, image);
     const results = new TessModule.OSResults();
 
     if (!api.DetectOS(results)) {
-
       res.resolve({
         tesseract_script_id: null,
         script: null,

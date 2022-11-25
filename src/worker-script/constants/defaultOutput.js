@@ -13,5 +13,5 @@ module.exports = {
   pdf: false,
   imageColor: false,
   imageGrey: false,
-  imageBinary: false
+  imageBinary: false,
 };

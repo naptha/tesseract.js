@@ -19,14 +19,19 @@ declare namespace Tesseract {
     readText(path: string, jobId?: string): Promise<ConfigResult>
     removeText(path: string, jobId?: string): Promise<ConfigResult>
     FS(method: string, args: any[], jobId?: string): Promise<ConfigResult>
-    loadLanguage(langs?: string, jobId?: string): Promise<ConfigResult>
-    initialize(langs?: string, oem?: OEM, config?: string | Partial<InitOptions>, jobId?: string): Promise<ConfigResult>
+    loadLanguage(langs?: string | Lang[], jobId?: string): Promise<ConfigResult>
+    initialize(langs?: string | Lang[], oem?: OEM, config?: string | Partial<InitOptions>, jobId?: string): Promise<ConfigResult>
     setParameters(params: Partial<WorkerParams>, jobId?: string): Promise<ConfigResult>
     getImage(type: imageType): string
     recognize(image: ImageLike, options?: Partial<RecognizeOptions>, output?: Partial<OutputFormats>, jobId?: string): Promise<RecognizeResult>
     detect(image: ImageLike, jobId?: string): Promise<DetectResult>
     terminate(jobId?: string): Promise<ConfigResult>
     getPDF(title?: string, textonly?: boolean, jobId?: string):Promise<GetPDFResult>
+  }
+
+  interface Lang {
+    code: string;
+    data: unknown;
   }
 
   interface InitOptions {
@@ -111,13 +116,13 @@ declare namespace Tesseract {
     width: number
     height: number
   }
-  const enum OEM {
+  enum OEM {
     TESSERACT_ONLY,
     LSTM_ONLY,
     TESSERACT_LSTM_COMBINED,
     DEFAULT,
   }
-  const enum PSM {
+  enum PSM {
     OSD_ONLY = '0',
     AUTO_OSD = '1',
     AUTO_ONLY = '2',

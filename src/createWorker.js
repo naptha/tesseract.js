@@ -129,7 +129,9 @@ module.exports = async (_options = {}) => {
     }))
   );
 
-  const recognize = async (image, opts = {}, output = {blocks: true, text: true, hocr: true, tsv: true}, jobId) => (
+  const recognize = async (image, opts = {}, output = {
+    blocks: true, text: true, hocr: true, tsv: true,
+  }, jobId) => (
     startJob(createJob({
       id: jobId,
       action: 'recognize',

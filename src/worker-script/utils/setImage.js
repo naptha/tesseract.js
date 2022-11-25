@@ -9,7 +9,6 @@ const fileType = require('file-type');
  * @access public
  */
 module.exports = (TessModule, api, image, angle = 0) => {
-
   const type = fileType(image);
 
   const exif = image.slice(0, 500).toString().match(/\x01\x12\x00\x03\x00\x00\x00\x01\x00(.)/)?.[1]?.charCodeAt(0) || 1;
@@ -23,12 +22,10 @@ module.exports = (TessModule, api, image, angle = 0) => {
     // Not sure what this line actually does, but removing breaks the function
     const buf = Buffer.from(Array.from({ ...image, length: Object.keys(image).length }));
     const bmpBuf = bmp.decode(buf);
-    TessModule.FS.writeFile("/input", bmp.encode(bmpBuf).data);
+    TessModule.FS.writeFile('/input', bmp.encode(bmpBuf).data);
   } else {
-    TessModule.FS.writeFile("/input", image);
+    TessModule.FS.writeFile('/input', image);
   }
 
   api.SetImageFile(exif, angle);
-  return;
-
 };
