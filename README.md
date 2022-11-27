@@ -97,27 +97,24 @@ Tesseract.js works with a `<script>` tag via local copy or CDN, with webpack via
 
 ### CDN
 ```html
-<!-- v2 -->
-<script src='https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js'></script>
-
-<!-- v1 -->
-<script src='https://unpkg.com/tesseract.js@1.0.19/src/index.js'></script>
+<!-- v4 -->
+<script src='https://unpkg.com/tesseract.js@4.0.0/dist/tesseract.min.js'></script>
 ```
 After including the script the `Tesseract` variable will be globally available.
 
 
 ### Node.js
 
-**Tesseract.js v3 requires Node.js v14 or higher**
+**Requires Node.js v14 or higher**
 
 ```shell
-# For v3
+# For latest version
 npm install tesseract.js
 yarn add tesseract.js
 
-# For v2
-npm install tesseract.js@2
-yarn add tesseract.js@2
+# For old versions
+npm install tesseract.js@3.0.3
+yarn add tesseract.js@3.0.3
 ```
 
 
