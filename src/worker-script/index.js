@@ -99,7 +99,7 @@ res) => {
         let path = null;
 
         if (isURL(langPath) || langPath.startsWith('moz-extension://') || langPath.startsWith('chrome-extension://') || langPath.startsWith('file://')) { /** When langPath is an URL */
-          path = langPath;
+          path = langPath.replace(/\/+$/, '');
         }
 
         if (path !== null) {
