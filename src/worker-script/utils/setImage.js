@@ -27,5 +27,6 @@ module.exports = (TessModule, api, image, angle = 0) => {
     TessModule.FS.writeFile('/input', image);
   }
 
-  api.SetImageFile(exif, angle);
+  const res = api.SetImageFile(exif, angle);
+  if (res === 1) throw Error('Error attempting to read image.');
 };
