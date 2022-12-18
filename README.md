@@ -140,6 +140,8 @@ yarn add tesseract.js@3.0.3
 - Typescript: https://github.com/jeromewu/tesseract.js-typescript
 - Video Real-time Recognition: https://github.com/jeromewu/tesseract.js-video
 
+Disclaimer: These examples are now several years old and use old versions of both Tesseract.js and the relevant frameworks.  Users are encouraged to use the latest version of Tesseract.js rather than the versions used in these examples.  For users that update these examples (or make new ones), please consider contributing through a PR.   
+
 ## Contributing
 
 ### Development
