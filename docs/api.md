@@ -140,7 +140,7 @@ Worker.readFile() remove a file in MEMFS, it is useful when you want to free the
 <a name="worker-FS"></a>
 ### Worker.FS(method, args, jobId): Promise
 
-Worker.FS() is a generic FS function to do anything you want, you can check [HERE](ihttps://emscripten.org/docs/api_reference/Filesystem-API.html) for all functions.
+Worker.FS() is a generic FS function to do anything you want, you can check [HERE](https://emscripten.org/docs/api_reference/Filesystem-API.html) for all functions.
 
 **Arguments:**
 
