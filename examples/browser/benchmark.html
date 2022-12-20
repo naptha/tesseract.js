@@ -6,10 +6,14 @@
     <textarea id="message">Working...</textarea>
 
     <script>
+
+      // This example provides a standardized performance benchmark.
+      // It does not accept user input. 
+
       const { createWorker } = Tesseract;
-      const worker = createWorker();
+      
       (async () => {
-        await worker.load();
+        const worker = await createWorker();
         await worker.loadLanguage('eng');
         await worker.initialize('eng');
         

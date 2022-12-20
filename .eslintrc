@@ -12,6 +12,9 @@
     "no-console": 0,
     "global-require": 0,
     "camelcase": 0,
-    "no-control-regex": 0
+    "no-control-regex": 0,
+    // Airbnb disallows ForOfStatement based on the bizarre belief that loops are not readable
+    // https://github.com/airbnb/javascript/issues/1271
+    "no-restricted-syntax": ["error", "ForInStatement", "LabeledStatement", "WithStatement"]
   }
 }

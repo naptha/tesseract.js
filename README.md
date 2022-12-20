@@ -46,12 +46,11 @@ Or more imperative
 ```javascript
 import { createWorker } from 'tesseract.js';
 
-const worker = createWorker({
+const worker = await createWorker({
   logger: m => console.log(m)
 });
 
 (async () => {
-  await worker.load();
   await worker.loadLanguage('eng');
   await worker.initialize('eng');
   const { data: { text } } = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png');
@@ -61,6 +60,16 @@ const worker = createWorker({
 ```
 
 [Check out the docs](#documentation) for a full explanation of the API.
+
+## Major changes in v4
+Version 4 includes many new features and bug fixes--see [this issue](https://github.com/naptha/tesseract.js/issues/662) for a full list.  Several highlights are below. 
+
+- Added rotation preprocessing options (including auto-rotate) for significantly better accuracy
+- Processed images (rotated, grayscale, binary) can now be retrieved
+- Improved support for parallel processing (schedulers)
+- Breaking changes:
+  - `createWorker` is now async
+  - `getPDF` function replaced by `pdf` recognize option
 
 ## Major changes in v3
 - Significantly faster performance
@@ -88,27 +97,24 @@ Tesseract.js works with a `<script>` tag via local copy or CDN, with webpack via
 
 ### CDN
 ```html
-<!-- v2 -->
-<script src='https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js'></script>
-
-<!-- v1 -->
-<script src='https://unpkg.com/tesseract.js@1.0.19/src/index.js'></script>
+<!-- v4 -->
+<script src='https://unpkg.com/tesseract.js@4.0.1/dist/tesseract.min.js'></script>
 ```
 After including the script the `Tesseract` variable will be globally available.
 
 
 ### Node.js
 
-**Tesseract.js v3 requires Node.js v14 or higher**
+**Requires Node.js v14 or higher**
 
 ```shell
-# For v3
+# For latest version
 npm install tesseract.js
 yarn add tesseract.js
 
-# For v2
-npm install tesseract.js@2
-yarn add tesseract.js@2
+# For old versions
+npm install tesseract.js@3.0.3
+yarn add tesseract.js@3.0.3
 ```
 
 
@@ -133,6 +139,8 @@ yarn add tesseract.js@2
 - With React: https://github.com/jeromewu/tesseract.js-react-app
 - Typescript: https://github.com/jeromewu/tesseract.js-typescript
 - Video Real-time Recognition: https://github.com/jeromewu/tesseract.js-video
+
+Disclaimer: These examples are now several years old and use old versions of both Tesseract.js and the relevant frameworks.  Users are encouraged to use the latest version of Tesseract.js rather than the versions used in these examples.  For users that update these examples (or make new ones), please consider contributing through a PR.   
 
 ## Contributing
 

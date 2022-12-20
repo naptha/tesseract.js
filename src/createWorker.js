@@ -15,7 +15,7 @@ const {
 
 let workerCounter = 0;
 
-module.exports = (_options = {}) => {
+module.exports = async (_options = {}) => {
   const id = getId('Worker', workerCounter);
   const {
     logger,
@@ -27,7 +27,17 @@ module.exports = (_options = {}) => {
   });
   const resolves = {};
   const rejects = {};
+
+  let workerResReject;
+  let workerResResolve;
+  const workerRes = new Promise((resolve, reject) => {
+    workerResResolve = resolve;
+    workerResReject = reject;
+  });
+  const workerError = (event) => { workerResReject(event.message); };
+
   let worker = spawnWorker(options);
+  worker.onerror = workerError;
 
   workerCounter += 1;
 
@@ -53,7 +63,11 @@ module.exports = (_options = {}) => {
     })
   );
 
-  const load = (jobId) => (
+  const load = () => (
+    console.warn('`load` is depreciated and should be removed from code (workers now come pre-loaded)')
+  );
+
+  const loadInternal = (jobId) => (
     startJob(createJob({
       id: jobId, action: 'load', payload: { options },
     }))
@@ -99,11 +113,11 @@ module.exports = (_options = {}) => {
     }))
   );
 
-  const initialize = (langs = 'eng', oem = defaultOEM, jobId) => (
+  const initialize = (langs = 'eng', oem = defaultOEM, config, jobId) => (
     startJob(createJob({
       id: jobId,
       action: 'initialize',
-      payload: { langs, oem },
+      payload: { langs, oem, config },
     }))
   );
 
@@ -115,21 +129,24 @@ module.exports = (_options = {}) => {
     }))
   );
 
-  const recognize = async (image, opts = {}, jobId) => (
+  const recognize = async (image, opts = {}, output = {
+    blocks: true, text: true, hocr: true, tsv: true,
+  }, jobId) => (
     startJob(createJob({
       id: jobId,
       action: 'recognize',
-      payload: { image: await loadImage(image), options: opts },
+      payload: { image: await loadImage(image), options: opts, output },
     }))
   );
 
-  const getPDF = (title = 'Tesseract OCR Result', textonly = false, jobId) => (
-    startJob(createJob({
+  const getPDF = (title = 'Tesseract OCR Result', textonly = false, jobId) => {
+    console.log('`getPDF` function is depreciated. `recognize` option `savePDF` should be used instead.');
+    return startJob(createJob({
       id: jobId,
       action: 'getPDF',
       payload: { title, textonly },
-    }))
-  );
+    }));
+  };
 
   const detect = async (image, jobId) => (
     startJob(createJob({
@@ -167,6 +184,7 @@ module.exports = (_options = {}) => {
       resolves[action]({ jobId, data: d });
     } else if (status === 'reject') {
       rejects[action](data);
+      if (action === 'load') workerResReject(data);
       if (errorHandler) {
         errorHandler(data);
       } else {
@@ -177,7 +195,7 @@ module.exports = (_options = {}) => {
     }
   });
 
-  return {
+  const resolveObj = {
     id,
     worker,
     setResolve,
@@ -195,4 +213,8 @@ module.exports = (_options = {}) => {
     detect,
     terminate,
   };
+
+  loadInternal().then(() => workerResResolve(resolveObj)).catch(() => {});
+
+  return workerRes;
 };

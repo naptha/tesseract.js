@@ -39,9 +39,7 @@ function progressUpdate(packet){
 
 async function recognizeFile(file) {
 	document.querySelector("#log").innerHTML = ''
-  const corePath = window.navigator.userAgent.indexOf("Edge") > -1
-    ? '../../node_modules/tesseract.js-core/tesseract-core.asm.js'
-    : '../../node_modules/tesseract.js-core/tesseract-core.wasm.js';
+  const corePath = '../../node_modules/tesseract.js-core/tesseract-core.wasm.js';
 
   const lang = document.querySelector('#langsel').value
   const data = await Tesseract.recognize(file, lang, {
