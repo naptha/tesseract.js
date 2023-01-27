@@ -30,7 +30,7 @@ Video Real-time Recognition
 </p>
 
 
-Tesseract.js wraps an [emscripten](https://github.com/kripken/emscripten) [port](https://github.com/naptha/tesseract.js-core) of the [Tesseract](https://github.com/tesseract-ocr/tesseract) [OCR](https://en.wikipedia.org/wiki/Optical_character_recognition) Engine.
+Tesseract.js wraps a [webassembly port](https://github.com/naptha/tesseract.js-core) of the [Tesseract](https://github.com/tesseract-ocr/tesseract) OCR Engine.
 It works in the browser using [webpack](https://webpack.js.org/) or plain script tags with a [CDN](#CDN) and on the server with [Node.js](https://nodejs.org/en/).
 After you [install it](#installation), using it is as simple as:
 
@@ -103,7 +103,7 @@ Tesseract.js works with a `<script>` tag via local copy or CDN, with webpack via
 ### CDN
 ```html
 <!-- v4 -->
-<script src='https://unpkg.com/tesseract.js@4.0.1/dist/tesseract.min.js'></script>
+<script src='https://unpkg.com/tesseract.js@4.0.2/dist/tesseract.min.js'></script>
 ```
 After including the script the `Tesseract` variable will be globally available.
 
@@ -144,6 +144,8 @@ yarn add tesseract.js@3.0.3
 - With React: https://github.com/jeromewu/tesseract.js-react-app
 - Typescript: https://github.com/jeromewu/tesseract.js-typescript
 - Video Real-time Recognition: https://github.com/jeromewu/tesseract.js-video
+
+React Native is **not** supported as it does not support Webassembly. 
 
 Disclaimer: These examples are now several years old and use old versions of both Tesseract.js and the relevant frameworks.  Users are encouraged to use the latest version of Tesseract.js rather than the versions used in these examples.  For users that update these examples (or make new ones), please consider contributing through a PR.   
 
