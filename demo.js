@@ -16,7 +16,8 @@ var demoStarted = false
 var lang_demo_images = {
 	eng: 'img/eng_bw.png',
 	chi_sim: 'img/chi_sim.png',
-	rus: 'img/rus.png'
+	rus: 'img/rus.png',
+	ell: 'img/ell.png',
 }
 
 var lang_drop_instructions = {
