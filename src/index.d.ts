@@ -9,7 +9,6 @@ declare namespace Tesseract {
     addWorker(worker: Worker): string
     addJob(action: 'recognize', ...args: Parameters<Worker['recognize']>): Promise<RecognizeResult>
     addJob(action: 'detect', ...args: Parameters<Worker['detect']>): Promise<DetectResult>
-    addJob(action: 'setParameters', ...args: Parameters<Worker['setParameters']>): Promise<ConfigResult>
     terminate(): Promise<any>
     getQueueLen(): number
     getNumWorkers(): number
