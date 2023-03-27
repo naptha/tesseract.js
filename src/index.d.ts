@@ -7,7 +7,8 @@ declare namespace Tesseract {
 
   interface Scheduler {
     addWorker(worker: Worker): string
-    addJob(action: string, ...args: any[]): Promise<ConfigResult | RecognizeResult | DetectResult>
+    addJob(action: 'recognize', ...args: Parameters<Worker['recognize']>): Promise<RecognizeResult>
+    addJob(action: 'detect', ...args: Parameters<Worker['detect']>): Promise<DetectResult>
     terminate(): Promise<any>
     getQueueLen(): number
     getNumWorkers(): number
