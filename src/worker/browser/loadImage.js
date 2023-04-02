@@ -45,7 +45,7 @@ const loadImage = async (image) => {
     }
   } else if (OffscreenCanvas && image instanceof OffscreenCanvas) {
     const blob = await image.convertToBlob({ type: 'image/bmp' });
-    data = await loadImage(blob)
+    data = await loadImage(blob);
   } else if (HTMLElement && image instanceof HTMLElement) {
     if (image.tagName === 'IMG') {
       data = await loadImage(image.src);
