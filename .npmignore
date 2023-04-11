@@ -2,3 +2,4 @@ tests
 .nyc_output
 .github
 /*.traineddata
+babel.config.json

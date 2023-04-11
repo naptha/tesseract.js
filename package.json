@@ -36,6 +36,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@babel/core": "^7.18.7",
+    "@babel/eslint-parser": "^7.21.3",
     "@babel/preset-env": "^7.18.7",
     "@rollup/plugin-commonjs": "^22.0.2",
     "acorn": "^6.4.0",
@@ -60,7 +61,6 @@
     "webpack-dev-middleware": "^5.3.3"
   },
   "dependencies": {
-    "babel-eslint": "^10.1.0",
     "bmp-js": "^0.1.0",
     "file-type": "^12.4.1",
     "idb-keyval": "^3.2.0",
