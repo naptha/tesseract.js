@@ -41,7 +41,7 @@ const imageDataToPBM = (imageData) => {
   header += `DEPTH ${DEPTH}\n`;
   header += `MAXVAL ${MAXVAL}\n`;
   header += `TUPLTYPE ${TUPLTYPE}\n`;
-  header += `ENDHDR\n`;
+  header += 'ENDHDR\n';
   const encoder = new TextEncoder();
   const binaryHeader = encoder.encode(header);
   const binary = new Uint8Array(binaryHeader.length + data.length);
