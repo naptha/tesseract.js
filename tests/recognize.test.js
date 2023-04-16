@@ -194,4 +194,36 @@ describe('recognize()', () => {
       }).timeout(TIMEOUT)
     ));
   });
+
+  (IS_BROWSER ? describe : describe.skip)('should read video from OffscreenCanvas (browser only)', () => {
+    // img tag is unable to render pbm, so let's skip it.
+    const formats = FORMATS.filter(f => f !== 'pbm');
+    let offscreenCanvas = null;
+    let imageDOM = null;
+    let idx = 0;
+    beforeEach((done) => {
+      imageDOM = document.createElement('img');
+      imageDOM.setAttribute('crossOrigin', 'Anonymous');
+      imageDOM.onload = () => {
+        offscreenCanvas = new OffscreenCanvas(imageDOM.width, imageDOM.height)
+        offscreenCanvas.getContext('2d').drawImage(imageDOM, 0, 0);
+        done();
+      };
+      imageDOM.setAttribute('src', `${IMAGE_PATH}/simple.${formats[idx]}`);
+      idx += 1;
+    });
+
+    afterEach(() => {
+      offscreenCanvas = null;
+      imageDOM.remove();
+    });
+
+    formats.forEach(format => (
+      it(`support ${format} format`, async () => {
+        await worker.initialize('eng');
+        const { data: { text } } = await worker.recognize(offscreenCanvas);
+        expect(text).to.be(SIMPLE_TEXT);
+      }).timeout(TIMEOUT)
+    ));
+  });
 });
