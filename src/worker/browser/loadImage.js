@@ -21,6 +21,36 @@ const readFromBlobOrFile = (blob) => (
 );
 
 /**
+ * imageDataToPBM
+ *
+ * @name imageDataToPBM
+ * @function
+ * @access private
+ *
+ * @see https://github.com/DanBloomberg/leptonica/blob/master/src/pnmio.c
+ * @see https://netpbm.sourceforge.net/doc/pam.html
+ */
+const imageDataToPBM = (imageData) => {
+  const { width, height, data } = imageData;
+  const DEPTH = 4; // channels per pixel (RGBA = 4)
+  const MAXVAL = 255; // range of each channel (0-255)
+  const TUPLTYPE = 'RGB_ALPHA';
+  let header = 'P7\n'
+  header += `WIDTH ${width}\n`
+  header += `HEIGHT ${height}\n`
+  header += `DEPTH ${DEPTH}\n`
+  header += `MAXVAL ${MAXVAL}\n`
+  header += `TUPLTYPE ${TUPLTYPE}\n`
+  header += `ENDHDR\n`
+  const encoder = new TextEncoder();
+  const binaryHeader = encoder.encode(header);
+  const binary = new Uint8Array(binaryHeader.length + data.length);
+  binary.set(binaryHeader);
+  binary.set(data, binaryHeader.length);
+  return binary
+}
+
+/**
  * loadImage
  *
  * @name loadImage
@@ -44,8 +74,10 @@ const loadImage = async (image) => {
       data = await resp.arrayBuffer();
     }
   } else if (OffscreenCanvas && image instanceof OffscreenCanvas) {
-    const blob = await image.convertToBlob({ type: 'image/bmp' });
-    data = await loadImage(blob);
+    const ctx = image.getContext('2d');
+    const imageData = ctx.getImageData(0, 0, image.width, image.height);
+    const pbm = imageDataToPBM(imageData);
+    data = pbm
   } else if (HTMLElement && image instanceof HTMLElement) {
     if (image.tagName === 'IMG') {
       data = await loadImage(image.src);
@@ -54,12 +86,10 @@ const loadImage = async (image) => {
       data = await loadImage(image.poster);
     }
     if (image.tagName === 'CANVAS') {
-      await new Promise((resolve) => {
-        image.toBlob(async (blob) => {
-          data = await readFromBlobOrFile(blob);
-          resolve();
-        }, { type: 'image/bmp' });
-      });
+      const ctx = image.getContext('2d');
+      const imageData = ctx.getImageData(0, 0, image.width, image.height);
+      const pbm = imageDataToPBM(imageData);
+      data = pbm
     }
   } else if (image instanceof File || image instanceof Blob) {
     data = await readFromBlobOrFile(image);
