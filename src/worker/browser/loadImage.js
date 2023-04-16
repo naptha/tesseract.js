@@ -35,20 +35,20 @@ const imageDataToPBM = (imageData) => {
   const DEPTH = 4; // channels per pixel (RGBA = 4)
   const MAXVAL = 255; // range of each channel (0-255)
   const TUPLTYPE = 'RGB_ALPHA';
-  let header = 'P7\n'
-  header += `WIDTH ${width}\n`
-  header += `HEIGHT ${height}\n`
-  header += `DEPTH ${DEPTH}\n`
-  header += `MAXVAL ${MAXVAL}\n`
-  header += `TUPLTYPE ${TUPLTYPE}\n`
-  header += `ENDHDR\n`
+  let header = 'P7\n';
+  header += `WIDTH ${width}\n`;
+  header += `HEIGHT ${height}\n`;
+  header += `DEPTH ${DEPTH}\n`;
+  header += `MAXVAL ${MAXVAL}\n`;
+  header += `TUPLTYPE ${TUPLTYPE}\n`;
+  header += `ENDHDR\n`;
   const encoder = new TextEncoder();
   const binaryHeader = encoder.encode(header);
   const binary = new Uint8Array(binaryHeader.length + data.length);
   binary.set(binaryHeader);
   binary.set(data, binaryHeader.length);
-  return binary
-}
+  return binary;
+};
 
 /**
  * loadImage
@@ -74,14 +74,14 @@ const loadImage = async (image) => {
       data = await resp.arrayBuffer();
     }
   } else if (ImageData && image instanceof ImageData) {
-    data = imageDataToPBM(image)
+    data = imageDataToPBM(image);
   } else if (
     (CanvasRenderingContext2D && image instanceof CanvasRenderingContext2D)
     || (OffscreenCanvasRenderingContext2D && image instanceof OffscreenCanvasRenderingContext2D)) {
     const imageData = image.getImageData(0, 0, image.canvas.width, image.canvas.height);
-    data = await loadImage(imageData)
+    data = await loadImage(imageData);
   } else if (OffscreenCanvas && image instanceof OffscreenCanvas) {
-    data = await loadImage(image.getContext('2d'))
+    data = await loadImage(image.getContext('2d'));
   } else if (HTMLElement && image instanceof HTMLElement) {
     if (image.tagName === 'IMG') {
       data = await loadImage(image.src);
@@ -90,7 +90,7 @@ const loadImage = async (image) => {
       data = await loadImage(image.poster);
     }
     if (image.tagName === 'CANVAS') {
-      data = await loadImage(image.getContext('2d'))
+      data = await loadImage(image.getContext('2d'));
     }
   } else if (image instanceof File || image instanceof Blob) {
     data = await readFromBlobOrFile(image);
