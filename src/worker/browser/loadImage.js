@@ -73,11 +73,15 @@ const loadImage = async (image) => {
       const resp = await fetch(resolveURL(image));
       data = await resp.arrayBuffer();
     }
+  } else if (ImageData && image instanceof ImageData) {
+    data = imageDataToPBM(image)
+  } else if (
+    (CanvasRenderingContext2D && image instanceof CanvasRenderingContext2D)
+    || (OffscreenCanvasRenderingContext2D && image instanceof OffscreenCanvasRenderingContext2D)) {
+    const imageData = image.getImageData(0, 0, image.canvas.width, image.canvas.height);
+    data = await loadImage(imageData)
   } else if (OffscreenCanvas && image instanceof OffscreenCanvas) {
-    const ctx = image.getContext('2d');
-    const imageData = ctx.getImageData(0, 0, image.width, image.height);
-    const pbm = imageDataToPBM(imageData);
-    data = pbm
+    data = await loadImage(image.getContext('2d'))
   } else if (HTMLElement && image instanceof HTMLElement) {
     if (image.tagName === 'IMG') {
       data = await loadImage(image.src);
@@ -86,10 +90,7 @@ const loadImage = async (image) => {
       data = await loadImage(image.poster);
     }
     if (image.tagName === 'CANVAS') {
-      const ctx = image.getContext('2d');
-      const imageData = ctx.getImageData(0, 0, image.width, image.height);
-      const pbm = imageDataToPBM(imageData);
-      data = pbm
+      data = await loadImage(image.getContext('2d'))
     }
   } else if (image instanceof File || image instanceof Blob) {
     data = await readFromBlobOrFile(image);
