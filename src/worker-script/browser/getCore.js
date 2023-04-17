@@ -17,11 +17,15 @@ module.exports = async (corePath, res) => {
       }
     }
 
+    // Create a module named `global.TesseractCore`
     global.importScripts(corePathImport);
 
-    if (typeof global.TesseractCoreWASM !== 'undefined' && typeof WebAssembly === 'object') {
+    // Tesseract.js-core versions through 4.0.3 create a module named `global.TesseractCoreWASM`,
+    // so we account for that here to preserve backwards compatibility.
+    // This part can be removed when Tesseract.js-core v4.0.3 becomes incompatible for other reasons
+    if (typeof global.TesseractCore === 'undefined' && typeof global.TesseractCoreWASM !== 'undefined' && typeof WebAssembly === 'object') {
       global.TesseractCore = global.TesseractCoreWASM;
-    } else {
+    } else if (typeof global.TesseractCore === 'undefined') {
       throw Error('Failed to load TesseractCore');
     }
     res.progress({ status: 'loading tesseract core', progress: 1 });
