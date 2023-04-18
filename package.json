@@ -67,7 +67,7 @@
     "is-electron": "^2.2.2",
     "is-url": "^1.2.4",
     "node-fetch": "^2.6.0",
-    "opencollective-postinstall": "^2.0.2",
+    "opencollective-postinstall": "^2.0.3",
     "regenerator-runtime": "^0.13.3",
     "resolve-url": "^0.2.1",
     "tesseract.js-core": "^4.0.3",
