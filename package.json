@@ -64,7 +64,7 @@
     "bmp-js": "^0.1.0",
     "file-type": "^12.4.1",
     "idb-keyval": "^3.2.0",
-    "is-electron": "^2.2.0",
+    "is-electron": "^2.2.2",
     "is-url": "^1.2.4",
     "node-fetch": "^2.6.0",
     "opencollective-postinstall": "^2.0.2",
