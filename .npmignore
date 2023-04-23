@@ -3,3 +3,6 @@ tests
 .github
 /*.traineddata
 babel.config.json
+.eslintrc
+.gitpod.Dockerfile
+.gitpod.yml
