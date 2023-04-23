@@ -14,6 +14,11 @@ const genConfig = ({
     library,
     libraryTarget,
   },
+  resolve: {
+    fallback: {
+      fs: false,
+    },
+  },
   plugins: [
     new webpack.ProvidePlugin({
       Buffer: ['buffer', 'Buffer'],

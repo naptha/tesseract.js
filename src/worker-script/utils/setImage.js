@@ -8,8 +8,8 @@ const fileType = require('file-type');
  * @function set image in tesseract for recognition
  * @access public
  */
-module.exports = (TessModule, api, image, angle = 0) => {
-  const type = fileType(image);
+module.exports = async (TessModule, api, image, angle = 0) => {
+  const type = await fileType.fromBuffer(image);
 
   const exif = image.slice(0, 500).toString().match(/\x01\x12\x00\x03\x00\x00\x00\x01\x00(.)/)?.[1]?.charCodeAt(0) || 1;
 

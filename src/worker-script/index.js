@@ -119,7 +119,7 @@ res) => {
 
     data = new Uint8Array(data);
 
-    const type = fileType(data);
+    const type = await fileType.fromBuffer(data);
     if (typeof type !== 'undefined' && type.mime === 'application/gzip') {
       data = adapter.gunzip(data);
     }
@@ -304,7 +304,7 @@ const recognize = async ({
         api.SetVariable('tessedit_pageseg_mode', String(PSM.AUTO));
       }
 
-      setImage(TessModule, api, image);
+      await setImage(TessModule, api, image);
       api.FindLines();
       const rotateRadiansCalc = api.GetAngle();
 
@@ -316,11 +316,11 @@ const recognize = async ({
       // Small angles (<0.005 radians/~0.3 degrees) are ignored to save on runtime
       if (Math.abs(rotateRadiansCalc) >= 0.005) {
         rotateRadiansFinal = rotateRadiansCalc;
-        setImage(TessModule, api, image, rotateRadiansFinal);
+        await setImage(TessModule, api, image, rotateRadiansFinal);
       } else {
         // Image needs to be reset if run with different PSM setting earlier
         if (psmEdit) {
-          setImage(TessModule, api, image);
+          await setImage(TessModule, api, image);
         }
         rotateRadiansFinal = 0;
       }

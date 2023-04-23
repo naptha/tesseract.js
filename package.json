@@ -62,7 +62,7 @@
   },
   "dependencies": {
     "bmp-js": "^0.1.0",
-    "file-type": "^12.4.2",
+    "file-type": "^16.5.4",
     "idb-keyval": "^6.2.0",
     "is-electron": "^2.2.2",
     "is-url": "^1.2.4",
