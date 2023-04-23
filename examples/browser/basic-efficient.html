@@ -12,7 +12,7 @@
       // every time the user uploads a new file.  
 
       const worker = await Tesseract.createWorker({
-          corePath: '../../node_modules/tesseract.js-core/tesseract-core.wasm.js',
+          corePath: '../../node_modules/tesseract.js-core',
           workerPath: "/dist/worker.dev.js",
           logger: function(m){console.log(m);}
         });
