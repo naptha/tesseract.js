@@ -6,19 +6,27 @@ module.exports = async (corePath, res) => {
     res.progress({ status: 'loading tesseract core', progress: 0 });
 
     // If the user specifies a core path, we use that
-    // Otherwise, we detect the correct core based on SIMD support
-    let corePathImport = corePath;
-    if (!corePathImport) {
+    // Otherwise, default to CDN
+    const corePathImport = corePath || `https://cdn.jsdelivr.net/npm/tesseract.js-core@v${dependencies['tesseract.js-core'].substring(1)}`;
+
+    // If a user specifies a specific JavaScript file, load that file.
+    // Otherwise, assume a directory has been provided, and load either
+    // tesseract-core.wasm.js or tesseract-core-simd.wasm.js depending
+    // on whether this device has SIMD support.
+    let corePathImportFile;
+    if (corePathImport.slice(-2) === 'js') {
+      corePathImportFile = corePathImport;
+    } else {
       const simdSupport = await simd();
       if (simdSupport) {
-        corePathImport = `https://cdn.jsdelivr.net/npm/tesseract.js-core@v${dependencies['tesseract.js-core'].substring(1)}/tesseract-core-simd.wasm.js`;
+        corePathImportFile = `${corePathImport.replace(/\/$/, '')}/tesseract-core-simd.wasm.js`;
       } else {
-        corePathImport = `https://cdn.jsdelivr.net/npm/tesseract.js-core@v${dependencies['tesseract.js-core'].substring(1)}/tesseract-core.wasm.js`;
+        corePathImportFile = `${corePathImport.replace(/\/$/, '')}/tesseract-core.wasm.js`;
       }
     }
 
     // Create a module named `global.TesseractCore`
-    global.importScripts(corePathImport);
+    global.importScripts(corePathImportFile);
 
     // Tesseract.js-core versions through 4.0.3 create a module named `global.TesseractCoreWASM`,
     // so we account for that here to preserve backwards compatibility.
