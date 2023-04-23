@@ -11,9 +11,9 @@ module.exports = async (corePath, res) => {
     if (!corePathImport) {
       const simdSupport = await simd();
       if (simdSupport) {
-        corePathImport = `https://unpkg.com/tesseract.js-core@v${dependencies['tesseract.js-core'].substring(1)}/tesseract-core-simd.wasm.js`;
+        corePathImport = `https://cdn.jsdelivr.net/npm/tesseract.js-core@v${dependencies['tesseract.js-core'].substring(1)}/tesseract-core-simd.wasm.js`;
       } else {
-        corePathImport = `https://unpkg.com/tesseract.js-core@v${dependencies['tesseract.js-core'].substring(1)}/tesseract-core.wasm.js`;
+        corePathImport = `https://cdn.jsdelivr.net/npm/tesseract.js-core@v${dependencies['tesseract.js-core'].substring(1)}/tesseract-core.wasm.js`;
       }
     }
 

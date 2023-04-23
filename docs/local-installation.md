@@ -10,9 +10,9 @@ In Node.js environment, the only path you may want to customize is languages/lan
 
 ```javascript
 Tesseract.recognize(image, langs, {
-  workerPath: 'https://unpkg.com/tesseract.js@v4.0.3/dist/worker.min.js',
+  workerPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@v4.0.3/dist/worker.min.js',
   langPath: 'https://tessdata.projectnaptha.com/4.0.0',
-  corePath: 'https://unpkg.com/tesseract.js-core@v4.0.3/tesseract-core.wasm.js',
+  corePath: 'https://cdn.jsdelivr.net/npm/tesseract.js-core@v4.0.3/tesseract-core.wasm.js',
 })
 ```
 
@@ -20,9 +20,9 @@ Or
 
 ```javascript
 const worker = await createWorker({
-  workerPath: 'https://unpkg.com/tesseract.js@v4.0.3/dist/worker.min.js',
+  workerPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@v4.0.3/dist/worker.min.js',
   langPath: 'https://tessdata.projectnaptha.com/4.0.0',
-  corePath: 'https://unpkg.com/tesseract.js-core@v4.0.3/tesseract-core.wasm.js',
+  corePath: 'https://cdn.jsdelivr.net/npm/tesseract.js-core@v4.0.3/tesseract-core.wasm.js',
 });
 ```
 
@@ -33,4 +33,4 @@ A string specifying the location of the `worker.js` file.
 A string specifying the location of the tesseract language files, with default value 'https://tessdata.projectnaptha.com/4.0.0'. Language file URLs are calculated according to the formula `langPath + langCode + '.traineddata.gz'`.
 
 ### corePath
-A string specifying the location of the [tesseract.js-core library](https://github.com/naptha/tesseract.js-core), with default value 'https://unpkg.com/tesseract.js-core@v4.0.3/tesseract-core.wasm.js'.
+A string specifying the location of the [tesseract.js-core library](https://github.com/naptha/tesseract.js-core), with default value 'https://cdn.jsdelivr.net/npm/tesseract.js-core@v4.0.3/tesseract-core.wasm.js'.
