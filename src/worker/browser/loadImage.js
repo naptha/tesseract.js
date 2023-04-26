@@ -20,6 +20,20 @@ const readFromBlobOrFile = (blob) => (
   })
 );
 
+const rgba2rgb = (rgbaArray) => {
+  // Create a new array to hold only RGB values
+  const rgbArray = new Uint8Array((rgbaArray.length / 4) * 3);
+
+  for (let i = 0, j = 0; i < rgbaArray.length; i += 4, j += 3) {
+    // Copy over the RGB values, skipping the alpha channel
+    rgbArray[j] = rgbaArray[i];
+    rgbArray[j + 1] = rgbaArray[i + 1];
+    rgbArray[j + 2] = rgbaArray[i + 2];
+  }
+
+  return rgbArray;
+};
+
 /**
  * imageDataToPBM
  *
@@ -32,9 +46,10 @@ const readFromBlobOrFile = (blob) => (
  */
 const imageDataToPBM = (imageData) => {
   const { width, height, data } = imageData;
-  const DEPTH = 4; // channels per pixel (RGBA = 4)
+  const rgb = rgba2rgb(data); // discard alpha channel
+  const DEPTH = 3; // channels per pixel (RGBA = 4, RGB = 3)
   const MAXVAL = 255; // range of each channel (0-255)
-  const TUPLTYPE = 'RGB_ALPHA';
+  const TUPLTYPE = 'RGB'; // or 'RGB_ALPHA'
   let header = 'P7\n';
   header += `WIDTH ${width}\n`;
   header += `HEIGHT ${height}\n`;
@@ -44,9 +59,9 @@ const imageDataToPBM = (imageData) => {
   header += 'ENDHDR\n';
   const encoder = new TextEncoder();
   const binaryHeader = encoder.encode(header);
-  const binary = new Uint8Array(binaryHeader.length + data.length);
+  const binary = new Uint8Array(binaryHeader.length + rgb.length);
   binary.set(binaryHeader);
-  binary.set(data, binaryHeader.length);
+  binary.set(rgb, binaryHeader.length);
   return binary;
 };
 
@@ -58,6 +73,7 @@ const imageDataToPBM = (imageData) => {
  * @access private
  */
 const loadImage = async (image) => {
+  console.time('loadImage');
   let data = image;
   if (typeof image === 'undefined') {
     return 'undefined';
@@ -96,6 +112,7 @@ const loadImage = async (image) => {
     data = await readFromBlobOrFile(image);
   }
 
+  console.timeEnd('loadImage');
   return new Uint8Array(data);
 };
 

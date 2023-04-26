@@ -1,0 +1,51 @@
+<html>
+
+<head>
+  <script src="/dist/tesseract.dev.js"></script>
+  <style>
+    .column {
+  float: left;
+  width: 20%;
+  padding: 5px;
+}
+
+  </style>
+</head>
+
+<body>
+  <img id="img">
+  <canvas id="canvas"></canvas>
+
+  <script defer>
+    const recognize = async () => {
+      console.log('starting')
+      const worker = await Tesseract.createWorker({
+        // corePath: '/tesseract-core-simd.wasm.js',
+        workerPath: "/dist/worker.dev.js"
+      });
+      await worker.loadLanguage('eng');
+      await worker.initialize('eng');
+      await worker.initialize();
+      console.log('worker initialized')
+
+      const canvas = document.getElementById('canvas');
+      const img = document.getElementById('img');
+      img.src = '../data/meditations.jpg';
+
+
+      img.onload = async () => {
+        console.log('image loaded')
+        canvas.width = img.width
+        canvas.height = img.height
+        canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height)
+        console.time('recognize from canvas');
+        const ret = await worker.recognize(canvas);
+        console.timeEnd('recognize from canvas');
+        console.log(ret.data.text)
+      };
+    }
+    recognize();
+  </script>
+</body>
+
+</html>
