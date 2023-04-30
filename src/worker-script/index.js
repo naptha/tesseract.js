@@ -306,7 +306,11 @@ const recognize = async ({
 
       setImage(TessModule, api, image);
       api.FindLines();
-      const rotateRadiansCalc = api.GetAngle();
+
+      // The function GetAngle will be replaced with GetGradient in 4.0.4,
+      // but for now we want to maintain compatibility.   
+      // We can switch to only using GetGradient in v5.
+      const rotateRadiansCalc = api.GetGradient ? api.GetGradient() : api.GetAngle();
 
       // Restore user-provided PSM setting
       if (psmEdit) {
