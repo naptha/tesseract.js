@@ -8,6 +8,7 @@ const genConfig = ({
 }) => ({
   ...common,
   mode: 'development',
+  devtool: 'source-map',
   entry,
   output: {
     filename,
