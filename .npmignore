@@ -1,7 +1,8 @@
 tests
 .nyc_output
 .github
-/*.traineddata
+*.traineddata
+*.traineddata.gz
 babel.config.json
 .eslintrc
 .gitpod.Dockerfile
