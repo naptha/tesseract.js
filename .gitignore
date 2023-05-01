@@ -3,8 +3,8 @@ node_modules/*
 yarn.lock
 tesseract.dev.js
 worker.dev.js
-/*.traineddata
-/examples/**/*.traineddata
+*.traineddata
+*.traineddata.gz
 .nyc_output
 dist/
 *.swp
