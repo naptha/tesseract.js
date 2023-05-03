@@ -7,3 +7,4 @@ babel.config.json
 .eslintrc
 .gitpod.Dockerfile
 .gitpod.yml
+benchmarks
