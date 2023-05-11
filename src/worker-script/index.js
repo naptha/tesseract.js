@@ -210,12 +210,11 @@ const initialize = async ({
     if (status === -1) {
       // Cache is deleted if initialization fails to avoid keeping bad data in cache
       // This assumes that initialization failing only occurs due to bad .traineddata,
-      // this should be refined if other reasons for init failing are encountered. 
+      // this should be refined if other reasons for init failing are encountered.
       if (['write', 'refresh', undefined].includes(cacheMethodWorker)) {
         const langsArr = langs.split('+');
-        for (let i = 0; i < langsArr.length; i++) {
-          await adapter.deleteCache(`${cachePathWorker || '.'}/${langsArr[i]}.traineddata`);
-        }
+        const delCachePromise = langsArr.map((lang) => adapter.deleteCache(`${cachePathWorker || '.'}/${lang}.traineddata`));
+        await Promise.all(delCachePromise);
       }
       res.reject('initialization failed');
     }
