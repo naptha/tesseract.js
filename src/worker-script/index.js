@@ -29,6 +29,8 @@ let api = null;
 let latestJob;
 let adapter = {};
 let params = defaultParams;
+let cachePathWorker;
+let cacheMethodWorker;
 
 const load = async ({ workerId, jobId, payload: { options: { corePath, logging } } }, res) => {
   setLogging(logging);
@@ -75,6 +77,10 @@ const loadLanguage = async ({
   },
 },
 res) => {
+  // Remember cache options for later, as cache may be deleted if `initialize` fails
+  cachePathWorker = cachePath;
+  cacheMethodWorker = cacheMethod;
+
   const loadAndGunzipFile = async (_lang) => {
     const lang = typeof _lang === 'string' ? _lang : _lang.code;
     const readCache = ['refresh', 'none'].includes(cacheMethod)
@@ -202,6 +208,15 @@ const initialize = async ({
     api = new TessModule.TessBaseAPI();
     const status = api.Init(null, langs, oem);
     if (status === -1) {
+      // Cache is deleted if initialization fails to avoid keeping bad data in cache
+      // This assumes that initialization failing only occurs due to bad .traineddata,
+      // this should be refined if other reasons for init failing are encountered. 
+      if (['write', 'refresh', undefined].includes(cacheMethodWorker)) {
+        const langsArr = langs.split('+');
+        for (let i = 0; i < langsArr.length; i++) {
+          await adapter.deleteCache(`${cachePathWorker || '.'}/${langsArr[i]}.traineddata`);
+        }
+      }
       res.reject('initialization failed');
     }
     params = defaultParams;
