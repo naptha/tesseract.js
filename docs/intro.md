@@ -31,8 +31,8 @@ Tesseract.js also supports creating and managing workers (the objects that execu
 
 This code block is no more efficient than the `Tesseract.recognize` example as written (in both cases a worker is created and destroyed for recognizing a single image).  However, within the context of an actual application, separating (1) creating a worker and loading data and (2) running recognition jobs provides developers the control necessary to write more efficient code:
 1.	Workers can be prepared ahead of time
-   1. E.g. a worker can be created and loaded with language data when the page is first loaded, rather than waiting for a user to upload an image to recognize
-2.	Workers can be reused for multiple recognition jobs, rather than creating a new worker and loading language data for every image recognized (as `Tesseract.recognize` does)
+    - E.g. a worker can be created and loaded with language data when the page is first loaded, rather than waiting for a user to upload an image to recognize
+1.	Workers can be reused for multiple recognition jobs, rather than creating a new worker and loading language data for every image recognized (as `Tesseract.recognize` does)
 
 # Option 3: Using Schedulers + Workers
 Finally, Tesseract.js supports schedulers.  A scheduler is an object that contains multiple workers, which it uses to execute jobs in parallel.  
