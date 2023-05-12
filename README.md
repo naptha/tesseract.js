@@ -45,7 +45,7 @@ Tesseract.recognize(
 })
 ```
 
-Or more imperative
+Or using workers (recommended for production use):
 
 ```javascript
 import { createWorker } from 'tesseract.js';
@@ -63,8 +63,8 @@ const worker = await createWorker({
 })();
 ```
 
-[Check out the docs](#documentation) for a full explanation of the API.
-
+For a basic overview of the functions, including the pros/cons of different approaches, see the [intro](./docs/intro.md).  [Check out the docs](#documentation) for a full explanation of the API.
+ 
 ## Major changes in v4
 Version 4 includes many new features and bug fixes--see [this issue](https://github.com/naptha/tesseract.js/issues/662) for a full list.  Several highlights are below. 
 
@@ -124,6 +124,7 @@ yarn add tesseract.js@3.0.3
 
 ## Documentation
 
+* [Intro](./docs/intro.md)
 * [Examples](./docs/examples.md)
 * [Image Format](./docs/image-format.md)
 * [API](./docs/api.md)
