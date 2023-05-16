@@ -58,6 +58,7 @@
     "webpack": "^5.79.0",
     "webpack-bundle-analyzer": "^4.8.0",
     "webpack-cli": "^5.0.1",
+    "webpack-dev-middleware": "^6.0.2",
     "rollup-plugin-sourcemaps": "^0.6.3"
   },
   "dependencies": {
