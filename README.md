@@ -134,7 +134,7 @@ yarn add tesseract.js@3.0.3
 ## Use tesseract.js the way you like!
 
 - Offline Version: https://github.com/jeromewu/tesseract.js-offline
-- Electron Version: https://github.com/jeromewu/tesseract.js-electron
+- Electron Version: https://github.com/Balearica/tesseract.js-electron
 - Custom Traineddata: https://github.com/jeromewu/tesseract.js-custom-traineddata
 - Chrome Extension #1: https://github.com/jeromewu/tesseract.js-chrome-extension
 - Chrome Extension #2: https://github.com/fxnoob/image-to-text
