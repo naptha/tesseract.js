@@ -5,6 +5,7 @@
 module.exports = {
   text: true,
   blocks: true,
+  layoutBlocks: false,
   hocr: true,
   tsv: true,
   box: false,
@@ -14,4 +15,5 @@ module.exports = {
   imageColor: false,
   imageGrey: false,
   imageBinary: false,
+  debug: false,
 };
