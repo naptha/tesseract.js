@@ -43,7 +43,7 @@ const loadImage = async (image) => {
       const resp = await fetch(resolveURL(image));
       data = await resp.arrayBuffer();
     }
-  } else if (HTMLElement && image instanceof HTMLElement) {
+  } else if (typeof HTMLElement !== 'undefined' && image instanceof HTMLElement) {
     if (image.tagName === 'IMG') {
       data = await loadImage(image.src);
     }
@@ -58,7 +58,7 @@ const loadImage = async (image) => {
         });
       });
     }
-  } else if (OffscreenCanvas && image instanceof OffscreenCanvas) {
+  } else if (typeof OffscreenCanvas !== 'undefined' && image instanceof OffscreenCanvas) {
     const blob = await image.convertToBlob();
     data = await readFromBlobOrFile(blob);
   } else if (image instanceof File || image instanceof Blob) {
