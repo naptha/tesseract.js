@@ -70,6 +70,7 @@ declare namespace Tesseract {
   interface OutputFormats {
     text: boolean;
     blocks: boolean;
+    layoutBlocks: boolean;
     hocr: boolean;
     tsv: boolean;
     box: boolean;

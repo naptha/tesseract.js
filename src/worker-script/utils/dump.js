@@ -79,7 +79,10 @@ module.exports = (TessModule, api, output, options) => {
     return TessModule.FS.readFile('/tesseract-ocr.pdf');
   };
 
-  if (output.blocks) {
+  // If output.layoutBlocks is true and options.skipRecognition is true,
+  // the user wants layout data but text recognition has not been run.
+  // In this case, fields that require text recognition are skipped.
+  if (output.blocks || output.layoutBlocks) {
     ri.Begin();
     do {
       if (ri.IsAtBeginningOf(RIL_BLOCK)) {
@@ -102,8 +105,8 @@ module.exports = (TessModule, api, output, options) => {
 
         block = {
           paragraphs: [],
-          text: ri.GetUTF8Text(RIL_BLOCK),
-          confidence: ri.Confidence(RIL_BLOCK),
+          text: !options.skipRecognition ? ri.GetUTF8Text(RIL_BLOCK) : null,
+          confidence: !options.skipRecognition ? ri.Confidence(RIL_BLOCK) : null,
           baseline: ri.getBaseline(RIL_BLOCK),
           bbox: ri.getBoundingBox(RIL_BLOCK),
           blocktype: enumToString(ri.BlockType(), 'PT'),
@@ -114,8 +117,8 @@ module.exports = (TessModule, api, output, options) => {
       if (ri.IsAtBeginningOf(RIL_PARA)) {
         para = {
           lines: [],
-          text: ri.GetUTF8Text(RIL_PARA),
-          confidence: ri.Confidence(RIL_PARA),
+          text: !options.skipRecognition ? ri.GetUTF8Text(RIL_PARA) : null,
+          confidence: !options.skipRecognition ? ri.Confidence(RIL_PARA) : null,
           baseline: ri.getBaseline(RIL_PARA),
           bbox: ri.getBoundingBox(RIL_PARA),
           is_ltr: !!ri.ParagraphIsLtr(),
@@ -125,8 +128,8 @@ module.exports = (TessModule, api, output, options) => {
       if (ri.IsAtBeginningOf(RIL_TEXTLINE)) {
         textline = {
           words: [],
-          text: ri.GetUTF8Text(RIL_TEXTLINE),
-          confidence: ri.Confidence(RIL_TEXTLINE),
+          text: !options.skipRecognition ? ri.GetUTF8Text(RIL_TEXTLINE) : null,
+          confidence: !options.skipRecognition ? ri.Confidence(RIL_TEXTLINE) : null,
           baseline: ri.getBaseline(RIL_TEXTLINE),
           bbox: ri.getBoundingBox(RIL_TEXTLINE),
         };
@@ -139,8 +142,8 @@ module.exports = (TessModule, api, output, options) => {
           symbols: [],
           choices: [],
 
-          text: ri.GetUTF8Text(RIL_WORD),
-          confidence: ri.Confidence(RIL_WORD),
+          text: !options.skipRecognition ? ri.GetUTF8Text(RIL_WORD) : null,
+          confidence: !options.skipRecognition ? ri.Confidence(RIL_WORD) : null,
           baseline: ri.getBaseline(RIL_WORD),
           bbox: ri.getBoundingBox(RIL_WORD),
 
@@ -162,8 +165,8 @@ module.exports = (TessModule, api, output, options) => {
         const wc = new TessModule.WordChoiceIterator(ri);
         do {
           word.choices.push({
-            text: wc.GetUTF8Text(),
-            confidence: wc.Confidence(),
+            text: !options.skipRecognition ? wc.GetUTF8Text() : null,
+            confidence: !options.skipRecognition ? wc.Confidence() : null,
           });
         } while (wc.Next());
         TessModule.destroy(wc);
@@ -179,8 +182,8 @@ module.exports = (TessModule, api, output, options) => {
         symbol = {
           choices: [],
           image: null,
-          text: ri.GetUTF8Text(RIL_SYMBOL),
-          confidence: ri.Confidence(RIL_SYMBOL),
+          text: !options.skipRecognition ? ri.GetUTF8Text(RIL_SYMBOL) : null,
+          confidence: !options.skipRecognition ? ri.Confidence(RIL_SYMBOL) : null,
           baseline: ri.getBaseline(RIL_SYMBOL),
           bbox: ri.getBoundingBox(RIL_SYMBOL),
           is_superscript: !!ri.SymbolIsSuperscript(),
@@ -191,8 +194,8 @@ module.exports = (TessModule, api, output, options) => {
         const ci = new TessModule.ChoiceIterator(ri);
         do {
           symbol.choices.push({
-            text: ci.GetUTF8Text(),
-            confidence: ci.Confidence(),
+            text: !options.skipRecognition ? ci.GetUTF8Text() : null,
+            confidence: !options.skipRecognition ? ci.Confidence() : null,
           });
         } while (ci.Next());
         // TessModule.destroy(i);
@@ -212,8 +215,9 @@ module.exports = (TessModule, api, output, options) => {
     imageColor: output.imageColor ? getImage(imageType.COLOR) : null,
     imageGrey: output.imageGrey ? getImage(imageType.GREY) : null,
     imageBinary: output.imageBinary ? getImage(imageType.BINARY) : null,
-    confidence: api.MeanTextConf(),
-    blocks: output.blocks ? blocks : null,
+    confidence: !options.skipRecognition ? api.MeanTextConf() : null,
+    blocks: output.blocks && !options.skipRecognition ? blocks : null,
+    layoutBlocks: output.layoutBlocks && options.skipRecognition ? blocks : null,
     psm: enumToString(api.GetPageSegMode(), 'PSM'),
     oem: enumToString(api.oem(), 'OEM'),
     version: api.Version(),

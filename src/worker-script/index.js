@@ -255,7 +255,7 @@ const processOutput = (output) => {
   if (params.tessjs_create_tsv === '1') workingOutput.tsv = true;
   if (params.tessjs_create_unlv === '1') workingOutput.unlv = true;
 
-  const nonRecOutputs = ['imageColor', 'imageGrey', 'imageBinary'];
+  const nonRecOutputs = ['imageColor', 'imageGrey', 'imageBinary', 'layoutBlocks'];
   let recOutputCount = 0;
   for (const prop of Object.keys(output)) {
     workingOutput[prop] = output[prop];
@@ -267,7 +267,8 @@ const processOutput = (output) => {
       }
     }
   }
-  return { workingOutput, recOutputCount };
+  const skipRecognition = recOutputCount == 0;
+  return { workingOutput, skipRecognition };
 };
 
 // List of options for Tesseract.js (rather than passed through to Tesseract),
@@ -302,7 +303,7 @@ const recognize = async ({
       }
     }
 
-    const { workingOutput, recOutputCount } = processOutput(output);
+    const { workingOutput, skipRecognition } = processOutput(output);
 
     // When the auto-rotate option is True, setImage is called with no angle,
     // then the angle is calculated by Tesseract and then setImage is re-called.
@@ -352,14 +353,21 @@ const recognize = async ({
       api.SetRectangle(rec.left, rec.top, rec.width, rec.height);
     }
 
-    if (recOutputCount > 0) {
+    if (!skipRecognition) {
+      console.log("Running api.Recognize");
       api.Recognize(null);
+      console.log("Done");
     } else {
+      if (output.layoutBlocks) {
+        console.log("Running api.AnalyseLayout");
+        api.AnalyseLayout();
+        console.log("Done");
+      }
       log('Skipping recognition: all output options requiring recognition are disabled.');
     }
     const { pdfTitle } = options;
     const { pdfTextOnly } = options;
-    const result = dump(TessModule, api, workingOutput, { pdfTitle, pdfTextOnly });
+    const result = dump(TessModule, api, workingOutput, { pdfTitle, pdfTextOnly, skipRecognition });
     result.rotateRadians = rotateRadiansFinal;
 
     if (output.debug) TessModule.FS.unlink('/debugInternal.txt');
