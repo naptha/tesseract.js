@@ -354,14 +354,10 @@ const recognize = async ({
     }
 
     if (!skipRecognition) {
-      console.log("Running api.Recognize");
       api.Recognize(null);
-      console.log("Done");
     } else {
       if (output.layoutBlocks) {
-        console.log("Running api.AnalyseLayout");
         api.AnalyseLayout();
-        console.log("Done");
       }
       log('Skipping recognition: all output options requiring recognition are disabled.');
     }
