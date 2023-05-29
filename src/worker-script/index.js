@@ -267,7 +267,7 @@ const processOutput = (output) => {
       }
     }
   }
-  const skipRecognition = recOutputCount == 0;
+  const skipRecognition = recOutputCount === 0;
   return { workingOutput, skipRecognition };
 };
 

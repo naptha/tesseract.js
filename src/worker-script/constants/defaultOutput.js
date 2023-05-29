@@ -15,5 +15,5 @@ module.exports = {
   imageColor: false,
   imageGrey: false,
   imageBinary: false,
-  debug: false
+  debug: false,
 };
