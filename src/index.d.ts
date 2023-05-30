@@ -146,7 +146,7 @@ declare namespace Tesseract {
     BINARY = 2
   }
   type ImageLike = string | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement
-    | CanvasRenderingContext2D | File | Blob | ImageData | Buffer;
+    | CanvasRenderingContext2D | File | Blob | ImageData | Buffer | OffscreenCanvas;
   interface Block {
     paragraphs: Paragraph[];
     text: string;
