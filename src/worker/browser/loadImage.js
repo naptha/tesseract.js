@@ -1,5 +1,3 @@
-const resolveURL = require('resolve-url');
-
 /**
  * readFromBlobOrFile
  *
@@ -40,7 +38,7 @@ const loadImage = async (image) => {
         .split('')
         .map((c) => c.charCodeAt(0));
     } else {
-      const resp = await fetch(resolveURL(image));
+      const resp = await fetch(image);
       data = await resp.arrayBuffer();
     }
   } else if (typeof HTMLElement !== 'undefined' && image instanceof HTMLElement) {
