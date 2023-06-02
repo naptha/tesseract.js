@@ -8,7 +8,6 @@
  * @author Jerome Wu <jeromewus@gmail.com>
  */
 require('regenerator-runtime/runtime');
-const fileType = require('file-type');
 const isURL = require('is-url');
 const dump = require('./utils/dump');
 const isWebWorker = require('../utils/getEnvironment')('type') === 'webworker';
@@ -125,8 +124,10 @@ res) => {
 
     data = new Uint8Array(data);
 
-    const type = fileType(data);
-    if (typeof type !== 'undefined' && type.mime === 'application/gzip') {
+    // Check for gzip magic numbers (1F and 8B in hex)
+    const isGzip = (data[0] === 31 && data[1] === 139) || (data[1] === 31 && data[0] === 139);
+
+    if (isGzip) {
       data = adapter.gunzip(data);
     }
 
