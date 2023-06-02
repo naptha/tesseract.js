@@ -70,7 +70,6 @@
     "node-fetch": "^2.6.9",
     "opencollective-postinstall": "^2.0.3",
     "regenerator-runtime": "^0.13.3",
-    "resolve-url": "^0.2.1",
     "tesseract.js-core": "^4.0.4",
     "wasm-feature-detect": "^1.2.11",
     "zlibjs": "^0.3.1"

@@ -1,4 +1,4 @@
-const resolveURL = require('resolve-url');
+const resolveURL = (s) => (new URL(s, window.location.href)).href;
 const { version } = require('../../../package.json');
 const defaultOptions = require('../../constants/defaultOptions');
 
