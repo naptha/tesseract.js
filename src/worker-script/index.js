@@ -10,7 +10,7 @@
 require('regenerator-runtime/runtime');
 const isURL = require('is-url');
 const dump = require('./utils/dump');
-const isWebWorker = require('../utils/getEnvironment')('type') === 'webworker';
+const env = require('../utils/getEnvironment')('type');
 const setImage = require('./utils/setImage');
 const defaultParams = require('./constants/defaultParams');
 const defaultOutput = require('./constants/defaultOutput');
@@ -88,6 +88,8 @@ res) => {
     let data = null;
     let newData = false;
 
+    // Check for existing .traineddata file in cache
+    // This automatically fails if cacheMethod is set to 'refresh' or 'none'
     try {
       const _data = await readCache(`${cachePath || '.'}/${lang}.traineddata`);
       if (typeof _data !== 'undefined') {
@@ -97,23 +99,31 @@ res) => {
       } else {
         throw Error('Not found in cache');
       }
+    // Attempt to fetch new .traineddata file
     } catch (e) {
       newData = true;
       log(`[${workerId}]: Load ${lang}.traineddata from ${langPath}`);
       if (typeof _lang === 'string') {
         let path = null;
 
-        if (isURL(langPath) || langPath.startsWith('moz-extension://') || langPath.startsWith('chrome-extension://') || langPath.startsWith('file://')) { /** When langPath is an URL */
+        // For Node.js, langPath may be a URL or local file path
+        // The is-url package is used to tell the difference
+        // For the browser version, langPath is assumed to be a URL
+        if (env !== 'node' || isURL(langPath) || langPath.startsWith('moz-extension://') || langPath.startsWith('chrome-extension://') || langPath.startsWith('file://')) { /** When langPath is an URL */
           path = langPath.replace(/\/$/, '');
         }
 
+        // langPath is a URL, fetch from server
         if (path !== null) {
           const fetchUrl = `${path}/${lang}.traineddata${gzip ? '.gz' : ''}`;
-          const resp = await (isWebWorker ? fetch : adapter.fetch)(fetchUrl);
+          const resp = await (env === 'webworker' ? fetch : adapter.fetch)(fetchUrl);
           if (!resp.ok) {
             throw Error(`Network error while fetching ${fetchUrl}. Response code: ${resp.status}`);
           }
           data = await resp.arrayBuffer();
+
+        // langPath is a local file, read .traineddata from local filesystem
+        // (adapter.readCache is a generic file read function in Node.js version)
         } else {
           data = await adapter.readCache(`${langPath}/${lang}.traineddata${gzip ? '.gz' : ''}`);
         }
