@@ -109,7 +109,7 @@ res) => {
         // For Node.js, langPath may be a URL or local file path
         // The is-url package is used to tell the difference
         // For the browser version, langPath is assumed to be a URL
-        if (env !== "node" || isURL(langPath) || langPath.startsWith('moz-extension://') || langPath.startsWith('chrome-extension://') || langPath.startsWith('file://')) { /** When langPath is an URL */
+        if (env !== 'node' || isURL(langPath) || langPath.startsWith('moz-extension://') || langPath.startsWith('chrome-extension://') || langPath.startsWith('file://')) { /** When langPath is an URL */
           path = langPath.replace(/\/$/, '');
         }
 
