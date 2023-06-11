@@ -144,6 +144,7 @@ yarn add tesseract.js@3.0.3
 - With React: https://github.com/jeromewu/tesseract.js-react-app
 - Typescript: https://github.com/jeromewu/tesseract.js-typescript
 - Video Real-time Recognition: https://github.com/jeromewu/tesseract.js-video
+- Simple tool for converting PDF to text using OCR: https://github.com/racosa/pdf2text-ocr
 
 React Native is **not** supported as it does not support Webassembly. 
 
