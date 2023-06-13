@@ -133,23 +133,21 @@ yarn add tesseract.js@3.0.3
 
 ## Use tesseract.js the way you like!
 
-- Offline Version: https://github.com/jeromewu/tesseract.js-offline
 - Electron Version: https://github.com/Balearica/tesseract.js-electron
+- Chrome Extension (with Manifest V3): https://github.com/Tshetrim/Image-To-Text-OCR-extension-for-ChatGPT
+- Converting PDF to text: https://github.com/racosa/pdf2text-ocr
+
+The following are old examples that use depreciated versions of Tesseract.js.  Updating to Tesseract.js v4 is highly recommended.  Users are encouraged to create updated examples (or make entirely new ones) and submit them as pull requests. 
+- Offline Version: https://github.com/jeromewu/tesseract.js-offline
 - Custom Traineddata: https://github.com/jeromewu/tesseract.js-custom-traineddata
-- Chrome Extension #1: https://github.com/jeromewu/tesseract.js-chrome-extension
-- Chrome Extension #2: https://github.com/fxnoob/image-to-text
-- Chrome Extension #3 (with Manifest V3): https://github.com/Tshetrim/Image-To-Text-OCR-extension-for-ChatGPT
 - Firefox Extension: https://github.com/gnonio/korporize
 - With Vue: https://github.com/jeromewu/tesseract.js-vue-app
 - With Angular: https://github.com/jeromewu/tesseract.js-angular-app
 - With React: https://github.com/jeromewu/tesseract.js-react-app
 - Typescript: https://github.com/jeromewu/tesseract.js-typescript
 - Video Real-time Recognition: https://github.com/jeromewu/tesseract.js-video
-- Simple tool for converting PDF to text using OCR: https://github.com/racosa/pdf2text-ocr
 
-React Native is **not** supported as it does not support Webassembly. 
-
-Disclaimer: These examples are now several years old and use old versions of both Tesseract.js and the relevant frameworks.  Users are encouraged to use the latest version of Tesseract.js rather than the versions used in these examples.  For users that update these examples (or make new ones), please consider contributing through a PR.   
+React Native is **not** supported as it does not support Webassembly.
 
 ## Contributing
 
