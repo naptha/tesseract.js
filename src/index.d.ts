@@ -43,6 +43,15 @@ declare namespace Tesseract {
     load_number_dawg: string
     load_bigram_dawg: string
   }
+  
+  type LoggerMessage = {
+    jobId: string
+    progress: number
+    status: string
+    userJobId: string
+    workerId: string
+  }
+  
   interface WorkerOptions {
     corePath: string
     langPath: string
@@ -52,7 +61,7 @@ declare namespace Tesseract {
     cacheMethod: string
     workerBlobURL: boolean
     gzip: boolean
-    logger: (arg: any) => void,
+    logger: (arg: LoggerMessage) => void,
     errorHandler: (arg: any) => void
   }
   interface WorkerParams {
