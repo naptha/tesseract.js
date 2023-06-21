@@ -30,6 +30,20 @@ describe('recognize()', () => {
     ));
   });
 
+  describe('should support orientation metadata', () => {
+    [
+      { name: 'simple-90.jpg', desc: 'simple', ans: SIMPLE_TEXT },
+      { name: 'simple-180.jpg', desc: 'simple', ans: SIMPLE_TEXT },
+      { name: 'simple-270.jpg', desc: 'simple', ans: SIMPLE_TEXT },
+    ].forEach(({ name, desc, ans }) => (
+      it(`recongize ${desc} image`, async () => {
+        await worker.initialize('eng');
+        const { data: { text } } = await worker.recognize(`${IMAGE_PATH}/${name}`);
+        expect(text).to.be(ans);
+      }).timeout(TIMEOUT)
+    ));
+  });
+
   describe('should recognize base64 image (simplified interface)', () => {
     [
       { format: 'png', image: SIMPLE_PNG_BASE64, ans: SIMPLE_TEXT },
