@@ -266,7 +266,7 @@ const processOutput = (output) => {
   if (params.tessjs_create_tsv === '1') workingOutput.tsv = true;
   if (params.tessjs_create_unlv === '1') workingOutput.unlv = true;
 
-  const nonRecOutputs = ['imageColor', 'imageGrey', 'imageBinary', 'layoutBlocks'];
+  const nonRecOutputs = ['imageColor', 'imageGrey', 'imageBinary', 'layoutBlocks', 'debug'];
   let recOutputCount = 0;
   for (const prop of Object.keys(output)) {
     workingOutput[prop] = output[prop];
