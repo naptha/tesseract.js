@@ -122,7 +122,7 @@ Worker.readText() reads a text file to the path specified in MEMFS, it is useful
 <a name="worker-removeFile"></a>
 ### Worker.removeFile(path, jobId): Promise
 
-Worker.readFile() remove a file in MEMFS, it is useful when you want to free the memory.
+Worker.removeFile() remove a file in MEMFS, it is useful when you want to free the memory.
 
 **Arguments:**
 
