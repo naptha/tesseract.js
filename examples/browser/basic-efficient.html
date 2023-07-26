@@ -4,7 +4,7 @@
     <script src="/dist/tesseract.dev.js"></script>
   </head>
   <body>
-    <input type="file" id="uploader">
+    <input type="file" id="uploader" multiple>
     <script type="module">
 
       // This is a basic example more efficient than "basic.html".
@@ -22,10 +22,11 @@
 
       const recognize = async function(evt){
         const files = evt.target.files;
-
-        const ret = await worker.recognize(files[0]);
-        console.log(ret.data.text);
-
+        
+        for (let i=0; i<files.length; i++) {
+          const ret = await worker.recognize(files[i]);
+          console.log(ret.data.text);
+        }
       }
       const elm = document.getElementById('uploader');
       elm.addEventListener('change', recognize);
