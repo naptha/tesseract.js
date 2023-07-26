@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <script src="/dist/tesseract.dev.js"></script>
+  </head>
+  <body>
+    <input type="file" id="uploader" multiple>
+    <script type="module">
+
+      // This example builds on "basic-efficient.html".
+      // Rather than using a single worker, a scheduler manages a pool of multiple workers. 
+      // While performance is similar for a single file, this parallel processing results in significantly
+      // faster speeds when used with multiple files.
+
+      const scheduler = Tesseract.createScheduler();
+
+      // Creates worker and adds to scheduler
+      const workerGen = async () => {
+        const worker = await Tesseract.createWorker({
+          corePath: '../../node_modules/tesseract.js-core',
+          workerPath: "/dist/worker.dev.js",
+          logger: function(m){console.log(m);}
+        });
+        await worker.loadLanguage('eng');
+        await worker.initialize('eng');
+        scheduler.addWorker(worker);
+      }
+
+      const workerN = 4;
+      (async () => {
+        const resArr = Array(workerN);
+        for (let i=0; i<workerN; i++) {
+          resArr[i] = await workerGen();
+        }
+      })();
+
+      const recognize = async function(evt){
+        const files = evt.target.files;
+
+        for (let i=0; i<files.length; i++) {
+          scheduler.addJob('recognize', files[i]).then((x) => console.log(x.data.text))
+        }
+      }
+
+      const elm = document.getElementById('uploader');
+      elm.addEventListener('change', recognize);
+    </script>
+  </body>
+</html>

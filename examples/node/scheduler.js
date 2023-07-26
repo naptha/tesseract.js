@@ -4,8 +4,7 @@ const scheduler = createScheduler();
 
 // Creates worker and adds to scheduler
 const workerGen = async () => {
-  const worker = createWorker({cachePath: "."});
-  await worker.load();
+  const worker = await createWorker({cachePath: "."});
   await worker.loadLanguage('eng');
   await worker.initialize('eng');
   scheduler.addWorker(worker);
@@ -15,7 +14,7 @@ const workerN = 4;
 (async () => {
   const resArr = Array(workerN);
   for (let i=0; i<workerN; i++) {
-    resArr[i] = workerGen();
+    resArr[i] = await workerGen();
   }
   await Promise.all(resArr);
   /** Add 4 recognition jobs */
