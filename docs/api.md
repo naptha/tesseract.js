@@ -63,7 +63,7 @@ const worker = await createWorker({
 A Worker helps you to do the OCR related tasks, it takes few steps to setup Worker before it is fully functional. The full flow is:
 
 - FS functions // optional
-- loadLanguauge
+- loadLanguage
 - initialize
 - setParameters // optional
 - recognize or detect
