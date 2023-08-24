@@ -65,7 +65,6 @@ declare namespace Tesseract {
     errorHandler: (arg: any) => void
   }
   interface WorkerParams {
-    tessedit_ocr_engine_mode: OEM
     tessedit_pageseg_mode: PSM
     tessedit_char_whitelist: string
     preserve_interword_spaces: string
