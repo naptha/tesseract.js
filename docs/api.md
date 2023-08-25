@@ -154,7 +154,7 @@ Worker.FS() is a generic FS function to do anything you want, you can check [HER
 (async () => {
   await worker.FS('writeFile', ['tmp.txt', 'Hi\nTesseract.js\n']);
   // equal to:
-  // await worker.readText('tmp.txt', 'Hi\nTesseract.js\n');
+  // await worker.writeText('tmp.txt', 'Hi\nTesseract.js\n');
 })();
 ```
 
