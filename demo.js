@@ -25,7 +25,7 @@ var lang_drop_instructions = {
 	rus: 'a Russian'
 }
 
-var worker = new Tesseract.createWorker({
+const workerPromise = Tesseract.createWorker({
   logger: progressUpdate,
 });
 
@@ -52,11 +52,11 @@ function startDemo(){
 	demoStarted = true
 
 	async function start(){
-    await worker.load();
-    await worker.loadLanguage('eng');
-    await worker.initialize('eng');
-    const { data } = await worker.recognize(input);
-    result(data);
+		const worker = await workerPromise;
+		await worker.loadLanguage('eng');
+		await worker.initialize('eng');
+		const { data } = await worker.recognize(input);
+		result(data);
 
 		input.removeEventListener('load', start)
 	}
@@ -81,17 +81,25 @@ function startDemo(){
 function progressUpdate(packet){
 	var log = document.getElementById('log');
 
-	if(log.firstChild && log.firstChild.status === packet.status){
+	const statusLabel = {"initialized api": "Initializing API", "initializing api": "Initializing API", "recognizing text" : "Recognizing Text", 
+	"initialized tesseract": "Initializing Tesseract", "initializing tesseract" : "Initializing Tesseract", 
+	"loaded language traineddata": "Loading Language Traineddata", "loading language traineddata": "Loading Language Traineddata",
+	"loading language traineddata (from cache)": "Loading Language Traineddata",
+	"loading tesseract core": "Loading Tesseract Core", "done": "done"}[packet.status];
+
+	if (!statusLabel) console.log(packet.status);
+
+	if(log.firstChild && log.firstChild.status === statusLabel){
 		if('progress' in packet){
 			var progress = log.firstChild.querySelector('progress')
 			progress.value = packet.progress
 		}
 	}else{
 		var line = document.createElement('div');
-		line.status = packet.status;
+		line.status = statusLabel;
 		var status = document.createElement('div')
 		status.className = 'status'
-		status.appendChild(document.createTextNode(packet.status))
+		status.appendChild(document.createTextNode(statusLabel))
 		line.appendChild(status)
 
 		if('progress' in packet){
@@ -177,12 +185,11 @@ async function play(){
 	output_text.style.display = 'block'
 	output_text.innerHTML = ''
 	// output_overlay.innerHTML = ''
-
-  await worker.load();
-  await worker.loadLanguage(language);
-  await worker.initialize(language);
-  const { data } = await worker.recognize(input);
-  result(data);
+	const worker = await workerPromise;
+	await worker.loadLanguage(language);
+	await worker.initialize(language);
+	const { data } = await worker.recognize(input);
+	result(data);
 }
 
 options.forEach(function(option){
@@ -221,7 +228,6 @@ document.body.addEventListener('drop', async function(e){
 		}
 	};
 	reader.readAsDataURL(file);
-  await worker.load();
   await worker.loadLanguage(language);
   await worker.initialize(language);
   const { data } = await worker.recognize(file);
