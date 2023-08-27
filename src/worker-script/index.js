@@ -58,7 +58,7 @@ const load = async ({ workerId, jobId, payload: { options: { corePath, logging }
 };
 
 const FS = async ({ workerId, payload: { method, args } }, res) => {
-  log(`[${workerId}]: FS.${method} with args ${args}`);
+  log(`[${workerId}]: FS.${method}`);
   res.resolve(TessModule.FS[method](...args));
 };
 
