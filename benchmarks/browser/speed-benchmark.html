@@ -13,7 +13,10 @@
       const { createWorker } = Tesseract;
       
       (async () => {
-        const worker = await createWorker();
+        const worker = await createWorker({
+          // corePath: '/tesseract-core-simd.wasm.js',
+          workerPath: "/dist/worker.dev.js"
+        });
         await worker.loadLanguage('eng');
         await worker.initialize('eng');
 
