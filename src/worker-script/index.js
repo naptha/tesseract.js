@@ -120,7 +120,7 @@ res) => {
           if (!resp.ok) {
             throw Error(`Network error while fetching ${fetchUrl}. Response code: ${resp.status}`);
           }
-          data = await resp.arrayBuffer();
+          data = new Uint8Array(await resp.arrayBuffer());
 
         // langPath is a local file, read .traineddata from local filesystem
         // (adapter.readCache is a generic file read function in Node.js version)
@@ -131,8 +131,6 @@ res) => {
         data = _lang.data; // eslint-disable-line
       }
     }
-
-    data = new Uint8Array(data);
 
     // Check for gzip magic numbers (1F and 8B in hex)
     const isGzip = (data[0] === 31 && data[1] === 139) || (data[1] === 31 && data[0] === 139);
@@ -160,8 +158,7 @@ res) => {
         log(err.toString());
       }
     }
-
-    return Promise.resolve(data);
+    return Promise.resolve();
   };
 
   res.progress({ workerId, status: 'loading language traineddata', progress: 0 });
@@ -445,8 +442,14 @@ const terminate = async (_, res) => {
  */
 exports.dispatchHandlers = (packet, send) => {
   const res = (status, data) => {
+    // Return only the necessary info to avoid sending unnecessarily large messages
+    const packetRes = {
+      jobId: packet.jobId,
+      workerId: packet.workerId,
+      action: packet.action,
+    };
     send({
-      ...packet,
+      ...packetRes,
       status,
       data,
     });
