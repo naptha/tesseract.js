@@ -16,7 +16,18 @@
         const worker = await createWorker();
         await worker.loadLanguage('eng');
         await worker.initialize('eng');
-        
+
+        // The performance.measureUserAgentSpecificMemory function only runs under specific circumstances for security reasons.
+        // See: https://developer.mozilla.org/en-US/docs/Web/API/Performance/measureUserAgentSpecificMemory#security_requirements
+        // Launching a server using `npm start` and accessing via localhost on the same system should meet these conditions.
+        const debugMemory = true;
+        if (debugMemory && crossOriginIsolated) {
+          console.log("Memory utilization after initialization:");
+          console.log(await performance.measureUserAgentSpecificMemory());
+        } else {
+          console.log("Unable to run `performance.measureUserAgentSpecificMemory`: not crossOriginIsolated.")
+        }
+
         const fileArr = ["../data/meditations.jpg", "../data/tyger.jpg", "../data/testocr.png"];
         let timeTotal = 0;
         for (let file of fileArr) {
@@ -29,6 +40,12 @@
             timeTotal += timeDif;
             document.getElementById('message').innerHTML += "\n" + file + " [x10] runtime: " + timeDif + "s";
         }
+
+        if (debugMemory && crossOriginIsolated) {
+          console.log("Memory utilization after recognition:");
+          console.log(await performance.measureUserAgentSpecificMemory());
+        }
+
         document.getElementById('message').innerHTML += "\nTotal runtime: " + timeTotal + "s";
 
       })();
