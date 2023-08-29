@@ -26,7 +26,7 @@ var lang_drop_instructions = {
 }
 
 const workerPromise = Tesseract.createWorker({
-  logger: progressUpdate,
+	logger: progressUpdate,
 });
 
 function setUp(){
@@ -81,8 +81,8 @@ function startDemo(){
 function progressUpdate(packet){
 	var log = document.getElementById('log');
 
-	const statusLabel = {"initialized api": "Initializing API", "initializing api": "Initializing API", "recognizing text" : "Recognizing Text", 
-	"initialized tesseract": "Initializing Tesseract", "initializing tesseract" : "Initializing Tesseract", 
+	const statusLabel = {"initialized api": "Initializing API", "initializing api": "Initializing API", "recognizing text" : "Recognizing Text",
+	"initialized tesseract": "Initializing Tesseract", "initializing tesseract" : "Initializing Tesseract",
 	"loaded language traineddata": "Loading Language Traineddata", "loading language traineddata": "Loading Language Traineddata",
 	"loading language traineddata (from cache)": "Loading Language Traineddata",
 	"loading tesseract core": "Loading Tesseract Core", "done": "done"}[packet.status];
@@ -146,9 +146,9 @@ function result(res){
 		ioctx.stroke()
 
 
-        // octx.font = '20px Times';
-        // octx.font = 20 * (b.x1 - b.x0) / octx.measureText(w.text).width + "px Times";
-        // octx.fillText(w.text, b.x0, w.baseline.y0);
+		// octx.font = '20px Times';
+		// octx.font = 20 * (b.x1 - b.x0) / octx.measureText(w.text).width + "px Times";
+		// octx.fillText(w.text, b.x0, w.baseline.y0);
 	})
 }
 
@@ -171,7 +171,7 @@ function clearOverLayAndOutput(){
 // function displayPlayButtonFor(lang){
 // 	output.addEventListener('click', function play(){
 // 		output.removeEventListener('click', play)
-		
+
 // 		tessWorker.recognize(input, lang)
 // 		.progress( progress )
 // 		.then( result )
@@ -197,7 +197,7 @@ options.forEach(function(option){
 
 		clearOverLayAndOutput()
 
-		
+
 		drop_instructions.forEach(function(di){
 			di.innerHTML = lang_drop_instructions[option.lang]
 		})
@@ -216,8 +216,8 @@ options.forEach(function(option){
 
 document.body.addEventListener('drop', async function(e){
 	e.stopPropagation();
-    e.preventDefault();
-    var file = e.dataTransfer.files[0]
+	e.preventDefault();
+	var file = e.dataTransfer.files[0]
 	var reader = new FileReader();
 	reader.onload = function(e){
 		input.src = e.target.result;
@@ -228,8 +228,9 @@ document.body.addEventListener('drop', async function(e){
 		}
 	};
 	reader.readAsDataURL(file);
-  await worker.loadLanguage(language);
-  await worker.initialize(language);
-  const { data } = await worker.recognize(file);
-  result(data);
+	const worker = await workerPromise;
+	await worker.loadLanguage(language);
+	await worker.initialize(language);
+	const { data } = await worker.recognize(file);
+	result(data);
 })
