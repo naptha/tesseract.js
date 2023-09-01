@@ -3,7 +3,7 @@ const circularize = require('./utils/circularize');
 const createJob = require('./createJob');
 const { log } = require('./utils/log');
 const getId = require('./utils/getId');
-const { defaultOEM } = require('./constants/config');
+const OEM = require('./constants/OEM');
 const {
   defaultOptions,
   spawnWorker,
@@ -15,7 +15,7 @@ const {
 
 let workerCounter = 0;
 
-module.exports = async (_options = {}) => {
+module.exports = async (langs = "eng", oem = OEM.LSTM_ONLY, _options = {}, config = {}) => {
   const id = getId('Worker', workerCounter);
   const {
     logger,
@@ -69,7 +69,7 @@ module.exports = async (_options = {}) => {
 
   const loadInternal = (jobId) => (
     startJob(createJob({
-      id: jobId, action: 'load', payload: { options },
+      id: jobId, action: 'load', payload: {options: { oem: options.oemCore, corePath: options.corePath, logging: options.logging }},
     }))
   );
 
@@ -105,7 +105,11 @@ module.exports = async (_options = {}) => {
     }))
   );
 
-  const loadLanguage = (langs = 'eng', jobId) => (
+  const loadLanguage = () => (
+    console.warn('`loadLanguage` is depreciated and should be removed from code (workers now come with language pre-loaded)')
+  );
+
+  const loadLanguageInternal = (langs = 'eng', jobId) => (
     startJob(createJob({
       id: jobId,
       action: 'loadLanguage',
@@ -113,12 +117,23 @@ module.exports = async (_options = {}) => {
     }))
   );
 
-  const initialize = (langs = 'eng', oem = defaultOEM, config, jobId) => (
+  const initialize = () => (
+    console.warn('`initialize` is depreciated and should be removed from code (workers now come pre-initialized)')
+  );
+
+  const initializeInternal = (langs = 'eng', oem = OEM.LSTM_ONLY, config, jobId) => (
     startJob(createJob({
       id: jobId,
       action: 'initialize',
       payload: { langs, oem, config },
     }))
+  );
+
+  // TODO: If OEM is not specified, this should default to whatever it was before.
+  // In other words, if it was initialized with Legacy `reinitialize` should not change to LSTM.
+  const reinitialize = (langs = 'eng', oem = OEM.DEFAULT, config, jobId) => (
+    loadLanguageInternal(langs, jobId)
+    .then(() => initializeInternal(langs, oem, config, jobId))
   );
 
   const setParameters = (params = {}, jobId) => (
@@ -207,6 +222,7 @@ module.exports = async (_options = {}) => {
     FS,
     loadLanguage,
     initialize,
+    reinitialize,
     setParameters,
     recognize,
     getPDF,
@@ -214,7 +230,11 @@ module.exports = async (_options = {}) => {
     terminate,
   };
 
-  loadInternal().then(() => workerResResolve(resolveObj)).catch(() => {});
+  loadInternal()
+  .then(() => loadLanguageInternal(langs))
+  .then(() => initializeInternal(langs, oem, config))
+  .then(() => workerResResolve(resolveObj))
+  .catch(() => {});
 
   return workerRes;
 };

@@ -2,15 +2,14 @@ const { createWorker, PSM } = Tesseract;
 let worker;
 before(async function cb() {
   this.timeout(0);
-  worker = await createWorker(OPTIONS);
-  await worker.loadLanguage('eng+chi_tra+osd');
+  worker = await createWorker("eng+chi_tra+osd", 1, OPTIONS);
 });
 
 describe('recognize()', () => {
   describe('should read bmp, jpg, png and pbm format images', () => {
     FORMATS.forEach(format => (
       it(`support ${format} format`, async () => {
-        await worker.initialize('eng');
+        await worker.reinitialize('eng');
         const { data: { text } } = await worker.recognize(`${IMAGE_PATH}/simple.${format}`);
         expect(text).to.be(SIMPLE_TEXT);
       }).timeout(TIMEOUT)
@@ -23,7 +22,7 @@ describe('recognize()', () => {
       { format: 'jpg', image: SIMPLE_JPG_BASE64, ans: SIMPLE_TEXT },
     ].forEach(({ format, image, ans }) => (
       it(`recongize ${format} in base64`, async () => {
-        await worker.initialize('eng');
+        await worker.reinitialize('eng');
         const { data: { text } } = await worker.recognize(image);
         expect(text).to.be(ans);
       }).timeout(TIMEOUT)
@@ -37,7 +36,7 @@ describe('recognize()', () => {
       { name: 'simple-270.jpg', desc: 'simple', ans: SIMPLE_TEXT },
     ].forEach(({ name, desc, ans }) => (
       it(`recongize ${desc} image`, async () => {
-        await worker.initialize('eng');
+        await worker.reinitialize('eng');
         const { data: { text } } = await worker.recognize(`${IMAGE_PATH}/${name}`);
         expect(text).to.be(ans);
       }).timeout(TIMEOUT)
@@ -62,7 +61,7 @@ describe('recognize()', () => {
       { name: 'chinese.png', lang: 'chi_tra', ans: CHINESE_TEXT },
     ].forEach(({ name, lang, ans }) => (
       it(`recongize ${lang}`, async () => {
-        await worker.initialize(lang);
+        await worker.reinitialize(lang);
         const { data: { text } } = await worker.recognize(`${IMAGE_PATH}/${name}`);
         expect(text).to.be(ans);
       }).timeout(TIMEOUT)
@@ -76,7 +75,7 @@ describe('recognize()', () => {
       { name: 'testocr.png', desc: 'large', ans: TESTOCR_TEXT },
     ].forEach(({ name, desc, ans }) => (
       it(`recongize ${desc} image`, async () => {
-        await worker.initialize('eng');
+        await worker.reinitialize('eng');
         const { data: { text } } = await worker.recognize(`${IMAGE_PATH}/${name}`);
         expect(text).to.be(ans);
       }).timeout(TIMEOUT)
@@ -92,7 +91,7 @@ describe('recognize()', () => {
       name, left, top, width, height, ans,
     }) => (
       it(`recongize half ${name}`, async () => {
-        await worker.initialize('eng');
+        await worker.reinitialize('eng');
         const { data: { text } } = await worker.recognize(
           `${IMAGE_PATH}/${name}`,
           {
@@ -108,7 +107,7 @@ describe('recognize()', () => {
 
   describe('should work with selected parameters', () => {
     it('support preserve_interword_spaces', async () => {
-      await worker.initialize('eng');
+      await worker.reinitialize('eng');
       await worker.setParameters({
         preserve_interword_spaces: '1',
       });
@@ -117,7 +116,7 @@ describe('recognize()', () => {
     }).timeout(TIMEOUT);
 
     it('support tessedit_char_whitelist', async () => {
-      await worker.initialize('eng');
+      await worker.reinitialize('eng');
       await worker.setParameters({
         tessedit_char_whitelist: 'Tess',
       });
@@ -132,7 +131,7 @@ describe('recognize()', () => {
       .map(name => ({ name, mode: PSM[name] }))
       .forEach(({ name, mode }) => (
         it(`support PSM.${name} mode`, async () => {
-          await worker.initialize('eng');
+          await worker.reinitialize('eng');
           await worker.setParameters({
             tessedit_pageseg_mode: mode,
           });
@@ -146,7 +145,7 @@ describe('recognize()', () => {
     FORMATS.forEach(format => (
       it(`support ${format} format`, async () => {
         const buf = fs.readFileSync(path.join(__dirname, 'assets', 'images', `simple.${format}`));
-        await worker.initialize('eng');
+        await worker.reinitialize('eng');
         const { data: { text } } = await worker.recognize(buf);
         expect(text).to.be(SIMPLE_TEXT);
       }).timeout(TIMEOUT)
@@ -158,7 +157,7 @@ describe('recognize()', () => {
       it(`support ${format} format`, async () => {
         const imageDOM = document.createElement('img');
         imageDOM.setAttribute('src', `${IMAGE_PATH}/simple.${format}`);
-        await worker.initialize('eng');
+        await worker.reinitialize('eng');
         const { data: { text } } = await worker.recognize(imageDOM);
         expect(text).to.be(SIMPLE_TEXT);
       }).timeout(TIMEOUT)
@@ -170,7 +169,7 @@ describe('recognize()', () => {
       it(`support ${format} format`, async () => {
         const videoDOM = document.createElement('video');
         videoDOM.setAttribute('poster', `${IMAGE_PATH}/simple.${format}`);
-        await worker.initialize('eng');
+        await worker.reinitialize('eng');
         const { data: { text } } = await worker.recognize(videoDOM);
         expect(text).to.be(SIMPLE_TEXT);
       }).timeout(TIMEOUT)
@@ -202,7 +201,7 @@ describe('recognize()', () => {
 
     formats.forEach(format => (
       it(`support ${format} format`, async () => {
-        await worker.initialize('eng');
+        await worker.reinitialize('eng');
         const { data: { text } } = await worker.recognize(canvasDOM);
         expect(text).to.be(SIMPLE_TEXT);
       }).timeout(TIMEOUT)
@@ -234,7 +233,7 @@ describe('recognize()', () => {
 
     formats.forEach(format => (
       it(`support ${format} format`, async () => {
-        await worker.initialize('eng');
+        await worker.reinitialize('eng');
         const { data: { text } } = await worker.recognize(offscreenCanvas);
         expect(text).to.be(SIMPLE_TEXT);
       }).timeout(TIMEOUT)

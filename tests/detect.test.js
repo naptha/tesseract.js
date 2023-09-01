@@ -2,7 +2,7 @@ const { createWorker } = Tesseract;
 let worker;
 before(async function cb() {
   this.timeout(0);
-  worker = await createWorker(OPTIONS);
+  worker = await createWorker("osd", 1, OPTIONS);
 });
 
 describe('detect()', async () => {
@@ -10,8 +10,6 @@ describe('detect()', async () => {
     [
       { name: 'cosmic.png', ans: { script: 'Latin' } },
     ].forEach(async ({ name, ans: { script } }) => {
-      await worker.loadLanguage('osd');
-      await worker.initialize('osd');
       const { data: { script: s } } = await worker.detect(`${IMAGE_PATH}/${name}`);
       expect(s).to.be(script);
     });
