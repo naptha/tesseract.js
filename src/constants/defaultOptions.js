@@ -1,11 +1,11 @@
 const OEM = require('./OEM');
 
 module.exports = {
-  // If `oem = OEM.LSTM_ONLY` (the default), only the code and language data for the LSTM model is loaded.
+  // If `oem = OEM.LSTM_ONLY` (the default) only the code and langdata for LSTM is loaded.
   // This significantly decreases network and memory use for LSTM-only users (the vast majority),
   // and has no impact on Legacy-only users.
   // For the small number of users that use both models, this increases network and memory use
-  // (as two sets of code and language data end up being downloaded). 
+  // (as two sets of code and language data end up being downloaded).
   // For these users, `oemLang` and `oemCore` should be set to `OEM.TESSERACT_LSTM_COMBINED`,
   // which forces download of language data and core code (respectively) that support both models.
   oemLang: OEM.DEFAULT,

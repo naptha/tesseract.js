@@ -15,7 +15,7 @@ const {
 
 let workerCounter = 0;
 
-module.exports = async (langs = "eng", oem = OEM.LSTM_ONLY, _options = {}, config = {}) => {
+module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, config = {}) => {
   const id = getId('Worker', workerCounter);
   const {
     logger,
@@ -27,6 +27,12 @@ module.exports = async (langs = "eng", oem = OEM.LSTM_ONLY, _options = {}, confi
   });
   const resolves = {};
   const rejects = {};
+
+  // Current langs, oem, and config file.
+  // Used if the user ever re-initializes the worker using `worker.reinitialize`.
+  const currentLangs = typeof langs === 'string' ? langs.split('+') : langs;
+  let currentOem = oem;
+  let currentConfig = config;
 
   let workerResReject;
   let workerResResolve;
@@ -69,7 +75,7 @@ module.exports = async (langs = "eng", oem = OEM.LSTM_ONLY, _options = {}, confi
 
   const loadInternal = (jobId) => (
     startJob(createJob({
-      id: jobId, action: 'load', payload: {options: { oem: options.oemCore, corePath: options.corePath, logging: options.logging }},
+      id: jobId, action: 'load', payload: { options: { oem: options.oemCore, corePath: options.corePath, logging: options.logging } },
     }))
   );
 
@@ -109,11 +115,11 @@ module.exports = async (langs = "eng", oem = OEM.LSTM_ONLY, _options = {}, confi
     console.warn('`loadLanguage` is depreciated and should be removed from code (workers now come with language pre-loaded)')
   );
 
-  const loadLanguageInternal = (langs = 'eng', jobId) => (
+  const loadLanguageInternal = (_langs, jobId) => (
     startJob(createJob({
       id: jobId,
       action: 'loadLanguage',
-      payload: { langs, options },
+      payload: { langs: _langs, options },
     }))
   );
 
@@ -121,20 +127,38 @@ module.exports = async (langs = "eng", oem = OEM.LSTM_ONLY, _options = {}, confi
     console.warn('`initialize` is depreciated and should be removed from code (workers now come pre-initialized)')
   );
 
-  const initializeInternal = (langs = 'eng', oem = OEM.LSTM_ONLY, config, jobId) => (
+  const initializeInternal = (_langs, _oem, _config, jobId) => (
     startJob(createJob({
       id: jobId,
       action: 'initialize',
-      payload: { langs, oem, config },
+      payload: { langs: _langs, oem: _oem, config: _config },
     }))
   );
 
-  // TODO: If OEM is not specified, this should default to whatever it was before.
-  // In other words, if it was initialized with Legacy `reinitialize` should not change to LSTM.
-  const reinitialize = (langs = 'eng', oem = OEM.DEFAULT, config, jobId) => (
-    loadLanguageInternal(langs, jobId)
-    .then(() => initializeInternal(langs, oem, config, jobId))
-  );
+  // TODO:
+  // (1) Add case where OEM is requested that current core does not support
+  //  (this may just be error message).
+  // (2) Figure out how to download the appropriate traineddata for the OEM
+  const reinitialize = (langs = 'eng', oem, config, jobId) => { // eslint-disable-line
+
+    const _oem = oem || currentOem;
+    currentOem = _oem;
+
+    const _config = config || currentConfig;
+    currentConfig = _config;
+
+    // Only load langs that are not already loaded.
+    // This logic fails if the user downloaded the LSTM-only English data for a language
+    // and then uses `worker.reinitialize` to switch to the Legacy engine.
+    // However, the correct data will still be downloaded after initialization fails
+    // and this can be avoided entirely
+    const langsArr = typeof langs === 'string' ? langs.split('+') : langs;
+    const _langs = langsArr.filter((x) => currentLangs.includes(x));
+    currentLangs.push(_langs);
+
+    return loadLanguageInternal(_langs, jobId)
+      .then(() => initializeInternal(_langs, _oem, _config, jobId));
+  };
 
   const setParameters = (params = {}, jobId) => (
     startJob(createJob({
@@ -231,10 +255,10 @@ module.exports = async (langs = "eng", oem = OEM.LSTM_ONLY, _options = {}, confi
   };
 
   loadInternal()
-  .then(() => loadLanguageInternal(langs))
-  .then(() => initializeInternal(langs, oem, config))
-  .then(() => workerResResolve(resolveObj))
-  .catch(() => {});
+    .then(() => loadLanguageInternal(langs))
+    .then(() => initializeInternal(langs, oem, config))
+    .then(() => workerResResolve(resolveObj))
+    .catch(() => {});
 
   return workerRes;
 };

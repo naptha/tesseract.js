@@ -9,7 +9,7 @@ const recognize = async (image, langs, options) => {
 };
 
 const detect = async (image, options) => {
-  const worker = await createWorker("osd", 0, options);
+  const worker = await createWorker('osd', 0, options);
   return worker.detect(image)
     .finally(async () => {
       await worker.terminate();
