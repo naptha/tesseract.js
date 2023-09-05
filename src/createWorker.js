@@ -115,13 +115,20 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
     console.warn('`loadLanguage` is depreciated and should be removed from code (workers now come with language pre-loaded)')
   );
 
-  const loadLanguageInternal = (_langs, jobId) => (
-    startJob(createJob({
+  const loadLanguageInternal = (_langs, jobId) => {
+    return startJob(createJob({
       id: jobId,
       action: 'loadLanguage',
-      payload: { langs: _langs, options },
+      payload: { langs: _langs, options: {
+        langPath: options.langPath,
+        dataPath: options.dataPath,
+        cachePath: options.cachePath,
+        cacheMethod: options.cacheMethod,
+        gzip: options.gzip,
+        lstmOnly: !([OEM.TESSERACT_ONLY, OEM.TESSERACT_LSTM_COMBINED].includes(options.oemLang) || [OEM.TESSERACT_ONLY, OEM.TESSERACT_LSTM_COMBINED].includes(options.oemLang)),
+      } },
     }))
-  );
+  };
 
   const initialize = () => (
     console.warn('`initialize` is depreciated and should be removed from code (workers now come pre-initialized)')

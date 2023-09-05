@@ -76,6 +76,7 @@ const loadLanguage = async ({
       cachePath,
       cacheMethod,
       gzip = true,
+      lstmOnly,
     },
   },
 },
@@ -88,6 +89,7 @@ res) => {
     cachePath,
     cacheMethod,
     gzip,
+    lstmOnly
   };
 
   const statusText = 'loading language traineddata';
@@ -102,6 +104,11 @@ res) => {
       : adapter.readCache;
     let data = null;
     let newData = false;
+
+    // If `langPath` if not explicitly set by the user, the jsdelivr CDN is used.
+    // Data supporting the Legacy model is only included if `lstmOnly` is not true.
+    // This saves a significant amount of data for the majority of users that use LSTM only.
+    const langPath = langPath || (lstmOnly ? 'https://cdn.jsdelivr.net/npm/@tesseract.js-data/${lang}/4.0.0_best_int' : 'https://cdn.jsdelivr.net/npm/@tesseract.js-data/${lang}/4.0.0');
 
     // Check for existing .traineddata file in cache
     // This automatically fails if cacheMethod is set to 'refresh' or 'none'
