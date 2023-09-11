@@ -22,12 +22,12 @@ module.exports = async (oem, corePath, res) => {
     } else {
       const simdSupport = await simd();
       if (simdSupport) {
-        if (oem === OEM.LSTM_ONLY) {
+        if ([OEM.DEFAULT, OEM.LSTM_ONLY].includes(oem)) {
           corePathImportFile = `${corePathImport.replace(/\/$/, '')}/tesseract-core-simd-lstm.wasm.js`;
         } else {
           corePathImportFile = `${corePathImport.replace(/\/$/, '')}/tesseract-core-simd.wasm.js`;
         }
-      } else if (oem === OEM.LSTM_ONLY) {
+      } else if ([OEM.DEFAULT, OEM.LSTM_ONLY].includes(oem)) {
         corePathImportFile = `${corePathImport.replace(/\/$/, '')}/tesseract-core-lstm.wasm.js`;
       } else {
         corePathImportFile = `${corePathImport.replace(/\/$/, '')}/tesseract-core.wasm.js`;

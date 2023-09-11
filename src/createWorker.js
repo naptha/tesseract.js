@@ -15,7 +15,7 @@ const {
 
 let workerCounter = 0;
 
-module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, config = {}) => {
+module.exports = async (langs = 'eng', oem = OEM.DEFAULT, _options = {}, config = {}) => {
   const id = getId('Worker', workerCounter);
   const {
     logger,
@@ -33,6 +33,7 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
   const currentLangs = typeof langs === 'string' ? langs.split('+') : langs;
   let currentOem = oem;
   let currentConfig = config;
+  const lstmOnlyCore = [OEM.DEFAULT, OEM.LSTM_ONLY].includes(oem);
 
   let workerResReject;
   let workerResResolve;
@@ -115,20 +116,21 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
     console.warn('`loadLanguage` is depreciated and should be removed from code (workers now come with language pre-loaded)')
   );
 
-  const loadLanguageInternal = (_langs, jobId) => {
-    return startJob(createJob({
-      id: jobId,
-      action: 'loadLanguage',
-      payload: { langs: _langs, options: {
+  const loadLanguageInternal = (_langs, jobId) => startJob(createJob({
+    id: jobId,
+    action: 'loadLanguage',
+    payload: {
+      langs: _langs,
+      options: {
         langPath: options.langPath,
         dataPath: options.dataPath,
         cachePath: options.cachePath,
         cacheMethod: options.cacheMethod,
         gzip: options.gzip,
-        lstmOnly: !([OEM.TESSERACT_ONLY, OEM.TESSERACT_LSTM_COMBINED].includes(options.oemLang) || [OEM.TESSERACT_ONLY, OEM.TESSERACT_LSTM_COMBINED].includes(options.oemLang)),
-      } },
-    }))
-  };
+        lstmOnly: !([OEM.TESSERACT_ONLY, OEM.TESSERACT_LSTM_COMBINED].includes(currentOem) || [OEM.TESSERACT_ONLY, OEM.TESSERACT_LSTM_COMBINED].includes(options.oemLang)), // eslint-disable-line
+      },
+    },
+  }));
 
   const initialize = () => (
     console.warn('`initialize` is depreciated and should be removed from code (workers now come pre-initialized)')
@@ -142,11 +144,9 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
     }))
   );
 
-  // TODO:
-  // (1) Add case where OEM is requested that current core does not support
-  //  (this may just be error message).
-  // (2) Figure out how to download the appropriate traineddata for the OEM
   const reinitialize = (langs = 'eng', oem, config, jobId) => { // eslint-disable-line
+
+    if (lstmOnlyCore && [OEM.TESSERACT_ONLY, OEM.TESSERACT_LSTM_COMBINED].includes(oem)) throw Error('Legacy model requested but code missing.');
 
     const _oem = oem || currentOem;
     currentOem = _oem;
@@ -194,13 +194,15 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
     }));
   };
 
-  const detect = async (image, jobId) => (
-    startJob(createJob({
+  const detect = async (image, jobId) => {
+    if (lstmOnlyCore) throw Error('`worker.detect` requires Legacy model, which was not loaded.');
+
+    return startJob(createJob({
       id: jobId,
       action: 'detect',
       payload: { image: await loadImage(image) },
-    }))
-  );
+    }));
+  };
 
   const terminate = async () => {
     if (worker !== null) {

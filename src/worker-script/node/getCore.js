@@ -13,12 +13,12 @@ module.exports = async (oem, _, res) => {
     const simdSupport = await simd();
     res.progress({ status: statusText, progress: 0 });
     if (simdSupport) {
-      if (oem === OEM.LSTM_ONLY) {
+      if ([OEM.DEFAULT, OEM.LSTM_ONLY].includes(oem)) {
         TesseractCore = require('tesseract.js-core/tesseract-core-simd-lstm');
       } else {
         TesseractCore = require('tesseract.js-core/tesseract-core-simd');
       }
-    } else if (oem === OEM.LSTM_ONLY) {
+    } else if ([OEM.DEFAULT, OEM.LSTM_ONLY].includes(oem)) {
       TesseractCore = require('tesseract.js-core/tesseract-core-lstm');
     } else {
       TesseractCore = require('tesseract.js-core/tesseract-core');

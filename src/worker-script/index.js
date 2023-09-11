@@ -89,7 +89,7 @@ res) => {
     cachePath,
     cacheMethod,
     gzip,
-    lstmOnly
+    lstmOnly,
   };
 
   const statusText = 'loading language traineddata';
@@ -104,11 +104,6 @@ res) => {
       : adapter.readCache;
     let data = null;
     let newData = false;
-
-    // If `langPath` if not explicitly set by the user, the jsdelivr CDN is used.
-    // Data supporting the Legacy model is only included if `lstmOnly` is not true.
-    // This saves a significant amount of data for the majority of users that use LSTM only.
-    const langPath = langPath || (lstmOnly ? 'https://cdn.jsdelivr.net/npm/@tesseract.js-data/${lang}/4.0.0_best_int' : 'https://cdn.jsdelivr.net/npm/@tesseract.js-data/${lang}/4.0.0');
 
     // Check for existing .traineddata file in cache
     // This automatically fails if cacheMethod is set to 'refresh' or 'none'
@@ -128,14 +123,19 @@ res) => {
       if (typeof _lang === 'string') {
         let path = null;
 
+        // If `langPath` if not explicitly set by the user, the jsdelivr CDN is used.
+        // Data supporting the Legacy model is only included if `lstmOnly` is not true.
+        // This saves a significant amount of data for the majority of users that use LSTM only.
+        const langPathDownload = langPath || (lstmOnly ? `https://cdn.jsdelivr.net/npm/@tesseract.js-data/${lang}/4.0.0_best_int` : `https://cdn.jsdelivr.net/npm/@tesseract.js-data/${lang}/4.0.0`);
+
         // For Node.js, langPath may be a URL or local file path
         // The is-url package is used to tell the difference
         // For the browser version, langPath is assumed to be a URL
-        if (env !== 'node' || isURL(langPath) || langPath.startsWith('moz-extension://') || langPath.startsWith('chrome-extension://') || langPath.startsWith('file://')) { /** When langPath is an URL */
-          path = langPath.replace(/\/$/, '');
+        if (env !== 'node' || isURL(langPathDownload) || langPathDownload.startsWith('moz-extension://') || langPathDownload.startsWith('chrome-extension://') || langPathDownload.startsWith('file://')) { /** When langPathDownload is an URL */
+          path = langPathDownload.replace(/\/$/, '');
         }
 
-        // langPath is a URL, fetch from server
+        // langPathDownload is a URL, fetch from server
         if (path !== null) {
           const fetchUrl = `${path}/${lang}.traineddata${gzip ? '.gz' : ''}`;
           const resp = await (env === 'webworker' ? fetch : adapter.fetch)(fetchUrl);
@@ -144,10 +144,10 @@ res) => {
           }
           data = new Uint8Array(await resp.arrayBuffer());
 
-        // langPath is a local file, read .traineddata from local filesystem
+        // langPathDownload is a local file, read .traineddata from local filesystem
         // (adapter.readCache is a generic file read function in Node.js version)
         } else {
-          data = await adapter.readCache(`${langPath}/${lang}.traineddata${gzip ? '.gz' : ''}`);
+          data = await adapter.readCache(`${langPathDownload}/${lang}.traineddata${gzip ? '.gz' : ''}`);
         }
       } else {
         data = _lang.data; // eslint-disable-line
