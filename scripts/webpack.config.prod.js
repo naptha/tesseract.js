@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('node:path');
 const common = require('./webpack.config.common');
 const webpack = require('webpack');
 
