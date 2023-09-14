@@ -32,7 +32,8 @@ createWorker is a factory function that creates a tesseract worker, a worker is 
 **Arguments:**
 
 - `options` an object of customized options
-  - `corePath` path for tesseract-core.js script
+  - `corePath` path to a directory containing **both** `tesseract-core.wasm.js` and `tesseract-core-simd.wasm.js` from [Tesseract.js-core](https://www.npmjs.com/package/tesseract.js-core) package
+     - Setting `corePath` to a specific `.js` file is **strongly discouraged.**  To provide the best performance on all devices, Tesseract.js needs to be able to pick between `tesseract-core.wasm.js` and `tesseract-core-simd.wasm.js`.  See [this issue](https://github.com/naptha/tesseract.js/issues/735) for more detail.
   - `langPath` path for downloading traineddata, do not include `/` at the end of the path
   - `workerPath` path for downloading worker script
   - `dataPath` path for saving traineddata in WebAssembly file system, not common to modify
