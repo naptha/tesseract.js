@@ -37,15 +37,10 @@
 
       const element = document.getElementById("imgRow");
 
-      const worker = await Tesseract.createWorker({
+      const worker = await Tesseract.createWorker('eng', 0, {
         // corePath: '/tesseract-core-simd.wasm.js',
         workerPath: "/dist/worker.dev.js"
       });
-      await worker.loadLanguage('eng');
-      await worker.initialize('eng');
-
-      await worker.initialize();
-
 
       const fileArr = ["../data/meditations.jpg", "../data/tyger.jpg", "../data/testocr.png"];
       let timeTotal = 0;

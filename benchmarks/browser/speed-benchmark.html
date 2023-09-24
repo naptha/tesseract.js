@@ -13,12 +13,10 @@
       const { createWorker } = Tesseract;
       
       (async () => {
-        const worker = await createWorker({
+        const worker = await createWorker("eng", 1, {
           // corePath: '/tesseract-core-simd.wasm.js',
           workerPath: "/dist/worker.dev.js"
         });
-        await worker.loadLanguage('eng');
-        await worker.initialize('eng');
 
         // The performance.measureUserAgentSpecificMemory function only runs under specific circumstances for security reasons.
         // See: https://developer.mozilla.org/en-US/docs/Web/API/Performance/measureUserAgentSpecificMemory#security_requirements

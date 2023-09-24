@@ -16,13 +16,11 @@
 
       // Creates worker and adds to scheduler
       const workerGen = async () => {
-        const worker = await Tesseract.createWorker({
+        const worker = await Tesseract.createWorker("eng", 1, {
           corePath: '../../node_modules/tesseract.js-core',
           workerPath: "/dist/worker.dev.js",
           logger: function(m){console.log(m);}
         });
-        await worker.loadLanguage('eng');
-        await worker.initialize('eng');
         scheduler.addWorker(worker);
       }
 

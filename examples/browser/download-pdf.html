@@ -10,7 +10,7 @@
     <textarea id="board" readonly rows="8" cols="80">Upload an image file</textarea>
     <script type="module">
       const { createWorker } = Tesseract;
-      const worker = await createWorker({
+      const worker = await createWorker("eng", 1, {
         corePath: '/node_modules/tesseract.js-core',
         workerPath: "/dist/worker.dev.js",
         logger: m => console.log(m),
