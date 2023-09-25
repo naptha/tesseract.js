@@ -60,8 +60,8 @@ declare namespace Tesseract {
     cacheMethod: string
     workerBlobURL: boolean
     gzip: boolean
-    oemLang: OEM
-    oemCore: OEM
+    legacyLang: boolean
+    legacyCore: boolean
     logger: (arg: LoggerMessage) => void,
     errorHandler: (arg: any) => void
   }

@@ -33,7 +33,7 @@ module.exports = async (langs = 'eng', oem = OEM.DEFAULT, _options = {}, config 
   const currentLangs = typeof langs === 'string' ? langs.split('+') : langs;
   let currentOem = oem;
   let currentConfig = config;
-  const lstmOnlyCore = [OEM.DEFAULT, OEM.LSTM_ONLY].includes(oem) && (!options.oemCore || [OEM.DEFAULT, OEM.LSTM_ONLY].includes(options.oemCore));
+  const lstmOnlyCore = [OEM.DEFAULT, OEM.LSTM_ONLY].includes(oem) && !options.legacyCore;
 
   let workerResReject;
   let workerResResolve;
@@ -127,7 +127,7 @@ module.exports = async (langs = 'eng', oem = OEM.DEFAULT, _options = {}, config 
         cachePath: options.cachePath,
         cacheMethod: options.cacheMethod,
         gzip: options.gzip,
-        lstmOnly: !([OEM.TESSERACT_ONLY, OEM.TESSERACT_LSTM_COMBINED].includes(currentOem) || [OEM.TESSERACT_ONLY, OEM.TESSERACT_LSTM_COMBINED].includes(options.oemLang)), // eslint-disable-line
+        lstmOnly: [OEM.TESSERACT_ONLY, OEM.TESSERACT_LSTM_COMBINED].includes(currentOem) && !options.legacyLang, 
       },
     },
   }));
