@@ -9,7 +9,7 @@
  */
 
 const fetch = require('node-fetch');
-const { parentPort } = require('worker_threads');
+const { parentPort } = require('node:worker_threads');
 const worker = require('..');
 const getCore = require('./getCore');
 const gunzip = require('./gunzip');
