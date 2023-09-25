@@ -167,7 +167,7 @@ npm start
 ```
 
 The development server will be available at http://localhost:3000/examples/browser/demo.html in your favorite browser.
-It will automatically rebuild `tesseract.dev.js` and `worker.dev.js` when you change files in the **src** folder.
+It will automatically rebuild `tesseract.min.js` and `worker.min.js` when you change files in the **src** folder.
 
 ### Online Setup with a single Click
 

@@ -3,7 +3,7 @@ const middleware = require('webpack-dev-middleware');
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
-const webpackConfig = require('./webpack.config.dev');
+const webpackConfig = require('./webpack.config.prod');
 
 const compiler = webpack(webpackConfig);
 const app = express();

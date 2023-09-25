@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
   <head>
-    <script src="/dist/tesseract.dev.js"></script>
+    <script src="/dist/tesseract.min.js"></script>
   </head>
   <body>
     <input type="file" id="uploader" multiple>
@@ -18,7 +18,7 @@
       const workerGen = async () => {
         const worker = await Tesseract.createWorker("eng", 1, {
           corePath: '../../node_modules/tesseract.js-core',
-          workerPath: "/dist/worker.dev.js",
+          workerPath: "/dist/worker.min.js",
           logger: function(m){console.log(m);}
         });
         scheduler.addWorker(worker);

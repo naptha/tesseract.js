@@ -1,8 +1,7 @@
 const { simd } = require('wasm-feature-detect');
 const { dependencies } = require('../../../package.json');
-const OEM = require('../../constants/OEM');
 
-module.exports = async (oem, corePath, res) => {
+module.exports = async (lstmOnly, corePath, res) => {
   if (typeof global.TesseractCore === 'undefined') {
     const statusText = 'loading tesseract core';
 
@@ -22,12 +21,12 @@ module.exports = async (oem, corePath, res) => {
     } else {
       const simdSupport = await simd();
       if (simdSupport) {
-        if ([OEM.DEFAULT, OEM.LSTM_ONLY].includes(oem)) {
+        if (lstmOnly) {
           corePathImportFile = `${corePathImport.replace(/\/$/, '')}/tesseract-core-simd-lstm.wasm.js`;
         } else {
           corePathImportFile = `${corePathImport.replace(/\/$/, '')}/tesseract-core-simd.wasm.js`;
         }
-      } else if ([OEM.DEFAULT, OEM.LSTM_ONLY].includes(oem)) {
+      } else if (lstmOnly) {
         corePathImportFile = `${corePathImport.replace(/\/$/, '')}/tesseract-core-lstm.wasm.js`;
       } else {
         corePathImportFile = `${corePathImport.replace(/\/$/, '')}/tesseract-core.wasm.js`;

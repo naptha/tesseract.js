@@ -1,7 +1,7 @@
 <html>
 
 <head>
-  <script src="/dist/tesseract.dev.js"></script>
+  <script src="/dist/tesseract.min.js"></script>
   <style>
     .column {
       float: left;
@@ -39,7 +39,7 @@
 
       const worker = await Tesseract.createWorker('eng', 0, {
         // corePath: '/tesseract-core-simd.wasm.js',
-        workerPath: "/dist/worker.dev.js"
+        workerPath: "/dist/worker.min.js"
       });
 
       const fileArr = ["../data/meditations.jpg", "../data/tyger.jpg", "../data/testocr.png"];

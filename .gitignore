@@ -1,8 +1,8 @@
 .DS_Store
 node_modules/*
 yarn.lock
-tesseract.dev.js
-worker.dev.js
+tesseract.min.js
+worker.min.js
 *.traineddata
 *.traineddata.gz
 .nyc_output

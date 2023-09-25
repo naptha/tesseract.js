@@ -33,7 +33,7 @@ module.exports = async (langs = 'eng', oem = OEM.DEFAULT, _options = {}, config 
   const currentLangs = typeof langs === 'string' ? langs.split('+') : langs;
   let currentOem = oem;
   let currentConfig = config;
-  const lstmOnlyCore = [OEM.DEFAULT, OEM.LSTM_ONLY].includes(oem);
+  const lstmOnlyCore = [OEM.DEFAULT, OEM.LSTM_ONLY].includes(oem) && (!options.oemCore || [OEM.DEFAULT, OEM.LSTM_ONLY].includes(options.oemCore));
 
   let workerResReject;
   let workerResResolve;
@@ -76,7 +76,7 @@ module.exports = async (langs = 'eng', oem = OEM.DEFAULT, _options = {}, config 
 
   const loadInternal = (jobId) => (
     startJob(createJob({
-      id: jobId, action: 'load', payload: { options: { oem: options.oemCore, corePath: options.corePath, logging: options.logging } },
+      id: jobId, action: 'load', payload: { options: { lstmOnly: lstmOnlyCore, corePath: options.corePath, logging: options.logging } },
     }))
   );
 

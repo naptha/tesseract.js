@@ -1,6 +1,6 @@
 <html>
   <head>
-    <script src="/dist/tesseract.dev.js"></script>
+    <script src="/dist/tesseract.min.js"></script>
   </head>
   <body>
     <input type="file" id="uploader">
@@ -14,7 +14,7 @@
       const recognize = async ({ target: { files }  }) => {
         const { data: { text } } = await Tesseract.recognize(files[0], 'eng', {
           corePath: '../../node_modules/tesseract.js-core',
-          workerPath: "/dist/worker.dev.js",
+          workerPath: "/dist/worker.min.js",
           logger: m => console.log(m),
         });
         console.log(text);

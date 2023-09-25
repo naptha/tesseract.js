@@ -1,6 +1,6 @@
 <html>
   <head>
-    <script src="/dist/tesseract.dev.js"></script>
+    <script src="/dist/tesseract.min.js"></script>
   </head>
   <body>
     <div>
@@ -12,7 +12,7 @@
       const { createWorker } = Tesseract;
       const worker = await createWorker("eng", 1, {
         corePath: '/node_modules/tesseract.js-core',
-        workerPath: "/dist/worker.dev.js",
+        workerPath: "/dist/worker.min.js",
         logger: m => console.log(m),
       });
       const uploader = document.getElementById('uploader');

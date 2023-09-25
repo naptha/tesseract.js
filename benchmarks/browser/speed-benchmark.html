@@ -1,6 +1,6 @@
 <html>
   <head>
-    <script src="/dist/tesseract.dev.js"></script>
+    <script src="/dist/tesseract.min.js"></script>
   </head>
   <body>
     <textarea id="message">Working...</textarea>
@@ -14,8 +14,8 @@
       
       (async () => {
         const worker = await createWorker("eng", 1, {
-          // corePath: '/tesseract-core-simd.wasm.js',
-          workerPath: "/dist/worker.dev.js"
+          corePath: '../../node_modules/tesseract.js-core',
+          workerPath: "/dist/worker.min.js",
         });
 
         // The performance.measureUserAgentSpecificMemory function only runs under specific circumstances for security reasons.
@@ -23,8 +23,11 @@
         // Launching a server using `npm start` and accessing via localhost on the same system should meet these conditions.
         const debugMemory = true;
         if (debugMemory && crossOriginIsolated) {
-          console.log("Memory utilization after initialization:");
-          console.log(await performance.measureUserAgentSpecificMemory());
+          const memObj = await performance.measureUserAgentSpecificMemory();
+          const memMb = memObj.breakdown.map((x) => {if(x.attribution?.[0]?.scope == "DedicatedWorkerGlobalScope") return x.bytes}).reduce((a, b) => (a || 0) + (b || 0), 0) / 1e6;
+
+          console.log(`Worker memory utilization after initialization: ${memMb} MB`);
+
         } else {
           console.log("Unable to run `performance.measureUserAgentSpecificMemory`: not crossOriginIsolated.")
         }
@@ -43,8 +46,11 @@
         }
 
         if (debugMemory && crossOriginIsolated) {
-          console.log("Memory utilization after recognition:");
-          console.log(await performance.measureUserAgentSpecificMemory());
+          const memObj = await performance.measureUserAgentSpecificMemory();
+          const memMb = memObj.breakdown.map((x) => {if(x.attribution?.[0]?.scope == "DedicatedWorkerGlobalScope") return x.bytes}).reduce((a, b) => (a || 0) + (b || 0), 0) / 1e6;
+
+          console.log(`Worker memory utilization after recognition: ${memMb} MB`);
+
         }
 
         document.getElementById('message').innerHTML += "\nTotal runtime: " + timeTotal + "s";

@@ -32,13 +32,13 @@ let loadLanguageLangsWorker;
 let loadLanguageOptionsWorker;
 let dataFromCache = false;
 
-const load = async ({ workerId, jobId, payload: { options: { oem, corePath, logging } } }, res) => {
+const load = async ({ workerId, jobId, payload: { options: { lstmOnly, corePath, logging } } }, res) => {
   setLogging(logging);
 
   const statusText = 'initializing tesseract';
 
   if (!TessModule) {
-    const Core = await adapter.getCore(oem, corePath, res);
+    const Core = await adapter.getCore(lstmOnly, corePath, res);
 
     res.progress({ workerId, status: statusText, progress: 0 });
 
