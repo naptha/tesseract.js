@@ -51,13 +51,11 @@ Or using workers (recommended for production use):
 ```javascript
 import { createWorker } from 'tesseract.js';
 
-const worker = await createWorker({
+const worker = await createWorker('eng', 1, {
   logger: m => console.log(m)
 });
 
 (async () => {
-  await worker.loadLanguage('eng');
-  await worker.initialize('eng');
   const { data: { text } } = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png');
   console.log(text);
   await worker.terminate();
@@ -65,7 +63,21 @@ const worker = await createWorker({
 ```
 
 For a basic overview of the functions, including the pros/cons of different approaches, see the [intro](./docs/intro.md).  [Check out the docs](#documentation) for a full explanation of the API.
- 
+
+## Major changes in v5
+Version 5 changes are documented in [this issue](https://github.com/naptha/tesseract.js/issues/820).  Highlights are below.
+
+ - Significantly smaller files by default (54% smaller for English, 73% smaller for Chinese)
+    - This results in a ~50% reduction in runtime for first-time users (who do not have the files cached yet)
+ - Significantly lower memory usage
+ - Compatible with iOS 17 (using default settings)
+    - iOS 17 broke compatibility with Tesseract.js v4--developers who value iOS compatibility should upgrade to v5
+ - Breaking changes:
+    - `createWorker` arguments changed
+       - Setting non-default language and OEM now happens in `createWorker`
+          - E.g. `createWorker("chi_sim", 1)`
+    - `worker.initialize` and `worker.loadLanguage` functions now do nothing and can be deleted from code
+
 ## Major changes in v4
 Version 4 includes many new features and bug fixes--see [this issue](https://github.com/naptha/tesseract.js/issues/662) for a full list.  Several highlights are below. 
 
@@ -87,15 +99,6 @@ Version 4 includes many new features and bug fixes--see [this issue](https://git
    - ASM.js version, any other old versions of Tesseract.js-core (<3.0.0) 
    - Node.js versions 10 and 12
 
-## Major changes in v2
-- Upgrade to tesseract v4.1.1 (using emscripten 1.39.10 upstream)
-- Support multiple languages at the same time, eg: eng+chi\_tra for English and Traditional Chinese
-- Supported image formats: png, jpg, bmp, pbm
-- Support WebAssembly (fallback to ASM.js when browser doesn't support)
-- Support Typescript
-
-Read a story about v2: <a href="https://jeromewu.github.io/why-i-refactor-tesseract.js-v2/">Why I refactor tesseract.js v2?</a><br>
-  Check the <a href="https://github.com/naptha/tesseract.js/tree/support/1.x">support/1.x</a> branch for version 1
 ## Installation
 Tesseract.js works with a `<script>` tag via local copy or CDN, with webpack via `npm` and on Node.js with `npm/yarn`.
 

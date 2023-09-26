@@ -2,11 +2,11 @@
 This guide contains tips and strategies for getting the fastest performance from Tesseract.js.  While some of the tips below involve avoiding pitfalls and should be universally implemented, other strategies (changing the language data or recognition model) may harm recognition quality.  Therefore, whether these strategies are appropriate depends on the application, and users should always benchmark performance and quality before changing important settings from their defaults. 
 
 # Reducing Setup Time
-Within certain applications, the majority of runtime may be attributable to setup steps (`createWorker`, `worker.initialize`, and `worker.loadLanguage`) rather than recognition (`worker.recognize`).  Implementing the strategies in this section should reduce the time spent on these steps. 
+Within certain applications, the majority of runtime may be attributable to setup steps (`createWorker`) rather than recognition (`worker.recognize`).  Implementing the strategies in this section should reduce the time spent on these steps. 
 
 Notably, the time spent on setup for first-time users may not be apparent to developers, as Tesseract.js caches language data after it is downloaded for the first time. To experience Tesseract.js as a first-time user, set `cacheMethod: 'none'` in the [createWorker options](./api.md#createworkeroptions-worker).  Be sure to remove this setting before publishing your app.
 ### Reuse Workers
-When recognizing multiple images, some users will create/load/destroy a new worker for each image.  This is never the correct option.  If the images are being recognized one after the other, all of the extra `createWorker`/`worker.initialize`/`worker.loadLanguage` steps are wasted runtime, as `worker.recognize` could be run with the same `worker`.  Workers do not break after one use. 
+When recognizing multiple images, some users will create/load/destroy a new worker for each image.  This is never the correct option.  If the images are being recognized one after the other, all of the extra steps required to create/load/destroy a new worker are wasted runtime, as `worker.recognize` could be run with the same `worker`.  Workers do not break after one use. 
 
 Alternatively, if images are being recognized in parallel, then creating a new worker for each recognition job is likely to cause crashes due to resource limitations.  As each Tesseract.js worker uses a high amount of memory, code should never be able to create an arbitrary number of `workers`.  Instead, schedulers should be used to create a specific pool for workers (say, 4 workers), and then jobs assigned through the scheduler.
 ### Set Up Workers Ahead of Time

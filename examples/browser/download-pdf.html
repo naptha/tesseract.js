@@ -19,8 +19,6 @@
       const dlBtn = document.getElementById('download-pdf');
       let pdf;
       const recognize = async ({ target: { files }  }) => {
-        await worker.loadLanguage('eng');
-        await worker.initialize('eng');
         const res = await worker.recognize(files[0],{pdfTitle: "Example PDF"},{pdf: true});
         pdf = res.data.pdf;
         const text = res.data.text;

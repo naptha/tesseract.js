@@ -20,9 +20,7 @@ Tesseract.js also supports creating and managing workers (the objects that execu
 
 ```
 (async () => {
-    const worker = await Tesseract.createWorker();
-    await worker.loadLanguage('eng');
-    await worker.initialize('eng');
+    const worker = await Tesseract.createWorker('eng');
     const { data: { text } } = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png');
     console.log(text);
     await worker.terminate();
@@ -42,9 +40,7 @@ const scheduler = Tesseract.createScheduler();
 
 // Creates worker and adds to scheduler
 const workerGen = async () => {
-  const worker = await Tesseract.createWorker();
-  await worker.loadLanguage('eng');
-  await worker.initialize('eng');
+  const worker = await Tesseract.createWorker('eng');
   scheduler.addWorker(worker);
 }
 
