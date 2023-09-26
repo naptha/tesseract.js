@@ -71,7 +71,6 @@ Version 5 changes are documented in [this issue](https://github.com/naptha/tesse
     - This results in a ~50% reduction in runtime for first-time users (who do not have the files cached yet)
  - Significantly lower memory usage
  - Compatible with iOS 17 (using default settings)
-    - iOS 17 broke compatibility with Tesseract.js v4
  - Breaking changes:
     - `createWorker` arguments changed
        - Setting non-default language and OEM now happens in `createWorker`
