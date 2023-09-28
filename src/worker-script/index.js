@@ -32,7 +32,7 @@ let loadLanguageLangsWorker;
 let loadLanguageOptionsWorker;
 let dataFromCache = false;
 
-const load = async ({ workerId, jobId, payload: { options: { lstmOnly, corePath, logging } } }, res) => {
+const load = async ({ workerId, jobId, payload: { options: { lstmOnly, corePath, logging } } }, res) => { // eslint-disable-line max-len
   setLogging(logging);
 
   const statusText = 'initializing tesseract';
