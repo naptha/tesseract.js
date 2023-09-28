@@ -15,7 +15,7 @@ const {
 
 let workerCounter = 0;
 
-module.exports = async (langs = 'eng', oem = OEM.DEFAULT, _options = {}, config = {}) => {
+module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, config = {}) => {
   const id = getId('Worker', workerCounter);
   const {
     logger,
