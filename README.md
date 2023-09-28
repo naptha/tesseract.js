@@ -31,38 +31,55 @@ Video Real-time Recognition
 
 
 Tesseract.js wraps a [webassembly port](https://github.com/naptha/tesseract.js-core) of the [Tesseract](https://github.com/tesseract-ocr/tesseract) OCR Engine.
-It works in the browser using [webpack](https://webpack.js.org/) or plain script tags with a [CDN](#CDN) and on the server with [Node.js](https://nodejs.org/en/).
+It works in the browser using [webpack](https://webpack.js.org/), esm, or plain script tags with a [CDN](#CDN) and on the server with [Node.js](https://nodejs.org/en/).
 After you [install it](#installation), using it is as simple as:
-
-```javascript
-import Tesseract from 'tesseract.js';
-
-Tesseract.recognize(
-  'https://tesseract.projectnaptha.com/img/eng_bw.png',
-  'eng',
-  { logger: m => console.log(m) }
-).then(({ data: { text } }) => {
-  console.log(text);
-})
-```
-
-Or using workers (recommended for production use):
 
 ```javascript
 import { createWorker } from 'tesseract.js';
 
-const worker = await createWorker('eng', 1, {
-  logger: m => console.log(m)
-});
-
 (async () => {
-  const { data: { text } } = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png');
-  console.log(text);
+  const worker = await createWorker('eng');
+  const data = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png');
+  console.log(data.text);
   await worker.terminate();
 })();
 ```
+When recognizing multiple images, users should create a worker once, run `worker.recognize` for each image, and then run `worker.terminate()` once at the end (rather than running the above snippet for every image). 
 
-For a basic overview of the functions, including the pros/cons of different approaches, see the [intro](./docs/intro.md).  [Check out the docs](#documentation) for a full explanation of the API.
+## Installation
+Tesseract.js works with a `<script>` tag via local copy or CDN, with webpack via `npm` and on Node.js with `npm/yarn`.
+
+### CDN
+```html
+<!-- v5 -->
+<script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
+```
+After including the script the `Tesseract` variable will be globally available and a worker can be created using `Tesseract.createWorker`.
+
+Alternatively, an ESM build (used with `import` syntax) can be found at `https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.esm.min.js`. 
+
+### Node.js
+
+**Requires Node.js v14 or higher**
+
+```shell
+# For latest version
+npm install tesseract.js
+yarn add tesseract.js
+
+# For old versions
+npm install tesseract.js@3.0.3
+yarn add tesseract.js@3.0.3
+```
+
+## Documentation
+
+* [Workers vs. Schedulers](./docs/workers_vs_schedulers.md)
+* [Examples](./docs/examples.md)
+* [Supported Image Formats](./docs/image-format.md)
+* [API](./docs/api.md)
+* [Local Installation](./docs/local-installation.md)
+* [FAQ](./docs/faq.md)
 
 ## Major changes in v5
 Version 5 changes are documented in [this issue](https://github.com/naptha/tesseract.js/issues/820).  Highlights are below.
@@ -98,41 +115,6 @@ Version 4 includes many new features and bug fixes--see [this issue](https://git
    - ASM.js version, any other old versions of Tesseract.js-core (<3.0.0) 
    - Node.js versions 10 and 12
 
-## Installation
-Tesseract.js works with a `<script>` tag via local copy or CDN, with webpack via `npm` and on Node.js with `npm/yarn`.
-
-
-### CDN
-```html
-<!-- v4 -->
-<script src='https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js'></script>
-```
-After including the script the `Tesseract` variable will be globally available.
-
-
-### Node.js
-
-**Requires Node.js v14 or higher**
-
-```shell
-# For latest version
-npm install tesseract.js
-yarn add tesseract.js
-
-# For old versions
-npm install tesseract.js@3.0.3
-yarn add tesseract.js@3.0.3
-```
-
-
-## Documentation
-
-* [Intro](./docs/intro.md)
-* [Examples](./docs/examples.md)
-* [Image Format](./docs/image-format.md)
-* [API](./docs/api.md)
-* [Local Installation](./docs/local-installation.md)
-* [FAQ](./docs/faq.md)
 
 ## Use tesseract.js the way you like!
 

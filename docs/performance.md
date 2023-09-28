@@ -10,7 +10,7 @@ When recognizing multiple images, some users will create/load/destroy a new work
 
 Alternatively, if images are being recognized in parallel, then creating a new worker for each recognition job is likely to cause crashes due to resource limitations.  As each Tesseract.js worker uses a high amount of memory, code should never be able to create an arbitrary number of `workers`.  Instead, schedulers should be used to create a specific pool for workers (say, 4 workers), and then jobs assigned through the scheduler.
 ### Set Up Workers Ahead of Time
-Rather than waiting until the last minute to load code and data, you can set up a worker ahead of time.  Doing so greatly reduces runtime the first time a user run recognition.  This requires managing workers rather than using `Tesseract.recognize`, which is explained [here](./intro.md).  An example where a worker is prepared ahead of time can be found [here](../examples/browser/basic-efficient.html).
+Rather than waiting until the last minute to load code and data, you can set up a worker ahead of time.  Doing so greatly reduces runtime the first time a user run recognition.  An example where a worker is prepared ahead of time can be found [here](../examples/browser/basic-efficient.html).
 
 The appropriate time to load Tesseract.js workers and data is application-specific.  For example, if you have an web app where only 5% of users need OCR, it likely does not make sense to download ~15MB in code and data upon a page load.  You could consider instead loading Tesseract.js when a user indicates they want to perform OCR, but before they select a specific image.
 
@@ -24,12 +24,6 @@ To avoid downloading language data multiple times, Tesseract.js caches `.trained
 ### Use the Latest Version of Tesseract.js
 Old versions of Tesseract.js are significantly slower.  Notably, v2 (now depreciated) takes 10x longer to recognize certain images compared to the latest version.
 
-### Consider Using the Legacy Model
-In general, the LSTM (default) recognition model provides the best quality.  However, the Legacy model generally runs faster, and depending on your application, may provide sufficient recognition quality.  If runtime is a significant concern, consider experimenting with the Legacy model (by setting `oem` to `”0”` within `worker.initialize`).  As a rule of thumb, the Legacy model is usually viable when the input data is high-quality (high-definition screenshots, document scans, etc.).  
-
-### Consider Using "Fast" Language Data
-By default, Tesseract.js uses language data that is optimized for quality rather than speed.  You can also experiment with using language data that is optimized for speed by setting `langPath` to `https://tessdata.projectnaptha.com/4.0.0_fast`.  We have not benchmarked the impact this has on performance or accuracy, so feel free to open a Git Issue if you do so and wish to share results. 
-
 ### Do Not Set `corePath` to a Single `.js` file
 If you set the `corePath` argument, be sure to set it to a directory that contains **all 4** of these files:
 
@@ -39,3 +33,6 @@ If you set the `corePath` argument, be sure to set it to a directory that contai
 4. `tesseract-core-simd-lstm.wasm.js`
 
 Tesseract.js needs to be able to pick between these files—setting `corePath` to a specific `.js` file will significantly degrade performance or compatibility.  
+
+### Consider Using "Fast" Language Data
+By default, Tesseract.js uses language data that is optimized for quality rather than speed.  You can also experiment with using language data that is optimized for speed by setting `langPath` to `https://tessdata.projectnaptha.com/4.0.0_fast`.  We have not benchmarked the impact this has on performance or accuracy, so feel free to open a Git Issue if you do so and wish to share results. 

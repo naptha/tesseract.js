@@ -363,12 +363,16 @@ setLogging(true);
 <a name="recognize"></a>
 ## recognize(image, langs, options): Promise
 
-recognize() is a function to quickly do recognize() task, it is not recommended to use in real application, but useful when you want to save some time.
+This function is depreciated and should be replaced with `worker.recognize` (see above). 
+
+`recognize` works the same as `worker.recognize`, except that a new worker is created, loaded, and destroyed every time the function is called.
 
 See [Tesseract.js](../src/Tesseract.js)
 
 <a name="detect"></a>
 ## detect(image, options): Promise
+
+This function is depreciated and should be replaced with `worker.detect` (see above). 
 
 Same background as recognize(), but it does detect instead.
 
