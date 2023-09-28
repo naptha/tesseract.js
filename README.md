@@ -93,6 +93,7 @@ Version 5 changes are documented in [this issue](https://github.com/naptha/tesse
        - Setting non-default language and OEM now happens in `createWorker`
           - E.g. `createWorker("chi_sim", 1)`
     - `worker.initialize` and `worker.loadLanguage` functions now do nothing and can be deleted from code
+    - See [this issue](https://github.com/naptha/tesseract.js/issues/820) for full list
 
 ## Major changes in v4
 Version 4 includes many new features and bug fixes--see [this issue](https://github.com/naptha/tesseract.js/issues/662) for a full list.  Several highlights are below. 
