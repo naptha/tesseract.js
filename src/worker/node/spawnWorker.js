@@ -1,4 +1,4 @@
-const { Worker } = require('node:worker_threads');
+const { Worker } = require('worker_threads');
 
 /**
  * spawnWorker
