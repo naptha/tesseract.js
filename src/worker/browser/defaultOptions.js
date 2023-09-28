@@ -1,4 +1,3 @@
-const resolveURL = (s) => (new URL(s, window.location.href)).href;
 const { version } = require('../../../package.json');
 const defaultOptions = require('../../constants/defaultOptions');
 
@@ -7,12 +6,5 @@ const defaultOptions = require('../../constants/defaultOptions');
  */
 module.exports = {
   ...defaultOptions,
-  workerPath: (typeof process !== 'undefined' && process.env.TESS_ENV === 'development')
-    ? resolveURL(`/dist/worker.dev.js?nocache=${Math.random().toString(36).slice(3)}`)
-    : `https://cdn.jsdelivr.net/npm/tesseract.js@v${version}/dist/worker.min.js`,
-  /*
-   * If browser doesn't support WebAssembly,
-   * load ASM version instead
-   */
-  corePath: null,
+  workerPath: `https://cdn.jsdelivr.net/npm/tesseract.js@v${version}/dist/worker.min.js`,
 };

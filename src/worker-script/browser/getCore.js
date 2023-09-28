@@ -1,9 +1,11 @@
 const { simd } = require('wasm-feature-detect');
 const { dependencies } = require('../../../package.json');
 
-module.exports = async (corePath, res) => {
+module.exports = async (lstmOnly, corePath, res) => {
   if (typeof global.TesseractCore === 'undefined') {
-    res.progress({ status: 'loading tesseract core', progress: 0 });
+    const statusText = 'loading tesseract core';
+
+    res.progress({ status: statusText, progress: 0 });
 
     // If the user specifies a core path, we use that
     // Otherwise, default to CDN
@@ -19,7 +21,13 @@ module.exports = async (corePath, res) => {
     } else {
       const simdSupport = await simd();
       if (simdSupport) {
-        corePathImportFile = `${corePathImport.replace(/\/$/, '')}/tesseract-core-simd.wasm.js`;
+        if (lstmOnly) {
+          corePathImportFile = `${corePathImport.replace(/\/$/, '')}/tesseract-core-simd-lstm.wasm.js`;
+        } else {
+          corePathImportFile = `${corePathImport.replace(/\/$/, '')}/tesseract-core-simd.wasm.js`;
+        }
+      } else if (lstmOnly) {
+        corePathImportFile = `${corePathImport.replace(/\/$/, '')}/tesseract-core-lstm.wasm.js`;
       } else {
         corePathImportFile = `${corePathImport.replace(/\/$/, '')}/tesseract-core.wasm.js`;
       }
@@ -36,7 +44,7 @@ module.exports = async (corePath, res) => {
     } else if (typeof global.TesseractCore === 'undefined') {
       throw Error('Failed to load TesseractCore');
     }
-    res.progress({ status: 'loading tesseract core', progress: 1 });
+    res.progress({ status: statusText, progress: 1 });
   }
   return global.TesseractCore;
 };

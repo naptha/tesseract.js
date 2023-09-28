@@ -3,7 +3,7 @@ const circularize = require('./utils/circularize');
 const createJob = require('./createJob');
 const { log } = require('./utils/log');
 const getId = require('./utils/getId');
-const { defaultOEM } = require('./constants/config');
+const OEM = require('./constants/OEM');
 const {
   defaultOptions,
   spawnWorker,
@@ -15,7 +15,7 @@ const {
 
 let workerCounter = 0;
 
-module.exports = async (_options = {}) => {
+module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, config = {}) => {
   const id = getId('Worker', workerCounter);
   const {
     logger,
@@ -27,6 +27,13 @@ module.exports = async (_options = {}) => {
   });
   const resolves = {};
   const rejects = {};
+
+  // Current langs, oem, and config file.
+  // Used if the user ever re-initializes the worker using `worker.reinitialize`.
+  const currentLangs = typeof langs === 'string' ? langs.split('+') : langs;
+  let currentOem = oem;
+  let currentConfig = config;
+  const lstmOnlyCore = [OEM.DEFAULT, OEM.LSTM_ONLY].includes(oem) && !options.legacyCore;
 
   let workerResReject;
   let workerResResolve;
@@ -69,7 +76,7 @@ module.exports = async (_options = {}) => {
 
   const loadInternal = (jobId) => (
     startJob(createJob({
-      id: jobId, action: 'load', payload: { options },
+      id: jobId, action: 'load', payload: { options: { lstmOnly: lstmOnlyCore, corePath: options.corePath, logging: options.logging } },
     }))
   );
 
@@ -105,21 +112,61 @@ module.exports = async (_options = {}) => {
     }))
   );
 
-  const loadLanguage = (langs = 'eng', jobId) => (
-    startJob(createJob({
-      id: jobId,
-      action: 'loadLanguage',
-      payload: { langs, options },
-    }))
+  const loadLanguage = () => (
+    console.warn('`loadLanguage` is depreciated and should be removed from code (workers now come with language pre-loaded)')
   );
 
-  const initialize = (langs = 'eng', oem = defaultOEM, config, jobId) => (
+  const loadLanguageInternal = (_langs, jobId) => startJob(createJob({
+    id: jobId,
+    action: 'loadLanguage',
+    payload: {
+      langs: _langs,
+      options: {
+        langPath: options.langPath,
+        dataPath: options.dataPath,
+        cachePath: options.cachePath,
+        cacheMethod: options.cacheMethod,
+        gzip: options.gzip,
+        lstmOnly: [OEM.TESSERACT_ONLY, OEM.TESSERACT_LSTM_COMBINED].includes(currentOem)
+          && !options.legacyLang,
+      },
+    },
+  }));
+
+  const initialize = () => (
+    console.warn('`initialize` is depreciated and should be removed from code (workers now come pre-initialized)')
+  );
+
+  const initializeInternal = (_langs, _oem, _config, jobId) => (
     startJob(createJob({
       id: jobId,
       action: 'initialize',
-      payload: { langs, oem, config },
+      payload: { langs: _langs, oem: _oem, config: _config },
     }))
   );
+
+  const reinitialize = (langs = 'eng', oem, config, jobId) => { // eslint-disable-line
+
+    if (lstmOnlyCore && [OEM.TESSERACT_ONLY, OEM.TESSERACT_LSTM_COMBINED].includes(oem)) throw Error('Legacy model requested but code missing.');
+
+    const _oem = oem || currentOem;
+    currentOem = _oem;
+
+    const _config = config || currentConfig;
+    currentConfig = _config;
+
+    // Only load langs that are not already loaded.
+    // This logic fails if the user downloaded the LSTM-only English data for a language
+    // and then uses `worker.reinitialize` to switch to the Legacy engine.
+    // However, the correct data will still be downloaded after initialization fails
+    // and this can be avoided entirely
+    const langsArr = typeof langs === 'string' ? langs.split('+') : langs;
+    const _langs = langsArr.filter((x) => currentLangs.includes(x));
+    currentLangs.push(_langs);
+
+    return loadLanguageInternal(_langs, jobId)
+      .then(() => initializeInternal(_langs, _oem, _config, jobId));
+  };
 
   const setParameters = (params = {}, jobId) => (
     startJob(createJob({
@@ -148,13 +195,15 @@ module.exports = async (_options = {}) => {
     }));
   };
 
-  const detect = async (image, jobId) => (
-    startJob(createJob({
+  const detect = async (image, jobId) => {
+    if (lstmOnlyCore) throw Error('`worker.detect` requires Legacy model, which was not loaded.');
+
+    return startJob(createJob({
       id: jobId,
       action: 'detect',
       payload: { image: await loadImage(image) },
-    }))
-  );
+    }));
+  };
 
   const terminate = async () => {
     if (worker !== null) {
@@ -207,6 +256,7 @@ module.exports = async (_options = {}) => {
     FS,
     loadLanguage,
     initialize,
+    reinitialize,
     setParameters,
     recognize,
     getPDF,
@@ -214,7 +264,11 @@ module.exports = async (_options = {}) => {
     terminate,
   };
 
-  loadInternal().then(() => workerResResolve(resolveObj)).catch(() => {});
+  loadInternal()
+    .then(() => loadLanguageInternal(langs))
+    .then(() => initializeInternal(langs, oem, config))
+    .then(() => workerResResolve(resolveObj))
+    .catch(() => {});
 
   return workerRes;
 };

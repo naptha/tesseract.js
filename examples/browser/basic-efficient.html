@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
   <head>
-    <script src="/dist/tesseract.dev.js"></script>
+    <script src="/dist/tesseract.min.js"></script>
   </head>
   <body>
     <input type="file" id="uploader" multiple>
@@ -10,15 +10,11 @@
       // This is a basic example more efficient than "basic.html".
       // In this example we create a worker once, and this worker is re-used
       // every time the user uploads a new file.  
-
-      const worker = await Tesseract.createWorker({
+      const worker = await Tesseract.createWorker("eng", 1, {
           corePath: '../../node_modules/tesseract.js-core',
-          workerPath: "/dist/worker.dev.js",
+          workerPath: "/dist/worker.min.js",
           logger: function(m){console.log(m);}
         });
-
-      await worker.loadLanguage('eng');
-      await worker.initialize('eng');
 
       const recognize = async function(evt){
         const files = evt.target.files;

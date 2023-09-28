@@ -28,15 +28,19 @@ let api = null;
 let latestJob;
 let adapter = {};
 let params = defaultParams;
-let cachePathWorker;
-let cacheMethodWorker;
+let loadLanguageLangsWorker;
+let loadLanguageOptionsWorker;
+let dataFromCache = false;
 
-const load = async ({ workerId, jobId, payload: { options: { corePath, logging } } }, res) => {
+const load = async ({ workerId, jobId, payload: { options: { lstmOnly, corePath, logging } } }, res) => { // eslint-disable-line max-len
   setLogging(logging);
-  if (!TessModule) {
-    const Core = await adapter.getCore(corePath, res);
 
-    res.progress({ workerId, status: 'initializing tesseract', progress: 0 });
+  const statusText = 'initializing tesseract';
+
+  if (!TessModule) {
+    const Core = await adapter.getCore(lstmOnly, corePath, res);
+
+    res.progress({ workerId, status: statusText, progress: 0 });
 
     Core({
       TesseractProgress(percent) {
@@ -49,7 +53,7 @@ const load = async ({ workerId, jobId, payload: { options: { corePath, logging }
       },
     }).then((tessModule) => {
       TessModule = tessModule;
-      res.progress({ workerId, status: 'initialized tesseract', progress: 1 });
+      res.progress({ workerId, status: statusText, progress: 1 });
       res.resolve({ loaded: true });
     });
   } else {
@@ -72,13 +76,26 @@ const loadLanguage = async ({
       cachePath,
       cacheMethod,
       gzip = true,
+      lstmOnly,
     },
   },
 },
 res) => {
-  // Remember cache options for later, as cache may be deleted if `initialize` fails
-  cachePathWorker = cachePath;
-  cacheMethodWorker = cacheMethod;
+  // Remember options for later, as cache may be deleted if `initialize` fails
+  loadLanguageLangsWorker = langs;
+  loadLanguageOptionsWorker = {
+    langPath,
+    dataPath,
+    cachePath,
+    cacheMethod,
+    gzip,
+    lstmOnly,
+  };
+
+  const statusText = 'loading language traineddata';
+
+  const langsArr = typeof langs === 'string' ? langs.split('+') : langs;
+  let progress = 0;
 
   const loadAndGunzipFile = async (_lang) => {
     const lang = typeof _lang === 'string' ? _lang : _lang.code;
@@ -94,8 +111,8 @@ res) => {
       const _data = await readCache(`${cachePath || '.'}/${lang}.traineddata`);
       if (typeof _data !== 'undefined') {
         log(`[${workerId}]: Load ${lang}.traineddata from cache`);
-        res.progress({ workerId, status: 'loading language traineddata (from cache)', progress: 0.5 });
         data = _data;
+        dataFromCache = true;
       } else {
         throw Error('Not found in cache');
       }
@@ -106,14 +123,19 @@ res) => {
       if (typeof _lang === 'string') {
         let path = null;
 
+        // If `langPath` if not explicitly set by the user, the jsdelivr CDN is used.
+        // Data supporting the Legacy model is only included if `lstmOnly` is not true.
+        // This saves a significant amount of data for the majority of users that use LSTM only.
+        const langPathDownload = langPath || (lstmOnly ? `https://cdn.jsdelivr.net/npm/@tesseract.js-data/${lang}/4.0.0_best_int` : `https://cdn.jsdelivr.net/npm/@tesseract.js-data/${lang}/4.0.0`);
+
         // For Node.js, langPath may be a URL or local file path
         // The is-url package is used to tell the difference
         // For the browser version, langPath is assumed to be a URL
-        if (env !== 'node' || isURL(langPath) || langPath.startsWith('moz-extension://') || langPath.startsWith('chrome-extension://') || langPath.startsWith('file://')) { /** When langPath is an URL */
-          path = langPath.replace(/\/$/, '');
+        if (env !== 'node' || isURL(langPathDownload) || langPathDownload.startsWith('moz-extension://') || langPathDownload.startsWith('chrome-extension://') || langPathDownload.startsWith('file://')) { /** When langPathDownload is an URL */
+          path = langPathDownload.replace(/\/$/, '');
         }
 
-        // langPath is a URL, fetch from server
+        // langPathDownload is a URL, fetch from server
         if (path !== null) {
           const fetchUrl = `${path}/${lang}.traineddata${gzip ? '.gz' : ''}`;
           const resp = await (env === 'webworker' ? fetch : adapter.fetch)(fetchUrl);
@@ -122,15 +144,18 @@ res) => {
           }
           data = new Uint8Array(await resp.arrayBuffer());
 
-        // langPath is a local file, read .traineddata from local filesystem
+        // langPathDownload is a local file, read .traineddata from local filesystem
         // (adapter.readCache is a generic file read function in Node.js version)
         } else {
-          data = await adapter.readCache(`${langPath}/${lang}.traineddata${gzip ? '.gz' : ''}`);
+          data = await adapter.readCache(`${langPathDownload}/${lang}.traineddata${gzip ? '.gz' : ''}`);
         }
       } else {
         data = _lang.data; // eslint-disable-line
       }
     }
+
+    progress += 0.5 / langsArr.length;
+    if (res) res.progress({ workerId, status: statusText, progress });
 
     // Check for gzip magic numbers (1F and 8B in hex)
     const isGzip = (data[0] === 31 && data[1] === 139) || (data[1] === 31 && data[0] === 139);
@@ -144,7 +169,7 @@ res) => {
         try {
           TessModule.FS.mkdir(dataPath);
         } catch (err) {
-          res.reject(err.toString());
+          if (res) res.reject(err.toString());
         }
       }
       TessModule.FS.writeFile(`${dataPath || '.'}/${lang}.traineddata`, data);
@@ -158,16 +183,19 @@ res) => {
         log(err.toString());
       }
     }
-    return Promise.resolve();
+
+    progress += 0.5 / langsArr.length;
+    // Make sure last progress message is 1 (not 0.9999)
+    if (Math.round(progress * 100) === 100) progress = 1;
+    if (res) res.progress({ workerId, status: statusText, progress });
   };
 
-  res.progress({ workerId, status: 'loading language traineddata', progress: 0 });
+  if (res) res.progress({ workerId, status: statusText, progress: 0 });
   try {
-    await Promise.all((typeof langs === 'string' ? langs.split('+') : langs).map(loadAndGunzipFile));
-    res.progress({ workerId, status: 'loaded language traineddata', progress: 1 });
-    res.resolve(langs);
+    await Promise.all(langsArr.map(loadAndGunzipFile));
+    if (res) res.resolve(langs);
   } catch (err) {
-    res.reject(err.toString());
+    if (res) res.reject(err.toString());
   }
 };
 
@@ -208,9 +236,11 @@ const initialize = async ({
     ? _langs
     : _langs.map((l) => ((typeof l === 'string') ? l : l.data)).join('+');
 
+  const statusText = 'initializing api';
+
   try {
     res.progress({
-      workerId, status: 'initializing api', progress: 0,
+      workerId, status: statusText, progress: 0,
     });
     if (api !== null) {
       api.End();
@@ -230,22 +260,55 @@ const initialize = async ({
     }
 
     api = new TessModule.TessBaseAPI();
-    const status = api.Init(null, langs, oem);
+    let status = api.Init(null, langs, oem);
     if (status === -1) {
       // Cache is deleted if initialization fails to avoid keeping bad data in cache
       // This assumes that initialization failing only occurs due to bad .traineddata,
       // this should be refined if other reasons for init failing are encountered.
-      if (['write', 'refresh', undefined].includes(cacheMethodWorker)) {
+      // The "if" condition skips this section if either (1) cache is disabled [so the issue
+      // is definitely unrelated to cached data] or (2) cache is set to read-only
+      // [so we do not have permission to make any changes].
+      if (['write', 'refresh', undefined].includes(loadLanguageOptionsWorker.cacheMethod)) {
         const langsArr = langs.split('+');
-        const delCachePromise = langsArr.map((lang) => adapter.deleteCache(`${cachePathWorker || '.'}/${lang}.traineddata`));
+        const delCachePromise = langsArr.map((lang) => adapter.deleteCache(`${loadLanguageOptionsWorker.cachePath || '.'}/${lang}.traineddata`));
         await Promise.all(delCachePromise);
+
+        // Check for the case when (1) data was loaded from the cache and
+        // (2) the data does not support the requested OEM.
+        // In this case, loadLanguage is re-run and initialization is attempted a second time.
+        // This is because `loadLanguage` has no mechanism for checking whether the cached data
+        // supports the requested model, so this only becomes apparent when initialization fails.
+
+        // Check for this error message:
+        // eslint-disable-next-line
+        // "Tesseract (legacy) engine requested, but components are not present in ./eng.traineddata!!""
+        // The .wasm build of Tesseract saves this message in a separate file
+        // (in addition to the normal debug file location).
+        const debugStr = TessModule.FS.readFile('/debugDev.txt', { encoding: 'utf8', flags: 'a+' });
+        if (dataFromCache && /components are not present/.test(debugStr)) {
+          log('Data from cache missing requested OEM model. Attempting to refresh cache with new language data.');
+          // In this case, language data is re-loaded
+          await loadLanguage({ workerId, payload: { langs: loadLanguageLangsWorker, options: loadLanguageOptionsWorker } }); // eslint-disable-line max-len
+          status = api.Init(null, langs, oem);
+          if (status === -1) {
+            log('Language data refresh failed.');
+            const delCachePromise2 = langsArr.map((lang) => adapter.deleteCache(`${loadLanguageOptionsWorker.cachePath || '.'}/${lang}.traineddata`));
+            await Promise.all(delCachePromise2);
+          } else {
+            log('Language data refresh successful.');
+          }
+        }
       }
+    }
+
+    if (status === -1) {
       res.reject('initialization failed');
     }
+
     params = defaultParams;
     await setParameters({ payload: { params } });
     res.progress({
-      workerId, status: 'initialized api', progress: 1,
+      workerId, status: statusText, progress: 1,
     });
     res.resolve();
   } catch (err) {

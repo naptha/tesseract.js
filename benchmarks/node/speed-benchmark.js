@@ -4,8 +4,6 @@ const { createWorker } = require('../../');
 
 (async () => {
   const worker = await createWorker();
-  await worker.loadLanguage('eng');
-  await worker.initialize('eng');
   const fileArr = ["../data/meditations.jpg", "../data/tyger.jpg", "../data/testocr.png"];
   let timeTotal = 0;
   for (let file of fileArr) {

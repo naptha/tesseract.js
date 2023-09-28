@@ -1,6 +1,6 @@
 <html>
   <head>
-    <script src="/dist/tesseract.dev.js"></script>
+    <script src="/dist/tesseract.min.js"></script>
   </head>
   <body>
     <div>
@@ -10,17 +10,15 @@
     <textarea id="board" readonly rows="8" cols="80">Upload an image file</textarea>
     <script type="module">
       const { createWorker } = Tesseract;
-      const worker = await createWorker({
+      const worker = await createWorker("eng", 1, {
         corePath: '/node_modules/tesseract.js-core',
-        workerPath: "/dist/worker.dev.js",
+        workerPath: "/dist/worker.min.js",
         logger: m => console.log(m),
       });
       const uploader = document.getElementById('uploader');
       const dlBtn = document.getElementById('download-pdf');
       let pdf;
       const recognize = async ({ target: { files }  }) => {
-        await worker.loadLanguage('eng');
-        await worker.initialize('eng');
         const res = await worker.recognize(files[0],{pdfTitle: "Example PDF"},{pdf: true});
         pdf = res.data.pdf;
         const text = res.data.text;

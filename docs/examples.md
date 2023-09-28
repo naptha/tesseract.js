@@ -7,11 +7,9 @@ You can also check [examples](../examples) folder.
 ```javascript
 const { createWorker } = require('tesseract.js');
 
-const worker = await createWorker();
+const worker = await createWorker('eng');
 
 (async () => {
-  await worker.loadLanguage('eng');
-  await worker.initialize('eng');
   const { data: { text } } = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png');
   console.log(text);
   await worker.terminate();
@@ -23,13 +21,11 @@ const worker = await createWorker();
 ```javascript
 const { createWorker } = require('tesseract.js');
 
-const worker = await createWorker({
+const worker = await createWorker('eng', 1, {
   logger: m => console.log(m), // Add logger here
 });
 
 (async () => {
-  await worker.loadLanguage('eng');
-  await worker.initialize('eng');
   const { data: { text } } = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png');
   console.log(text);
   await worker.terminate();
@@ -41,11 +37,9 @@ const worker = await createWorker({
 ```javascript
 const { createWorker } = require('tesseract.js');
 
-const worker = await createWorker();
+const worker = await createWorker('eng+chi_tra');
 
 (async () => {
-  await worker.loadLanguage('eng+chi_tra');
-  await worker.initialize('eng+chi_tra');
   const { data: { text } } = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png');
   console.log(text);
   await worker.terminate();
@@ -56,11 +50,9 @@ const worker = await createWorker();
 ```javascript
 const { createWorker } = require('tesseract.js');
 
-const worker = await createWorker();
+const worker = await createWorker('eng');
 
 (async () => {
-  await worker.loadLanguage('eng');
-  await worker.initialize('eng');
   await worker.setParameters({
     tessedit_char_whitelist: '0123456789',
   });
@@ -77,11 +69,9 @@ Check here for more details of pageseg mode: https://github.com/tesseract-ocr/te
 ```javascript
 const { createWorker, PSM } = require('tesseract.js');
 
-const worker = await createWorker();
+const worker = await createWorker('eng');
 
 (async () => {
-  await worker.loadLanguage('eng');
-  await worker.initialize('eng');
   await worker.setParameters({
     tessedit_pageseg_mode: PSM.SINGLE_BLOCK,
   });
@@ -105,12 +95,10 @@ Node: [download-pdf.js](../examples/node/download-pdf.js)
 ```javascript
 const { createWorker } = require('tesseract.js');
 
-const worker = await createWorker();
+const worker = await createWorker('eng');
 const rectangle = { left: 0, top: 0, width: 500, height: 250 };
 
 (async () => {
-  await worker.loadLanguage('eng');
-  await worker.initialize('eng');
   const { data: { text } } = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png', { rectangle });
   console.log(text);
   await worker.terminate();
@@ -122,7 +110,7 @@ const rectangle = { left: 0, top: 0, width: 500, height: 250 };
 ```javascript
 const { createWorker } = require('tesseract.js');
 
-const worker = await createWorker();
+const worker = await createWorker('eng');
 const rectangles = [
   {
     left: 0,
@@ -139,8 +127,6 @@ const rectangles = [
 ];
 
 (async () => {
-  await worker.loadLanguage('eng');
-  await worker.initialize('eng');
   const values = [];
   for (let i = 0; i < rectangles.length; i++) {
     const { data: { text } } = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png', { rectangle: rectangles[i] });
@@ -157,8 +143,8 @@ const rectangles = [
 const { createWorker, createScheduler } = require('tesseract.js');
 
 const scheduler = createScheduler();
-const worker1 = await createWorker();
-const worker2 = await createWorker();
+const worker1 = await createWorker('eng');
+const worker2 = await createWorker('eng');
 const rectangles = [
   {
     left: 0,
@@ -175,10 +161,6 @@ const rectangles = [
 ];
 
 (async () => {
-  await worker1.loadLanguage('eng');
-  await worker2.loadLanguage('eng');
-  await worker1.initialize('eng');
-  await worker2.initialize('eng');
   scheduler.addWorker(worker1);
   scheduler.addWorker(worker2);
   const results = await Promise.all(rectangles.map((rectangle) => (
@@ -195,14 +177,10 @@ const rectangles = [
 const { createWorker, createScheduler } = require('tesseract.js');
 
 const scheduler = createScheduler();
-const worker1 = await createWorker();
-const worker2 = await createWorker();
+const worker1 = await createWorker('eng');
+const worker2 = await createWorker('eng');
 
 (async () => {
-  await worker1.loadLanguage('eng');
-  await worker2.loadLanguage('eng');
-  await worker1.initialize('eng');
-  await worker2.initialize('eng');
   scheduler.addWorker(worker1);
   scheduler.addWorker(worker2);
   /** Add 10 recognition jobs */

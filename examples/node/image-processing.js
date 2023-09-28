@@ -21,8 +21,6 @@ const convertImage = (imageSrc) => {
 
 (async () => {
   const worker = await createWorker();
-  await worker.loadLanguage('eng');
-  await worker.initialize('eng');
   const { data: { imageColor, imageGrey, imageBinary } } = await worker.recognize(image, {rotateAuto: true}, {imageColor: true, imageGrey: true, imageBinary: true});
   
   console.log('Saving intermediate images: imageColor.png, imageGrey.png, imageBinary.png');

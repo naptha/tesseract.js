@@ -12,7 +12,7 @@
     "profile:tesseract": "webpack-bundle-analyzer dist/tesseract-stats.json",
     "profile:worker": "webpack-bundle-analyzer dist/worker-stats.json",
     "prepublishOnly": "npm run build",
-    "wait": "rimraf dist && wait-on http://localhost:3000/dist/tesseract.dev.js",
+    "wait": "rimraf dist && wait-on http://localhost:3000/dist/tesseract.min.js",
     "test": "npm-run-all -p -r start test:all",
     "test:all": "npm-run-all wait test:browser:* test:node:all",
     "test:node": "nyc mocha --exit --bail --require ./scripts/test-helper.js",
@@ -69,7 +69,7 @@
     "node-fetch": "^2.6.9",
     "opencollective-postinstall": "^2.0.3",
     "regenerator-runtime": "^0.13.3",
-    "tesseract.js-core": "^4.0.4",
+    "tesseract.js-core": "^5.0.0",
     "wasm-feature-detect": "^1.2.11",
     "zlibjs": "^0.3.1"
   },

@@ -1,7 +1,7 @@
 <html>
 
 <head>
-  <script src="/dist/tesseract.dev.js"></script>
+  <script src="/dist/tesseract.min.js"></script>
   <style>
     .column {
   float: left;
@@ -37,14 +37,10 @@
   <script>
     const recognize = async ({ target: { files } }) => {
       document.getElementById("imgInput").src = URL.createObjectURL(files[0]);
-      const worker = await Tesseract.createWorker({
+      const worker = await Tesseract.createWorker("eng", 1, {
         // corePath: '/tesseract-core-simd.wasm.js',
-        workerPath: "/dist/worker.dev.js"
+        workerPath: "/dist/worker.min.js"
       });
-      await worker.loadLanguage('eng');
-      await worker.initialize('eng');
-
-      await worker.initialize();
       const ret = await worker.recognize(files[0], {rotateAuto: true}, {imageColor: true, imageGrey: true, imageBinary: true});
       document.getElementById("imgOriginal").src = ret.data.imageColor;
       document.getElementById("imgGrey").src = ret.data.imageGrey;
