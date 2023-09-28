@@ -1,1 +1,1 @@
-module.exports = require('node:zlib').gunzipSync;
+module.exports = require('zlib').gunzipSync;
