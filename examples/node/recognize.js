@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const path = require('path');
+const path = require('node:path');
 const { createWorker } = require('../../');
 
 const [,, imagePath] = process.argv;

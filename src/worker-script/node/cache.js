@@ -1,5 +1,5 @@
-const util = require('util');
-const fs = require('fs');
+const util = require('node:util');
+const fs = require('node:fs');
 
 module.exports = {
   readCache: util.promisify(fs.readFile),

@@ -1,5 +1,5 @@
-const util = require('util');
-const fs = require('fs');
+const util = require('node:util');
+const fs = require('node:fs');
 const fetch = require('node-fetch');
 const isURL = require('is-url');
 
