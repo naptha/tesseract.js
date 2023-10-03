@@ -25,7 +25,7 @@ var lang_drop_instructions = {
 	rus: 'a Russian'
 }
 
-const workerPromise = Tesseract.createWorker({
+const workerPromise = Tesseract.createWorker('eng', 1, {
 	logger: progressUpdate,
 });
 
@@ -53,8 +53,6 @@ function startDemo(){
 
 	async function start(){
 		const worker = await workerPromise;
-		await worker.loadLanguage('eng');
-		await worker.initialize('eng');
 		const { data } = await worker.recognize(input);
 		result(data);
 
@@ -81,9 +79,9 @@ function startDemo(){
 function progressUpdate(packet){
 	var log = document.getElementById('log');
 
-	const statusLabel = {"initialized api": "Initializing API", "initializing api": "Initializing API", "recognizing text" : "Recognizing Text",
-	"initialized tesseract": "Initializing Tesseract", "initializing tesseract" : "Initializing Tesseract",
-	"loaded language traineddata": "Loading Language Traineddata", "loading language traineddata": "Loading Language Traineddata",
+	const statusLabel = {"initializing api": "Initializing API", "initializing api": "Initializing API", "recognizing text" : "Recognizing Text",
+	"initializing tesseract": "Initializing Tesseract", "initializing tesseract" : "Initializing Tesseract",
+	"loading language traineddata": "Loading Language Traineddata", "loading language traineddata": "Loading Language Traineddata",
 	"loading language traineddata (from cache)": "Loading Language Traineddata",
 	"loading tesseract core": "Loading Tesseract Core", "done": "done"}[packet.status];
 
@@ -186,8 +184,7 @@ async function play(){
 	output_text.innerHTML = ''
 	// output_overlay.innerHTML = ''
 	const worker = await workerPromise;
-	await worker.loadLanguage(language);
-	await worker.initialize(language);
+	await worker.reinitialize(language);
 	const { data } = await worker.recognize(input);
 	result(data);
 }
@@ -229,8 +226,7 @@ document.body.addEventListener('drop', async function(e){
 	};
 	reader.readAsDataURL(file);
 	const worker = await workerPromise;
-	await worker.loadLanguage(language);
-	await worker.initialize(language);
+	await worker.reinitialize(language);
 	const { data } = await worker.recognize(file);
 	result(data);
 })
