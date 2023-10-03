@@ -127,7 +127,7 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
         cachePath: options.cachePath,
         cacheMethod: options.cacheMethod,
         gzip: options.gzip,
-        lstmOnly: [OEM.TESSERACT_ONLY, OEM.TESSERACT_LSTM_COMBINED].includes(currentOem)
+        lstmOnly: [OEM.LSTM_ONLY, OEM.TESSERACT_LSTM_COMBINED].includes(currentOem)
           && !options.legacyLang,
       },
     },
@@ -159,13 +159,13 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
     // This logic fails if the user downloaded the LSTM-only English data for a language
     // and then uses `worker.reinitialize` to switch to the Legacy engine.
     // However, the correct data will still be downloaded after initialization fails
-    // and this can be avoided entirely
+    // and this can be avoided entirely if the user loads the correct data ahead of time.
     const langsArr = typeof langs === 'string' ? langs.split('+') : langs;
-    const _langs = langsArr.filter((x) => currentLangs.includes(x));
+    const _langs = langsArr.filter((x) => !currentLangs.includes(x));
     currentLangs.push(_langs);
 
     return loadLanguageInternal(_langs, jobId)
-      .then(() => initializeInternal(_langs, _oem, _config, jobId));
+      .then(() => initializeInternal(langs, _oem, _config, jobId));
   };
 
   const setParameters = (params = {}, jobId) => (

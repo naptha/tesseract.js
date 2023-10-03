@@ -2,17 +2,16 @@ const TIMEOUT = 30000;
 const IMAGE_PATH = 'http://localhost:3000/tests/assets/images';
 const IS_BROWSER = typeof window !== 'undefined' && typeof window.document !== 'undefined';
 const OPTIONS = {
-  cacheMethod: 'readOnly',
-  langPath: 'http://localhost:3000/tests/assets/traineddata',
   cachePath: './tests/assets/traineddata',
-  corePath: '../node_modules/tesseract.js-core/tesseract-core.wasm.js',
+  corePath: '../node_modules/tesseract.js-core',
   ...(IS_BROWSER ? { workerPath: '../dist/worker.min.js' } : {}),
 };
 const SIMPLE_TEXT = 'Tesseract.js\n';
+const SIMPLE_TEXT_LEGACY = 'Tesseractjs\n';
 const SIMPLE_TEXT_HALF = 'Tesse\n';
 const COMSIC_TEXT = 'HellO World\nfrom beyond\nthe Cosmic Void\n';
 const TESTOCR_TEXT = 'This is a lot of 12 point text to test the\nocr code and see if it works on all types\nof file format.\n\nThe quick brown dog jumped over the\nlazy fox. The quick brown dog jumped\nover the lazy fox. The quick brown dog\njumped over the lazy fox. The quick\nbrown dog jumped over the lazy fox.\n';
-const CHINESE_TEXT = '繁 體 中 文 測 試\n';
+const CHINESE_TEXT = '繁體 中 文 測試\n';
 const BILL_SPACED_TEXT = 'FIRST CHEQUING\n\nLine of Credit 100,000.00 Rate 4.2000\n\nDate      Description                                   Number     Debits     Credits    Balance\n31Jul2018 Balance Forward                                                         99,878.08 -\n01Aug2018 Clearing Cheque                                4987      36.07             99,914.15 -\n01Aug2018 Clearing Cheque                                4986      60.93             99,975.08 -\n01Aug2018 Clearing Cheque                             4982     800.04           100,775.12 EX\n01Aug2018 Clearing Cheque                             4981     823.34           101,598.46 EX\n01Aug2018 Incoming Interac e-Transfer                                   1454 101,583.92 EX\n01Aug2018 Incoming Interac e-Transfer                                   400.00 101,183.92 EX\n01Aug2018 Assisted Deposit                                                3241450 68,769.42 -\n01Aug2018 Transfer out to loan 7                                          1,500.00               70,269.42 -\n02Aug2018 Clearing Cheque                                4984      48.08             70,317.50 -\n02Aug2018 Clearing Cheque                           4985     7051           70,388.01 -\n02Aug2018 Clearing Cheque                           4992    500.00           70,888.01 -\n';
 const SIMPLE_WHITELIST_TEXT = 'Tesses\n';
 const FORMATS = ['png', 'jpg', 'bmp', 'pbm', 'webp', 'gif'];
@@ -28,6 +27,7 @@ if (typeof module !== 'undefined') {
     SIMPLE_JPG_BASE64,
     CHINESE_TEXT,
     SIMPLE_TEXT,
+    SIMPLE_TEXT_LEGACY,
     SIMPLE_WHITELIST_TEXT,
     SIMPLE_TEXT_HALF,
     COMSIC_TEXT,

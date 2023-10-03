@@ -2,7 +2,8 @@ const { createWorker, PSM } = Tesseract;
 let worker;
 before(async function cb() {
   this.timeout(0);
-  worker = await createWorker("eng+chi_tra+osd", 1, OPTIONS);
+  worker = await createWorker("eng", 1, OPTIONS);
+  workerLegacy = await createWorker("eng", 0, OPTIONS);
 });
 
 describe('recognize()', () => {
@@ -24,6 +25,19 @@ describe('recognize()', () => {
       it(`recongize ${format} in base64`, async () => {
         await worker.reinitialize('eng');
         const { data: { text } } = await worker.recognize(image);
+        expect(text).to.be(ans);
+      }).timeout(TIMEOUT)
+    ));
+  });
+
+  describe('should recognize with Legacy OEM', () => {
+    [
+      { format: 'png', image: SIMPLE_PNG_BASE64, ans: SIMPLE_TEXT_LEGACY },
+      { format: 'jpg', image: SIMPLE_JPG_BASE64, ans: SIMPLE_TEXT_LEGACY },
+    ].forEach(({ format, image, ans }) => (
+      it(`recongize ${format} in base64`, async () => {
+        const { data: { text } } = await workerLegacy.recognize(image);
+        console.log(text);
         expect(text).to.be(ans);
       }).timeout(TIMEOUT)
     ));
@@ -125,13 +139,30 @@ describe('recognize()', () => {
     }).timeout(TIMEOUT);
   });
 
-  describe('should support all page seg modes', () => {
+  describe('should support all page seg modes (Legacy)', () => {
     Object
       .keys(PSM)
       .map(name => ({ name, mode: PSM[name] }))
       .forEach(({ name, mode }) => (
         it(`support PSM.${name} mode`, async () => {
-          await worker.reinitialize('eng');
+          await workerLegacy.reinitialize('eng+osd');
+          await workerLegacy.setParameters({
+            tessedit_pageseg_mode: mode,
+          });
+          const { data } = await workerLegacy.recognize(`${IMAGE_PATH}/simple.png`);
+          expect(Object.keys(data).length).not.to.be(0);
+        }).timeout(TIMEOUT)
+      ));
+  });
+
+  describe('should support all page seg modes except for PSM.OSD_ONLY (LSTM)', () => {
+    Object
+      .keys(PSM)
+      .filter((x) => x !== 'OSD_ONLY')
+      .map(name => ({ name, mode: PSM[name] }))
+      .forEach(({ name, mode }) => (
+        it(`support PSM.${name} mode`, async () => {
+          await worker.reinitialize('eng+osd');
           await worker.setParameters({
             tessedit_pageseg_mode: mode,
           });
