@@ -162,10 +162,14 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
     // and this can be avoided entirely if the user loads the correct data ahead of time.
     const langsArr = typeof langs === 'string' ? langs.split('+') : langs;
     const _langs = langsArr.filter((x) => !currentLangs.includes(x));
-    currentLangs.push(_langs);
+    currentLangs.push(..._langs);
 
-    return loadLanguageInternal(_langs, jobId)
-      .then(() => initializeInternal(langs, _oem, _config, jobId));
+    if (_langs.length > 0) {
+      return loadLanguageInternal(_langs, jobId)
+        .then(() => initializeInternal(langs, _oem, _config, jobId));
+    }
+
+    return initializeInternal(langs, _oem, _config, jobId);
   };
 
   const setParameters = (params = {}, jobId) => (
