@@ -40,7 +40,7 @@ import { createWorker } from 'tesseract.js';
 (async () => {
   const worker = await createWorker('eng');
   const data = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png');
-  console.log(data.text);
+  console.log(data.data.text);
   await worker.terminate();
 })();
 ```
