@@ -68,6 +68,7 @@ declare namespace Tesseract {
   interface WorkerParams {
     tessedit_pageseg_mode: PSM
     tessedit_char_whitelist: string
+    tessedit_char_blacklist: string
     preserve_interword_spaces: string
     user_defined_dpi: string
     tessjs_create_hocr: string
@@ -75,6 +76,7 @@ declare namespace Tesseract {
     tessjs_create_box: string
     tessjs_create_unlv: string
     tessjs_create_osd: string
+    [propName: string]: any
   }
   interface OutputFormats {
     text: boolean;
