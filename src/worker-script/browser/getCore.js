@@ -1,5 +1,5 @@
 const { simd } = require('wasm-feature-detect');
-const { dependencies } = require('../../../package.json');
+const coreVersion = require('../../../package.json').dependencies['tesseract.js-core'];
 
 module.exports = async (lstmOnly, corePath, res) => {
   if (typeof global.TesseractCore === 'undefined') {
@@ -9,7 +9,7 @@ module.exports = async (lstmOnly, corePath, res) => {
 
     // If the user specifies a core path, we use that
     // Otherwise, default to CDN
-    const corePathImport = corePath || `https://cdn.jsdelivr.net/npm/tesseract.js-core@v${dependencies['tesseract.js-core'].substring(1)}`;
+    const corePathImport = corePath || `https://cdn.jsdelivr.net/npm/tesseract.js-core@v${coreVersion.substring(1)}`;
 
     // If a user specifies a specific JavaScript file, load that file.
     // Otherwise, assume a directory has been provided, and load either

@@ -15,6 +15,9 @@
     "no-control-regex": 0,
     // Airbnb disallows ForOfStatement based on the bizarre belief that loops are not readable
     // https://github.com/airbnb/javascript/issues/1271
-    "no-restricted-syntax": ["error", "ForInStatement", "LabeledStatement", "WithStatement"]
+    "no-restricted-syntax": ["error", "ForInStatement", "LabeledStatement", "WithStatement"],
+    // The `prefer-destructuring` rule causes issues
+    // https://github.com/naptha/tesseract.js/issues/847
+    "prefer-destructuring": 0
   }
 }
