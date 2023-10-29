@@ -128,7 +128,6 @@ Version 4 includes many new features and bug fixes--see [this issue](https://git
 
 The following are old examples that use depreciated versions of Tesseract.js.  Updating to Tesseract.js v5 is highly recommended.  Users are encouraged to create updated examples (or make entirely new ones) and submit them as pull requests. 
 - Offline Version: https://github.com/jeromewu/tesseract.js-offline
-- Custom Traineddata: https://github.com/jeromewu/tesseract.js-custom-traineddata
 - Firefox Extension: https://github.com/gnonio/korporize
 - With Vue: https://github.com/jeromewu/tesseract.js-vue-app
 - With Angular: https://github.com/jeromewu/tesseract.js-angular-app
