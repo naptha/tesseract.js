@@ -4,7 +4,7 @@ Tesseract.js offers 2 ways to run recognition jobs: (1) using a worker directly,
 # Option 1: Using Workers Directly
 The following snippet recognizes text from an image using a single worker.
 
-```
+```javascript
 (async () => {
     const worker = await Tesseract.createWorker('eng');
     const { data: { text } } = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png');
@@ -22,7 +22,7 @@ In actual use, the `createWorker` step should be separated from the `worker.reco
 # Option 2: Using Schedulers + Workers
 Tesseract.js also supports executing jobs using schedulers.  A scheduler is an object that contains multiple workers, which it uses to execute jobs in parallel.  For example, the following code executes 10 jobs in parallel using 4 workers.
  
-```
+```javascript
 const scheduler = Tesseract.createScheduler();
 
 // Creates worker and adds to scheduler
