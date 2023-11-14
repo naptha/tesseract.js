@@ -57,7 +57,7 @@
 
 ```javascript
 const { createWorker } = Tesseract;
-const worker = await createWorker({
+const worker = await createWorker('eng', 1, {
   langPath: '...',
   logger: m => console.log(m),
 });

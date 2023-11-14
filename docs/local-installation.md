@@ -9,7 +9,7 @@ Because of this we recommend loading `tesseract.js` from a CDN. But if you reall
 In Node.js environment, the only path you may want to customize is languages/langPath.
 
 ```javascript
-const worker = await createWorker({
+const worker = await createWorker('eng', 1, {
   workerPath: 'https://cdn.jsdelivr.net/npm/tesseract.js@v5.0.0/dist/worker.min.js',
   langPath: 'https://tessdata.projectnaptha.com/4.0.0',
   corePath: 'https://cdn.jsdelivr.net/npm/tesseract.js-core@v5.0.0',
