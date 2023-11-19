@@ -64,7 +64,6 @@ body, html{
 	padding: 40px 0;
 	color: #714d26;
 	font-size: 30px;
-	// text-align: center;
 }
 
 
@@ -100,6 +99,19 @@ body, html{
 	margin-top: 30px;
     border: 1px solid #ddd;
 }
+
+#openFileInputLabel {
+    display: inline-block;
+    color: #714d26;
+    background: #fff;
+    padding: 5px;
+	border-style:solid;
+	border-width:1px;
+	cursor: pointer;
+    border-radius: 7px;
+	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+}
+
 
 #input-overlay {
 	position: absolute;
@@ -181,7 +193,10 @@ body, html{
 }
 
 #drop-instructions-main {
-	display: none;
+	display: block;
+	text-align: center;
+	color: #b1a79c;
+	width:100%;
 }
 
 .commentary {
@@ -255,13 +270,17 @@ body, html{
 }
 
 @media (min-width: 900px) {
-	
-	#drop-instructions-main {
-	    display: block;
-	    text-align: center;
-	    color: #b1a79c;
-	}
 
+	#drop-instructions-main {
+		display: block;
+		text-align: center;
+		color: #b1a79c;
+		position: absolute;
+		top: -45px;
+		width:100%;
+	}
+	
+	
 	#demo-content {
 		display: flex;
 		align-items: center;
@@ -279,35 +298,4 @@ body, html{
 		margin: 40px auto;
 	}
 
-	// #demo-title {
-	// 	width: 250px;
-	// 	background: #fff;
-	// 	margin-top: -70px;
-	// 	margin-left: 40px;
-	// 	position: relative;
-	// 	padding: 20px 0;
-	// }
-
-	// #demo-title::after {
-	//     border-right: 40px solid transparent;
-	//     border-bottom: 70px solid white;
-	//     content: ' ';
-	//     position: absolute;
-	//     top: 0;
-	//     left: 100%;
-	// }
-
-	// #demo-title::before {
-	//     border-left: 40px solid transparent;
-	//     border-bottom: 70px solid white;
-	//     content: ' ';
-	//     position: absolute;
-	//     top: 0;
-	//     left: -40px;
-	// }
-
-	// body {
-	// 	box-sizing: border-box;
-	// 	border: 20px solid #425565;
-	// }
 }

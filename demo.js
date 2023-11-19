@@ -166,17 +166,6 @@ function clearOverLayAndOutput(){
 }
 
 
-// function displayPlayButtonFor(lang){
-// 	output.addEventListener('click', function play(){
-// 		output.removeEventListener('click', play)
-
-// 		tessWorker.recognize(input, lang)
-// 		.progress( progress )
-// 		.then( result )
-// 	})
-// }
-
-
 async function play(){
 
 	demo_instructions.style.display = 'none'
@@ -211,10 +200,7 @@ options.forEach(function(option){
 })
 
 
-document.body.addEventListener('drop', async function(e){
-	e.stopPropagation();
-	e.preventDefault();
-	var file = e.dataTransfer.files[0]
+const recognizeFromFile = async (file) => {
 	var reader = new FileReader();
 	reader.onload = function(e){
 		input.src = e.target.result;
@@ -229,4 +215,19 @@ document.body.addEventListener('drop', async function(e){
 	await worker.reinitialize(language);
 	const { data } = await worker.recognize(file);
 	result(data);
+}
+
+document.body.addEventListener('drop', async function(e){
+	e.stopPropagation();
+	e.preventDefault();
+	var file = e.dataTransfer.files[0]
+	recognizeFromFile(file);
 })
+
+
+
+
+document.getElementById("openFileInput").addEventListener('change', (event) => {
+	if (event.target.files.length == 0) return;
+	recognizeFromFile(event.target.files[0]);
+});

@@ -43,11 +43,16 @@
 				<div class="option" lang='chi_sim'>Chinese Demo</div>
 				<div class="option" lang='rus'>Russian Demo</div>
 			</div>
-			<div id='drop-instructions-main'><p>Drop <span class='drop-instructions'>an English</span> image on this page to OCR it!</p></div>
 			<div id='demo-content'>
 				<div>
+					<div id='drop-instructions-main'>Drop <span class='drop-instructions'>an English</span> image on this page or
+						<span>
+							<label for="openFileInput" id="openFileInputLabel">Select File</label>
+							<input type="file" id="openFileInput" style="display:none">
+						</span>
+					</div>
 					<canvas id='input-overlay'></canvas>
-					<img id='input' src="img/eng_bw.png"/>			
+					<img id='input' src="img/eng_bw.png" />
 				</div>
 				<div id='arrow'></div>
 				<div>
