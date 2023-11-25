@@ -64,7 +64,7 @@ const worker = await createWorker('eng', 1, {
 ```
 
 <a name="worker-recognize"></a>
-### Worker.recognize(image, options, jobId): Promise
+### Worker.recognize(image, options, output, jobId): Promise
 
 Worker.recognize() provides core function of Tesseract.js as it executes OCR
 
