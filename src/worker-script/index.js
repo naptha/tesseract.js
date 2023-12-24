@@ -249,9 +249,9 @@ const initialize = async ({
     let configStr;
     // config argument may either be config file text, or object with key/value pairs
     // In the latter case we convert to config file text here
-    if (typeof config === 'object') {
+    if (config && typeof config === 'object' && Object.keys(config).length > 0) {
       configStr = JSON.stringify(config).replace(/,/g, '\n').replace(/:/g, ' ').replace(/["'{}]/g, '');
-    } else {
+    } else if (config && typeof config === 'string') {
       configStr = config;
     }
     if (typeof configStr === 'string') {
@@ -260,7 +260,7 @@ const initialize = async ({
     }
 
     api = new TessModule.TessBaseAPI();
-    let status = api.Init(null, langs, oem);
+    let status = api.Init(null, langs, oem, configFile);
     if (status === -1) {
       // Cache is deleted if initialization fails to avoid keeping bad data in cache
       // This assumes that initialization failing only occurs due to bad .traineddata,
@@ -289,7 +289,7 @@ const initialize = async ({
           log('Data from cache missing requested OEM model. Attempting to refresh cache with new language data.');
           // In this case, language data is re-loaded
           await loadLanguage({ workerId, payload: { langs: loadLanguageLangsWorker, options: loadLanguageOptionsWorker } }); // eslint-disable-line max-len
-          status = api.Init(null, langs, oem);
+          status = api.Init(null, langs, oem, configFile);
           if (status === -1) {
             log('Language data refresh failed.');
             const delCachePromise2 = langsArr.map((lang) => adapter.deleteCache(`${loadLanguageOptionsWorker.cachePath || '.'}/${lang}.traineddata`));
