@@ -51,7 +51,11 @@
   - `gzip` a boolean to define whether the traineddata from the remote is gzipped, default: true
   - `logger` a function to log the progress, a quick example is `m => console.log(m)`
   - `errorHandler` a function to handle worker errors, a quick example is `err => console.error(err)`
-
+- `config` an object of customized options which are set prior to initialization
+  - This argument allows for setting "init only" Tesseract parameters
+	  - Most Tesseract parameters can be set after a worker is initialized, using either `worker.setParameters` or the `options` argument of `worker.recognize`.  
+	  - A handful of Tesseract parameters, referred to as "init only" parameters in Tesseract documentation, cannot be modified after Tesseract is initialized--these can only be set using this argument
+		  - Examples include `load_system_dawg`, `load_number_dawg`, and `load_punc_dawg`
 
 **Examples:**
 
@@ -148,6 +152,7 @@ This list is incomplete.  As Tesseract.js passes parameters to the Tesseract eng
 
 - `langs` a string to indicate the languages traineddata to download, multiple languages are concated with **+**, ex: **eng+chi\_tra**
 - `oem` a enum to indicate the OCR Engine Mode you use
+- `config` an object of customized options which are set prior to initialization (see details above)
 - `jobId` Please see details above
 
 Note: to switch from Tesseract LSTM (`oem` value `1`) to Tesseract Legacy (`oem` value `0`) using `worker.reinitialize()`, the worker must already contain the code required to run the Tesseract Legacy model.  Setting `legacyCore: true` and `legacyLang: true` in `createWorker` options ensures this is the case.
