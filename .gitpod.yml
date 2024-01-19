@@ -1,7 +1,7 @@
 image:
   file: .gitpod.Dockerfile
 tasks:
-  - command: gp await-port 3000 && sleep 3 && gp preview $(gp url 3000)/examples/browser/demo.html
+  - command: gp await-port 3000 && sleep 3 && gp preview $(gp url 3000)/examples/browser/basic-efficient.html
   - init: npm install
     command: npm start
 ports:

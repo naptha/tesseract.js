@@ -152,14 +152,14 @@ npm install
 npm start
 ```
 
-The development server will be available at http://localhost:3000/examples/browser/demo.html in your favorite browser.
+The development server will be available at http://localhost:3000/examples/browser/basic-efficient.html in your favorite browser.
 It will automatically rebuild `tesseract.min.js` and `worker.min.js` when you change files in the **src** folder.
 
 ### Online Setup with a single Click
 
 You can use Gitpod(A free online VS Code like IDE) for contributing. With a single click it will launch a ready to code workspace with the build & start scripts already in process and within a few seconds it will spin up the dev server so that you can start contributing straight away without wasting any time. 
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/naptha/tesseract.js/blob/master/examples/browser/demo.html)
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/naptha/tesseract.js/blob/master/examples/browser/basic-efficient.html)
 
 ### Building Static Files
 To build the compiled static files just execute the following:
