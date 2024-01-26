@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR App</title>
+    <style>
+        .box-img img {
+            max-width: 100%;
+            max-height: 300px;
+        }
+
+        .box-p {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="App">
+    <span>This example uses Hindi language, but the function is universal<br>
+    Check console for various outputs and logger</span>
+
+    <p>
+        <label for="upload">Upload</label>
+        <input type="file" id="upload" accept="image/*" />
+    </p>
+    <div class="box-img" id="boxImg"></div>
+    <div class="box-p" id="boxText">result text will appear here
+    </div>
+
+    <script>
+        var boundingBoxData = [];
+
+        function performOCR(selectedImg) {
+            Tesseract.recognize(
+                selectedImg,
+                'hin',
+                {
+                    logger: (e) => console.log(e),
+                }
+            )
+                .then((out) => {
+                    setTextResult(out.data.text);
+                    saveBoundingBoxes(out.data.words);
+                })
+                .catch((error) => console.error('Error:', error));
+        }
+
+        function saveBoundingBoxes(words) {
+            boundingBoxData = words.map(word => word.bbox);
+            updateBoundingBoxDisplay();
+        }
+
+        function setTextResult(text) {
+            document.getElementById('boxText').innerText = text;
+        }
+
+        function handleChange(e) {
+            const selectedImg = e.target.files[0];
+            if (selectedImg) {
+                displayImage(selectedImg);
+                performOCR(selectedImg);
+            }
+        }
+
+        function displayImage(selectedImg) {
+            const imgBox = document.getElementById('boxImg');
+            imgBox.innerHTML = '';
+
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(selectedImg);
+            img.alt = 'thumb';
+            imgBox.appendChild(img);
+        }
+
+        function updateBoundingBoxDisplay() {
+            var boundingBoxInfoElement = document.getElementById('boxText');
+            boundingBoxInfoElement.innerHTML = '';
+
+            boundingBoxData.forEach(function(bbox, index) {
+                var boxInfo = document.createElement('div');
+                boxInfo.innerHTML = `Word ${index + 1}: Bounding Box - x0=${bbox.x0}, y0=${bbox.y0}, x1=${bbox.x1}, y1=${bbox.y1}`;
+                boundingBoxInfoElement.appendChild(boxInfo);
+            });
+        }
+
+        document.getElementById('upload').addEventListener('change', handleChange);
+    </script>
+</div>
+</body>
+</html>
