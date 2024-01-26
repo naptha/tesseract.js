@@ -21,9 +21,13 @@
     <span>This example uses Hindi language, but the function is universal<br>
     Check console for various outputs and logger</span>
 
+    <p>
+        <label for="upload">Upload</label>
+        <input type="file" id="upload" accept="image/*" />
+    </p>
     <div class="box-img" id="boxImg"></div>
-    <div class="box-p" id="boxText">result text will appear here</div>
-    <div class="box-p" id="bboxInfo"></div>
+    <div class="box-p" id="boxText">result text will appear here
+    </div>
 
     <script>
         var boundingBoxData = [];
@@ -52,21 +56,27 @@
             document.getElementById('boxText').innerText = text;
         }
 
+        function handleChange(e) {
+            const selectedImg = e.target.files[0];
+            if (selectedImg) {
+                displayImage(selectedImg);
+                performOCR(selectedImg);
+            }
+        }
+
         function displayImage(selectedImg) {
             const imgBox = document.getElementById('boxImg');
             imgBox.innerHTML = '';
 
             const img = document.createElement('img');
-            img.src = selectedImg.src;
+            img.src = URL.createObjectURL(selectedImg);
             img.alt = 'thumb';
             imgBox.appendChild(img);
-
-            performOCR(img);
         }
 
         function updateBoundingBoxDisplay() {
-            var boundingBoxInfoElement = document.getElementById('bboxInfo');
-            boundingBoxInfoElement.innerHTML = 'Bounding Box Data:<br>';
+            var boundingBoxInfoElement = document.getElementById('boxText');
+            boundingBoxInfoElement.innerHTML = '';
 
             boundingBoxData.forEach(function(bbox, index) {
                 var boxInfo = document.createElement('div');
@@ -75,10 +85,7 @@
             });
         }
 
-        const selectedImg = new Image();
-        selectedImg.src = 'photo.jpg';
-
-        displayImage(selectedImg);
+        document.getElementById('upload').addEventListener('change', handleChange);
     </script>
 </div>
 </body>

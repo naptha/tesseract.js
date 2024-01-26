@@ -14,12 +14,20 @@
 </head>
 <body>
   <div class="App">
-    <span>Hi<br>This example shows the confidence data, words and result with borders around the recognized image</span>
+    <span>Hi<br>This example shows the confidence data, words and result with borders around the recognized image<br>
+    Edit css of the canvas if facing alignment/ placement issues</span>
+    <p>
+      <label for="upload">Upload</label>
+      <input type="file" id="upload" accept="image/*" />
+    </p>
     <div class="box-img" id="boxImg"></div>
     <div class="box-p" id="boxText">result text will appear here</div>
+    <br> 
     <div class="box-p" id="bboxInfo"></div>
+
     <script>
       var wordData = [];
+
       function performOCR(selectedImg) {
         Tesseract.recognize(
           selectedImg,
@@ -27,49 +35,75 @@
           {
             logger: (e) => console.log(e),
           }
-        ).then((out) => {
-          console.log(out, 'confidence:', out.data.confidence);
-          setTextResult(out.data.text);
-          saveWordData(out.data.words);
-          renderBoundingBoxes(out.data.words);
-        }).catch((error) => console.error('Error during OCR:', error));
+        )
+          .then((out) => {
+            console.log(out, 'confidence:', out.data.confidence);
+            setTextResult(out.data.text);
+            saveWordData(out.data.words);
+            renderBoundingBoxes(out.data.words);
+          })
+          .catch((error) => console.error('Error during OCR:', error));
       }
+
       function setTextResult(text) {
         document.getElementById('boxText').innerText = text;
       }
+
+      function handleChange(e) {
+        const selectedImg = e.target.files[0];
+        if (selectedImg) {
+          displayImage(selectedImg);
+          performOCR(selectedImg);
+        }
+      }
+
+      function displayImage(selectedImg) {
+        const imgBox = document.getElementById('boxImg');
+        imgBox.innerHTML = '';
+
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(selectedImg);
+        img.alt = 'thumb';
+        imgBox.appendChild(img);
+        const canvas = document.createElement('canvas');
+        canvas.id = 'canvas';
+        imgBox.appendChild(canvas);
+      }
+
       function saveWordData(words) {
         wordData = words;
         updateWordDisplay();
       }
+
       function updateWordDisplay() {
         var wordInfoElement = document.getElementById('bboxInfo');
         wordInfoElement.innerHTML = 'Word Data:<br>';
+
         wordData.forEach(function (word, index) {
           var wordInfo = document.createElement('div');
           wordInfo.innerHTML = `Word ${index + 1}: Text - ${word.text}, Confidence - ${word.confidence}, Bounding Box - x0=${word.bbox.x0}, y0=${word.bbox.y0}, x1=${word.bbox.x1}, y1=${word.bbox.y1}`;
           wordInfoElement.appendChild(wordInfo);
         });
       }
+
       function renderBoundingBoxes(words) {
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const img = document.querySelector('.box-img img');
         canvas.width = img.width;
         canvas.height = img.height;
+
         words.forEach((word) => {
           const { x0, y0, x1, y1 } = word.bbox;
           ctx.beginPath();
           ctx.rect(x0, y0, x1 - x0, y1 - y0);
-          ctx.lineWidth = 2;
+          ctx.lineWidth = 2; 
           ctx.strokeStyle = 'red';
           ctx.stroke();
         });
       }
-      // Fixed image path to 'photo.jpg'
-      const selectedImg = new Image();
-      selectedImg.src = 'photo.jpg';
-      document.getElementById('boxImg').appendChild(selectedImg);
-      performOCR(selectedImg);
+
+      document.getElementById('upload').addEventListener('change', handleChange);
     </script>
   </div>
 </body>
