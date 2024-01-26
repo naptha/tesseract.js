@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OCR App</title>
+  <style>
+    #canvas {
+      position: absolute;
+      left: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="App">
+    <span>Hi<br>This example shows the confidence data, words and result with borders around the recognized image</span>
+    <div class="box-img" id="boxImg"></div>
+    <div class="box-p" id="boxText">result text will appear here</div>
+    <div class="box-p" id="bboxInfo"></div>
+    <script>
+      var wordData = [];
+      function performOCR(selectedImg) {
+        Tesseract.recognize(
+          selectedImg,
+          'hin',
+          {
+            logger: (e) => console.log(e),
+          }
+        ).then((out) => {
+          console.log(out, 'confidence:', out.data.confidence);
+          setTextResult(out.data.text);
+          saveWordData(out.data.words);
+          renderBoundingBoxes(out.data.words);
+        }).catch((error) => console.error('Error during OCR:', error));
+      }
+      function setTextResult(text) {
+        document.getElementById('boxText').innerText = text;
+      }
+      function saveWordData(words) {
+        wordData = words;
+        updateWordDisplay();
+      }
+      function updateWordDisplay() {
+        var wordInfoElement = document.getElementById('bboxInfo');
+        wordInfoElement.innerHTML = 'Word Data:<br>';
+        wordData.forEach(function (word, index) {
+          var wordInfo = document.createElement('div');
+          wordInfo.innerHTML = `Word ${index + 1}: Text - ${word.text}, Confidence - ${word.confidence}, Bounding Box - x0=${word.bbox.x0}, y0=${word.bbox.y0}, x1=${word.bbox.x1}, y1=${word.bbox.y1}`;
+          wordInfoElement.appendChild(wordInfo);
+        });
+      }
+      function renderBoundingBoxes(words) {
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const img = document.querySelector('.box-img img');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        words.forEach((word) => {
+          const { x0, y0, x1, y1 } = word.bbox;
+          ctx.beginPath();
+          ctx.rect(x0, y0, x1 - x0, y1 - y0);
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = 'red';
+          ctx.stroke();
+        });
+      }
+      // Fixed image path to 'photo.jpg'
+      const selectedImg = new Image();
+      selectedImg.src = 'photo.jpg';
+      document.getElementById('boxImg').appendChild(selectedImg);
+      performOCR(selectedImg);
+    </script>
+  </div>
+</body>
+</html>
