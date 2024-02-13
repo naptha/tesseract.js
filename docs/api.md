@@ -31,7 +31,7 @@
 
 **Arguments:**
 
-- `langs` a string to indicate the languages traineddata to download, multiple languages are concated with **+**, ex: **eng+chi\_tra**
+- `langs` a string to indicate the languages traineddata to download, multiple languages are specified using an array (['eng', 'chi_sim'])
 - `oem` a enum to indicate the OCR Engine Mode you use
 - `options` an object of customized options
   - `corePath` path to a directory containing **both** `tesseract-core.wasm.js` and `tesseract-core-simd.wasm.js` from [Tesseract.js-core](https://www.npmjs.com/package/tesseract.js-core) package
@@ -155,7 +155,7 @@ This list is incomplete.  As Tesseract.js passes parameters to the Tesseract eng
 
 **Arguments:**
 
-- `langs` a string to indicate the languages traineddata to download, multiple languages are concated with **+**, ex: **eng+chi\_tra**
+- `langs` a string to indicate the languages traineddata to download, multiple languages are specified using an array (['eng', 'chi_sim'])
 - `oem` a enum to indicate the OCR Engine Mode you use
 - `config` an object of customized options which are set prior to initialization (see details above)
 - `jobId` Please see details above
