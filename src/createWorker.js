@@ -48,19 +48,21 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
 
   workerCounter += 1;
 
-  const setResolve = (action, res) => {
-    resolves[action] = res;
+  const setResolve = (promiseId, res) => {
+    resolves[promiseId] = res;
   };
 
-  const setReject = (action, rej) => {
-    rejects[action] = rej;
+  const setReject = (promiseId, rej) => {
+    rejects[promiseId] = rej;
   };
 
   const startJob = ({ id: jobId, action, payload }) => (
     new Promise((resolve, reject) => {
       log(`[${id}]: Start ${jobId}, action=${action}`);
-      setResolve(action, resolve);
-      setReject(action, reject);
+      // Using both `action` and `jobId` in case user provides non-unique `jobId`.
+      const promiseId = `${action}-${jobId}`;
+      setResolve(promiseId, resolve);
+      setReject(promiseId, reject);
       send(worker, {
         workerId: id,
         jobId,
@@ -226,6 +228,7 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
   onMessage(worker, ({
     workerId, jobId, status, action, data,
   }) => {
+    const promiseId = `${action}-${jobId}`;
     if (status === 'resolve') {
       log(`[${workerId}]: Complete ${jobId}`);
       let d = data;
@@ -234,9 +237,9 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
       } else if (action === 'getPDF') {
         d = Array.from({ ...data, length: Object.keys(data).length });
       }
-      resolves[action]({ jobId, data: d });
+      resolves[promiseId]({ jobId, data: d });
     } else if (status === 'reject') {
-      rejects[action](data);
+      rejects[promiseId](data);
       if (action === 'load') workerResReject(data);
       if (errorHandler) {
         errorHandler(data);
