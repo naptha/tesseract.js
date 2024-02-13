@@ -145,7 +145,7 @@ describe('recognize()', () => {
       .map(name => ({ name, mode: PSM[name] }))
       .forEach(({ name, mode }) => (
         it(`support PSM.${name} mode`, async () => {
-          await workerLegacy.reinitialize('eng+osd');
+          await workerLegacy.reinitialize(['eng', 'osd']);
           await workerLegacy.setParameters({
             tessedit_pageseg_mode: mode,
           });
@@ -162,7 +162,7 @@ describe('recognize()', () => {
       .map(name => ({ name, mode: PSM[name] }))
       .forEach(({ name, mode }) => (
         it(`support PSM.${name} mode`, async () => {
-          await worker.reinitialize('eng+osd');
+          await worker.reinitialize(['eng', 'osd']);
           await worker.setParameters({
             tessedit_pageseg_mode: mode,
           });

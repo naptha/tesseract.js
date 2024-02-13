@@ -37,7 +37,7 @@ const worker = await createWorker('eng', 1, {
 ```javascript
 const { createWorker } = require('tesseract.js');
 
-const worker = await createWorker('eng+chi_tra');
+const worker = await createWorker(['eng', 'chi_tra']);
 
 (async () => {
   const { data: { text } } = await worker.recognize('https://tesseract.projectnaptha.com/img/eng_bw.png');
