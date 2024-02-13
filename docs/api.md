@@ -68,11 +68,12 @@ const worker = await createWorker('eng', 1, {
 ```
 
 <a name="worker-recognize"></a>
-### Worker.recognize(image, options, output, jobId): Promise
+### worker.recognize(image, options, output, jobId): Promise
 
-Worker.recognize() provides core function of Tesseract.js as it executes OCR
+`worker.recognize` provides core function of Tesseract.js as it executes OCR
 
 Figures out what words are in `image`, where the words are in `image`, etc.
+> [!TIP]
 > Note: `image` should be sufficiently high resolution.
 > Often, the same image will get much better results if you upscale it before calling `recognize`.
 
@@ -85,6 +86,10 @@ Figures out what words are in `image`, where the words are in `image`, etc.
 - `jobId` Please see details above
 
 **Output:**
+`worker.recognize` returns a promise to an object containing `jobId` and `data` properties.  The `data` property contains output in all of the formats specified using the `output` argument.
+
+> [!NOTE]  
+> `worker.recognize` still returns an output object even if no text is detected (the outputs will simply contain no words). No exception is thrown as determining the page is empty is considered a valid result. 
 
 **Examples:**
 
@@ -164,11 +169,12 @@ await worker.reinitialize('eng', 1);
 ```
 
 <a name="worker-detect"></a>
-### Worker.detect(image, jobId): Promise
+### worker.detect(image, jobId): Promise
 
-Worker.detect() does OSD (Orientation and Script Detection) to the image instead of OCR.
+`worker.detect` does OSD (Orientation and Script Detection) to the image instead of OCR.
 
-Note: Running `worker.detect` requires a worker with code and language data that supports Tesseract Legacy (this is not enabled by default).  If you want to run `worker.detect`, set `legacyCore` and `legacyLang` to `true` in the `createWorker` options. 
+> [!NOTE]  
+> Running `worker.detect` requires a worker with code and language data that supports Tesseract Legacy (this is not enabled by default).  If you want to run `worker.detect`, set `legacyCore` and `legacyLang` to `true` in the `createWorker` options. 
 
 **Arguments:**
 
@@ -187,9 +193,9 @@ const { createWorker } = Tesseract;
 ```
 
 <a name="worker-terminate"></a>
-### Worker.terminate(jobId): Promise
+### worker.terminate(jobId): Promise
 
-Worker.terminate() terminates the worker and cleans up
+`worker.terminate` terminates the worker and cleans up
 
 ```javascript
 (async () => {
@@ -201,7 +207,7 @@ Worker.terminate() terminates the worker and cleans up
 <a name="worker-writeText"></a>
 ### Worker.writeText(path, text, jobId): Promise
 
-Worker.writeText() writes a text file to the path specified in MEMFS, it is useful when you want to use some features that requires tesseract.js
+`worker.writeText` writes a text file to the path specified in MEMFS, it is useful when you want to use some features that requires tesseract.js
 to read file from file system.
 
 **Arguments:**
@@ -219,9 +225,9 @@ to read file from file system.
 ```
 
 <a name="worker-readText"></a>
-### Worker.readText(path, jobId): Promise
+### worker.readText(path, jobId): Promise
 
-Worker.readText() reads a text file to the path specified in MEMFS, it is useful when you want to check the content.
+`worker.readText` reads a text file to the path specified in MEMFS, it is useful when you want to check the content.
 
 **Arguments:**
 
@@ -238,9 +244,9 @@ Worker.readText() reads a text file to the path specified in MEMFS, it is useful
 ```
 
 <a name="worker-removeFile"></a>
-### Worker.removeFile(path, jobId): Promise
+### worker.removeFile(path, jobId): Promise
 
-Worker.removeFile() remove a file in MEMFS, it is useful when you want to free the memory.
+`worker.removeFile` removes a file in MEMFS, it is useful when you want to free the memory.
 
 **Arguments:**
 
@@ -256,9 +262,9 @@ Worker.removeFile() remove a file in MEMFS, it is useful when you want to free t
 ```
 
 <a name="worker-FS"></a>
-### Worker.FS(method, args, jobId): Promise
+### worker.FS(method, args, jobId): Promise
 
-Worker.FS() is a generic FS function to do anything you want, you can check [HERE](https://emscripten.org/docs/api_reference/Filesystem-API.html) for all functions.
+`worker.FS` is a generic FS function to do anything you want, you can check [HERE](https://emscripten.org/docs/api_reference/Filesystem-API.html) for all functions.
 
 **Arguments:**
 
@@ -279,7 +285,7 @@ Worker.FS() is a generic FS function to do anything you want, you can check [HER
 <a name="create-scheduler"></a>
 ## createScheduler(): Scheduler
 
-createScheduler() is a factory function to create a scheduler, a scheduler manages a job queue and workers to enable multiple workers to work together, it is useful when you want to speed up your performance.
+`createScheduler` is a factory function to create a scheduler, a scheduler manages a job queue and workers to enable multiple workers to work together, it is useful when you want to speed up your performance.
 
 **Examples:**
 
@@ -291,9 +297,9 @@ const scheduler = createScheduler();
 ### Scheduler
 
 <a name="scheduler-add-worker"></a>
-### Scheduler.addWorker(worker): string
+### scheduler.addWorker(worker): string
 
-Scheduler.addWorker() adds a worker into the worker pool inside scheduler, it is suggested to add one worker to only one scheduler.
+`scheduler.addWorker` adds a worker into the worker pool inside scheduler, it is suggested to add one worker to only one scheduler.
 
 **Arguments:**
 
@@ -309,9 +315,9 @@ scheduler.addWorker(worker);
 ```
 
 <a name="scheduler-add-job"></a>
-### Scheduler.addJob(action, ...payload): Promise
+### scheduler.addJob(action, ...payload): Promise
 
-Scheduler.addJob() adds a job to the job queue and scheduler waits and finds an idle worker to take the job.
+`scheduler.addJob` adds a job to the job queue and scheduler waits and finds an idle worker to take the job.
 
 **Arguments:**
 
@@ -328,9 +334,9 @@ Scheduler.addJob() adds a job to the job queue and scheduler waits and finds an 
 ```
 
 <a name="scheduler-get-queue-len"></a>
-### Scheduler.getQueueLen(): number
+### scheduler.getQueueLen(): number
 
-Scheduler.getNumWorkers() returns the length of job queue.
+`scheduler.getNumWorkers()` returns the length of job queue.
 
 <a name="scheduler-get-num-workers"></a>
 ### Scheduler.getNumWorkers(): number
@@ -338,9 +344,9 @@ Scheduler.getNumWorkers() returns the length of job queue.
 Scheduler.getNumWorkers() returns number of workers added into the scheduler
 
 <a name="scheduler-terminate"></a>
-### Scheduler.terminate(): Promise
+### scheduler.terminate(): Promise
 
-Scheduler.terminate() terminates all workers added, useful to do quick clean up.
+`scheduler.terminate()` terminates all workers added, useful to do quick clean up.
 
 **Examples:**
 
@@ -353,7 +359,7 @@ Scheduler.terminate() terminates all workers added, useful to do quick clean up.
 <a name="set-logging"></a>
 ## setLogging(logging: boolean)
 
-setLogging() sets the logging flag, you can `setLogging(true)` to see detailed information, useful for debugging.
+`setLogging` sets the logging flag, you can `setLogging(true)` to see detailed information, useful for debugging.
 
 **Arguments:**
 
@@ -369,7 +375,8 @@ setLogging(true);
 <a name="recognize"></a>
 ## recognize(image, langs, options): Promise
 
-This function is depreciated and should be replaced with `worker.recognize` (see above). 
+> [!WARNING]  
+> This function is depreciated and should be replaced with `worker.recognize` (see above). 
 
 `recognize` works the same as `worker.recognize`, except that a new worker is created, loaded, and destroyed every time the function is called.
 
@@ -378,9 +385,10 @@ See [Tesseract.js](../src/Tesseract.js)
 <a name="detect"></a>
 ## detect(image, options): Promise
 
-This function is depreciated and should be replaced with `worker.detect` (see above). 
+> [!WARNING]  
+> This function is depreciated and should be replaced with `worker.detect` (see above). 
 
-Same background as recognize(), but it does detect instead.
+`detect` works the same as `worker.detect`, except that a new worker is created, loaded, and destroyed every time the function is called.
 
 See [Tesseract.js](../src/Tesseract.js)
 
