@@ -401,7 +401,7 @@ const recognize = async ({
       // Therefore, if this is not the mode specified by the user, it is enabled temporarily here
       const psmInit = api.GetPageSegMode();
       let psmEdit = false;
-      if (![PSM.AUTO, PSM.AUTO_ONLY, PSM.OSD].includes(psmInit)) {
+      if (![PSM.AUTO, PSM.AUTO_ONLY, PSM.OSD].includes(String(psmInit))) {
         psmEdit = true;
         api.SetVariable('tessedit_pageseg_mode', String(PSM.AUTO));
       }
