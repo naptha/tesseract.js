@@ -125,6 +125,7 @@ Version 4 includes many new features and bug fixes--see [this issue](https://git
 - Typescript: https://github.com/Balearica/tesseract.js-typescript
 - Chrome Extension (with Manifest V3): https://github.com/Tshetrim/Image-To-Text-OCR-extension-for-ChatGPT
 - Converting PDF to text: https://github.com/racosa/pdf2text-ocr
+- Use `blocks` output to generate granular data [word/symbol level]: https://github.com/Kishlay-notabot/tesseract-bbox-examples
 
 The following are old examples that use depreciated versions of Tesseract.js.  Updating to Tesseract.js v5 is highly recommended.  Users are encouraged to create updated examples (or make entirely new ones) and submit them as pull requests. 
 - Offline Version: https://github.com/jeromewu/tesseract.js-offline
@@ -172,7 +173,7 @@ This will output the files into the `dist` directory.
 
 ### Code Contributors
 
-This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+This project exists thanks to all the people who contribute. [[Contribute](https://github.com/naptha/tesseract.js?tab=readme-ov-file#contributing)].
 <a href="https://github.com/naptha/tesseract.js/graphs/contributors"><img src="https://opencollective.com/tesseractjs/contributors.svg?width=890&button=false" /></a>
 
 ### Financial Contributors
