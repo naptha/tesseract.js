@@ -16,6 +16,9 @@ Tesseract.js does not support .pdf directly—a separate library must be used to
 ## What configuration settings should I use? 
 Default settings should provide optimal results for most users.  If you do want to experiment with configuration settings, Tesseract does include many settings to change—the vast majority are documented in the [main Tesseract project](https://github.com/tesseract-ocr/tesseract) and not here.  As noted above (“what is the scope of this project”), the core recognition engine is inherited from the main Tesseract project—all of the configuration settings in Tesseract work identically in Tesseract.js.  Therefore, for specific questions about configuring recognition settings (e.g. “how can I make noise removal more/less aggressive” or “what settings work best for license plates”) you are more likely to find an answer in the Tesseract documentation/discussion versus only looking in this repo.  
 
+## Is handwritten text supported? 
+No.  The Tesseract OCR model is built around assumptions that only hold for printed text.  No combination of options will significantly improve performance with handwritten text.  Unless your handwriting is so good that it closely resembles printed text, the results will be poor.
+
 # Trained Data
 ## How does tesseract.js download and keep \*.traineddata?
 
