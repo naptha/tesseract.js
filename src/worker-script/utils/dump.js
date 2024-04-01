@@ -126,11 +126,22 @@ module.exports = (TessModule, api, output, options) => {
         block.paragraphs.push(para);
       }
       if (ri.IsAtBeginningOf(RIL_TEXTLINE)) {
+        // getRowAttributes was added in a recent minor version of Tesseract.js-core,
+        // so we need to check if it exists before calling it.
+        // This can be removed in the next major version (v6).
+        let rowAttributes;
+        if (ri.getRowAttributes) {
+          rowAttributes = ri.getRowAttributes();
+          // Descenders is reported as a negative within Tesseract internally so we need to flip it.
+          // The positive version is intuitive, and matches what is reported in the hOCR output.
+          rowAttributes.descenders *= -1;
+        }
         textline = {
           words: [],
           text: !options.skipRecognition ? ri.GetUTF8Text(RIL_TEXTLINE) : null,
           confidence: !options.skipRecognition ? ri.Confidence(RIL_TEXTLINE) : null,
           baseline: ri.getBaseline(RIL_TEXTLINE),
+          rowAttributes,
           bbox: ri.getBoundingBox(RIL_TEXTLINE),
         };
         para.lines.push(textline);
