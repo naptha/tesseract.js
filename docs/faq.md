@@ -7,6 +7,21 @@ Tesseract.js is the JavaScript/Webassembly port of the Tesseract OCR engine.  We
 
 If you encounter a Tesseract bug you would like to see fixed you should confirm the behavior is the same in the [main (CLI) version](https://github.com/tesseract-ocr/tesseract) of Tesseract and then open a Git Issue in that repository.    
 
+# Frameworks
+
+## What JavaScript frameworks are supported?
+Tesseract.js supports all frameworks that support JavaScript and WebAssembly.  The only common JavaScript framework known to not be supported is React Native, as it does not support WebAssembly.
+## Why am I getting a `Cannot find module` error when running in my project/framework? 
+If you are able to run the examples in the [examples directory](https://github.com/naptha/tesseract.js/tree/master/examples), however are getting a `cannot find module` error when run in your framework, this indicates the main Tesseract.js thread is unable to find the worker code.  
+
+This can be resolved by manually setting the `workerPath` argument to point to the local copy of `worker-script/node/index.js` (Node.js) or `worker.min.js` (browser).  For example, the using the following arguments resolved for one Node.js user in [this issue](https://github.com/naptha/tesseract.js/issues/868#issuecomment-1879235802).  You may need to edit the file paths to work with your system/project.
+
+```
+const worker = await createWorker("eng", 1, {workerPath: "./node_modules/tesseract.js/src/worker-script/node/index.js"});
+```
+
+For context, Tesseract.js "workers" get their own web worker (browser) or worker thread (Node.js), which is independent code that uses a different entry point. When Tesseract.js is used on its own, this entrypoint should be identified automatically. However, this may not hold with build systems implemented by various frameworks, as these build systems copy around files in a way that violates Tesseract.js's assumptions for where files are located.
+
 # Recognizing Text
 ## Are PDF files supported? 
 Tesseract.js does not support .pdf directly—a separate library must be used to convert the .pdf files to images before Tesseract can recognize them.  If you are an end user and want to use Tesseract.js to OCR a .pdf file, consider using [scribeocr.com](https://scribeocr.com/), a project that uses Tesseract.js and supports .pdf files.  If you are a developer who wants to use Tesseract.js with .pdf files, you can use either of the libraries below to convert from .pdf to images. 
