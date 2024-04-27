@@ -34,6 +34,30 @@ Default settings should provide optimal results for most users.  If you do want 
 ## Is handwritten text supported? 
 No.  The Tesseract OCR model is built around assumptions that only hold for printed text.  No combination of options will significantly improve performance with handwritten text.  Unless your handwriting is so good that it closely resembles printed text, the results will be poor.
 
+## Why am I getting different results vs. Tesseract CLI?
+Tesseract.js should produce results identical to using the Tesseract CLI, as long as the settings, language data, and version are identical.  If you are observing differences between Tesseract.js and the Tesseract CLI/API, and this difference is problematic, perform the following troubleshooting steps.
+
+1. Confirm parameters are identical.
+	1. Manually set `oem` and `psm` in both to account for different defaults.
+		1. Tesseract.js and the Tesseract CLI use different default `oem` and `psm` settings.
+			1. Tesseract.js uses a default `oem` of `1` (`lstm` model only), while the Tesseract CLI uses a default `oem` of `2` (`lstm` with `legacy` fallback).
+			2. Tesseract.js and the Tesseract API use a default `pms` of `6` (`PSM_SINGLE_BLOCK`), while the Tesseract CLI uses a default `psm` of `3` (`PSM_AUTO`).
+	2. Confirm that all user-set parameters are identical.
+2. Confirm language data is identical.
+    1. By default, when run with `oem` value `0` or `2`, Tesseract.js uses [these](https://github.com/naptha/tessdata/tree/gh-pages/4.0.0) language files.
+       1. These were taken from the [tessdata](https://github.com/tesseract-ocr/tessdata) repo in the main Tesseract project.
+    3. By default, when run with `oem` value `1`, Tesseract.js uses [these](https://github.com/naptha/tessdata/tree/gh-pages/4.0.0_best_int) language files.
+       1. These were created by integerizing the language files from the [tessdata_best](https://github.com/tesseract-ocr/tessdata_best) repo in the main Tesseract project.
+          1. This should be equivalent to using the LSTM language files from the [tessdata](https://github.com/tesseract-ocr/tessdata) which are created by combining an integerized version of `tessdata_best` with data for the Legacy model.
+3. Confirm version is identical.
+	1. Using a different version of Tesseract may result in different recognition results.
+	2. The exact version of Tesseract used for Tesseract.js can be found by clicking on the `tesseract` submodule in this directory:
+		1. https://github.com/naptha/tesseract.js-core/tree/master/third_party
+
+If you find that results differ between Tesseract.js and Tesseract CLI and the settings, language data, and version are identical, feel free to open a Git Issue with a reproducible example.  
+
+Additionally, feel free to open a Git Issue (with reproducible example) if you find that a **newer** version of Tesseract produces significantly better results, and we can prioritize updating Tesseract to the latest version.  If an older version of Tesseract produces significantly better results, then that regression should be raised with the main Tesseract project, as Tesseract.js will not be downgraded to an earlier version.
+
 # Trained Data
 ## How does tesseract.js download and keep \*.traineddata?
 
