@@ -1,6 +1,6 @@
 declare namespace Tesseract {
   function createScheduler(): Scheduler
-  function createWorker(langs?: string | Lang[], oem?: OEM, options?: Partial<WorkerOptions>, config?: string | Partial<InitOptions>): Promise<Worker>
+  function createWorker(langs?: string | string[] | Lang[], oem?: OEM, options?: Partial<WorkerOptions>, config?: string | Partial<InitOptions>): Promise<Worker>
   function setLogging(logging: boolean): void
   function recognize(image: ImageLike, langs?: string, options?: Partial<WorkerOptions>): Promise<RecognizeResult>
   function detect(image: ImageLike, options?: Partial<WorkerOptions>): any
