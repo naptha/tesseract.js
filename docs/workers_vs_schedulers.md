@@ -49,3 +49,9 @@ const workerN = 4;
 While using schedulers is no more efficient for a single job, they allow for quickly executing large numbers of jobs in parallel. 
 
 When working with schedulers, note that workers added to the same scheduler should all be homogenous—they should have the same language be configured with the same parameters.  Schedulers assign jobs to workers in a non-deterministic manner, so if the workers are not identical then recognition results will depend on which worker the job is assigned to. 
+
+# Reusing Workers in Node.js Server Code
+While workers and schedulers are reusable, and we recommend reusing them between jobs, using the same worker/scheduler for a week straight within Node.js server code will cause problems.  Therefore, when using workers/schedulers within long-running Node.js server code, workers/schedulers should be killed and re-created every so often.  For example, a scheduler could be terminated and re-created after every 500 jobs.  
+
+There are a couple reasons why periodically “resetting” workers/schedulers within server code is a good practice.  First, due to general WebAssembly limitations, the memory allocated to workers can only expand over time.  Therefore, a single large image will permanently increase the memory footprint of a worker.  Second, workers “learn” over time by adding additional words they encounter in jobs to their internal dictionaries.  While this behavior is useful within the context of a single document or group of documents, it is not necessarily desirable if recognizing hundreds of unrelated documents.  If a single scheduler runs thousands of jobs over an entire week, the internal dictionary will eventually become bloated and include typos.
+
