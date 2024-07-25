@@ -336,12 +336,12 @@ scheduler.addWorker(worker);
 <a name="scheduler-get-queue-len"></a>
 ### scheduler.getQueueLen(): number
 
-`scheduler.getNumWorkers()` returns the length of job queue.
+`scheduler.getQueueLen()` returns the length of job queue.
 
 <a name="scheduler-get-num-workers"></a>
 ### Scheduler.getNumWorkers(): number
 
-Scheduler.getNumWorkers() returns number of workers added into the scheduler
+`Scheduler.getNumWorkers()` returns number of workers added into the scheduler
 
 <a name="scheduler-terminate"></a>
 ### scheduler.terminate(): Promise
