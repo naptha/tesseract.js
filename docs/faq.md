@@ -24,7 +24,13 @@ For context, Tesseract.js "workers" get their own web worker (browser) or worker
 
 # Recognizing Text
 ## Are PDF files supported? 
-Tesseract.js does not support .pdf directly—a separate library must be used to convert the .pdf files to images before Tesseract can recognize them.  If you are an end user and want to use Tesseract.js to OCR a .pdf file, consider using [scribeocr.com](https://scribeocr.com/), a project that uses Tesseract.js and supports .pdf files.  If you are a developer who wants to use Tesseract.js with .pdf files, you can use either of the libraries below to convert from .pdf to images. 
+Tesseract.js does not support PDF files.  If you need to run OCR on PDF files, possible options are below.
+
+### Use Scribe.js
+[Scribe.js](https://github.com/scribeocr/scribe.js) is a library that builds on Tesseract.js and includes additional features, including native PDF support.  Scribe.js supports running OCR on PDF files.  Additionally, Scribe.js supports extracting text directly from text-native PDF files, which is significantly faster and more accurate compared to running OCR. 
+
+### Render PDFs to Images
+The only way to recognize PDF files using Tesseract.js is to use a third-party library to render the `.pdf` file to a series of `.png` images, and then recognize those images using Tesseract.js.  Libraries to consider are listed below.
 1. [PDF.js](https://github.com/mozilla/pdf.js/) (Apache-2.0 license)
 2. [muPDF](https://github.com/ArtifexSoftware/mupdf) (AGPL-3.0 license)
 
