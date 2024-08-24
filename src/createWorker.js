@@ -129,7 +129,7 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
         cachePath: options.cachePath,
         cacheMethod: options.cacheMethod,
         gzip: options.gzip,
-        lstmOnly: [OEM.LSTM_ONLY, OEM.TESSERACT_LSTM_COMBINED].includes(currentOem)
+        lstmOnly: [OEM.DEFAULT, OEM.LSTM_ONLY].includes(currentOem)
           && !options.legacyLang,
       },
     },
