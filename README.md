@@ -9,7 +9,7 @@
 
 ![Lint & Test](https://github.com/naptha/tesseract.js/workflows/Node.js%20CI/badge.svg)
 ![CodeQL](https://github.com/naptha/tesseract.js/workflows/CodeQL/badge.svg)
-[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://github.com/naptha/tesseract.js) 
+[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://github.com/naptha/tesseract.js)
 [![Financial Contributors on Open Collective](https://opencollective.com/tesseractjs/all/badge.svg?label=financial+contributors)](https://opencollective.com/tesseractjs) [![npm version](https://badge.fury.io/js/tesseract.js.svg)](https://badge.fury.io/js/tesseract.js)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/naptha/tesseract.js/graphs/commit-activity)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
@@ -44,7 +44,7 @@ import { createWorker } from 'tesseract.js';
   await worker.terminate();
 })();
 ```
-When recognizing multiple images, users should create a worker once, run `worker.recognize` for each image, and then run `worker.terminate()` once at the end (rather than running the above snippet for every image). 
+When recognizing multiple images, users should create a worker once, run `worker.recognize` for each image, and then run `worker.terminate()` once at the end (rather than running the above snippet for every image).
 
 ## Installation
 Tesseract.js works with a `<script>` tag via local copy or CDN, with webpack via `npm` and on Node.js with `npm/yarn`.
@@ -56,7 +56,7 @@ Tesseract.js works with a `<script>` tag via local copy or CDN, with webpack via
 ```
 After including the script the `Tesseract` variable will be globally available and a worker can be created using `Tesseract.createWorker`.
 
-Alternatively, an ESM build (used with `import` syntax) can be found at `https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.esm.min.js`. 
+Alternatively, an ESM build (used with `import` syntax) can be found at `https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.esm.min.js`.
 
 ### Node.js
 
@@ -82,18 +82,19 @@ yarn add tesseract.js@3.0.3
 * [FAQ](./docs/faq.md)
 
 ## Community Projects and Examples
-The following are examples and projects built by the community using Tesseract.js. Officially supported examples are found in the [examples](https://github.com/naptha/tesseract.js/tree/master/examples) directory. 
+The following are examples and projects built by the community using Tesseract.js. Officially supported examples are found in the [examples](https://github.com/naptha/tesseract.js/tree/master/examples) directory.
 
 - Projects
    - Scribe OCR: web application for scanning documents (images and PDFs)
       - Site at [scribeocr.com](https://scribeocr.com/), repo at [github.com/scribeocr/scribeocr](https://github.com/scribeocr/scribeocr)
-   - Chrome Extension (with Manifest V3): https://github.com/Tshetrim/Image-To-Text-OCR-extension-for-ChatGPT
+   - Chrome Extension (with Manifest V3): https://marketplace.visualstudio.com/items?itemName=windmillcode-publisher-0.windmillcode-paste-text-from-image
+   - Windmillcode: Paste Text From Image Vscode Extension: https://github.com/WindMillCode/Paste-Text-From-Image
 - Examples
    - Converting PDF to text: https://github.com/racosa/pdf2text-ocr
    - Use `blocks` output to generate granular data [word/symbol level]: https://github.com/Kishlay-notabot/tesseract-bbox-examples
    - Electron: https://github.com/Balearica/tesseract.js-electron
    - Typescript: https://github.com/Balearica/tesseract.js-typescript
- 
+
 If you have a project or example repo that uses Tesseract.js, feel free to add it to this list using a pull request. Examples submitted should be well documented such that new users can run them; projects should be functional and actively maintained.
 
 ## Major changes in v5
@@ -113,7 +114,7 @@ Version 5 changes are documented in [this issue](https://github.com/naptha/tesse
 Upgrading from v2 to v5?  See [this guide](https://github.com/naptha/tesseract.js/issues/771).
 
 ## Major changes in v4
-Version 4 includes many new features and bug fixes--see [this issue](https://github.com/naptha/tesseract.js/issues/662) for a full list.  Several highlights are below. 
+Version 4 includes many new features and bug fixes--see [this issue](https://github.com/naptha/tesseract.js/issues/662) for a full list.  Several highlights are below.
 
 - Added rotation preprocessing options (including auto-rotate) for significantly better accuracy
 - Processed images (rotated, grayscale, binary) can now be retrieved
@@ -130,7 +131,7 @@ Version 4 includes many new features and bug fixes--see [this issue](https://git
 - Added support:
    - Node.js version 18
 - Removed support:
-   - ASM.js version, any other old versions of Tesseract.js-core (<3.0.0) 
+   - ASM.js version, any other old versions of Tesseract.js-core (<3.0.0)
    - Node.js versions 10 and 12
 
 ## Contributing
@@ -154,7 +155,7 @@ It will automatically rebuild `tesseract.min.js` and `worker.min.js` when you ch
 
 ### Online Setup with a single Click
 
-You can use Gitpod(A free online VS Code like IDE) for contributing. With a single click it will launch a ready to code workspace with the build & start scripts already in process and within a few seconds it will spin up the dev server so that you can start contributing straight away without wasting any time. 
+You can use Gitpod(A free online VS Code like IDE) for contributing. With a single click it will launch a ready to code workspace with the build & start scripts already in process and within a few seconds it will spin up the dev server so that you can start contributing straight away without wasting any time.
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/naptha/tesseract.js/blob/master/examples/browser/basic-efficient.html)
 
