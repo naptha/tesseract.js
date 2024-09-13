@@ -1,0 +1,102 @@
+{
+  "manifest_version": 3,
+  "name": "Vijay's X",
+  "version": "1.0",
+  "description": "OCR extension to extract and highlight passport details from a travel visa website.",
+  "permissions": ["activeTab", "scripting"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["styles.css"]
+    }
+  ]
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vijay's X - OCR</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>Vijay's X</h1>
+  <p>Extract and highlight passport details.</p>
+  <button id="run-ocr">Run OCR</button>
+  <script src="popup.js"></script>
+</body>
+</html>
+document.getElementById('run-ocr').addEventListener('click', () => {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.scripting.executeScript({
+      target: { tabId: tabs[0].id },
+      files: ['content.js']
+    });
+  });
+});
+// Inject Tesseract.js
+const script = document.createElement('script');
+script.src = chrome.runtime.getURL('tesseract.min.js');
+document.head.appendChild(script);
+
+script.onload = () => {
+  const images = document.querySelectorAll('img');
+  images.forEach((img) => {
+    // Run OCR on each image found
+    Tesseract.recognize(img, 'eng', {
+      logger: (m) => console.log(m),
+    }).then(({ data: { text } }) => {
+      console.log("OCR Text:", text);
+
+      // Define patterns to extract specific passport details
+      const patterns = {
+        name: /Name:\s*(.*)/i,
+        passportNumber: /Passport Number:\s*(\w+)/i,
+        dateOfBirth: /Date of Birth:\s*(\d{2}\/\d{2}\/\d{4})/i,
+        nationality: /Nationality:\s*(\w+)/i,
+        visaExpiry: /Visa Expiry Date:\s*(\d{2}\/\d{2}\/\d{4})/i,
+        issueDate: /Issue Date:\s*(\d{2}\/\d{2}\/\d{4})/i,
+        passportType: /Passport Type:\s*(\w+)/i
+      };
+
+      // Extract and highlight details
+      for (const [key, pattern] of Object.entries(patterns)) {
+        const match = text.match(pattern);
+        if (match) {
+          highlightDetail(match[0]);
+        }
+      }
+    }).catch((error) => {
+      console.error("Error during OCR processing:", error);
+    });
+  });
+};
+
+// Function to highlight details on the page
+function highlightDetail(detail) {
+  const bodyText = document.body.innerHTML;
+  const highlightedText = bodyText.replace(
+    new RegExp(detail, 'g'),
+    `<span style="background-color: lightblue;">${detail}</span>`
+  );
+  document.body.innerHTML = highlightedText;
+}
+h1 {
+  font-size: 1.5em;
+}
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+}
