@@ -4,6 +4,7 @@ const createJob = require('./createJob');
 const { log } = require('./utils/log');
 const getId = require('./utils/getId');
 const OEM = require('./constants/OEM');
+const { FORMATS } = require('../tests/constants');
 const {
   defaultOptions,
   spawnWorker,
@@ -12,6 +13,13 @@ const {
   loadImage,
   send,
 } = require('./worker/node');
+
+const validateImageFormat = (imagePath) => {
+  const format = imagePath.split('.').pop().toLowerCase();
+  if (!FORMATS.includes(format)) {
+    throw new Error(`Unsupported image format: ${format}. Tesseract.js supports: ${FORMATS.join(', ')}`);
+  }
+};
 
 let workerCounter = 0;
 
@@ -185,6 +193,7 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
   const recognize = async (image, opts = {}, output = {
     blocks: true, text: true, hocr: true, tsv: true,
   }, jobId) => (
+    validateImageFormat(image),
     startJob(createJob({
       id: jobId,
       action: 'recognize',
