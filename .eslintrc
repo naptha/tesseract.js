@@ -18,6 +18,7 @@
     "no-restricted-syntax": ["error", "ForInStatement", "LabeledStatement", "WithStatement"],
     // The `prefer-destructuring` rule causes issues
     // https://github.com/naptha/tesseract.js/issues/847
-    "prefer-destructuring": 0
+    "prefer-destructuring": 0,
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }]
   }
 }
