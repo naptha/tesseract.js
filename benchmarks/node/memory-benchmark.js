@@ -2,10 +2,10 @@
 const path = require('path');
 const { createWorker, createScheduler } = require('../../src');
 
-const formatBytes = (bytes) => `${(bytes / 1024 / 1024).toFixed(2)} MB`;
+const formatBytes = (bytes) => `${(bytes / 1024 / 1024).toFixed(0)} MB`;
 const formatTime = (seconds) => `${seconds.toFixed(2)}s`;
 
-const getMemoryRow = (iteration, memUsage, time) => `| ${iteration} | ${formatTime(time)} | ${formatBytes(memUsage.heapUsed)} | ${formatBytes(memUsage.heapTotal)} | ${formatBytes(memUsage.rss)} | ${formatBytes(memUsage.external)} |`;
+const getMemoryRow = (iteration, memUsage, time) => `| ${iteration} | ${formatTime(time)} | ${formatBytes(memUsage.heapUsed)} | ${formatBytes(memUsage.heapTotal)} | ${formatBytes(memUsage.rss - memUsage.heapTotal)} | ${formatBytes(memUsage.rss)} | ${formatBytes(memUsage.external)} |`;
 
 const scheduler = createScheduler();
 
@@ -34,8 +34,8 @@ const workerGen = async () => {
   await Promise.all(resArr);
 
   // Print table header
-  console.log('| Iteration | Time | Heap Used | Heap Total | RSS | External |');
-  console.log('|-----------|------|------------|------------|-----|----------|');
+  console.log('| Iteration | Time | Heap Used | Heap Total | RSS Non-Heap | RSS Total | External |');
+  console.log('|-----------|------|-----------|------------|--------------|-----------|----------|');
 
   for (let i = 0; i < 10; i++) {
     let iterationTime = 0;
