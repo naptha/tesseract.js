@@ -12,7 +12,6 @@ const isURL = require('is-url');
 const dump = require('./utils/dump');
 const env = require('../utils/getEnvironment')('type');
 const setImage = require('./utils/setImage');
-const defaultParams = require('./constants/defaultParams');
 const defaultOutput = require('./constants/defaultOutput');
 const { log, setLogging } = require('../utils/log');
 const PSM = require('../constants/PSM');
@@ -27,7 +26,7 @@ let TessModule;
 let api = null;
 let latestJob;
 let adapter = {};
-let params = defaultParams;
+let params = {};
 let loadLanguageLangsWorker;
 let loadLanguageOptionsWorker;
 let dataFromCache = false;
@@ -305,8 +304,6 @@ const initialize = async ({
       res.reject('initialization failed');
     }
 
-    params = defaultParams;
-    await setParameters({ payload: { params } });
     res.progress({
       workerId, status: statusText, progress: 1,
     });
@@ -316,31 +313,10 @@ const initialize = async ({
   }
 };
 
-const getPDFInternal = (title, textonly) => {
-  const pdfRenderer = new TessModule.TessPDFRenderer('tesseract-ocr', '/', textonly);
-  pdfRenderer.BeginDocument(title);
-  pdfRenderer.AddImage(api);
-  pdfRenderer.EndDocument();
-  TessModule._free(pdfRenderer);
-
-  return TessModule.FS.readFile('/tesseract-ocr.pdf');
-};
-
-const getPDF = async ({ payload: { title, textonly } }, res) => {
-  res.resolve(getPDFInternal(title, textonly));
-};
-
 // Combines default output with user-specified options and
 // counts (1) total output formats requested and (2) outputs that require OCR
 const processOutput = (output) => {
   const workingOutput = JSON.parse(JSON.stringify(defaultOutput));
-  // Output formats were set using `setParameters` in previous versions
-  // These settings are copied over for compatability
-  if (params.tessjs_create_box === '1') workingOutput.box = true;
-  if (params.tessjs_create_hocr === '1') workingOutput.hocr = true;
-  if (params.tessjs_create_osd === '1') workingOutput.osd = true;
-  if (params.tessjs_create_tsv === '1') workingOutput.tsv = true;
-  if (params.tessjs_create_unlv === '1') workingOutput.unlv = true;
 
   const nonRecOutputs = ['imageColor', 'imageGrey', 'imageBinary', 'layoutBlocks', 'debug'];
   let recOutputCount = 0;
@@ -546,7 +522,6 @@ exports.dispatchHandlers = (packet, send) => {
     initialize,
     setParameters,
     recognize,
-    getPDF,
     detect,
     terminate,
   })[packet.action](packet, res)

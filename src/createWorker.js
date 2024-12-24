@@ -104,10 +104,6 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
     }))
   );
 
-  const loadLanguage = () => (
-    console.warn('`loadLanguage` is depreciated and should be removed from code (workers now come with language pre-loaded)')
-  );
-
   const loadLanguageInternal = (_langs, jobId) => startJob(createJob({
     id: jobId,
     action: 'loadLanguage',
@@ -124,10 +120,6 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
       },
     },
   }));
-
-  const initialize = () => (
-    console.warn('`initialize` is depreciated and should be removed from code (workers now come pre-initialized)')
-  );
 
   const initializeInternal = (_langs, _oem, _config, jobId) => (
     startJob(createJob({
@@ -182,15 +174,6 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
     }))
   );
 
-  const getPDF = (title = 'Tesseract OCR Result', textonly = false, jobId) => {
-    console.log('`getPDF` function is depreciated. `recognize` option `savePDF` should be used instead.');
-    return startJob(createJob({
-      id: jobId,
-      action: 'getPDF',
-      payload: { title, textonly },
-    }));
-  };
-
   const detect = async (image, jobId) => {
     if (lstmOnlyCore) throw Error('`worker.detect` requires Legacy model, which was not loaded.');
 
@@ -224,8 +207,6 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
       let d = data;
       if (action === 'recognize') {
         d = circularize(data);
-      } else if (action === 'getPDF') {
-        d = Array.from({ ...data, length: Object.keys(data).length });
       }
       promises[promiseId].resolve({ jobId, data: d });
       delete promises[promiseId];
@@ -251,12 +232,9 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
     readText,
     removeFile,
     FS,
-    loadLanguage,
-    initialize,
     reinitialize,
     setParameters,
     recognize,
-    getPDF,
     detect,
     terminate,
   };
