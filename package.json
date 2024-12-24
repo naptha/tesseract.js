@@ -64,7 +64,6 @@
   "dependencies": {
     "bmp-js": "^0.1.0",
     "idb-keyval": "^6.2.0",
-    "is-electron": "^2.2.2",
     "is-url": "^1.2.4",
     "node-fetch": "^2.6.9",
     "opencollective-postinstall": "^2.0.3",
