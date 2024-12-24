@@ -82,7 +82,8 @@ Figures out what words are in `image`, where the words are in `image`, etc.
 - `image` see [Image Format](./image-format.md) for more details.
 - `options` an object of customized options
   - `rectangle` an object to specify the regions you want to recognized in the image, should contain top, left, width and height, see example below.
-- `output` an object specifying which output formats to return (by default `text`, `blocks`, `hocr`, and `tsv` are returned)
+- `output` an object specifying which output formats to return (by default only `text` is returned)
+   - Other options include `blocks` (json), `hocr`, and `tsv`
 - `jobId` Please see details above
 
 **Output:**

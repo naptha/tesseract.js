@@ -50,7 +50,7 @@ const workerGen = async () => {
       const promises = [];
       for (let j = 0; j < 10; j++) {
         // Results are purposefully not saved as this would increase memory usage over time.
-        promises.push(scheduler.addJob('recognize', file).then(() => (true)));
+        promises.push(scheduler.addJob('recognize', file, {}, { blocks: true }).then(() => (true)));
       }
       // eslint-disable-next-line no-await-in-loop
       await Promise.all(promises);

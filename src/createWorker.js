@@ -165,7 +165,7 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
   );
 
   const recognize = async (image, opts = {}, output = {
-    blocks: true, text: true, hocr: true, tsv: true,
+    text: true,
   }, jobId) => (
     startJob(createJob({
       id: jobId,

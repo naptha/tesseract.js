@@ -4,10 +4,10 @@
 
 module.exports = {
   text: true,
-  blocks: true,
+  blocks: false,
   layoutBlocks: false,
-  hocr: true,
-  tsv: true,
+  hocr: false,
+  tsv: false,
   box: false,
   unlv: false,
   osd: false,
