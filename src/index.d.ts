@@ -26,7 +26,6 @@ declare namespace Tesseract {
     recognize(image: ImageLike, options?: Partial<RecognizeOptions>, output?: Partial<OutputFormats>, jobId?: string): Promise<RecognizeResult>
     detect(image: ImageLike, jobId?: string): Promise<DetectResult>
     terminate(jobId?: string): Promise<ConfigResult>
-    getPDF(title?: string, textonly?: boolean, jobId?: string):Promise<GetPDFResult>
   }
 
   interface Lang {
@@ -71,11 +70,6 @@ declare namespace Tesseract {
     tessedit_char_blacklist: string
     preserve_interword_spaces: string
     user_defined_dpi: string
-    tessjs_create_hocr: string
-    tessjs_create_tsv: string
-    tessjs_create_box: string
-    tessjs_create_unlv: string
-    tessjs_create_osd: string
     [propName: string]: any
   }
   interface OutputFormats {
@@ -107,10 +101,6 @@ declare namespace Tesseract {
   interface RecognizeResult {
     jobId: string
     data: Page
-  }
-  interface GetPDFResult {
-    jobId: string
-    data: number[]
   }
   interface DetectResult {
     jobId: string
