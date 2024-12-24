@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+
+// Note: getting replicable results from this script requires:
+// (1) Running with the `--expose-gc` flag,
+// (2) adding `global.gc()` within the `index.js` file
+// to force garbage collection within each worker after each iteration.
+
 const path = require('path');
 const { createWorker, createScheduler } = require('../../src');
 
@@ -43,19 +49,25 @@ const workerGen = async () => {
       const time1 = Date.now();
       const promises = [];
       for (let j = 0; j < 10; j++) {
-        promises.push(scheduler.addJob('recognize', file));
+        // Results are purposefully not saved as this would increase memory usage over time.
+        promises.push(scheduler.addJob('recognize', file).then(() => (true)));
       }
       // eslint-disable-next-line no-await-in-loop
       await Promise.all(promises);
-
-      if (global.gc) global.gc();
 
       const time2 = Date.now();
       const timeDif = (time2 - time1) / 1e3;
       iterationTime += timeDif;
     }
+
+    if (global.gc) global.gc();
+
     // Print memory stats and time after each iteration
     console.log(getMemoryRow(i + 1, process.memoryUsage(), iterationTime));
   }
+
+  if (global.gc) global.gc();
+  // require('v8').writeHeapSnapshot();
+
   scheduler.terminate();
 })();
