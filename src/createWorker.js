@@ -25,8 +25,7 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
     ...defaultOptions,
     ..._options,
   });
-  const resolves = {};
-  const rejects = {};
+  const promises = {};
 
   // Current langs, oem, and config file.
   // Used if the user ever re-initializes the worker using `worker.reinitialize`.
@@ -48,21 +47,12 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
 
   workerCounter += 1;
 
-  const setResolve = (promiseId, res) => {
-    resolves[promiseId] = res;
-  };
-
-  const setReject = (promiseId, rej) => {
-    rejects[promiseId] = rej;
-  };
-
   const startJob = ({ id: jobId, action, payload }) => (
     new Promise((resolve, reject) => {
       log(`[${id}]: Start ${jobId}, action=${action}`);
       // Using both `action` and `jobId` in case user provides non-unique `jobId`.
       const promiseId = `${action}-${jobId}`;
-      setResolve(promiseId, resolve);
-      setReject(promiseId, reject);
+      promises[promiseId] = { resolve, reject };
       send(worker, {
         workerId: id,
         jobId,
@@ -237,9 +227,11 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
       } else if (action === 'getPDF') {
         d = Array.from({ ...data, length: Object.keys(data).length });
       }
-      resolves[promiseId]({ jobId, data: d });
+      promises[promiseId].resolve({ jobId, data: d });
+      delete promises[promiseId];
     } else if (status === 'reject') {
-      rejects[promiseId](data);
+      promises[promiseId].reject(data);
+      delete promises[promiseId];
       if (action === 'load') workerResReject(data);
       if (errorHandler) {
         errorHandler(data);
@@ -254,8 +246,6 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
   const resolveObj = {
     id,
     worker,
-    setResolve,
-    setReject,
     load,
     writeText,
     readText,
