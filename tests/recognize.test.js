@@ -2,13 +2,13 @@ const { createWorker, PSM } = Tesseract;
 let worker;
 before(async function cb() {
   this.timeout(0);
-  worker = await createWorker("eng", 1, OPTIONS);
-  workerLegacy = await createWorker("eng", 0, OPTIONS);
+  worker = await createWorker('eng', 1, OPTIONS);
+  workerLegacy = await createWorker('eng', 0, OPTIONS);
 });
 
 describe('recognize()', () => {
   describe('should read bmp, jpg, png and pbm format images', () => {
-    FORMATS.forEach(format => (
+    FORMATS.forEach((format) => (
       it(`support ${format} format`, async () => {
         await worker.reinitialize('eng');
         const { data: { text } } = await worker.recognize(`${IMAGE_PATH}/simple.${format}`);
@@ -68,7 +68,6 @@ describe('recognize()', () => {
       }).timeout(TIMEOUT)
     ));
   });
-
 
   describe('should recognize different langs', () => {
     [
@@ -142,7 +141,7 @@ describe('recognize()', () => {
   describe('should support all page seg modes (Legacy)', () => {
     Object
       .keys(PSM)
-      .map(name => ({ name, mode: PSM[name] }))
+      .map((name) => ({ name, mode: PSM[name] }))
       .forEach(({ name, mode }) => (
         it(`support PSM.${name} mode`, async () => {
           await workerLegacy.reinitialize(['eng', 'osd']);
@@ -159,7 +158,7 @@ describe('recognize()', () => {
     Object
       .keys(PSM)
       .filter((x) => x !== 'OSD_ONLY')
-      .map(name => ({ name, mode: PSM[name] }))
+      .map((name) => ({ name, mode: PSM[name] }))
       .forEach(({ name, mode }) => (
         it(`support PSM.${name} mode`, async () => {
           await worker.reinitialize(['eng', 'osd']);
@@ -173,7 +172,7 @@ describe('recognize()', () => {
   });
 
   (IS_BROWSER ? describe.skip : describe)('should recognize image in Buffer format (Node.js only)', () => {
-    FORMATS.forEach(format => (
+    FORMATS.forEach((format) => (
       it(`support ${format} format`, async () => {
         const buf = fs.readFileSync(path.join(__dirname, 'assets', 'images', `simple.${format}`));
         await worker.reinitialize('eng');
@@ -184,7 +183,7 @@ describe('recognize()', () => {
   });
 
   (IS_BROWSER ? describe : describe.skip)('should read image from img DOM element (browser only)', () => {
-    FORMATS.forEach(format => (
+    FORMATS.forEach((format) => (
       it(`support ${format} format`, async () => {
         const imageDOM = document.createElement('img');
         imageDOM.setAttribute('src', `${IMAGE_PATH}/simple.${format}`);
@@ -196,7 +195,7 @@ describe('recognize()', () => {
   });
 
   (IS_BROWSER ? describe : describe.skip)('should read image from video DOM element (browser only)', () => {
-    FORMATS.forEach(format => (
+    FORMATS.forEach((format) => (
       it(`support ${format} format`, async () => {
         const videoDOM = document.createElement('video');
         videoDOM.setAttribute('poster', `${IMAGE_PATH}/simple.${format}`);
@@ -209,7 +208,7 @@ describe('recognize()', () => {
 
   (IS_BROWSER ? describe : describe.skip)('should read video from canvas DOM element (browser only)', () => {
     // img tag is unable to render pbm, so let's skip it.
-    const formats = FORMATS.filter(f => f !== 'pbm');
+    const formats = FORMATS.filter((f) => f !== 'pbm');
     let canvasDOM = null;
     let imageDOM = null;
     let idx = 0;
@@ -230,7 +229,7 @@ describe('recognize()', () => {
       imageDOM.remove();
     });
 
-    formats.forEach(format => (
+    formats.forEach((format) => (
       it(`support ${format} format`, async () => {
         await worker.reinitialize('eng');
         const { data: { text } } = await worker.recognize(canvasDOM);
@@ -241,7 +240,7 @@ describe('recognize()', () => {
 
   (IS_BROWSER ? describe : describe.skip)('should read video from OffscreenCanvas (browser only)', () => {
     // img tag is unable to render pbm, so let's skip it.
-    const formats = FORMATS.filter(f => f !== 'pbm');
+    const formats = FORMATS.filter((f) => f !== 'pbm');
     let offscreenCanvas = null;
     let imageDOM = null;
     let idx = 0;
@@ -249,7 +248,7 @@ describe('recognize()', () => {
       imageDOM = document.createElement('img');
       imageDOM.setAttribute('crossOrigin', 'Anonymous');
       imageDOM.onload = () => {
-        offscreenCanvas = new OffscreenCanvas(imageDOM.width, imageDOM.height)
+        offscreenCanvas = new OffscreenCanvas(imageDOM.width, imageDOM.height);
         offscreenCanvas.getContext('2d').drawImage(imageDOM, 0, 0);
         done();
       };
@@ -262,7 +261,7 @@ describe('recognize()', () => {
       imageDOM.remove();
     });
 
-    formats.forEach(format => (
+    formats.forEach((format) => (
       it(`support ${format} format`, async () => {
         await worker.reinitialize('eng');
         const { data: { text } } = await worker.recognize(offscreenCanvas);

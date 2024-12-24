@@ -3,7 +3,7 @@ const FS_WAIT = 500;
 let worker;
 before(async function cb() {
   this.timeout(0);
-  worker = await createWorker("eng", 1, OPTIONS);
+  worker = await createWorker('eng', 1, OPTIONS);
 });
 
 describe('FS', async () => {

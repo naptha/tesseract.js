@@ -2,7 +2,7 @@ const { createWorker } = Tesseract;
 let worker;
 before(async function cb() {
   this.timeout(0);
-  worker = await createWorker("osd", 0, OPTIONS);
+  worker = await createWorker('osd', 0, OPTIONS);
 });
 
 describe('detect()', async () => {
@@ -15,7 +15,6 @@ describe('detect()', async () => {
     });
   }).timeout(TIMEOUT);
 });
-
 
 describe('detect()', async () => {
   it('should detect OSD (simplified interface)', () => {
