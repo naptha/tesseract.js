@@ -294,4 +294,15 @@ describe('recognize()', () => {
       expect(blocks[0].paragraphs[0].lines[0].text).to.be('繁體 中 文 測試\n');
     }).timeout(TIMEOUT);
   });
+
+  describe('should support layout blocks (json) output', () => {
+    it('recongize large image', async () => {
+      await worker.reinitialize('eng');
+      const { data: { layoutBlocks } } = await worker.recognize(`${IMAGE_PATH}/testocr.png`, {}, { text: false, layoutBlocks: true });
+      expect(layoutBlocks[0].bbox[0]).to.be(36);
+      expect(layoutBlocks[0].bbox[1]).to.be(92);
+      expect(layoutBlocks[0].bbox[2]).to.be(618);
+      expect(layoutBlocks[0].bbox[3]).to.be(361);
+    }).timeout(TIMEOUT);
+  });
 });
