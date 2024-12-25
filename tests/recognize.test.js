@@ -269,4 +269,29 @@ describe('recognize()', () => {
       }).timeout(TIMEOUT)
     ));
   });
+
+  describe('should support blocks (json) output', () => {
+    it('recongize large image', async () => {
+      await worker.reinitialize('eng');
+      const { data: { blocks } } = await worker.recognize(`${IMAGE_PATH}/testocr.png`, {}, { blocks: true });
+      expect(blocks[0].paragraphs[0].lines[0].words[0].symbols[0].text).to.be('T');
+      expect(blocks[0].paragraphs[0].lines[0].words[0].text).to.be('This');
+      expect(blocks[0].paragraphs[0].lines[0].text).to.be('This is a lot of 12 point text to test the\n');
+    }).timeout(TIMEOUT);
+
+    it('recongize image with special characters', async () => {
+      await worker.reinitialize('eng');
+      const { data: { blocks } } = await worker.recognize(`${IMAGE_PATH}/escape_chars.png`, {}, { blocks: true });
+      expect(blocks[0].paragraphs[0].lines[0].text).to.be('"Double Quotes"\n');
+      expect(blocks[0].paragraphs[0].lines[1].text).to.be('Back \\ Slash\n');
+    }).timeout(TIMEOUT);
+
+    it('recongize chinese image', async () => {
+      await worker.reinitialize('chi_tra');
+      const { data: { blocks } } = await worker.recognize(`${IMAGE_PATH}/chinese.png`, {}, { blocks: true });
+      expect(blocks[0].paragraphs[0].lines[0].words[0].symbols[0].text).to.be('繁');
+      expect(blocks[0].paragraphs[0].lines[0].words[0].text).to.be('繁體');
+      expect(blocks[0].paragraphs[0].lines[0].text).to.be('繁體 中 文 測試\n');
+    }).timeout(TIMEOUT);
+  });
 });
