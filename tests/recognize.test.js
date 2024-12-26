@@ -286,6 +286,24 @@ describe('recognize()', () => {
       expect(blocks[0].paragraphs[0].lines[1].text).to.be('Back \\ Slash\n');
     }).timeout(TIMEOUT);
 
+    it('recongize image with multiple choices', async () => {
+      await workerLegacy.reinitialize('eng');
+      const { data: { blocks } } = await workerLegacy.recognize(`${IMAGE_PATH}/bill.png`, {}, { blocks: true });
+      expect(blocks[0].paragraphs[1].lines[0].words[3].choices.length).to.be(3);
+      expect(blocks[0].paragraphs[1].lines[0].words[3].choices[1].text).to.be('100,000.0ll');
+    }).timeout(TIMEOUT);
+
+    it('recongize image with multiple blocks', async () => {
+      // This also implicitly checks that non-text blocks are ignored,
+      // as otherwise the length would be 5.
+      await worker.reinitialize('eng');
+      await worker.setParameters({
+        tessedit_pageseg_mode: PSM.AUTO,
+      });
+      const { data: { blocks } } = await worker.recognize(`${IMAGE_PATH}/bill.png`, {}, { blocks: true });
+      expect(blocks.length).to.be(4);
+    }).timeout(TIMEOUT);
+
     it('recongize chinese image', async () => {
       await worker.reinitialize('chi_tra');
       const { data: { blocks } } = await worker.recognize(`${IMAGE_PATH}/chinese.png`, {}, { blocks: true });
