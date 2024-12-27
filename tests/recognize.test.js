@@ -317,10 +317,10 @@ describe('recognize()', () => {
     it('recongize large image', async () => {
       await worker.reinitialize('eng');
       const { data: { layoutBlocks } } = await worker.recognize(`${IMAGE_PATH}/testocr.png`, {}, { text: false, layoutBlocks: true });
-      expect(layoutBlocks[0].bbox[0]).to.be(36);
-      expect(layoutBlocks[0].bbox[1]).to.be(92);
-      expect(layoutBlocks[0].bbox[2]).to.be(618);
-      expect(layoutBlocks[0].bbox[3]).to.be(361);
+      expect(layoutBlocks[0].bbox.x0).to.be(36);
+      expect(layoutBlocks[0].bbox.y0).to.be(92);
+      expect(layoutBlocks[0].bbox.x1).to.be(618);
+      expect(layoutBlocks[0].bbox.y1).to.be(361);
     }).timeout(TIMEOUT);
   });
 });
