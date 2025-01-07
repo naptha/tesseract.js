@@ -1,5 +1,4 @@
 const resolvePaths = require('./utils/resolvePaths');
-const circularize = require('./utils/circularize');
 const createJob = require('./createJob');
 const { log } = require('./utils/log');
 const getId = require('./utils/getId');
@@ -204,11 +203,7 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
     const promiseId = `${action}-${jobId}`;
     if (status === 'resolve') {
       log(`[${workerId}]: Complete ${jobId}`);
-      let d = data;
-      if (action === 'recognize') {
-        d = circularize(data);
-      }
-      promises[promiseId].resolve({ jobId, data: d });
+      promises[promiseId].resolve({ jobId, data });
       delete promises[promiseId];
     } else if (status === 'reject') {
       promises[promiseId].reject(data);
