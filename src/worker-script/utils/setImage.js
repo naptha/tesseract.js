@@ -1,3 +1,5 @@
+'use strict';
+
 const bmp = require('bmp-js');
 
 /**

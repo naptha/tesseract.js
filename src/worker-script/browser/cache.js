@@ -1,3 +1,5 @@
+'use strict';
+
 const { set, get, del } = require('idb-keyval');
 
 module.exports = {

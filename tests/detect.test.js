@@ -1,3 +1,5 @@
+'use strict';
+
 const { createWorker } = Tesseract;
 let worker;
 before(async function cb() {

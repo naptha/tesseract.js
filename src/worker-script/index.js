@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  *
  * Worker script for browser and node

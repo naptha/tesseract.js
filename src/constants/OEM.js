@@ -1,3 +1,5 @@
+'use strict';
+
 /*
  * OEM = OCR Engine Mode, and there are 4 possible modes.
  *

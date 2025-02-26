@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  *
  * Dump data to a big JSON tree

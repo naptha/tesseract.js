@@ -1,3 +1,5 @@
+'use strict';
+
 const isBrowser = require('./getEnvironment')('type') === 'browser';
 
 const resolveURL = isBrowser ? s => (new URL(s, window.location.href)).href : s => s; // eslint-disable-line

@@ -1,3 +1,5 @@
+'use strict';
+
 const { createScheduler, createWorker } = Tesseract;
 
 let workers = [];
