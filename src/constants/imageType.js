@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
   COLOR: 0,
   GREY: 1,

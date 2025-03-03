@@ -1,3 +1,5 @@
+'use strict';
+
 let logging = false;
 
 exports.logging = logging;

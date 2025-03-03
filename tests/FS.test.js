@@ -1,3 +1,5 @@
+'use strict';
+
 const { createWorker } = Tesseract;
 const FS_WAIT = 500;
 let worker;

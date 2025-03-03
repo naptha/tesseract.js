@@ -1,5 +1,8 @@
+'use strict';
+
 const { createWorker, PSM } = Tesseract;
 let worker;
+let workerLegacy;
 before(async function cb() {
   this.timeout(0);
   worker = await createWorker('eng', 1, OPTIONS);

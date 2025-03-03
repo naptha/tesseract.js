@@ -1,3 +1,5 @@
+'use strict';
+
 const createWorker = require('./createWorker');
 
 const recognize = async (image, langs, options) => {

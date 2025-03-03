@@ -1,3 +1,5 @@
+'use strict';
+
 const { simd } = require('wasm-feature-detect');
 const OEM = require('../../constants/OEM');
 

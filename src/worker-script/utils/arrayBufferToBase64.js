@@ -1,3 +1,5 @@
+'use strict';
+
 // Copied from https://gist.github.com/jonleighton/958841
 // Copyright 2011 Jon Leighton, MIT LICENSE
 

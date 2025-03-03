@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  *
  * Entry point for tesseract.js, should be the entry when bundling.

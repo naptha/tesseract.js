@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+'use strict';
+
 // Note: getting replicable results from this script requires:
 // (1) Running with the `--expose-gc` flag,
 // (2) adding `global.gc()` within the `index.js` file

@@ -1,3 +1,5 @@
+'use strict';
+
 const { simd } = require('wasm-feature-detect');
 const coreVersion = require('../../../package.json').dependencies['tesseract.js-core'];
 

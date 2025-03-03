@@ -1,3 +1,5 @@
+'use strict';
+
 const resolvePaths = require('./utils/resolvePaths');
 const createJob = require('./createJob');
 const { log } = require('./utils/log');

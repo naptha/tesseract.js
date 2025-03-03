@@ -1,3 +1,5 @@
+'use strict';
+
 const path = require('path');
 const common = require('./webpack.config.common');
 const webpack = require('webpack');

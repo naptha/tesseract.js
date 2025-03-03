@@ -1,3 +1,5 @@
+'use strict';
+
 const getId = require('./utils/getId');
 
 let jobCounter = 0;
