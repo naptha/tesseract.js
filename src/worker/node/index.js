@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  *
  * Tesseract Worker impl. for node (using child_process)

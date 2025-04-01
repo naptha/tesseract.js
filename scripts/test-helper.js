@@ -1,3 +1,5 @@
+'use strict';
+
 const constants = require('../tests/constants');
 global.expect = require('expect.js');
 global.fs = require('fs');

@@ -1,3 +1,5 @@
+'use strict';
+
 const createJob = require('./createJob');
 const { log } = require('./utils/log');
 const getId = require('./utils/getId');

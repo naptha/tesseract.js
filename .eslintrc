@@ -7,7 +7,12 @@
     "mocha": true,
     "worker": true
   },
+  "parserOptions": {
+    // airbnb-base sets this to "modules" for ESM but CJS is being used
+    "sourceType": "script"
+  },
   "rules": {
+    "strict": ["error", "global"],
     "no-underscore-dangle": 0,
     "no-console": 0,
     "global-require": 0,

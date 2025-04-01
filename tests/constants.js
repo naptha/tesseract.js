@@ -1,3 +1,5 @@
+'use strict';
+
 const TIMEOUT = 30000;
 const IMAGE_PATH = 'http://localhost:3000/tests/assets/images';
 const IS_BROWSER = typeof window !== 'undefined' && typeof window.document !== 'undefined';

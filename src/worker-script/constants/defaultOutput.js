@@ -1,3 +1,5 @@
+'use strict';
+
 /*
  * default output formats for tesseract.js
  */

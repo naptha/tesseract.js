@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  *
  * Tesseract Worker adapter for browser
