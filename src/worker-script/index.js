@@ -118,7 +118,7 @@ res) => {
         throw Error('Not found in cache');
       }
     // Attempt to fetch new .traineddata file
-    } catch (e) {
+    } catch {
       newData = true;
       log(`[${workerId}]: Load ${lang}.traineddata from ${langPath}`);
       if (typeof _lang === 'string') {
