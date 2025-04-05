@@ -2,7 +2,8 @@
 
 const util = require('util');
 const fs = require('fs');
-const fetch = require('node-fetch');
+// Use built-in fetch if available, otherwise fallback to node-fetch
+const fetch = global.fetch || require('node-fetch');
 const isURL = require('is-url');
 
 const readFile = util.promisify(fs.readFile);
