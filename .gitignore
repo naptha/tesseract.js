@@ -8,3 +8,5 @@ worker.min.js
 .nyc_output
 dist/
 *.swp
+*.wasm
+*.wasm.js
