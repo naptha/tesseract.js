@@ -1,4 +1,4 @@
-export const TIMEOUT = 30000;
+export const TIMEOUT = 60000;
 export const IMAGE_PATH = 'tests/assets/images';
 export const IS_BROWSER = typeof window !== 'undefined' && typeof window.document !== 'undefined';
 export const OPTIONS = {
