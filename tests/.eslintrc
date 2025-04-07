@@ -1,6 +1,7 @@
 {
   "rules": {
     "no-undef": 0,
-    "camelcase": 0
+    "camelcase": 0,
+    "import/extensions": 0,
   }
 }

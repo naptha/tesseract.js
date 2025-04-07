@@ -1,15 +1,19 @@
-'use strict';
-
-const { createWorker, PSM } = Tesseract;
-let worker;
-let workerLegacy;
-before(async function cb() {
-  this.timeout(0);
-  worker = await createWorker('eng', 1, OPTIONS);
-  workerLegacy = await createWorker('eng', 0, OPTIONS);
-});
+import {
+  FORMATS, SIMPLE_PNG_BASE64, SIMPLE_JPG_BASE64, SIMPLE_TEXT,
+  COMSIC_TEXT, TESTOCR_TEXT, BILL_SPACED_TEXT, SIMPLE_WHITELIST_TEXT,
+  SIMPLE_TEXT_LEGACY, SIMPLE_TEXT_HALF, CHINESE_TEXT,
+  IS_BROWSER, IMAGE_PATH, TIMEOUT, OPTIONS,
+} from './constants.mjs';
 
 describe('recognize()', () => {
+  let worker;
+  let workerLegacy;
+  before(async function cb() {
+    this.timeout(0);
+    worker = await Tesseract.createWorker('eng', 1, OPTIONS);
+    workerLegacy = await Tesseract.createWorker('eng', 0, OPTIONS);
+  });
+
   describe('should read bmp, jpg, png and pbm format images', () => {
     FORMATS.forEach((format) => (
       it(`support ${format} format`, async () => {
@@ -143,8 +147,8 @@ describe('recognize()', () => {
 
   describe('should support all page seg modes (Legacy)', () => {
     Object
-      .keys(PSM)
-      .map((name) => ({ name, mode: PSM[name] }))
+      .keys(Tesseract.PSM)
+      .map((name) => ({ name, mode: Tesseract.PSM[name] }))
       .forEach(({ name, mode }) => (
         it(`support PSM.${name} mode`, async () => {
           await workerLegacy.reinitialize(['eng', 'osd']);
@@ -159,9 +163,9 @@ describe('recognize()', () => {
 
   describe('should support all page seg modes except for PSM.OSD_ONLY (LSTM)', () => {
     Object
-      .keys(PSM)
+      .keys(Tesseract.PSM)
       .filter((x) => x !== 'OSD_ONLY')
-      .map((name) => ({ name, mode: PSM[name] }))
+      .map((name) => ({ name, mode: Tesseract.PSM[name] }))
       .forEach(({ name, mode }) => (
         it(`support PSM.${name} mode`, async () => {
           await worker.reinitialize(['eng', 'osd']);
@@ -177,7 +181,7 @@ describe('recognize()', () => {
   (IS_BROWSER ? describe.skip : describe)('should recognize image in Buffer format (Node.js only)', () => {
     FORMATS.forEach((format) => (
       it(`support ${format} format`, async () => {
-        const buf = fs.readFileSync(path.join(__dirname, 'assets', 'images', `simple.${format}`));
+        const buf = fs.readFileSync(`${IMAGE_PATH}/simple.${format}`);
         await worker.reinitialize('eng');
         const { data: { text } } = await worker.recognize(buf);
         expect(text).to.be(SIMPLE_TEXT);
@@ -301,7 +305,7 @@ describe('recognize()', () => {
       // as otherwise the length would be 5.
       await worker.reinitialize('eng');
       await worker.setParameters({
-        tessedit_pageseg_mode: PSM.AUTO,
+        tessedit_pageseg_mode: Tesseract.PSM.AUTO,
       });
       const { data: { blocks } } = await worker.recognize(`${IMAGE_PATH}/bill.png`, {}, { blocks: true });
       expect(blocks.length).to.be(4);
