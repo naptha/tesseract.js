@@ -34,8 +34,12 @@
 - `langs` a string to indicate the languages traineddata to download, multiple languages are specified using an array (['eng', 'chi_sim'])
 - `oem` a enum to indicate the OCR Engine Mode you use
 - `options` an object of customized options
-  - `corePath` path to a directory containing **both** `tesseract-core.wasm.js` and `tesseract-core-simd.wasm.js` from [Tesseract.js-core](https://www.npmjs.com/package/tesseract.js-core) package
-     - Setting `corePath` to a specific `.js` file is **strongly discouraged.**  To provide the best performance on all devices, Tesseract.js needs to be able to pick between `tesseract-core.wasm.js` and `tesseract-core-simd.wasm.js`.  See [this issue](https://github.com/naptha/tesseract.js/issues/735) for more detail.
+  - `corePath` path to a directory containing **all of** the following files from [Tesseract.js-core](https://www.npmjs.com/package/tesseract.js-core) package:
+     - `tesseract-core.wasm.js`
+     - `tesseract-core-simd.wasm.js`
+     - `tesseract-core-lstm.wasm.js`
+     - `tesseract-core-simd-lstm.wasm.js`
+     - Some code snippets found online set `corePath` to a specific `.js` file. This is **strongly discouraged.**  To provide the best performance and lowest network usage, Tesseract.js needs to be able to pick between builds.
   - `langPath` path for downloading traineddata, do not include `/` at the end of the path
   - `workerPath` path for downloading worker script
   - `dataPath` path for saving traineddata in WebAssembly file system, not common to modify
