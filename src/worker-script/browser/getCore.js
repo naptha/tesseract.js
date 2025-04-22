@@ -3,6 +3,8 @@
 const { simd } = require('wasm-feature-detect');
 const coreVersion = require('../../../package.json').dependencies['tesseract.js-core'];
 
+const trailingSlashRegex = /\/$/;
+
 module.exports = async (lstmOnly, corePath, res) => {
   if (typeof global.TesseractCore === 'undefined') {
     const statusText = 'loading tesseract core';
@@ -24,14 +26,14 @@ module.exports = async (lstmOnly, corePath, res) => {
       const simdSupport = await simd();
       if (simdSupport) {
         if (lstmOnly) {
-          corePathImportFile = `${corePathImport.replace(/\/$/, '')}/tesseract-core-simd-lstm.wasm.js`;
+          corePathImportFile = `${corePathImport.replace(trailingSlashRegex, '')}/tesseract-core-simd-lstm.wasm.js`;
         } else {
-          corePathImportFile = `${corePathImport.replace(/\/$/, '')}/tesseract-core-simd.wasm.js`;
+          corePathImportFile = `${corePathImport.replace(trailingSlashRegex, '')}/tesseract-core-simd.wasm.js`;
         }
       } else if (lstmOnly) {
-        corePathImportFile = `${corePathImport.replace(/\/$/, '')}/tesseract-core-lstm.wasm.js`;
+        corePathImportFile = `${corePathImport.replace(trailingSlashRegex, '')}/tesseract-core-lstm.wasm.js`;
       } else {
-        corePathImportFile = `${corePathImport.replace(/\/$/, '')}/tesseract-core.wasm.js`;
+        corePathImportFile = `${corePathImport.replace(trailingSlashRegex, '')}/tesseract-core.wasm.js`;
       }
     }
 

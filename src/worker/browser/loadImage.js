@@ -20,6 +20,8 @@ const readFromBlobOrFile = (blob) => (
   })
 );
 
+const imageRegex = /data:image\/([a-zA-Z]*);base64,([^"]*)/;
+
 /**
  * loadImage
  *
@@ -35,7 +37,7 @@ const loadImage = async (image) => {
 
   if (typeof image === 'string') {
     // Base64 Image
-    if (/data:image\/([a-zA-Z]*);base64,([^"]*)/.test(image)) {
+    if (imageRegex.test(image)) {
       data = atob(image.split(',')[1])
         .split('')
         .map((c) => c.charCodeAt(0));
