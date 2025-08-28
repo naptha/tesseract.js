@@ -318,6 +318,21 @@ describe('recognize()', () => {
       expect(blocks[0].paragraphs[0].lines[0].words[0].text).to.be('繁體');
       expect(blocks[0].paragraphs[0].lines[0].text).to.be('繁體 中 文 測試\n');
     }).timeout(TIMEOUT);
+
+    it('should report RowAttributes', async () => {
+      await worker.reinitialize('eng');
+      const { data: { blocks } } = await worker.recognize(`${IMAGE_PATH}/testocr.png`, {}, { blocks: true });
+      const firstLine = blocks[0].paragraphs[0].lines[0];
+
+      expect(firstLine.rowAttributes).to.be.an('object');
+      expect(firstLine.rowAttributes.ascenders).to.be.a('number');
+      expect(firstLine.rowAttributes.descenders).to.be.a('number');
+      expect(firstLine.rowAttributes.rowHeight).to.be.a('number');
+
+      expect(firstLine.rowAttributes.ascenders).to.be.greaterThan(0);
+      expect(firstLine.rowAttributes.descenders).to.be.greaterThan(0);
+      expect(firstLine.rowAttributes.rowHeight).to.be.greaterThan(0);
+    }).timeout(TIMEOUT);
   });
 
   describe('should support layout blocks (json) output', () => {
