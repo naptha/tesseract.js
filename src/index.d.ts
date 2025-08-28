@@ -41,7 +41,7 @@ declare namespace Tesseract {
     load_number_dawg: string
     load_bigram_dawg: string
   }
-  
+
   type LoggerMessage = {
     jobId: string
     progress: number
@@ -49,7 +49,7 @@ declare namespace Tesseract {
     userJobId: string
     workerId: string
   }
-  
+
   interface WorkerOptions {
     corePath: string
     langPath: string
@@ -166,7 +166,7 @@ declare namespace Tesseract {
   interface RowAttributes {
     ascenders: number;
     descenders: number;
-    row_height: number;
+    rowHeight: number;
   }
   interface Bbox {
     x0: number;
