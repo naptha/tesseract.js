@@ -2,7 +2,7 @@
 
 The main Tesseract.js functions (ex. recognize, detect) take an `image` parameter.  The image formats and data types supported are listed below. 
 
-Support Image Formats: **bmp, jpg, png, pbm, webp**
+Support Image Formats: **bmp, jpg, png, pbm, webp, gif \[non-animated\]**.
 
 For browser and Node, supported data types are:
  - string with base64 encoded image (fits `data:image\/([a-zA-Z]*);base64,([^"]*)` regexp)
