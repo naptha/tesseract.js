@@ -7,6 +7,7 @@ const fetch = global.fetch || require('node-fetch');
 const isURL = require('is-url');
 
 const readFile = util.promisify(fs.readFile);
+const imageRegex = /data:image\/([a-zA-Z]*);base64,([^"]*)/;
 
 /**
  * loadImage
@@ -25,7 +26,7 @@ module.exports = async (image) => {
     if (isURL(image) || image.startsWith('moz-extension://') || image.startsWith('chrome-extension://') || image.startsWith('file://')) {
       const resp = await fetch(image);
       data = await resp.arrayBuffer();
-    } else if (/data:image\/([a-zA-Z]*);base64,([^"]*)/.test(image)) {
+    } else if (imageRegex.test(image)) {
       data = Buffer.from(image.split(',')[1], 'base64');
     } else {
       data = await readFile(image);

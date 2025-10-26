@@ -18,6 +18,9 @@ const defaultOutput = require('./constants/defaultOutput');
 const { log, setLogging } = require('../utils/log');
 const PSM = require('../constants/PSM');
 
+const componentRegex = /components are not present/;
+const trailingSlashRegex = /\/$/;
+
 /*
  * Tesseract Module returned by TesseractCore.
  */
@@ -133,7 +136,7 @@ res) => {
         // The is-url package is used to tell the difference
         // For the browser version, langPath is assumed to be a URL
         if (env !== 'node' || isURL(langPathDownload) || langPathDownload.startsWith('moz-extension://') || langPathDownload.startsWith('chrome-extension://') || langPathDownload.startsWith('file://')) { /** When langPathDownload is an URL */
-          path = langPathDownload.replace(/\/$/, '');
+          path = langPathDownload.replace(trailingSlashRegex, '');
         }
 
         // langPathDownload is a URL, fetch from server
@@ -286,7 +289,7 @@ const initialize = async ({
         // The .wasm build of Tesseract saves this message in a separate file
         // (in addition to the normal debug file location).
         const debugStr = TessModule.FS.readFile('/debugDev.txt', { encoding: 'utf8', flags: 'a+' });
-        if (dataFromCache && /components are not present/.test(debugStr)) {
+        if (dataFromCache && componentRegex.test(debugStr)) {
           log('Data from cache missing requested OEM model. Attempting to refresh cache with new language data.');
           // In this case, language data is re-loaded
           await loadLanguage({ workerId, payload: { langs: loadLanguageLangsWorker, options: loadLanguageOptionsWorker } }); // eslint-disable-line max-len
