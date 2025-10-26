@@ -161,7 +161,6 @@ declare namespace Tesseract {
     y0: number;
     x1: number;
     y1: number;
-    has_baseline: boolean;
   }
   interface RowAttributes {
     ascenders: number;
