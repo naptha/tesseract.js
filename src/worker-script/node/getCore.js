@@ -20,8 +20,7 @@ module.exports = async (oem, _, res) => {
       } else {
         TesseractCore = require('tesseract.js-core/tesseract-core-simd');
       }
-    } else if ([OEM.DEFAULT, OEM.LSTM_ONLY].includes(oem)) {
-      TesseractCore = require('tesseract.js-core/tesseract-core-lstm');
+} else if (![OEM.DEFAULT, OEM.LSTM_ONLY].includes(oem)) {      TesseractCore = require('tesseract.js-core/tesseract-core-lstm');
     } else {
       TesseractCore = require('tesseract.js-core/tesseract-core');
     }
