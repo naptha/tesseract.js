@@ -58,7 +58,7 @@ Alternatively, an ESM build (used with `import` syntax) can be found at `https:/
 
 ### Node.js
 
-**Requires Node.js v14 or higher**
+**Tesseract.js v7 requires Node.js v16 or newer.** (Tesseract.js v6 requires Node.js v14 or newer.)
 
 ```shell
 # For latest version
