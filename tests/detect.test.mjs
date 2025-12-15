@@ -13,7 +13,7 @@ describe('detect()', () => {
   }).timeout(TIMEOUT);
 
   it('should detect OSD (simplified interface)', async () => {
-    const { data: { script: s } } = await Tesseract.detect(`${IMAGE_PATH}/cosmic.png`, undefined, OPTIONS);
+    const { data: { script: s } } = await Tesseract.detect(`${IMAGE_PATH}/cosmic.png`, OPTIONS);
     expect(s).to.be('Latin');
   }).timeout(TIMEOUT);
 });

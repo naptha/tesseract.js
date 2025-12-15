@@ -8,6 +8,8 @@ module.exports = function (config) {
       { pattern: 'dist/worker.min.js', included: false, served: true },
       { pattern: 'node_modules/tesseract.js-core/tesseract-core-simd-lstm.wasm.js', included: false, served: true },
       { pattern: 'node_modules/tesseract.js-core/tesseract-core-simd.wasm.js', included: false, served: true },
+      { pattern: 'node_modules/tesseract.js-core/tesseract-core-relaxedsimd-lstm.wasm.js', included: false, served: true },
+      { pattern: 'node_modules/tesseract.js-core/tesseract-core-relaxedsimd.wasm.js', included: false, served: true },
       { pattern: 'tests/constants.mjs', included: false, served: true },
       { pattern: 'node_modules/expect.js/index.js', included: true },
       { pattern: 'tests/*.test.mjs', type: 'module' },
@@ -25,6 +27,8 @@ module.exports = function (config) {
       '/dist/worker.min.js': '/base/dist/worker.min.js',
       '/node_modules/tesseract.js-core/tesseract-core-simd-lstm.wasm.js': '/base/node_modules/tesseract.js-core/tesseract-core-simd-lstm.wasm.js',
       '/node_modules/tesseract.js-core/tesseract-core-simd.wasm.js': '/base/node_modules/tesseract.js-core/tesseract-core-simd.wasm.js',
+      '/node_modules/tesseract.js-core/tesseract-core-relaxedsimd-lstm.wasm.js': '/base/node_modules/tesseract.js-core/tesseract-core-relaxedsimd-lstm.wasm.js',
+      '/node_modules/tesseract.js-core/tesseract-core-relaxedsimd.wasm.js': '/base/node_modules/tesseract.js-core/tesseract-core-relaxedsimd.wasm.js',
       '/tests/assets/images': '/base/tests/assets/images',
     },
   });
