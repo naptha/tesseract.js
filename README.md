@@ -88,7 +88,7 @@ If your project requires features outside of this scope, consider the [Scribe.js
 The following are examples and projects built by the community using Tesseract.js. Officially supported examples are found in the [examples](https://github.com/naptha/tesseract.js/tree/master/examples) directory. 
 
 - Projects
-   - Browser OCR: web application for extracting texts (multiple images)
+   - Browser OCR: web application for extracting text (multiple images)
       - Site at [https://saksham.thedev.id](https://saksham.thedev.id/Browser-OCR/), repo at [https://github.com/OshekharO/Browser-OCR](https://github.com/OshekharO/Browser-OCR)
    - Scribe OCR: web application for scanning documents (images and PDFs)
       - Site at [scribeocr.com](https://scribeocr.com/), repo at [github.com/scribeocr/scribeocr](https://github.com/scribeocr/scribeocr)
