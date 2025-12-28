@@ -89,7 +89,7 @@ The following are examples and projects built by the community using Tesseract.j
 
 - Projects
    - Browser OCR: web application for extracting text (multiple images)
-      - Site at [https://saksham.thedev.id](https://saksham.thedev.id/Browser-OCR/), repo at [https://github.com/OshekharO/Browser-OCR](https://github.com/OshekharO/Browser-OCR)
+      - Site at [https://browser-ocr.js.org](https://browser-ocr.js.org/), repo at [https://github.com/OshekharO/Browser-OCR](https://github.com/OshekharO/Browser-OCR)
    - Scribe OCR: web application for scanning documents (images and PDFs)
       - Site at [scribeocr.com](https://scribeocr.com/), repo at [github.com/scribeocr/scribeocr](https://github.com/scribeocr/scribeocr)
    - Chrome Extension (with Manifest V3): https://github.com/Tshetrim/Image-To-Text-OCR-extension-for-ChatGPT
