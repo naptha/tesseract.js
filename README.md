@@ -17,7 +17,7 @@
 ![npm](https://img.shields.io/npm/dm/tesseract.js?label=npm%20downloads)
 ![jsDelivr hits (npm)](https://img.shields.io/jsdelivr/npm/hm/tesseract.js?label=jsdelivr%20hits)
 
-Tesseract.js is a javascript library that gets words in [almost any language](./docs/tesseract_lang_list.md) out of images. ([Demo](http://tesseract.projectnaptha.com/))
+Tesseract.js is a JavaScript OCR library that extracts text from images in almost [almost any language](./docs/tesseract_lang_list.md)  ([Demo](http://tesseract.projectnaptha.com/))
 
 Image Recognition
 
