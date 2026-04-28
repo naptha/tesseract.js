@@ -45,12 +45,13 @@ const load = async ({ workerId, jobId, payload: { options: { lstmOnly, corePath,
 
     Core({
       TesseractProgress(percent) {
-        latestJob.progress({
-          workerId,
-          jobId,
-          status: 'recognizing text',
-          progress: Math.max(0, (percent - 30) / 70),
-        });
+        if (latestJob) {
+          latestJob.progress({
+            workerId,
+            status: 'recognizing text',
+            progress: Math.max(0, (percent - 30) / 70),
+          });
+        }
       },
     }).then((tessModule) => {
       TessModule = tessModule;
@@ -499,7 +500,6 @@ const terminate = async (_, res) => {
  */
 exports.dispatchHandlers = (packet, send) => {
   const res = (status, data) => {
-    // Return only the necessary info to avoid sending unnecessarily large messages
     const packetRes = {
       jobId: packet.jobId,
       workerId: packet.workerId,
@@ -511,11 +511,28 @@ exports.dispatchHandlers = (packet, send) => {
       data,
     });
   };
-  res.resolve = res.bind(this, 'resolve');
-  res.reject = res.bind(this, 'reject');
+
+  const currentJobRes = res;
+  const originalResolve = res.bind(this, 'resolve');
+  const originalReject = res.bind(this, 'reject');
+
+  res.resolve = (...args) => {
+    if (latestJob === currentJobRes) {
+      latestJob = null;
+    }
+    return originalResolve(...args);
+  };
+
+  res.reject = (...args) => {
+    if (latestJob === currentJobRes) {
+      latestJob = null;
+    }
+    return originalReject(...args);
+  };
+
   res.progress = res.bind(this, 'progress');
 
-  latestJob = res;
+  latestJob = currentJobRes;
 
   ({
     load,
