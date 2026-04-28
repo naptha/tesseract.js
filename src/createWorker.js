@@ -167,22 +167,42 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
 
   const recognize = async (image, opts = {}, output = {
     text: true,
-  }, jobId) => (
-    startJob(createJob({
+  }, jobId) => {
+    const job = createJob({
       id: jobId,
       action: 'recognize',
-      payload: { image: await loadImage(image), options: opts, output },
-    }))
-  );
+      payload: { options: opts, output },
+    });
+
+    try {
+      job.payload.image = await loadImage(image);
+    } catch (err) {
+      const errorData = typeof err === 'object' && err !== null ? err : { message: err };
+      errorData.jobId = job.id;
+      throw errorData;
+    }
+
+    return startJob(job);
+  };
 
   const detect = async (image, jobId) => {
     if (lstmOnlyCore) throw Error('`worker.detect` requires Legacy model, which was not loaded.');
 
-    return startJob(createJob({
+    const job = createJob({
       id: jobId,
       action: 'detect',
-      payload: { image: await loadImage(image) },
-    }));
+      payload: {},
+    });
+
+    try {
+      job.payload.image = await loadImage(image);
+    } catch (err) {
+      const errorData = typeof err === 'object' && err !== null ? err : { message: err };
+      errorData.jobId = job.id;
+      throw errorData;
+    }
+
+    return startJob(job);
   };
 
   const terminate = async () => {
@@ -208,13 +228,13 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
       promises[promiseId].resolve({ jobId, data });
       delete promises[promiseId];
     } else if (status === 'reject') {
-      promises[promiseId].reject(data);
+      const errorData = typeof data === 'object' && data !== null ? data : { message: data };
+      errorData.jobId = jobId;
+      promises[promiseId].reject(errorData);
       delete promises[promiseId];
-      if (action === 'load') workerResReject(data);
+      if (action === 'load') workerResReject(errorData);
       if (errorHandler) {
-        errorHandler(data);
-      } else {
-        throw Error(data);
+        errorHandler(errorData);
       }
     } else if (status === 'progress') {
       logger({ ...data, userJobId: jobId });
