@@ -234,7 +234,7 @@ const initialize = async ({
 }, res) => {
   const langs = (typeof _langs === 'string')
     ? _langs
-    : _langs.map((l) => ((typeof l === 'string') ? l : l.data)).join('+');
+    : _langs.map((l) => ((typeof l === 'string') ? l : l.code)).join('+');
 
   const statusText = 'initializing api';
 
