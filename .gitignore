@@ -10,3 +10,4 @@ dist/
 *.swp
 *.wasm
 *.wasm.js
+.devcontainer
