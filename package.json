@@ -20,8 +20,7 @@
     "test:node": "nyc mocha --exit --bail --require ./scripts/test-helper.mjs",
     "test:node:all": "npm run test:node -- ./tests/*.test.mjs",
     "lint": "eslint src",
-    "lint:fix": "eslint --fix src",
-    "postinstall": "opencollective-postinstall || true"
+    "lint:fix": "eslint --fix src"
   },
   "browser": {
     "./src/worker/node/index.js": "./src/worker/browser/index.js"
@@ -67,7 +66,6 @@
     "idb-keyval": "^6.2.0",
     "is-url": "^1.2.4",
     "node-fetch": "^2.6.9",
-    "opencollective-postinstall": "^2.0.3",
     "tesseract.js-core": "^7.0.0",
     "wasm-feature-detect": "^1.8.0",
     "zlibjs": "^0.3.1"
