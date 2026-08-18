@@ -22,7 +22,7 @@ module.exports = () => {
       const wIds = Object.keys(workers);
       for (let i = 0; i < wIds.length; i += 1) {
         if (typeof runningWorkers[wIds[i]] === 'undefined') {
-          jobQueue[0](workers[wIds[i]]);
+          jobQueue[0].run(workers[wIds[i]]);
           break;
         }
       }
@@ -32,17 +32,20 @@ module.exports = () => {
   const queue = (action, payload) => (
     new Promise((resolve, reject) => {
       const job = createJob({ action, payload });
-      jobQueue.push(async (w) => {
-        jobQueue.shift();
-        runningWorkers[w.id] = job;
-        try {
-          resolve(await w[action].apply(this, [...payload, job.id]));
-        } catch (err) {
-          reject(err);
-        } finally {
-          delete runningWorkers[w.id];
-          dequeue();
-        }
+      jobQueue.push({
+        run: async (w) => {
+          jobQueue.shift();
+          runningWorkers[w.id] = job;
+          try {
+            resolve(await w[action].apply(this, [...payload, job.id]));
+          } catch (err) {
+            reject(err);
+          } finally {
+            delete runningWorkers[w.id];
+            dequeue();
+          }
+        },
+        reject,
       });
       log(`[${id}]: Add ${job.id} to JobQueue`);
       log(`[${id}]: JobQueue length=${jobQueue.length}`);
@@ -66,10 +69,12 @@ module.exports = () => {
   };
 
   const terminate = async () => {
-    Object.keys(workers).forEach(async (wid) => {
-      await workers[wid].terminate();
-    });
+    const pendingJobs = jobQueue;
     jobQueue = [];
+    pendingJobs.forEach(({ reject }) => {
+      reject(Error(`[${id}]: Scheduler terminated`));
+    });
+    await Promise.all(Object.values(workers).map((worker) => worker.terminate()));
   };
 
   return {
