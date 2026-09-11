@@ -86,6 +86,7 @@ Figures out what words are in `image`, where the words are in `image`, etc.
 - `image` see [Image Format](./image-format.md) for more details.
 - `options` an object of customized options
   - `rectangle` an object to specify the regions you want to recognized in the image, should contain top, left, width and height, see example below.
+  - Tesseract parameters (for example `tessedit_pageseg_mode`, `tessedit_char_whitelist`) can also be set here. Unlike `worker.setParameters`, these apply only to this recognition job and are restored afterwards. See [worker.setParameters](#worker-set-parameters) for useful parameters. Parameters marked as “init only” in Tesseract documentation cannot be set here.
 - `output` an object specifying which output formats to return (by default only `text` is returned)
    - Other options include `blocks` (json), `hocr`, and `tsv`
 - `jobId` Please see details above
@@ -120,6 +121,19 @@ const { createWorker } = Tesseract;
 })();
 ```
 
+With Tesseract parameters (single job only)
+
+```javascript
+const { createWorker, PSM } = Tesseract;
+(async () => {
+  const worker = await createWorker('eng');
+  const { data: { text } } = await worker.recognize(image, {
+    tessedit_pageseg_mode: PSM.SINGLE_BLOCK, // or '6'
+  });
+  console.log(text);
+})();
+```
+
 <a name="worker-set-parameters"></a>
 ### worker.setParameters(params, jobId): Promise
 
@@ -131,6 +145,8 @@ const { createWorker } = Tesseract;
 - `jobId` Please see details above
 
 Note:  `worker.setParameters` cannot be used to change the `oem`, as this value is set at initialization.  `oem` is initially set using an argument of `createWorker`.  After a worker already exists, changing `oem` requires running `worker.reinitialize`.
+
+To set parameters for a single recognition job only (without changing worker state for later jobs), pass them in the `options` argument of `worker.recognize` or `scheduler.addJob('recognize', ...)` instead.
 
 **Useful Parameters:**
 
@@ -328,12 +344,15 @@ scheduler.addWorker(worker);
 
 - `action` a string to indicate the action you want to do, right now only **recognize** and **detect** are supported
 - `payload` a arbitrary number of args depending on the action you called.
+  - For `recognize`, the payload matches `worker.recognize` (image, options, output, jobId). Tesseract parameters may be passed in `options` and apply only to that job.
 
 **Examples:**
 
 ```javascript
 (async () => {
- const { data: { text } } = await scheduler.addJob('recognize', image, options);
+ const { data: { text } } = await scheduler.addJob('recognize', image, {
+   tessedit_pageseg_mode: '6',
+ });
  const { data } = await scheduler.addJob('detect', image);
 })();
 ```

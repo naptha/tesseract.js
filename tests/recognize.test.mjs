@@ -143,6 +143,16 @@ describe('recognize()', () => {
       const { data: { text } } = await worker.recognize(`${IMAGE_PATH}/simple.png`);
       expect(text).to.be(SIMPLE_WHITELIST_TEXT);
     }).timeout(TIMEOUT);
+
+    it('support tessedit_char_whitelist for a single recognize job', async () => {
+      await worker.reinitialize('eng');
+      const { data: { text: filtered } } = await worker.recognize(`${IMAGE_PATH}/simple.png`, {
+        tessedit_char_whitelist: 'Tess',
+      });
+      expect(filtered).to.be(SIMPLE_WHITELIST_TEXT);
+      const { data: { text } } = await worker.recognize(`${IMAGE_PATH}/simple.png`);
+      expect(text).to.be(SIMPLE_TEXT);
+    }).timeout(TIMEOUT);
   });
 
   describe('should support all page seg modes (Legacy)', () => {
