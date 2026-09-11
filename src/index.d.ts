@@ -65,7 +65,7 @@ declare namespace Tesseract {
     errorHandler: (arg: any) => void
   }
   interface WorkerParams {
-    tessedit_pageseg_mode: PSM
+    tessedit_pageseg_mode: PSM | `${PSM}`
     tessedit_char_whitelist: string
     tessedit_char_blacklist: string
     preserve_interword_spaces: string
@@ -87,7 +87,7 @@ declare namespace Tesseract {
     imageBinary: boolean;
     debug: boolean;
   }
-  interface RecognizeOptions {
+  interface RecognizeOptions extends WorkerParams {
     rectangle: Rectangle
     pdfTitle: string
     pdfTextOnly: boolean
