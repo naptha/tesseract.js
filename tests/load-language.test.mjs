@@ -1,9 +1,9 @@
-import path from 'path';
-import { OPTIONS, TIMEOUT, SIMPLE_TEXT, IMAGE_PATH } from './constants.mjs';
+import {
+  OPTIONS, TIMEOUT, SIMPLE_TEXT, IMAGE_PATH,
+} from './constants.mjs';
 
 const dataOptions = {
   ...OPTIONS,
-  cachePath: path.resolve('tests/assets/traineddata'),
   cacheMethod: 'readOnly',
   dataPath: '.',
   gzip: false,
