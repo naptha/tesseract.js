@@ -32,6 +32,23 @@ let loadLanguageLangsWorker;
 let loadLanguageOptionsWorker;
 let dataFromCache = false;
 
+const dataPathIsDirectory = (fs, dirPath) => {
+  try {
+    fs.readdir(dirPath);
+    return true;
+  } catch (statErr) {
+    return false;
+  }
+};
+
+const ensureDataDirectory = (fs, dirPath) => {
+  try {
+    fs.mkdir(dirPath);
+  } catch (err) {
+    if (!dataPathIsDirectory(fs, dirPath)) throw err;
+  }
+};
+
 const load = async ({ workerId, jobId, payload: { options: { lstmOnly, corePath, logging } } }, res) => { // eslint-disable-line max-len
   setLogging(logging);
 
@@ -165,13 +182,7 @@ res) => {
     }
 
     if (TessModule) {
-      if (dataPath) {
-        try {
-          TessModule.FS.mkdir(dataPath);
-        } catch (err) {
-          if (res) res.reject(err.toString());
-        }
-      }
+      if (dataPath) ensureDataDirectory(TessModule.FS, dataPath);
       TessModule.FS.writeFile(`${dataPath || '.'}/${lang}.traineddata`, data);
     }
 
