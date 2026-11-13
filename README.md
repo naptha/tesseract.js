@@ -91,6 +91,8 @@ The following are examples and projects built by the community using Tesseract.j
    - Scribe OCR: web application for scanning documents (images and PDFs)
       - Site at [scribeocr.com](https://scribeocr.com/), repo at [github.com/scribeocr/scribeocr](https://github.com/scribeocr/scribeocr)
    - Chrome Extension (with Manifest V3): https://github.com/Tshetrim/Image-To-Text-OCR-extension-for-ChatGPT
+   - Nyxiontech PDF Tools: browser-based PDF and image toolkit, with OCR in English and Polish
+      - Site at [tools.nyxiontech.com](https://tools.nyxiontech.com/), repo at [github.com/jurecki007/nyxiontech-tools](https://github.com/jurecki007/nyxiontech-tools)
 - Examples
    - Converting PDF to text: https://github.com/racosa/pdf2text-ocr
    - Use `blocks` output to generate granular data [word/symbol level]: https://github.com/Kishlay-notabot/tesseract-bbox-examples
