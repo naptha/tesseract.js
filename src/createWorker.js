@@ -211,11 +211,10 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
       promises[promiseId].reject(data);
       delete promises[promiseId];
       if (action === 'load') workerResReject(data);
-      if (errorHandler) {
-        errorHandler(data);
-      } else {
-        throw Error(data);
-      }
+      // The error is already delivered to the caller through the rejected promise above.
+      // Throwing here as well would happen inside the message listener, outside of the caller's
+      // try/catch, and crash the Node.js process (an uncaught exception).
+      if (errorHandler) errorHandler(data);
     } else if (status === 'progress') {
       logger({ ...data, userJobId: jobId });
     }
