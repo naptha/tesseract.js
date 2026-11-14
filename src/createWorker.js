@@ -41,9 +41,21 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
     workerResResolve = resolve;
     workerResReject = reject;
   });
-  const workerError = (event) => { workerResReject(event.message); };
+  // Until the worker is handed to the caller, the caller has no way to terminate it,
+  // so any initialization error must terminate the worker here.
+  let initialized = false;
+  let worker;
+  const failInitialization = (err) => {
+    if (initialized) return;
+    if (worker !== null) {
+      terminateWorker(worker);
+      worker = null;
+    }
+    workerResReject(err);
+  };
+  const workerError = (event) => { failInitialization(event.message); };
 
-  let worker = spawnWorker(options);
+  worker = spawnWorker(options);
   worker.onerror = workerError;
 
   workerCounter += 1;
@@ -210,7 +222,6 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
     } else if (status === 'reject') {
       promises[promiseId].reject(data);
       delete promises[promiseId];
-      if (action === 'load') workerResReject(data);
       if (errorHandler) {
         errorHandler(data);
       } else {
@@ -239,8 +250,11 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
   loadInternal()
     .then(() => loadLanguageInternal(langs))
     .then(() => initializeInternal(langs, oem, config))
-    .then(() => workerResResolve(resolveObj))
-    .catch(() => {});
+    .then(() => {
+      initialized = true;
+      workerResResolve(resolveObj);
+    })
+    .catch(failInitialization);
 
   return workerRes;
 };
