@@ -21,8 +21,7 @@ module.exports = (TessModule, api, image, angle = 0) => {
   //  * We therefore use bmp-js to convert all bmp files into a format Leptonica is known to support
   //  */
   if (isBmp) {
-    // Not sure what this line actually does, but removing breaks the function
-    const buf = Buffer.from(Array.from({ ...image, length: Object.keys(image).length }));
+    const buf = Buffer.from(image.buffer, image.byteOffset, image.byteLength);
     const bmpBuf = bmp.decode(buf);
     TessModule.FS.writeFile('/input', bmp.encode(bmpBuf).data);
   } else {
