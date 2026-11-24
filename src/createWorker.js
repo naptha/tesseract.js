@@ -134,7 +134,7 @@ module.exports = async (langs = 'eng', oem = OEM.LSTM_ONLY, _options = {}, confi
 
     if (lstmOnlyCore && [OEM.TESSERACT_ONLY, OEM.TESSERACT_LSTM_COMBINED].includes(oem)) throw Error('Legacy model requested but code missing.');
 
-    const _oem = oem || currentOem;
+    const _oem = oem ?? currentOem;
     currentOem = _oem;
 
     const _config = config || currentConfig;
